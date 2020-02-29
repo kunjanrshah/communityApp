@@ -1,15 +1,19 @@
 package com.krs.community.activity
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
@@ -39,6 +43,7 @@ import com.krs.community.listeners.UpdateVersionListener
 import com.krs.community.model.Member
 import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.Coroutines
+import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
@@ -46,6 +51,7 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
+import kotlinx.android.synthetic.main.jrspinner_layout_dialog.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -68,7 +74,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         var cur_addr = MutableLiveData<String>()
     }
 
+    private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
+    private val PERMISSION_REQUEST_READ_PHONE_STATE_TELEPHONE = 2
+
     override val kodein by kodein()
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -183,6 +193,17 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
 
+
+            if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
+                val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
+                requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE)
+            }
+
+        if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
+            val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
+            requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE_TELEPHONE)
+        }
+
         /*var JsonObj=JSONObject()
         JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
         JsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
@@ -190,6 +211,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         val updated=  JsonParser().parse(JsonObj.toString()) as JsonObject
         dashboardViewModel.getUpdatedVersion(updated)*/
     }
+
+
 
 
     override fun onResume() {
@@ -217,22 +240,36 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         backNavigation(this)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
             easyWayLocation.onActivityResult(resultCode)
+
+
         }
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == FINE_LOCATION_REQUEST) {
             easyWayLocation.startLocation()
+
+        }else{
+            when (requestCode) {PERMISSION_REQUEST_READ_PHONE_STATE -> if (grantResults.size > 0) {
+                    val CallAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    if (CallAccepted)
+                    else {
+                        binding.containerBody.snackbar("Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG)
+
+                    }
+                }
+            }
         }
     }
-
 
     private fun getMasterList() = Coroutines.main {
         dashboardViewModel.fetchState()
