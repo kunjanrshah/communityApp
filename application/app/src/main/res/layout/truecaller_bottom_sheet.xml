@@ -58,7 +58,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -67,12 +67,17 @@
                     android:layout_height="70dp"
                     android:background="@drawable/user_profile" />
 
-                <ImageView
-                    android:id="@+id/iv_gender"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/male" />
+
+
+                    <ImageView
+                        android:id="@+id/iv_gender"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/male" />
+
+
 
             </LinearLayout>
 

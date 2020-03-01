@@ -118,6 +118,13 @@ class MyCustomDialog : Activity() {
         Guru.putBoolean(this@MyCustomDialog.getString(R.string.isdialogApi), true)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Guru.putBoolean(this@MyCustomDialog.getString(R.string.isdialogApi), true)
+
+    }
+
     private fun sendEmail() {
         try {
             val emailIntent = Intent(Intent.ACTION_SEND)

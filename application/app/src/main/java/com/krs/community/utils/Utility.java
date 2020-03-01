@@ -117,6 +117,7 @@ public class Utility {
     public static final int FINE_LOCATION_REQUEST = 2;
     public static final int EXTERNAL_STORAGE_REQUEST = 3;
     public static final int CALL_PHONE_REQUEST = 4;
+
     static final int REQ_CODE_SPEECH_INPUT = 100;
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
     public static String Title = "";
@@ -162,6 +163,16 @@ public class Utility {
 
     public static boolean checkPhoneCallPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean CallLogPermission(Context mContext) {
+        int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALL_LOG);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean CallPhonePermission(Context mContext) {
+        int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 /*
