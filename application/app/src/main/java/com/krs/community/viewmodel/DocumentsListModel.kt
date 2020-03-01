@@ -25,7 +25,7 @@ class DocumentsListModel(
                     val response = documentListRepository.getDocumentList()
                     response.let {
                         withContext(Dispatchers.Main) {
-                            byDocumentListener.getMembers(response)
+                            byDocumentListener.getDocuments(response)
                             thejob.complete()
                         }
                         return@launch

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="80dp"
     android:layout_marginLeft="14dp"
     android:layout_marginTop="8dp"
     android:layout_marginRight="14dp"
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/tv_file"
@@ -69,7 +69,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat_medium"
                 android:text="My first file name"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_date"
@@ -79,7 +79,7 @@
                 android:fontFamily="@font/montserrat_light"
                 android:gravity="right"
                 android:text="uploaded: 01-01-2020"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
     </FrameLayout>

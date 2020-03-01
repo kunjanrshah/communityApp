@@ -92,7 +92,7 @@ public class MyRoleAdapter extends BaseAdapter {
         ImageView ivCancel;
 
         ViewHolder(View view) {
-            spRole = view.findViewById(R.id.sp_role);
+            spRole = view.findViewById(R.id.sp_role1);
             btnChange = view.findViewById(R.id.btn_change);
             ivCancel= view.findViewById(R.id.iv_cancel);
         }

@@ -3,15 +3,22 @@ package com.krs.community.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
+import com.downloader.PRDownloader
 import com.krs.community.R
+import com.krs.community.adapter.UploadDialogAdapter
 import com.krs.community.listeners.ByDocumentListener
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.UploadedFile
@@ -22,12 +29,13 @@ import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.DocumentsListModel
 import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
+import com.orhanobut.dialogplus.DialogPlus
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener {
+class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner, ParallaxRecyclerAdapter.OnLoadMore {
     override val kodein by kodein()
 
     private lateinit var btnupload: MovableFloatingActionButton
@@ -36,33 +44,43 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener {
     private val documentListViewModelFactory: DocumentListViewModelFactory by instance()
     private val listUpload = ArrayList<UploadedFile>()
     private lateinit var adapter: ParallaxRecyclerAdapter<UploadedFile>
+    private var uploadDialog: DialogPlus? = null
+    private var uploadedFileName = ""
+    private lateinit var tvCount: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_documents, container, false)
 
         documentsListModel = ViewModelProvider(this, documentListViewModelFactory).get(DocumentsListModel::class.java)
         documentsListModel.byDocumentListener = this
-
         btnupload = root.findViewById<View>(R.id.btnupload) as MovableFloatingActionButton
         rvDocuments = root.findViewById(R.id.rv_documents)
-        rvDocuments.layoutManager = LinearLayoutManager(activity)
-        rvDocuments.setHasFixedSize(true)
-
         btnupload.setOnClickListener {
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "*/*"
-            }
-            startActivityForResult(intent, Utility.PICK_GALLERY_REQUEST)
-        }
 
-        documentsListModel.getUploadedFiles()
+            val adapter: UploadDialogAdapter = UploadDialogAdapter(context)
+            adapter.setListener(this@DocumentsFragment)
+            uploadDialog = DialogPlus.newDialog(context)
+                    .setAdapter(adapter)
+                    .setGravity(Gravity.BOTTOM)
+                    .setCancelable(true)
+                    .setOnCancelListener {
+                        it.dismiss()
+                    }
+                    .setExpanded(true, 900)
+                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                    .create()
+            uploadDialog?.show()
+        }
 
         adapter = object : ParallaxRecyclerAdapter<UploadedFile>(listUpload) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder?, adapter: ParallaxRecyclerAdapter<UploadedFile>?, i: Int) {
                 val uploadfile = listUpload[i]
+                val holder = viewHolder as MyViewHolder
+                holder.tvFile.text = uploadfile.name
+                holder.tvDate.text = Utility.changeDateFormat(uploadfile.createdAt, Utility.yyyy_MM_dd_TIME, Utility.dd_MM_yyyy_TIME)
+                holder.llDownload.setOnClickListener {
 
-
+                }
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup?, adapter: ParallaxRecyclerAdapter<UploadedFile>?, i: Int): RecyclerView.ViewHolder {
@@ -74,17 +92,48 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener {
             }
         }
 
+        rvDocuments.layoutManager = LinearLayoutManager(activity)
+        rvDocuments.setHasFixedSize(true)
+
+        val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
+        val tvTitle = header.findViewById<TextView>(R.id.tv_title)
+        tvTitle.text = "Documents"
+        tvCount = header.findViewById(R.id.tv_count)
+        val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
+        adapter.setParallaxHeader(header, rvDocuments)
+        adapter.setContext(this)
+
+        rvDocuments.adapter = adapter
+        documentsListModel.getUploadedFiles()
+
+
         return root
     }
 
-    inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        var llDownload: LinearLayout = view.findViewById(R.id.ll_download)
-        var tvFile: LinearLayout = view.findViewById(R.id.tv_file)
-        var tvDate: LinearLayout = view.findViewById(R.id.tv_date)
-
-
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
     }
 
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+    }
+
+    override fun upload(name: String) {
+        uploadedFileName = name
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+        }
+        startActivityForResult(intent, Utility.PICK_GALLERY_REQUEST)
+    }
+
+    override fun cancelDialog() {
+        uploadDialog?.dismiss()
+        Utility.hideKeyboard(activity)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -99,26 +148,52 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener {
     }
 
     private fun onFilePicked(filePath: String) {
-        MultipartUploadRequest(activity!!, serverUrl = UPLOAD_DOCUMENT)
-                .setMethod("POST")
-                .addFileToUpload(
-                        filePath = filePath,
-                        parameterName = getString(R.string.uploaded_file)
-                )
-                .addParameter(getString(R.string.filename), "file name")
-                .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
-                .startUpload()
+
+        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Upload File")
+                .setContentText("Do you want to upload $uploadedFileName?")
+                .setConfirmText("Upload Now")
+                .setConfirmClickListener {
+                    it.dismissWithAnimation()
+
+                    MultipartUploadRequest(activity!!, serverUrl = UPLOAD_DOCUMENT)
+                            .setMethod("POST")
+                            .addFileToUpload(
+                                    filePath = filePath,
+                                    parameterName = getString(R.string.uploaded_file)
+                            )
+                            .addParameter(getString(R.string.filename), uploadedFileName)
+                            .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
+
+                            .startUpload()
+
+
+                }
+                .setCancelText("Later")
+                .setCancelClickListener {
+                    it.dismissWithAnimation()
+                }
+                .show()
     }
 
-    override fun getMembers(response: UploadedFilesResponse) {
+    override fun getDocuments(response: UploadedFilesResponse) {
         if (response.success) {
             listUpload.clear()
+            tvCount.text = "Total Record Founds: " + response.data.size
             listUpload.addAll(response.data)
-
+            adapter.notifyDataSetChanged()
         }
     }
 
     override suspend fun getFailure(message: String) {
     }
 
+    inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
+        var llDownload: LinearLayout = view.findViewById(R.id.ll_download)
+        var tvFile: TextView = view.findViewById(R.id.tv_file)
+        var tvDate: TextView = view.findViewById(R.id.tv_date)
+    }
+
+    override fun loadApi() {
+    }
 }
