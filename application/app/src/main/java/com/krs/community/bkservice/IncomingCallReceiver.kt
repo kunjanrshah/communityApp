@@ -24,10 +24,10 @@ import org.json.JSONObject
 class IncomingCallReceiver : BroadcastReceiver() {
 
     var completableJob: CompletableJob? = null
-    var contactListRepository = ContactListRepository(ApiServices())
+    var contactListRepository = ContactListRepository(ApiServices(), null)
 
-    private var isShow: Boolean = false;
-    private var isDialog: Boolean = false;
+    private var isShow: Boolean = true;
+    private var isDialog: Boolean = true;
 
     override fun onReceive(context: Context, intent: Intent) {
         try {
@@ -37,14 +37,14 @@ class IncomingCallReceiver : BroadcastReceiver() {
                     super.onCallStateChanged(state, incomingNumber)
 
                     Log.e("incomingNumber---", "number===" + incomingNumber);
-                    isShow = Guru.getBoolean(context.getString(R.string.isdialogshow), false)
+                    isShow = Guru.getBoolean(context.getString(R.string.isdialogshow), true)
                     isDialog = Guru.getBoolean(context.getString(R.string.isdialogApi), true)
 
 
                     Log.e("isDialog---", "" + isDialog);
                     Log.e("state---", "" + state);
 
-                    if (isDialog) {
+                    //  if (isDialog) {
                         if (state == 1 && incomingNumber.isNotEmpty()) {
                             if (isShow) {
                                 Guru.putBoolean(context.getString(R.string.isdialogApi), false)
@@ -63,14 +63,9 @@ class IncomingCallReceiver : BroadcastReceiver() {
                                 Log.e("updated---", "" + updated);
                                 getContactList(context, updated)
                             }
-
                         }
                     }
-
-
-
-
-                }
+                // }
             }, PhoneStateListener.LISTEN_CALL_STATE)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -93,11 +88,7 @@ class IncomingCallReceiver : BroadcastReceiver() {
                             Log.e("response", " " + response.success)
 
                             if (response.success) {
-
-
                                 Log.e("Frist Time", " success ")
-
-
                                 val intent = Intent(context, MyCustomDialog::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -114,21 +105,17 @@ class IncomingCallReceiver : BroadcastReceiver() {
                 } catch (e: ApiException) {
                     e.message?.let {
                         Guru.putBoolean(context.getString(R.string.isdialogApi), true)
-
                         Log.e("ApiException--", "" + e.toString());
                     }
                 } catch (e: NoInternetException) {
-                    Guru.putBoolean(context.getString(R.string.isdialogApi), true)
-
                     e.message?.let {
+                        Guru.putBoolean(context.getString(R.string.isdialogApi), true)
                         Log.e("NoInternetException--", "" + e.toString());
                     }
                 } catch (e: Exception) {
-                    Guru.putBoolean(context.getString(R.string.isdialogApi), true)
-
                     e.message?.let {
                         Log.e("Exception--", "" + e.toString());
-
+                        Guru.putBoolean(context.getString(R.string.isdialogApi), true)
                     }
                 }
                 thejob.complete()

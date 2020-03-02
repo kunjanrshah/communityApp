@@ -55,8 +55,8 @@
         <item>@drawable/documents</item>
         <item>@drawable/ic_paytm</item>
         <item>@drawable/add_user</item>
-        <item>@drawable/ic_tour</item>
-        <item>@drawable/ic_tour</item>
+        <item>@drawable/sign</item>
+        <item>@drawable/book</item>
     </integer-array>
 
 </resources>

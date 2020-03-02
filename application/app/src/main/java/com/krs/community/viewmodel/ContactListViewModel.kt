@@ -1,10 +1,9 @@
 package com.krs.community.viewmodel
 
 import android.app.Application
-import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
-import com.krs.community.bkservice.MyCustomDialog
+import com.krs.community.listeners.ByFilterListener
 import com.krs.community.repositories.ContactListRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -16,7 +15,15 @@ class ContactListViewModel(
 
     var completableJob: CompletableJob? = null
     var TAG: String = ContactListViewModel::class.java.simpleName
+    lateinit var filterListener: ByFilterListener
 
+    suspend fun getLastNameById(id: Int): String {
+        return contactListRepository.getLastNameById(id)
+    }
+
+    suspend fun getCityNamebyId(id: String): String {
+        return contactListRepository.getCityName(id)
+    }
 
     fun getContactList(jsonObject: JsonObject) {
         completableJob = Job()
@@ -27,22 +34,22 @@ class ContactListViewModel(
                     val response = contactListRepository.getContactList(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
-                            val intent = Intent(app, MyCustomDialog::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                            app.startActivity(intent)
+                            filterListener.getMembers(response)
                             thejob.complete()
                         }
                         return@launch
                     }
                 } catch (e: ApiException) {
                     e.message?.let {
+                        filterListener.getFailure(it)
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
+                        filterListener.getFailure(it)
                     }
                 } catch (e: Exception) {
                     e.message?.let {
+                        filterListener.getFailure(it)
                     }
                 }
                 thejob.complete()

@@ -175,7 +175,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                 val viewHolder: MyViewHolder = viewHolder as MyViewHolder
 
                 val member = lstMembers[position]
-                viewHolder.badge.setNumber(1)
+                viewHolder.badge.setNumber(member.membersCount)
                 viewHolder.tvName.text = member.firstName
                 smartSearchViewModel.getLastName(member.subCastId.toInt()).observeForever {
                     viewHolder.tvName.text = member.firstName + " " + it

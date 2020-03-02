@@ -60,26 +60,19 @@ class SettingFragment : Fragment() {
 
         if (isShow && isShowCallLog && isShowCallPhone){
             switchDialog?.isOn = Utility.CallLogPermission((activity as AppCompatActivity))
-
         }else{
-
             switchDialog?.isOn = false
-
         }
 
 
         switchDialog?.setOnClickListener {
 
-
             if (switchDialog?.isOn!!) {
                 Guru.putBoolean(getString(R.string.isdialogshow), false)
-
-
             } else {
                 Guru.putBoolean(getString(R.string.isdialogshow), true)
-
-                PermissionCheck(isShow,isShowCallLog,isShowCallPhone)
-
+                Guru.putBoolean(getString(R.string.isdialogApi), true)
+                // permissionCheck(isShow,isShowCallLog,isShowCallPhone)
 
                 SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Help")
@@ -88,7 +81,6 @@ class SettingFragment : Fragment() {
                         .setConfirmClickListener {
                             it.dismissWithAnimation()
                             if (AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(activity!!)) {
-
                                 AutoStartPermissionHelper.getInstance().getAutoStartPermission(activity!!)
                             }
                         }
@@ -103,20 +95,14 @@ class SettingFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun PermissionCheck(show: Boolean, showCallLog: Boolean, showCallPhone: Boolean) {
+    private fun permissionCheck(show: Boolean, showCallLog: Boolean, showCallPhone: Boolean) {
         if (show && showCallLog && showCallPhone){
             switchDialog?.isOn = Utility.CallLogPermission((activity as AppCompatActivity))
-
         }else{
-
             switchDialog?.isOn = false
-
             PhoneCallPermission()
-
             CallPermission()
-
         }
-
     }
 
     private fun PhoneCallPermission() {

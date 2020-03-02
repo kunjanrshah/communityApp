@@ -16,6 +16,10 @@ public class Member implements Serializable {
     @Expose
     private int loginStatus=0;
 
+    @SerializedName("members_count")
+    @Expose
+    private int membersCount = 0;
+
     @SerializedName("last_login")
     @Expose
     private String lastLogin="";
@@ -982,5 +986,13 @@ public class Member implements Serializable {
 
     public void setProfilePassword(String profilePassword) {
         this.profilePassword = profilePassword;
+    }
+
+    public int getMembersCount() {
+        return membersCount;
+    }
+
+    public void setMembersCount(int membersCount) {
+        this.membersCount = membersCount;
     }
 }

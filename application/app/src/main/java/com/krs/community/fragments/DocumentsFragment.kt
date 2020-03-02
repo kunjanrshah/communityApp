@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.downloader.PRDownloader
 import com.krs.community.R
 import com.krs.community.adapter.UploadDialogAdapter
 import com.krs.community.listeners.ByDocumentListener

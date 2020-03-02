@@ -140,7 +140,9 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 } else {
                     holder.ivVerify.visibility = View.GONE
                 }
-                holder.badge.setNumber(1)
+
+                holder.badge.setNumber(member.membersCount)
+
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
@@ -156,9 +158,6 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                         }
                     }
                 }
-
-                /* holder.tvEmail.text = member.emailAddress
-                 holder.tvMobile.text = member.mobile*/
 
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
@@ -239,6 +238,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 }
 
                 holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
+
                 holder.iconText.text = holder.tvName.text.substring(0, 1)
                 holder.itemView.isActivated = selectedItems[position, false]
                 applyIconAnimation(holder, position)
@@ -845,6 +845,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     override fun cancelDialog() {
         actionMode?.finish()
         changeRoleDialog?.dismiss()
+        setLocationDialog?.dismiss()
     }
 
 }

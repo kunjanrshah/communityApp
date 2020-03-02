@@ -52,8 +52,16 @@ class MyCustomDialog : Activity() {
                 val city = database.getCityDao().getcityName(cityId.toInt())
                 val LocationEnable = member.isLocationEnable
                 val str = getString(R.string.base_url_thumb) + member.profilePic
-                val mdate = Utility.changeDateFormat(member.birthDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
-                val age = Utility.getAge(mdate, Utility.dd_MM_yyyy)
+                var age = 34
+                try {
+                    if (!member.birthDate.isNullOrEmpty()) {
+                        val mdate = Utility.changeDateFormat(member.birthDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        age = Utility.getAge(mdate, Utility.dd_MM_yyyy)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
                 Log.e("Fname===", "" + member.firstName)
 
                 Coroutines.main {
@@ -62,9 +70,9 @@ class MyCustomDialog : Activity() {
                     tvArea.text = member.area
                     tvCity.text = city
 
-                    if (!member.companyName.isEmpty()) {
-                        tvWork.text = member.companyName
-                    }
+                    //   if (member.companyName.isNotEmpty()) {
+                    tvWork.text = "Mamaji graphics" //member.companyName
+                    //  }
                     Glide.with(this).load(str).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(ivProfile)
                     if (member.gender == "Male") {
                         ivGender.setBackgroundResource(R.drawable.male)

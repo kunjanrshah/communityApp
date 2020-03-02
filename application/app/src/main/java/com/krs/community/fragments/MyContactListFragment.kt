@@ -1,18 +1,20 @@
 package com.krs.community.fragments
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.ContactsContract
 import android.text.TextUtils
 import android.util.Log
-import android.util.SparseBooleanArray
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -20,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.FacebookSdk
@@ -29,17 +30,24 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.FamilyTreeListActivity
+import com.krs.community.activity.QRCodeActivity
+import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
-import com.krs.community.entities.RoomMember
-import com.krs.community.listeners.RoomMemberListener
+import com.krs.community.app.NotificationBadge
+import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
-import com.krs.community.repositories.ContactListRepository
-import com.krs.community.retrofit.ApiServices
+import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.*
-import com.krs.community.viewmodel.RoomMemberViewModel
-import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
-import kotlinx.coroutines.*
+import com.krs.community.viewmodel.ContactListViewModel
+import com.krs.community.viewmodel.ContactListViewModelFactory
+import com.krs.community.viewmodel.ProfileDetailViewModel
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
+import com.nightonke.boommenu.BoomMenuButton
+import com.orhanobut.dialogplus.DialogPlus
+import kotlinx.coroutines.Runnable
 import org.json.JSONArray
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -47,47 +55,34 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener {
+class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, LocationAdapter.SetLocationListner {
     override val kodein by kodein()
 
-    var rv_search: RecyclerView? = null
+    private var rvSearch: RecyclerView? = null
     var StoreContacts = ArrayList<String?>()
-    var arrayAdapter: ArrayAdapter<String?>? = null
     var cursor: Cursor? = null
     var name: String? = null
     var phonenumber: String? = null
-    var completableJob: CompletableJob? = null
-    var contactListRepository = ContactListRepository(ApiServices())
     private val RequestPermissionCode = 5
     private val lstMembers: MutableList<Member> = ArrayList()
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private lateinit var tvCount: TextView
-    private lateinit var selectedItems: SparseBooleanArray
-    private var currentSelectedIndex = -1
-    private var reverseAllAnimations = false
-    private var actionMode: ActionMode? = null
-    private lateinit var actionModeCallback: ActionModeCallback
-    private lateinit var roomMemberViewModel: RoomMemberViewModel
-
-    private lateinit var animationItemsIndex: SparseBooleanArray
-    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
-
+    private lateinit var contactListViewModel: ContactListViewModel
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+    private val contactListViewModelFactory: ContactListViewModelFactory by instance()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+    private var setLocationDialog: DialogPlus? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_mycontactlist, container, false)
         val mApp = FacebookSdk.getApplicationContext() as AppController
         mApp.FirebaseAnalytics(context, MyContactListFragment::class.java.simpleName)
 
-        roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
-        roomMemberViewModel.mRoomMemberListener= this
-
-        selectedItems = SparseBooleanArray()
-        animationItemsIndex = SparseBooleanArray()
-        actionModeCallback = ActionModeCallback()
-
-
-        rv_search = root.findViewById<View>(R.id.rv_search) as RecyclerView
-
+        profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+        contactListViewModel = ViewModelProvider(this, contactListViewModelFactory).get(ContactListViewModel::class.java)
+        contactListViewModel.filterListener = this
+        rvSearch = root.findViewById<View>(R.id.rv_search) as RecyclerView
+        AppController.mApplication.start = 0
 
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
@@ -95,10 +90,42 @@ class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.O
                 val member = lstMembers[position]
                 val holder = viewHolder as MyViewHolder
 
+                if (lstMembers.size > 0) {
+                    tvCount.visibility = View.VISIBLE
+                    tvCount.text = "Member ${lstMembers.size} found"
+                } else {
+                    tvCount.visibility = View.GONE
+                }
+
                 holder.tvName.text = member.firstName
                 holder.tvArea.text = member.area
-                holder.tvAddr.text = member.address
+                if (member.gender.equals("Male")) {
+                    holder.ivGender.setBackgroundResource(R.drawable.male)
+                } else {
+                    holder.ivGender.setBackgroundResource(R.drawable.female)
+                }
+                if (member.status == "2") {
+                    holder.ivVerify.visibility = View.VISIBLE
+                } else {
+                    holder.ivVerify.visibility = View.GONE
+                }
+                holder.badge.setNumber(member.membersCount)
 
+                Coroutines.io {
+                    if (!member.subCastId.isNullOrEmpty()) {
+                        val name = member.firstName + " " + contactListViewModel.getLastNameById(member.subCastId.toInt())
+                        Coroutines.main {
+                            viewHolder.tvName.text = name
+                        }
+                    }
+
+                    if (!member.cityId.isNullOrEmpty()) {
+                        val area = member.area + " " + contactListViewModel.getCityNamebyId(member.cityId)
+                        Coroutines.main {
+                            holder.tvArea.text = area
+                        }
+                    }
+                }
 
 
                 if (member.mobile.isEmpty()){
@@ -121,17 +148,74 @@ class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.O
                     viewHolder.tvEmail.text = member.emailAddress
                 }
 
+                if (member.headId == "0") {
+                    holder.tvRole.text = resources.getString(R.string.Family_Head)
+                } else {
+                    holder.tvRole.text = resources.getString(R.string.Member)
+                }
+                if (member.updatedDt.isNotEmpty()) {
+                    holder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                }
+
+                holder.boomMenuButton.clearBuilders()
+                for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
+                    val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                    builder?.listener {
+                        if (it == 0) {
+                            createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+                            Handler().post(Runnable {
+                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                            })
+                            Handler().postDelayed({
+                                Utility.hideSweetProgress()
+                            }, 5000)
+                        } else if (it == 1) {
+                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
+                            return@listener
+                            val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
+                            startActivity(intent)
+                        } else if (it == 2) {
+                            if (!member.mobile.isNullOrEmpty()) {
+                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                            } else {
+                                Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
+                            }
+                        } else if (it == 3) {
+                            val mBundle = Bundle()
+                            mBundle.putSerializable(getString(R.string.member), member)
+                            val intent: Intent = Intent(activity, QRCodeActivity::class.java)
+                            intent.putExtras(mBundle)
+                            startActivity(intent)
+                            Utility.fade(activity)
+                        } else if (it == 4) {
+                            shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
+                        } else if (it == 5) {
+                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity, member)
+                            adapter.setLocationListner(this@MyContactListFragment)
+                            setLocationDialog = DialogPlus.newDialog(context)
+                                    .setAdapter(adapter)
+                                    .setGravity(Gravity.BOTTOM)
+                                    .setCancelable(true)
+                                    .setExpanded(false, 600)
+                                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                    .create()
+                            setLocationDialog?.show()
+                        }
+                    }
+                    viewHolder.boomMenuButton.addBuilder(builder)
+                }
+
+                holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
+
 
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
-                viewHolder.itemView.isActivated = selectedItems.get(position, false)
 
-                applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
                 applyClickEvents(holder, position,member)
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
-                return MyViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.list_row_nonactives, viewGroup, false))
+                return MyViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.filter_result_list, viewGroup, false))
             }
 
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
@@ -140,35 +224,26 @@ class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.O
         }
 
         val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(activity!!.applicationContext)
-        rv_search?.layoutManager = mLayoutManager
-        rv_search?.itemAnimator = DefaultItemAnimator()
-
-
+        rvSearch?.layoutManager = mLayoutManager
+        rvSearch?.itemAnimator = DefaultItemAnimator()
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
         tvCount = header.findViewById(R.id.tv_count)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
-
-
-        adapter.setParallaxHeader(header, rv_search)
-        adapter.setContext(this)
-        rv_search?.adapter = adapter
-        EnableRuntimePermission()
+        val tvTitle = header.findViewById<TextView>(R.id.tv_title)
+        tvTitle.text = "My Contacts"
+        adapter.setParallaxHeader(header, rvSearch)
+        rvSearch?.adapter = adapter
+        enableRuntimePermission()
 
         return root
     }
 
-    private fun GetUserContactList() {
+    private fun userContactList() {
 
         Utility.startSweetProgress(context!!,getString(R.string.app_name),"Fetching Your Contacts")
-
-        GetContactsIntoArrayList()
-     /*   arrayAdapter = ArrayAdapter(
-                context!!, R.layout.contact_items_listview, R.id.textView, StoreContacts
-        )
-        listView!!.adapter = arrayAdapter*/
-
+        getContactsIntoArrayList()
         val jsonObject = JSONObject()
         jsonObject.put(context!!.getString(R.string.user_id), Guru.getString(context!!.getString(R.string.user_id), ""))
         jsonObject.put(context!!.getString(R.string.id), Guru.getString(context!!.getString(R.string.member_id), ""))
@@ -178,87 +253,54 @@ class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.O
         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
 
         Log.e("updated----",""+updated);
+        contactListViewModel.getContactList(updated)
 
-        getContactList(context!!,updated)
     }
 
-    fun getContactList(context: Context, jsonObject: JsonObject) {
-
-        completableJob = Job()
-        completableJob.let { thejob ->
-
-            CoroutineScope(Dispatchers.IO + thejob!!).launch {
-                try {
-                    val response = contactListRepository.getContactList(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-
-                            Utility.hideSweetProgress()
-
-                            Log.e("Frist Time", " success ")
-                            if (response.success) {
-                                if (response.members.size > 0) {
-                                    lstMembers.clear()
-
-                                    lstMembers.addAll(response.members)
-                                    adapter.notifyDataSetChanged()
-                                }
-
-                                Log.e("Frist Time", " success ")
-                                Log.e("members", ""+ response.members)
-
-                            }
-                        }
-                        return@launch
-                    }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        Utility.hideSweetProgress()
-
-                    }
-                } catch (e: NoInternetException) {
-
-                    e.message?.let {
-                        Utility.hideSweetProgress()
-                    }
-                } catch (e: Exception) {
-
-                    e.message?.let {
-                        Utility.hideSweetProgress()
-
-                        Log.e("Exception--", "" + e.toString());
-                    }
-                }
-                thejob.complete()
-            }
-        }
-    }
-    fun GetContactsIntoArrayList() {
+    private fun getContactsIntoArrayList() {
         cursor = activity!!.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
         while (cursor!!.moveToNext()) {
             name = cursor!!.getString(cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
-
             phonenumber = cursor!!.getString(cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-
-            var strNumber = phonenumber.toString().replace(" ","").replace("+91","");
-
-            if (strNumber.length ==10){
+            val strNumber = phonenumber.toString().replace(" ", "").replace("+91", "");
+            if (strNumber.length == 10) {
                 StoreContacts.add(strNumber)
             }
         }
         cursor!!.close()
     }
 
-    fun EnableRuntimePermission() {
+    override fun getMembers(response: SmartFilterResponse) {
+        Utility.hideSweetProgress()
+
+        Log.e("Frist Time", " success ")
+        if (response.success) {
+            if (response.members.size > 0) {
+                lstMembers.clear()
+                lstMembers.addAll(response.members)
+                adapter.notifyDataSetChanged()
+            }
+
+            Log.e("Frist Time", " success ")
+            Log.e("members", "" + response.members)
+
+        }
+
+    }
+
+    override suspend fun getFailure(message: String) {
+        Utility.hideSweetProgress()
+        rvSearch?.snackbar(message, Snackbar.LENGTH_SHORT)
+    }
+
+    private fun enableRuntimePermission() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if ((activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED || (activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED) {
                 val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CONTACTS)
                 requestPermissions(permissions, RequestPermissionCode)
             }else{
-
-                GetUserContactList()
-
+                userContactList()
             }
         }
     }
@@ -267,13 +309,10 @@ class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.O
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {RequestPermissionCode ->
         {
-            if (grantResults.size > 0) {
-                val ContactAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                if (ContactAccepted){
-
-                    GetUserContactList()
-
-
+            if (grantResults.isNotEmpty()) {
+                val Accepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                if (Accepted) {
+                    userContactList()
                 }else {
                     Snackbar.make(view!!, "Permission Canceled, Now your application cannot access CONTACTS.", Snackbar.LENGTH_LONG).show()
                 }
@@ -282,40 +321,37 @@ class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.O
         }
     }
 
-    override fun loadApi() {
 
-    }
     inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        var iconText: TextView = view.findViewById(R.id.icon_text)
-        var tvName: TextView = view.findViewById(R.id.tv_name)
-        var imgProfile: ImageView = view.findViewById(R.id.icon_profile)
-        var messageContainer: LinearLayout = view.findViewById(R.id.message_container)
-        var iconBack: RelativeLayout = view.findViewById(R.id.icon_back)
-        var iconFront: RelativeLayout = view.findViewById(R.id.icon_front)
-        var tvArea: TextView = view.findViewById(R.id.tv_area)
-        var tvMobile: TextView = view.findViewById(R.id.tv_mobile)
-        var tvEmail: TextView = view.findViewById(R.id.tv_email)
-        var tvAddr: TextView = view.findViewById(R.id.tv_addr)
-        var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
-        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
+        val boomMenuButton: BoomMenuButton = itemView.findViewById(R.id.bmb1)
+        val tvArea: TextView = itemView.findViewById(R.id.tv_area)
+        val tvRole: TextView = itemView.findViewById(R.id.tv_role)
+        val tvMobile: TextView = itemView.findViewById(R.id.tv_mobile)
+        val tvEmail: TextView = itemView.findViewById(R.id.tv_email)
+        var iconBack: RelativeLayout = itemView.findViewById(R.id.icon_back)
+        var iconImp: ImageView = itemView.findViewById(R.id.icon_star)
+        var iconFront: RelativeLayout = itemView.findViewById(R.id.icon_front)
+        var iconText: TextView = itemView.findViewById(R.id.icon_text)
+        var tvName: TextView = itemView.findViewById(R.id.tv_name)
+        var imgProfile: ImageView = itemView.findViewById(R.id.icon_profile)
+        var tvUpdate: TextView = itemView.findViewById(R.id.tv_update)
+        var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
+        var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {
 
-        holder.messageContainer.setOnClickListener { view: View? -> onMessageRowClicked(position) }
-        holder.messageContainer.setOnLongClickListener { view: View ->
-            onRowLongClicked(position)
-            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            true
-        }
         holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + holder.tvMobile.text
             intent.data = Uri.parse(str)
             startActivity(intent)
         }
+
         holder.imgProfile.setOnClickListener {
             if (member.profilePic.isNotEmpty()) {
                 holder.imgProfile.isClickable = true
@@ -354,39 +390,6 @@ class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.O
         }
     }
 
-    private fun applyIconAnimation(holder: MyViewHolder, position: Int) {
-        if (selectedItems[position, false]) {
-            holder.iconFront.visibility = View.GONE
-            resetIconYAxis(holder.iconBack)
-            holder.iconBack.visibility = View.VISIBLE
-            holder.iconBack.alpha = 1f
-            if (currentSelectedIndex == position) {
-                FlipAnimator.flipView(activity, holder.iconBack, holder.iconFront, true)
-                resetCurrentIndex()
-            }
-        } else {
-            holder.iconBack.visibility = View.GONE
-            resetIconYAxis(holder.iconFront)
-            holder.iconFront.visibility = View.VISIBLE
-            holder.iconFront.alpha = 1f
-            if (reverseAllAnimations && animationItemsIndex[position, false] || currentSelectedIndex == position) {
-                FlipAnimator.flipView(activity, holder.iconBack, holder.iconFront, false)
-                resetCurrentIndex()
-            }
-        }
-    }
-
-    private fun resetIconYAxis(view: View) {
-        if (view.rotationY != 0f) {
-            view.rotationY = 0f
-        }
-    }
-
-    private fun resetCurrentIndex() {
-        currentSelectedIndex = -1
-    }
-
-
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
@@ -395,155 +398,11 @@ class MyContactListFragment : Fragment(), KodeinAware, ParallaxRecyclerAdapter.O
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-        actionMode?.finish()
-        selectedItems.clear()
     }
 
-    private fun resetAnimationIndex() {
-        reverseAllAnimations = false
-        if (animationItemsIndex != null) {
-            animationItemsIndex.clear()
-        }
-    }
-
-    private fun getSelectedItems(): List<Int> {
-        val items: MutableList<Int> = ArrayList(selectedItems.size())
-        for (i in 0 until selectedItems.size()) {
-            items.add(selectedItems.keyAt(i))
-        }
-        return items
-    }
-
-    private fun toggleSelected(pos: Int) {
-        currentSelectedIndex = pos
-        if (selectedItems[pos, false]) {
-            selectedItems.delete(pos)
-            animationItemsIndex.delete(pos)
-        } else {
-            selectedItems.put(pos, true)
-            animationItemsIndex.put(pos, true)
-        }
-        adapter.notifyItemChanged(pos+ 1)
-    }
-
-    private fun toggleSelection(position: Int) {
-        toggleSelected(position)
-        val count = getSelectedItemCount()
-        if (count <= 0) {
-            actionMode?.finish()
-        } else {
-            actionMode?.title = count.toString()
-            actionMode?.invalidate()
-        }
-    }
-
-    private fun getSelectedItemCount(): Int {
-        return selectedItems.size()
-    }
-
-    private fun onMessageRowClicked(position: Int) {
-        if (getSelectedItemCount() > 0) {
-            enableActionMode(position)
-        }
-    }
-
-    private fun onRowLongClicked(position: Int) {
-        enableActionMode(position)
-    }
-
-    private fun enableActionMode(position: Int) {
-        if (actionMode == null) {
-            actionMode = activity?.startActionMode(actionModeCallback)!!
-        }
-        toggleSelection(position)
+    override fun cancelDialog() {
+        setLocationDialog?.dismiss()
     }
 
 
-    private inner class ActionModeCallback : ActionMode.Callback {
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(R.menu.menu_non_actives, menu)
-
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-            return false
-        }
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean =
-                when (item.itemId) {
-                    R.id.action_activate -> {
-                        val selectedItemPositions = getSelectedItems()
-                        SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText(getString(R.string.you_sure))
-                                .setContentText(getString(R.string.Approved) + " ${selectedItemPositions.size}" + " Profiles!")
-                                .setConfirmText(getString(R.string.YesApprovenon))
-                                .setCancelText(getString(R.string.no))
-                                .setConfirmClickListener {
-                                    it.dismiss()
-
-                                    val jsonObject = JSONObject()
-                                    jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-                                    jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                                    jsonObject.put("status", "1")
-
-                                    var Ids = ""
-                                    for (index in selectedItemPositions) {
-                                        Ids += lstMembers[index].id + ","
-                                    }
-
-                                    Ids = Ids.substring(0, Ids.length - 1)
-                                    jsonObject.put(getString(R.string.idList), Ids)
-                                    val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-
-                                    Utility.startSweetProgress(activity,getString(R.string.Restricted),getString(R.string.loading))
-                                    roomMemberViewModel.changeStatus(updated)
-                                }
-                                .setCancelClickListener {
-                                    it.dismiss()
-                                }
-                                .show()
-
-                        true
-                    }
-                    R.id.action_select_all -> {
-                        clearSelections()
-                        for (i in lstMembers.indices) {
-                            enableActionMode(i)
-                        }
-                        true
-                    }
-                    else -> false
-                }
-
-        override fun onDestroyActionMode(mode: ActionMode) {
-            clearSelections()
-            actionMode = null
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Utility.changeStatusbarColor(activity, R.color.colorBG, false)
-            }
-            rv_search?.post {
-                resetAnimationIndex()
-            }
-        }
-
-        fun clearSelections() {
-            reverseAllAnimations = true
-            selectedItems.clear()
-            adapter.notifyDataSetChanged()
-        }
-    }
-
-    override fun refreshList() {
-        adapter.notifyDataSetChanged()
-
-    }
-
-    override fun getRoomMembers(response: List<RoomMember>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun getFailure(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }

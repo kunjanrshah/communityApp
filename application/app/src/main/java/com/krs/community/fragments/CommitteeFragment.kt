@@ -130,7 +130,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 val member = lstMember[position]
                 val name = member.firstName
                 holder.tvName.text = name
-                holder.badge.setNumber(1)
+                holder.badge.setNumber(member.membersCount)
                 Coroutines.io {
                     val lastname = committeeViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
                     val localComm = committeeViewModel.getLocalCommunityName(Integer.parseInt(member.localCommunityId.toString()))
