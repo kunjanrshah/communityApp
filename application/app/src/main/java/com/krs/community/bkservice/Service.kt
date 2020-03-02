@@ -89,7 +89,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
             Log.i(TAG, "restarting foreground")
             try {
                 val notification = Notification()
-                startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_app))
+                startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.icon_app))
                 Log.i(TAG, "restarting foreground successful")
                 easyWayLocation?.startLocation()
                 // serviceIntent = Intent(this, CallReceiver::class.java)

@@ -47,7 +47,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
     private var which:Int=0
     var numberOfLines = 5
     private lateinit var loginMem:Member
-    private var pattern="dd-MM-yyyy"
+
     override val kodein by kodein()
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -98,7 +98,6 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.txtMdate.isEnabled=false
             binding.edtLocalAddr.isFocusable=false
         }
-
 
         if (member.role.equals(getString(R.string.LOCAL_ADMIN))) {
             binding.edtRole.text = getString(R.string.localAdmin)
@@ -153,6 +152,9 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             }
         }
 
+        if (!member.marriageDate.isNullOrEmpty()) {
+            binding.txtMdate.text = Utility.ChangedateFormat(member.marriageDate)
+        }
         if(!member.maritalStatus.isNullOrEmpty()){
             binding.spMarital.setText(member.maritalStatus)
             if(member.maritalStatus.equals("Married")){
@@ -176,40 +178,48 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             profileDetailViewModel.selectedNativeId = Integer.parseInt(member.nativePlaceId)
         }
         binding.spNative.setOnItemClickListener {
-            profileDetailViewModel.selectedNativeId = profileDetailViewModel.lstNativeId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedNativeId = profileDetailViewModel.getNativeIdByName(binding.spNative.text.toString())
+            }
         }
 
         if(!member.educationId.isNullOrEmpty()){
             profileDetailViewModel.selectedEducationId = Integer.parseInt(member.educationId)
         }
         binding.spEducation.setOnItemClickListener {
-            profileDetailViewModel.selectedEducationId = profileDetailViewModel.lstEducationId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedEducationId = profileDetailViewModel.getEducationIdByName(binding.spEducation.text.toString())
+            }
         }
 
         if(!member.currentActivityId.isNullOrEmpty()){
             profileDetailViewModel.selectedActivityId = Integer.parseInt(member.currentActivityId)
         }
         binding.spCurrentActivity.setOnItemClickListener {
-            profileDetailViewModel.selectedActivityId = profileDetailViewModel.lstActivityId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedActivityId = profileDetailViewModel.getActivityIdByName(binding.spCurrentActivity.text.toString())
+            }
         }
 
         if(!member.gotraId.isNullOrEmpty()){
             profileDetailViewModel.selectedGotraId = Integer.parseInt(member.gotraId)
         }
         binding.spGotra.setOnItemClickListener {
-            profileDetailViewModel.selectedGotraId = profileDetailViewModel.lstGotraId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedGotraId = profileDetailViewModel.getGotraIdByName(binding.spGotra.text.toString())
+            }
         }
-        if(!member.marriageDate.isNullOrEmpty()){
-            binding.txtMdate.text = Utility.ChangedateFormat(member.marriageDate)
-        }
+
 
         if (!member.expireDate.isNullOrBlank()) {
             binding.txtExpire.text = Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
         }
 
         if (member.isExpired.equals("1")) {
+            binding.chkExpired.isChecked = true
             binding.txtExpire.text= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
         } else {
+            binding.chkExpired.isChecked = false
             binding.txtExpire.text = ""
         }
 
@@ -234,15 +244,13 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             }
         }
 
-
-
         if (!member.birthDate.isNullOrBlank()) {
             val date= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
 
             if(binding.chkExpired.isChecked){
                 if(!binding.txtExpire.text.isNullOrEmpty()){
-                  val date1=  Utility.StringToDate(date,pattern)
-                  val date2=  Utility.StringToDate(binding.txtExpire.text.toString(),pattern)
+                    val date1 = Utility.StringToDate(date, Utility.dd_MM_yyyy)
+                    val date2 = Utility.StringToDate(binding.txtExpire.text.toString(), Utility.dd_MM_yyyy)
                   val age=Utility.getDiffYears(date1,date2)
                   binding.txtBdate.text =date+"($age)"
                 }else{
@@ -327,48 +335,37 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
     }
 
     private fun getMasterList() = Coroutines.main {
-        profileDetailViewModel.lstNativeName.await().observe(this, Observer {
+        profileDetailViewModel.lstNativeName.await().observe(viewLifecycleOwner, Observer {
             binding.spNative.setItems(it.toTypedArray())
             binding.spNative.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.nativeIds.await().observe(this, Observer {
-            profileDetailViewModel.lstNativeId = it
-        })
-        profileDetailViewModel.nativeName.await().observe(this, Observer {
+
+        profileDetailViewModel.nativeName.await().observe(viewLifecycleOwner, Observer {
             binding.spNative.setText(it)
         })
 
-        profileDetailViewModel.lstEducationName.await().observe(this, Observer {
+        profileDetailViewModel.lstEducationName.await().observe(viewLifecycleOwner, Observer {
             binding.spEducation.setItems(it.toTypedArray())
             binding.spEducation.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.educationName.await().observe(this, Observer {
+        profileDetailViewModel.educationName.await().observe(viewLifecycleOwner, Observer {
             binding.spEducation.setText(it)
         })
-        profileDetailViewModel.educationIds.await().observe(this, Observer {
-            profileDetailViewModel.lstEducationId = it
-        })
 
-        profileDetailViewModel.lstActivityName.await().observe(this, Observer {
+        profileDetailViewModel.lstActivityName.await().observe(viewLifecycleOwner, Observer {
             binding.spCurrentActivity.setItems(it.toTypedArray())
             binding.spCurrentActivity.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.activityName.await().observe(this, Observer {
+        profileDetailViewModel.activityName.await().observe(viewLifecycleOwner, Observer {
             binding.spCurrentActivity.setText(it)
         })
-        profileDetailViewModel.activityIds.await().observe(this, Observer {
-            profileDetailViewModel.lstActivityId = it
-        })
 
-        profileDetailViewModel.lstGotraName.await().observe(this, Observer {
+        profileDetailViewModel.lstGotraName.await().observe(viewLifecycleOwner, Observer {
             binding.spGotra.setItems(it.toTypedArray())
             binding.spGotra.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.gotraName.await().observe(this, Observer {
+        profileDetailViewModel.gotraName.await().observe(viewLifecycleOwner, Observer {
             binding.spGotra.setText(it)
-        })
-        profileDetailViewModel.gotraIds.await().observe(this, Observer {
-            profileDetailViewModel.lstGotraId = it
         })
 
         val lstBlood =  activity!!.resources.getStringArray(R.array.bloodGroup)
@@ -385,7 +382,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         val day: Int = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         val month: Int = Calendar.getInstance().get(Calendar.MONTH)
 
-        val format = SimpleDateFormat(pattern)
+        val format = SimpleDateFormat(Utility.dd_MM_yyyy)
         var day1: Int = day
         var month1: Int = month
         var year1: Int = year
@@ -430,8 +427,8 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
 
         if(which==1){
             if(binding.txtExpire.text.isNotEmpty()){
-                val date1=  Utility.StringToDate(date,pattern)
-                val date2=  Utility.StringToDate(binding.txtExpire.text.toString(),pattern)
+                val date1 = Utility.StringToDate(date, Utility.dd_MM_yyyy)
+                val date2 = Utility.StringToDate(binding.txtExpire.text.toString(), Utility.dd_MM_yyyy)
                 val age=Utility.getDiffYears(date1,date2)
                 binding.txtBdate.text =date+"($age)"
             }else{
@@ -444,8 +441,8 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             if(!binding.txtBdate.text.toString().isEmpty()){
                 var mydate=binding.txtBdate.text.toString()
                 mydate=mydate.substringBefore("(")
-                val date1=  Utility.StringToDate(mydate,pattern)
-                val date2=  Utility.StringToDate(date,pattern)
+                val date1 = Utility.StringToDate(mydate, Utility.dd_MM_yyyy)
+                val date2 = Utility.StringToDate(date, Utility.dd_MM_yyyy)
                 val age=Utility.getDiffYears(date1,date2)
                 binding.txtBdate.text =mydate+"($age)"
             }

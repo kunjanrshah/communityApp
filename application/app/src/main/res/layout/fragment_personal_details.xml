@@ -58,13 +58,8 @@
                                 android:layout_gravity="center"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:text="@string/blood_donorDetail" />
-
                         </LinearLayout>
-
-
                     </LinearLayout>
-
-
 
                     <LinearLayout
                         android:layout_width="match_parent"

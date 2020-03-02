@@ -37,7 +37,6 @@
                         android:textColor="@color/colorPrimary"
                           />
 
-
                     <CheckBox
                         android:id="@+id/chk_interested"
                         android:layout_width="wrap_content"
@@ -48,9 +47,7 @@
                         android:text="@string/interested"
                         android:textSize="14sp" />
 
-
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -69,7 +66,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_color_gray"
-                        android:inputType="textMultiLine"
+                        android:inputType="textMultiLine|textCapWords"
                         android:lines="3"
                         android:maxLines="3"
                         android:padding="5dp"
@@ -102,6 +99,7 @@
                         android:layout_height="40dp"
                         android:paddingLeft="10dp"
                         android:textSize="16sp"
+                        android:inputType="textCapWords"
                         android:fontFamily="@font/montserrat_regular"
                         android:background="@drawable/border_color_gray"
                         android:singleLine="true" />
@@ -174,6 +172,7 @@
                             android:layout_height="40dp"
                             android:paddingLeft="5dp"
                             android:textSize="16sp"
+                            android:inputType="textCapWords"
                             android:fontFamily="@font/montserrat_regular"
                             android:background="@drawable/border_color_gray"
                             android:singleLine="true" />
@@ -200,6 +199,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:paddingLeft="10dp"
+                        android:inputType="textCapWords"
                         android:textSize="16sp"
                         android:fontFamily="@font/montserrat_regular"
                         android:background="@drawable/border_color_gray"
@@ -228,6 +228,7 @@
                         android:layout_height="40dp"
                         android:textSize="16sp"
                         android:paddingLeft="10dp"
+                        android:inputType="textCapWords"
                         android:fontFamily="@font/montserrat_regular"
                         android:background="@drawable/border_color_gray"
                         android:singleLine="true" />
@@ -267,6 +268,7 @@
                                 android:layout_height="40dp"
                                 android:gravity="center"
                                 android:textSize="18sp"
+                                android:maxLength="8"
                                 android:inputType="number"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:background="@drawable/border_color_gray"
@@ -313,6 +315,7 @@
                                 android:layout_height="40dp"
                                 android:gravity="center"
                                 android:textSize="18sp"
+                                android:maxLength="8"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:background="@drawable/border_color_gray"
                                 android:singleLine="true" />

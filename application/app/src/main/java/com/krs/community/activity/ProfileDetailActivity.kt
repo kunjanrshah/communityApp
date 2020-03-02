@@ -1,12 +1,8 @@
 package com.krs.community.activity
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.location.Location
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -67,7 +63,6 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.io.File
 
-
 class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack, ImageUploadListener {
 
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
@@ -83,21 +78,14 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private var scanId: String? = null
     private var userId: String? = null
     private var isStopService = false
-    private var mNetworkReceiver: BroadcastReceiver? = null
 
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mNetworkReceiver = NetworkChangeReceiver()
-
-
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@ProfileDetailActivity, ProfileDetailActivity.javaClass.simpleName)
-
-
-        registerNetworkBroadcastForNougat()
 
         getLocationDetail = GetLocationDetail(this, this)
         request = LocationRequest()
@@ -155,7 +143,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             binding.switchLocation.isOn = true
             binding.switchLocation.labelOn = "ON"
             binding.tvDistance.text = getString(R.string.Finding)
-            startLocationService()
+            val mem_id = Guru.getString(getString(R.string.member_id), "")
+            if (member?.id == mem_id) {
+                startLocationService()
+                Utility.displaySnackBarWithBottomMargin(binding.viewpager, "You are sharing your location")
+            }
         } else {
             binding.switchLocation.isOn = false
             binding.switchLocation.labelOff = "OFF"
@@ -280,15 +272,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     }
 
-    private fun registerNetworkBroadcastForNougat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-    }
-
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -305,37 +288,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         retryButton.setOnClickListener { v: View? -> onBackPressed() }
     }
 
-    private fun unregisterNetworkBroadcastForNougat() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterNetworkBroadcastForNougat()
-    }
-
-    inner class NetworkChangeReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            try {
-                if (NetworkChecker.isNetworkConnected(context)) {
-
-                } else {
-                }
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-        }
-
-    }
 
     private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)
@@ -346,7 +298,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
         startActivity(intent)
         fade(this)
-
     }
 
     private fun startLocationService() {
@@ -362,7 +313,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     }
                     setDistance()
                 } else {
-
                     if (checkFineLocationPermission(this)) {
                         easyWayLocation.startLocation() //calculateDistance()
                     } else {

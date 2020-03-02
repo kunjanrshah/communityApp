@@ -177,6 +177,8 @@
                 android:singleLine="true"
                 android:layout_marginTop="10dp"
                 android:textSize="14sp"
+                android:digits="@string/restrict_space"
+                android:inputType="textFilter|textCapWords"
                 android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
                 android:hint="@string/WifeDetails"

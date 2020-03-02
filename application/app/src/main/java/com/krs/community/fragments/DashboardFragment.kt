@@ -23,6 +23,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +39,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.FavoriteProfileActivity
+import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.activity.RegisterActivty
 import com.krs.community.app.AppController
@@ -46,6 +48,7 @@ import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Utility
+import com.krs.community.utils.Utility.fade
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
@@ -184,7 +187,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             }
         }
     }
-
 
     private lateinit var scrollListener: OnScrollListener
     private fun setRecyclerViewScrollListener() {
@@ -351,6 +353,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         var tvName: TextView = v.findViewById(R.id.tv_name)
         var iconText: TextView = v.findViewById(R.id.icon_text)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile)
+        var cardViewRecentList: CardView = v.findViewById(R.id.card_view_recent_list)
     }
 
     inner class SharedProfileAdapter internal constructor(private val list: ArrayList<Member>) : RecyclerView.Adapter<SharedLocationViewHolder>() {
@@ -364,6 +367,14 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             holder.tvName.text = member.firstName
             holder.iconText.text = member.firstName.substring(0, 1)
             applyProfilePicture(holder, member)
+
+            holder.cardViewRecentList.setOnClickListener {
+                Utility.startSweetProgress(activity, getString(R.string.MoveProfile), getString(R.string.loading))
+                val intent = Intent(activity, ProfileDetailActivity::class.java)
+                intent.putExtra(getString(R.string.member), member)
+                startActivity(intent)
+                fade(activity)
+            }
         }
 
         override fun getItemCount(): Int {
@@ -372,6 +383,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
         @SuppressLint("CheckResult")
         private fun applyProfilePicture(holder: SharedLocationViewHolder, member: Member) {
+
             if (!TextUtils.isEmpty(member.profilePic)) {
                 holder.imgProfile.isClickable = true
                 val url = resources.getString(R.string.base_url_thumb) + member.profilePic
@@ -390,6 +402,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
                 holder.iconText.visibility = View.VISIBLE
             }
+
         }
     }
 

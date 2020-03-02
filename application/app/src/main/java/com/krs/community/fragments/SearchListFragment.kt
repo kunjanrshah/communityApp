@@ -468,7 +468,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
             }
             if (lstMembers.size > 0) {
-                tvRecords.text = getString(R.string.RecordList) + response.totalRecords
+                tvRecords.text = getString(R.string.RecordList) + " " + response.totalRecords
                 tvRecords.visibility = View.VISIBLE
                 llLabel.visibility = View.GONE
                 ivExport.visibility = View.VISIBLE

@@ -1,10 +1,7 @@
 package com.krs.community.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -28,8 +25,6 @@ import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
-import com.krs.community.bkservice.ProcessMainClass;
-import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver;
 import com.krs.community.fragments.FamilyDetailActivity;
 import com.krs.community.utils.Utility;
 import com.wessam.library.NetworkChecker;
@@ -45,7 +40,6 @@ public class SplashActivity extends AppCompatActivity {
     private DisplayMetrics dm;
     private boolean isLogin = false;
     private boolean isRegister = false;
-    private static final int PERMISSION_REQUEST_READ_PHONE_STATE = 1;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -58,16 +52,9 @@ public class SplashActivity extends AppCompatActivity {
         }else{
             setNoInternetLayout();
         }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE};
-                requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE);
-            }
-        }
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(SplashActivity.this,SplashActivity.class.getSimpleName());
-
     }
 
     private void setNoInternetLayout(){
@@ -84,7 +71,9 @@ public class SplashActivity extends AppCompatActivity {
         imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
-            setScreenLayout();
+            if (NetworkChecker.isNetworkConnected(this)) {
+                setScreenLayout();
+            }
         });
     }
 
@@ -198,15 +187,6 @@ public class SplashActivity extends AppCompatActivity {
                 splanguage.setSelection(1);
             }
         }
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
-        } else {
-            ProcessMainClass bck = new ProcessMainClass();
-            bck.launchService(getApplicationContext());
-        }
-
     }
 
     @Override

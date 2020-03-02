@@ -101,17 +101,13 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             Guru.putString(getString(R.string.hash_key), hashkey)
             Log.e(TAG, "hashcode: " + hashkey)
             setScreenLayout()
-
         } else {
             setNoInternetLayout()
         }
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
-
-
     }
-
 
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
@@ -126,7 +122,11 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         val imageView = findViewById<AppCompatImageView>(R.id.no_internet_image)
         imageView.animation = anim
         val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
-        retryButton.setOnClickListener { v: View? -> setScreenLayout() }
+        retryButton.setOnClickListener { v: View? ->
+            if (isNetworkConnected(this)) {
+                setScreenLayout()
+            }
+        }
     }
 
     fun setScreenLayout() {

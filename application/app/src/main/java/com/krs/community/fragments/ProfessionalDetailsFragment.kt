@@ -155,7 +155,6 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                     .show()
         }
 
-
         if (!member.workDetails.isNullOrEmpty()) {
             binding.edtDetail.setText(member.workDetails)
         }
@@ -196,14 +195,20 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         }
 
         binding.spMainCat.setOnItemClickListener {
-            profileDetailViewModel.selectedBusinessCategoryId = profileDetailViewModel.lstBusinessCategoryId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedBusinessCategoryId = profileDetailViewModel.getCategoryIdByName(binding.spMainCat.text.toString())
+            }
         }
 
         binding.spSubCat.setOnItemClickListener {
-            profileDetailViewModel.selectedBusinessSubCategoryId = profileDetailViewModel.lstBusinessSubCategoryId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedBusinessSubCategoryId = profileDetailViewModel.getSubCategoryIdByName(binding.spSubCat.text.toString())
+            }
         }
         binding.spOccupation.setOnItemClickListener {
-            profileDetailViewModel.selectedOccupationId = profileDetailViewModel.lstOccupationId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedOccupationId = profileDetailViewModel.getOccupationIdByName(binding.spOccupation.text.toString())
+            }
         }
 
         binding.edtComName.setText(member.companyName)
@@ -287,10 +292,8 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         }
     }
 
-
     fun getSaveData(jsonObject: JSONObject) {
         try {
-            jsonObject.put(getString(R.string.business_logo), "")
             jsonObject.put(getString(R.string.company_name), binding.edtComName.text.trim())
             jsonObject.put(getString(R.string.business_category_id), profileDetailViewModel.selectedBusinessCategoryId)
             jsonObject.put(getString(R.string.business_sub_category_id), profileDetailViewModel.selectedBusinessSubCategoryId)
@@ -308,32 +311,21 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
             binding.spMainCat.setItems(it.toTypedArray())
             binding.spMainCat.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.businessCategoryIds.await().observe(viewLifecycleOwner, Observer {
-            profileDetailViewModel.lstBusinessCategoryId = it
-        })
         profileDetailViewModel.businessCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spMainCat.setText(it)
         })
-
 
         profileDetailViewModel.lstBusinessSubCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spSubCat.setItems(it.toTypedArray())
             binding.spSubCat.setExpandTint(R.color.black)
         })
-        profileDetailViewModel.businessSubCategoryIds.await().observe(viewLifecycleOwner, Observer {
-            profileDetailViewModel.lstBusinessSubCategoryId = it
-        })
         profileDetailViewModel.businessSubCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spSubCat.setText(it)
         })
 
-
         profileDetailViewModel.lstOccupationName.await().observe(viewLifecycleOwner, Observer {
             binding.spOccupation.setItems(it.toTypedArray())
             binding.spOccupation.setExpandTint(R.color.black)
-        })
-        profileDetailViewModel.occupationIds.await().observe(viewLifecycleOwner, Observer {
-            profileDetailViewModel.lstOccupationId = it
         })
         profileDetailViewModel.occupationName.await().observe(viewLifecycleOwner, Observer {
             binding.spOccupation.setText(it)
@@ -342,7 +334,6 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     }
 
     override fun getScanResult(response: SmartFilterResponse) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {

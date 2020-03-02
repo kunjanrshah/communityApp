@@ -311,6 +311,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textSize="16sp"
             android:layout_marginBottom="60dp"
             android:text="@string/do_you_have_an_account"
             android:textColor="@color/dark_color_primary" />

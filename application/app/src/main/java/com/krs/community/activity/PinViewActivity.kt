@@ -1,12 +1,7 @@
 
 package com.krs.community.activity
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AlphaAnimation
@@ -43,7 +38,7 @@ import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
-import com.wessam.library.NetworkChecker
+import com.wessam.library.NetworkChecker.isNetworkConnected
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -57,7 +52,10 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     override val kodein by kodein()
-    private var mNetworkReceiver: BroadcastReceiver? = null
+
+    companion object {
+        private const val ARG_CURRENT_PIN = "current_pin"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,11 +63,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         familyDetailViewModel.mILoginListener=this
         familyDetailViewModel.innerLogoutListner=this
 
-        mNetworkReceiver = NetworkChangeReceiver()
-
-        registerNetworkBroadcastForNougat()
-
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             setScreenLayout()
         } else {
             setNoInternetLayout()
@@ -77,21 +71,6 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@PinViewActivity, PinViewActivity.javaClass.simpleName)
-
-    }
-
-    inner class NetworkChangeReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            try {
-                if (NetworkChecker.isNetworkConnected(context)) {
-                    setScreenLayout()
-                } else {
-                    setNoInternetLayout()
-                }
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 
     private fun setNoInternetLayout() {
@@ -107,8 +86,13 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         val imageView = findViewById<AppCompatImageView>(R.id.no_internet_image)
         imageView.animation = anim
         val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
-        retryButton.setOnClickListener { v: View? -> setScreenLayout() }
+        retryButton.setOnClickListener { v: View? ->
+            if (isNetworkConnected(this)) {
+                setScreenLayout()
+            }
+        }
     }
+
     private fun setScreenLayout() {
         setContentView(R.layout.activity_pinview)
         relative=findViewById(R.id.ll_parent)
@@ -118,13 +102,12 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         if (!member.profilePic.isEmpty()) {
             try {
                 val str = resources.getString(R.string.base_url_thumb) + member.profilePic
-                // String str="https://muslimghanchisamaj.in/uploads/users/thumb/6338dfa3c3f1c07515fcb2503e242975.jpg";
                 Glide.with(this).load(str).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(imgView)
             } catch (e: Exception) {
                 e.message
             }
         }
-        //member.profilePassword="123456"
+
         val pass = member.profilePassword
         var correctPattern: IntArray? = null
         if (pass != null && !pass.isEmpty()) {
@@ -166,10 +149,14 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         mPinView.title = getString(R.string.EnterThePin)
         mPinView.setAuthenticationListener(object : AuthenticationListener {
             override fun onAuthenticationSuccessful() {
-                if (member.loginStatus == 1) {
-                    getMemberLogout()
+                if (isNetworkConnected(this@PinViewActivity)) {
+                    if (member.loginStatus == 1) {
+                        getMemberLogout()
+                    } else {
+                        getMemberLogin()
+                    }
                 } else {
-                    getMemberLogin()
+                    mPinView.snackbar(getString(R.string.check_network), Snackbar.LENGTH_SHORT)
                 }
             }
             override fun onAuthenticationFailed() {
@@ -177,27 +164,6 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         })
     }
 
-    private fun registerNetworkBroadcastForNougat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-    }
-
-    private fun unregisterNetworkBroadcastForNougat() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
     private fun getMemberLogin(){
         startSweetProgress(this,getString(R.string.enter),getString(R.string.loading))
         val jsonObject= JSONObject()
@@ -273,14 +239,4 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         super.onRestoreInstanceState(savedInstanceState)
         mPinView.currentTypedPin = savedInstanceState.getIntArray(ARG_CURRENT_PIN)
     }
-
-    companion object {
-        private const val ARG_CURRENT_PIN = "current_pin"
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterNetworkBroadcastForNougat()
-    }
-
 }

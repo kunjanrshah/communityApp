@@ -24,9 +24,6 @@ import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppController
 import com.krs.community.utils.Utility
-import com.krs.community.utils.Utility.checkPhoneCallPermission
-import com.krs.community.utils.Utility.requestCallPermission
-
 
 class ContactUsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -47,13 +44,13 @@ class ContactUsFragment : Fragment() {
 
         val imgCall = layout.findViewById<ImageView>(R.id.img_call)
         imgCall.setOnClickListener { v: View? ->
-            if (checkPhoneCallPermission(activity)) {
+            //if (checkPhoneCallPermission(activity)) {
                 val intent = Intent(Intent.ACTION_DIAL)
                 intent.data = Uri.parse("tel:" + getString(R.string.contact_number))
                 startActivity(intent)
-            } else {
-                requestCallPermission(activity as AppCompatActivity?)
-            }
+            /*} else {
+                requestPhoneCallPermission(activity as AppCompatActivity?)
+            }*/
         }
 
         val imgFb = layout.findViewById<ImageView>(R.id.img_fb)

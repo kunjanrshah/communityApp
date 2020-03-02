@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.krs.community.bkservice.Service
 import com.krs.community.dao.*
 import com.krs.community.entities.*
 

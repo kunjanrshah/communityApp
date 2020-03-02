@@ -91,7 +91,9 @@ public class FamilyTreeListActivity extends AppCompatActivity {
         imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
-            setScreenLayout();
+            if (NetworkChecker.isNetworkConnected(this)) {
+                setScreenLayout();
+            }
         });
     }
     private void setScreenLayout(){

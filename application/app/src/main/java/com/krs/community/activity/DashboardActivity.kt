@@ -1,10 +1,11 @@
 package com.krs.community.activity
 
-import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -43,7 +44,6 @@ import com.krs.community.listeners.UpdateVersionListener
 import com.krs.community.model.Member
 import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.Coroutines
-import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
@@ -51,7 +51,6 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
-import kotlinx.android.synthetic.main.jrspinner_layout_dialog.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -61,7 +60,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
     private val factory: DashboardViewModelFactory by instance()
-    private lateinit var easyWayLocation: EasyWayLocation
+    private var easyWayLocation: EasyWayLocation? = null
     private lateinit var request: LocationRequest
     private var menu: Menu? = null
 
@@ -75,7 +74,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
-    private val PERMISSION_REQUEST_READ_PHONE_STATE_TELEPHONE = 2
 
     override val kodein by kodein()
     @RequiresApi(Build.VERSION_CODES.M)
@@ -86,12 +84,19 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
         dashboardViewModel.listener = this
 
-        // val intent = Intent(this@DashboardActivity, MyCustomDialog::class.java)
-        // this@DashboardActivity.startActivity(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkReadCallLogPermission(this)) {
+                requestReadCallLogPermission(this)
+            }
+
+            if (checkReadPhoneStatePermission(this)) {
+                requestReadPhoneStatePermission(this)
+            }
+
+        }
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
-
 
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
@@ -176,33 +181,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         })
 
-        getLocationDetail = GetLocationDetail(this, this)
-        request = LocationRequest()
-        request.interval = INTERVAL
-        request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        easyWayLocation = EasyWayLocation(this, request, true, this)
-
-        if (checkFineLocationPermission(this)) {
-            easyWayLocation.startLocation() //calculateDistance()
-        } else {
-            requestFineLocationPermission(this)
-        }
         if (isOnline(this)) {
             getMasterList()
         }
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
-
-
-            if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
-                val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
-                requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE)
-            }
-
-        if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
-            val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
-            requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE_TELEPHONE)
-        }
 
         /*var JsonObj=JSONObject()
         JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
@@ -212,25 +195,32 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         dashboardViewModel.getUpdatedVersion(updated)*/
     }
 
-
-
-
     override fun onResume() {
         super.onResume()
+        loadProfile()
+        hideSweetProgress()
+
         if (checkFineLocationPermission(this)) {
-            easyWayLocation.startLocation() //calculateDistance()
+            val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                getLocationDetail = GetLocationDetail(this, this)
+                request = LocationRequest()
+                request.interval = INTERVAL
+                request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+                easyWayLocation = EasyWayLocation(this, request, true, this)
+            }
+            easyWayLocation?.startLocation() //calculateDistance()
+
         } else {
             requestFineLocationPermission(this)
         }
-        loadProfile()
-        hideSweetProgress()
     }
 
 
     override fun onPause() {
         super.onPause()
         if (checkFineLocationPermission(this)) {
-            easyWayLocation.endUpdates()
+            easyWayLocation?.endUpdates()
         } else {
             requestFineLocationPermission(this)
         }
@@ -245,9 +235,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
-            easyWayLocation.onActivityResult(resultCode)
-
-
+            easyWayLocation?.onActivityResult(resultCode)
         }
 
     }
@@ -256,15 +244,14 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == FINE_LOCATION_REQUEST) {
-            easyWayLocation.startLocation()
-
+            easyWayLocation?.startLocation()
         }else{
-            when (requestCode) {PERMISSION_REQUEST_READ_PHONE_STATE -> if (grantResults.size > 0) {
+            when (requestCode) {
+                PERMISSION_REQUEST_READ_PHONE_STATE ->
+                    if (grantResults.size > 0) {
                     val CallAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    if (CallAccepted)
-                    else {
+                        if (!CallAccepted) {
                         binding.containerBody.snackbar("Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG)
-
                     }
                 }
             }

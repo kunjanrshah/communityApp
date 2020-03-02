@@ -35,13 +35,11 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-
     suspend fun getOccupationNames(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getOccupationDao().getOccupations()
         }
     }
-
 
     suspend fun getOccupationIdByName(name: String): Int {
         return withContext(Dispatchers.IO) {
@@ -49,16 +47,9 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-
     suspend fun getOccupationById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getOccupationDao().getOccupationById(id)
-        }
-    }
-
-    suspend fun getOccupationId(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getOccupationDao().getOccupationIds()
         }
     }
 
@@ -80,14 +71,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-
-
-    suspend fun getBusinessSubCategoryIds(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getBusinessSubCategoryDao().getBusinessSubCategoryIds()
-        }
-    }
-
     suspend fun getBusinessCategoryNames(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getBusinessCategoryDao().getBusinessCategorys()
@@ -106,18 +89,11 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun getBusinessCategoryIds(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getBusinessCategoryDao().getBusinessCategoryIds()
-        }
-    }
-
     suspend fun getGotraNames(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getGotraDao().getGotra()
         }
     }
-
 
     suspend fun getGotraIdByName(name: String): Int {
         return withContext(Dispatchers.IO) {
@@ -128,12 +104,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
     suspend fun getGotraById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getGotraDao().getGotraById(id)
-        }
-    }
-
-    suspend fun getGotraIds(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getGotraDao().getGotraIds()
         }
     }
 
@@ -156,12 +126,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun getActivityIds(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getCurrentActivityDao().getCurrentActivityIds()
-        }
-    }
-
     suspend fun getEducationNames(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getEducationDao().getEducations()
@@ -178,12 +142,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
     suspend fun getEducationById(id: Int): LiveData<String> {
         return withContext(Dispatchers.IO) {
             db.getEducationDao().getEducationById(id)
-        }
-    }
-
-    suspend fun getEducationIds(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getEducationDao().getEducationIds()
         }
     }
 
@@ -205,14 +163,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-
-
-    suspend fun getNativeIds(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getNativeDao().getNativeIds()
-        }
-    }
-
     suspend fun getRelations(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getRelationsDao().getRelations()
@@ -225,13 +175,11 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun getRelationIds(): LiveData<List<Int>> {
+    suspend fun getIdByRelation(name: String): Int {
         return withContext(Dispatchers.IO) {
-            db.getRelationsDao().getRelationIds()
+            db.getRelationsDao().getIdByRelation(name)
         }
     }
-
-
 
     suspend fun getIdByLastName(name: String): Int {
         return withContext(Dispatchers.IO) {
@@ -247,12 +195,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
     suspend fun getLastName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getLastNameDao().getLastName()
-        }
-    }
-
-    suspend fun getLastNameIds(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getLastNameDao().getLastNameIds()
         }
     }
 
@@ -280,15 +222,11 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-
-
     suspend fun getListCityName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getcityNames()
         }
     }
-
-
 
     suspend fun searchFilter(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest{
@@ -309,7 +247,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-
     suspend fun getstateIdByName(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getStatesDao().getstateIdByName(name)
@@ -324,12 +261,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
     suspend fun getStateName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getStatesDao().getStateNames()
-        }
-    }
-
-    suspend fun getStateIds(): LiveData<List<Int>> {
-        return withContext(Dispatchers.IO) {
-            db.getStatesDao().getStateIds()
         }
     }
 }

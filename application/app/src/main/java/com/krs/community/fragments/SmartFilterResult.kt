@@ -123,7 +123,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
                 if (lstMembers.size > 0) {
                     tvCount.visibility = View.VISIBLE
-                    tvCount.text = "Member ${lstMembers.size} found"
+                    tvCount.text = "${lstMembers.size} members found"
                 } else {
                     tvCount.visibility = View.GONE
                 }

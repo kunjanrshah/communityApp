@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
@@ -24,6 +23,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
@@ -57,7 +57,6 @@ import java.io.File
 
 class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware, ImageUploadListener {
 
-    private var str_profile_hash = ""
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
@@ -118,7 +117,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         val imageView = findViewById<AppCompatImageView>(R.id.no_internet_image)
         imageView.animation = anim
         val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
-        retryButton.setOnClickListener { v: View? -> setScreenLayout() }
+        retryButton.setOnClickListener { v: View? ->
+            if (NetworkChecker.isNetworkConnected(this)) {
+                setScreenLayout()
+            }
+        }
     }
     @SuppressLint("NewApi")
     fun setScreenLayout() {
@@ -175,10 +178,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             binding.imgCancel.setOnClickListener {
                 binding.imgProfile.setImageResource(R.drawable.man_reg)
                 binding.imgCancel.visibility = View.GONE
-                val icon = BitmapFactory.decodeResource(resources, R.drawable.man_reg)
-                if (icon != null) {
-                    str_profile_hash = Utility.getBase64(icon)
-                }
             }
 
             /*get Lastnames */
@@ -240,8 +239,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             binding.imgProfile.setOnClickListener { v ->
                 pickFromGallery(this)
             }
-
-
         }
     }
     inner class NetworkChangeReceiver : BroadcastReceiver() {
@@ -327,22 +324,32 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         if(resultUri!=null){
             try {
                 val uploadImage = File(resultUri?.path.toString())
-                Utility.startSweetProgress(this, getString(R.string.Register), getString(R.string.loading))
+                Utility.startSweetProgress(this, getString(R.string.RegisterFamilyPhoto), getString(R.string.loading))
                 profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(),getString(R.string.profile))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }else{
-            moveToLogin(data.message)
+            successResponse(data.message)
         }
     }
 
+    private fun successResponse(message: String) {
+        Utility.startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Register), message)
+        binding.edtHeadName.text.clear()
+        binding.edtAddress.text.clear()
+        binding.edtCpassword.text.clear()
+        binding.edtEmailId.text.clear()
+        binding.edtMobile.text.clear()
+        binding.edtPassword.text.clear()
+        binding.imgProfile.setImageResource(R.drawable.man_reg)
 
-    private fun moveToLogin(message: String){
-        root_layout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
-        val mIntent = Intent(this, LoginActivity::class.java)
-        startActivity(mIntent)
-        finish()
+        binding.spinnerLname.setText("Select LastName")
+        binding.spinnerGender.setText("Select Gender")
+        binding.spinnerStates.setText("Select State")
+        binding.spinnerCities.setText("Select City")
+        binding.spinnerSub.setText("Select Sub Community")
+        binding.spinnerLocal.setText("Select Local Community")
     }
 
     override fun getStates(data: List<States>) {
@@ -414,7 +421,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
     override fun getResult(profile: JsonObject) {
         Utility.hideSweetProgress()
-        moveToLogin(getString(R.string.RequestAdmin))
+        successResponse(getString(R.string.RequestAdmin))
     }
 
     override suspend fun onFailure(message: String) {

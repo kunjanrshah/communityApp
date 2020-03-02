@@ -80,7 +80,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             changeStatusbarColor(this, R.color.colorPrimary, true)
         }
@@ -275,28 +274,27 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         }
                     }
                     viewHolder.llDelete.setOnClickListener {
-                        if(!memberId.isNullOrEmpty()){
 
-
-                            TTFancyGifDialog.Builder(this@FamilyDetailActivity)
-                                    .setTitle(getString(R.string.you_sure))
-                                    .setMessage(getString(R.string.wontbeRecover))
-                                    .setPositiveBtnText(getString(R.string.yesdelete))
-                                    .setPositiveBtnBackground("#22b573")
-                                    .setNegativeBtnText(getString(R.string.no))
-                                    .setNegativeBtnBackground("#c1272d")
-                                    .setGifResource(R.drawable.gif2)
-                                    .isCancellable(false)
-                                    .OnPositiveClicked {
+                        TTFancyGifDialog.Builder(this@FamilyDetailActivity)
+                                .setTitle(getString(R.string.you_sure))
+                                .setMessage(getString(R.string.wontbeRecover))
+                                .setPositiveBtnText(getString(R.string.yesdelete))
+                                .setPositiveBtnBackground("#22b573")
+                                .setNegativeBtnText(getString(R.string.no))
+                                .setNegativeBtnBackground("#c1272d")
+                                .setGifResource(R.drawable.gif_delete)
+                                .isCancellable(false)
+                                .OnPositiveClicked {
+                                    if (!memberId.isNullOrEmpty()) {
                                         deleteFamilyMember(member.id)
+                                    } else {
+                                        llRoot.snackbar(getString(R.string.enter_pin), Snackbar.LENGTH_LONG)
                                     }
-                                    .OnNegativeClicked {
+                                }
+                                .OnNegativeClicked {
 
-                                    }
-                                    .build()
-                        }else{
-                            llRoot.snackbar(getString(R.string.enter_pin),Snackbar.LENGTH_LONG)
-                        }
+                                }
+                                .build()
                     }
                     viewHolder.boomMenuButton.clearBuilders()
                     for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
@@ -368,11 +366,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val header = layoutInflater.inflate(R.layout.header_detail, rvDetail, false)
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
         val login = header.findViewById<ImageView>(R.id.login)
-        val img_map = header.findViewById<ImageView>(R.id.img_map)
+        val imgMap = header.findViewById<ImageView>(R.id.img_map)
         if(!memberId.isNullOrEmpty()){
             cancel.visibility=View.VISIBLE
+            imgMap.visibility = View.VISIBLE
             login.visibility = View.GONE
         }else{
+            imgMap.visibility = View.GONE
             login.visibility = View.VISIBLE
             cancel.visibility=View.INVISIBLE
         }
@@ -384,7 +384,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         val member = members.get(0)
 
-        img_map.setOnClickListener {
+        imgMap.setOnClickListener {
 
             val url=resources.getString(R.string.base_url_thumb)+member.profilePic
 

@@ -95,7 +95,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
 
-
     override val kodein by kodein()
     private lateinit var tvCount: TextView
     lateinit var binding: FragmentFilterResultBinding
@@ -309,20 +308,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         }
         tvCount = header.findViewById(R.id.tv_count)
 
-        /*val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
-        ivAtoz.setOnClickListener { v ->
-            val adapter = AtoZBottomAdapter(context)
-            adapter.setmISortingRecords(this)
-            dialog = DialogPlus.newDialog(context)
-                    .setAdapter(adapter)
-                    .setGravity(Gravity.BOTTOM)
-                    .setCancelable(true)
-                    .setExpanded(true,900)
-                    .setContentBackgroundResource(R.drawable.popup_top_corner)
-                    .create()
-            dialog?.show()
-        }*/
-
         adapter.setParallaxHeader(header, binding.lstFilter)
         binding.lstFilter.layoutManager = LinearLayoutManager(activity)
         binding.lstFilter.adapter = adapter
@@ -380,7 +365,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         if (data.success) {
             if (data.members.size > 0) {
                 val count = data.totalHead + data.totalMem
-                tvCount.text = getString(R.string.families) + " ${data.totalHead}," + getString(R.string.mem) + " $count"
+                tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " $count"
                 ivExport.visibility = View.VISIBLE
                 for (user in data.members) {
                     members.add(user)

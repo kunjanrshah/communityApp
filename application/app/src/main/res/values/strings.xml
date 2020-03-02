@@ -319,8 +319,8 @@
     <string name="confirm_password">Please enter to confirm PIN</string>
     <string name="password_mismatch">PIN is mismatch</string>
     <string name="enter_home_address">Please enter your home address</string>
-    <string name="select_city">Please select City</string>
-    <string name="select_state">Please select state</string>
+    <string name="select_city">Select City</string>
+    <string name="select_state">Select State</string>
     <string name="select_sub_comm">Please select Sub Community</string>
     <string name="select_local">Please select Local Community</string>
     <string name="make_strong_pass">Make PIN more than 6 characters</string>
@@ -489,7 +489,8 @@
     <string name="code">Code</string>
     <string name="select_sub_community">Select Sub Community</string>
     <string name="select_local_community">Select Local Community</string>
-    <string name="RegisterFamily">Registering your family</string>
+    <string name="RegisterFamily">Registering your family details</string>
+    <string name="RegisterFamilyPhoto">Registering your family photo</string>
     <string name="FetchingCity">Fetching City</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
@@ -510,8 +511,8 @@
     <string name="Calendar">Calendar</string>
 
     <string name="MoveProfile">Move profile detail</string>
-    <string name="LocationOff">Location Off</string>
-    <string name="LocationOn">Location On</string>
+    <string name="LocationOff">GPS Off</string>
+    <string name="LocationOn">GPS On</string>
 
 
     <!-- FamilyTreeDetail Sccren -->
@@ -558,10 +559,10 @@
     <string name="no">No</string>
     <string name="updatingProfile">Updating your profile</string>
     <string name="pleaseWait">Please wait...</string>
-    <string name="EnterFirstName">Enter your FirstName</string>
-    <string name="selectYourLastName">Select your LastName</string>
-    <string name="SelectYourGender">Select your Gender</string>
-    <string name="SelectRelation">Select your Relation</string>
+    <string name="EnterFirstName">Enter FirstName</string>
+    <string name="selectYourLastName">Select LastName</string>
+    <string name="SelectYourGender">Select Gender</string>
+    <string name="SelectRelation">Select Relation</string>
     <string name="Distance">Distance</string>
     <string name="Profile">\'s Profile</string>
 
@@ -570,8 +571,7 @@
 
     <string name="Success">Success</string>
     <string name="profileUpdate">Profile updated!</string>
-    <string name="locationUpdate">Location updated</string>
-
+    <string name="locationUpdate">Your Location is private now.</string>
 
     <string name="selectedImage">Cannot retrieve selected image</string>
     <string name="image">Image</string>
@@ -1151,8 +1151,8 @@
     <string name="selectworkcategory">Select Work Category</string>
     <string name="selectworksub">Select Work Sub Category</string>
     <string name="selectOccupation">Select Occupation</string>
-    <string name="hobbypro">hobby</string>
-    <string name="expectationpro">expectation</string>
+    <string name="hobbypro">Hobby</string>
+    <string name="expectationpro">Expectation</string>
     <string name="weightpro">weight</string>
     <string name="heightpro">height</string>
     <string name="search_name">Search Name</string>

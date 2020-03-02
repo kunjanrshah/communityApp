@@ -87,8 +87,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -117,6 +115,8 @@ public class Utility {
     public static final int FINE_LOCATION_REQUEST = 2;
     public static final int EXTERNAL_STORAGE_REQUEST = 3;
     public static final int CALL_PHONE_REQUEST = 4;
+    public static final int READ_CALL_LOG = 5;
+    public static final int READ_PHONE_STATE = 6;
 
     static final int REQ_CODE_SPEECH_INPUT = 100;
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
@@ -126,8 +126,7 @@ public class Utility {
     public static String dd_MM_yyyy = "dd-MM-yyyy";
     public static String yyyy_MM_dd_TIME = "yyyy-MM-dd HH:mm:ss";
     public static String dd_MM_yyyy_TIME = "dd-MM-yyyy h:mm a";
-    /* public static String dd_MMM_yyyy = "dd-MMM-yyyy";
-     public static String ddMMMyyyy = "dd/MM/yyyy";*/
+
     public static SweetAlertDialog dialog = null;
     public static long INTERVAL = 5 * 60 * 1000;
     public static InputFilter filter = (source, start, end, dest, dstart, dend) -> {
@@ -161,17 +160,17 @@ public class Utility {
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static boolean checkPhoneCallPermission(Context mContext) {
+  /*  public static boolean checkPhoneCallPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
+    }*/
 
-    public static boolean CallLogPermission(Context mContext) {
+    public static boolean checkReadCallLogPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALL_LOG);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static boolean CallPhonePermission(Context mContext) {
+    public static boolean checkReadPhoneStatePermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
@@ -232,8 +231,16 @@ public class Utility {
         ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_REQUEST);
     }
 
-    public static void requestCallPermission(AppCompatActivity mActivity) {
+    public static void requestPhoneCallPermission(AppCompatActivity mActivity) {
         ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_REQUEST);
+    }
+
+    public static void requestReadCallLogPermission(AppCompatActivity mActivity) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG}, READ_CALL_LOG);
+    }
+
+    public static void requestReadPhoneStatePermission(AppCompatActivity mActivity) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE);
     }
 
     public static String getRandomString(final int sizeOfRandomString) {
@@ -244,11 +251,17 @@ public class Utility {
         return sb.toString();
     }
 
-    /**
-     * This method returns a Json object for handling Force update error
-     *
-     * @return
-     */
+     /*if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
+            val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
+            requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE)
+        }
+
+        if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
+            val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
+            requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE_TELEPHONE)
+        }*/
+
+
     public static JSONObject getServerErrorJsonObject(Context context) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -1147,34 +1160,6 @@ public class Utility {
         return false;
     }
 
-    public static String getBase64(Bitmap bitmap) {
-
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bao);
-        byte[] ba = bao.toByteArray();
-        return PiyushBase64.Base64.encodeBytes(ba);
-    }
-
-
-    public static String getByteArrayFromImageURL(String url) {
-
-        try {
-            URL imageUrl = new URL(url);
-            URLConnection ucon = imageUrl.openConnection();
-            InputStream is = ucon.getInputStream();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int read = 0;
-            while ((read = is.read(buffer, 0, buffer.length)) != -1) {
-                baos.write(buffer, 0, read);
-            }
-            baos.flush();
-            return PiyushBase64.Base64.encodeBytes(baos.toByteArray(), Base64.DEFAULT);
-        } catch (Exception e) {
-            Log.d("Error", e.toString());
-        }
-        return null;
-    }
 
     public static Bitmap scaleImage(Context context, @NonNull Uri photoUri) throws IOException {
         InputStream is = context.getContentResolver().openInputStream(photoUri);
@@ -1245,15 +1230,11 @@ public class Utility {
         alertDialog.setMessage("Do you want to enable location service ?");
 
         //On Pressing Setting button
-        alertDialog.setPositiveButton("Setting", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(@NonNull DialogInterface dialog, int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mActivity.startActivity(intent);
-                dialog.cancel();
-                mActivity.finish();
-            }
+        alertDialog.setPositiveButton("Setting", (dialog, which) -> {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            mActivity.startActivity(intent);
+            dialog.cancel();
+            mActivity.finish();
         });
 
         //On pressing cancel button
@@ -1361,18 +1342,6 @@ public class Utility {
         }).show();
     }
 
-   /* public static void alert(@NonNull Activity mActivity, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(mActivity.getString(R.string.app_name));
-        builder.setCancelable(false);
-        builder.setMessage(message);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(@NonNull DialogInterface dialog, int which) {
-                dialog.dismiss();
-
-            }
-        }).show();
-    }*/
 
     public static String DatetoString(Date date, String pattern) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);

@@ -192,32 +192,39 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         })
 
         binding.spState.setOnItemClickListener {
-            profileDetailViewModel.selectedStateId = profileDetailViewModel.lstStateId[it]
-            Coroutines.main {
-               val cities=  profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
-                binding.spCity.clear()
-                binding.spCity.setText(getString(R.string.select))
-                profileDetailViewModel.selectedCityId=0
-                binding.spCity.setItems(cities.toTypedArray())
-                binding.spCity.setExpandTint(R.color.black)
+            Coroutines.io {
+                profileDetailViewModel.selectedStateId = profileDetailViewModel.getstateIdByName(binding.spState.text.toString())
+
+                Coroutines.main {
+                    val cities = profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
+                    binding.spCity.clear()
+                    binding.spCity.setText(getString(R.string.select))
+                    profileDetailViewModel.selectedCityId = 0
+                    binding.spCity.setItems(cities.toTypedArray())
+                    binding.spCity.setExpandTint(R.color.black)
+                }
             }
+
         }
 
         binding.spCity.setOnItemClickListener {
-            profileDetailViewModel.selectedCityName = binding.spCity.text.toString().trim()
-            Coroutines.main {
-                profileDetailViewModel.cityId.await().observe(viewLifecycleOwner, Observer {
-                    profileDetailViewModel.selectedCityId = it
-                })
+            Coroutines.io {
+                val cityName = binding.spCity.text.toString().trim()
+                profileDetailViewModel.selectedCityName = cityName
+                profileDetailViewModel.selectedCityId = profileDetailViewModel.getCityIdByName(cityName)
             }
         }
 
         binding.spRelation.setOnItemClickListener {
-            profileDetailViewModel.selectedRelationId = profileDetailViewModel.lstRelationId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedRelationId = profileDetailViewModel.getIdByRelation(binding.spRelation.text.toString())
+            }
         }
 
         binding.spLastname.setOnItemClickListener {
-            profileDetailViewModel.selectedLastNameId = profileDetailViewModel.lstLastNameId[it]
+            Coroutines.io {
+                profileDetailViewModel.selectedLastNameId = profileDetailViewModel.getIdByLastName(binding.spLastname.text.toString())
+            }
         }
 
         setMemberRelation()
@@ -339,18 +346,10 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
            }
         })
-        profileDetailViewModel.relationIds.await().observe(viewLifecycleOwner, Observer {
-          if(it.isNotEmpty()){
-              profileDetailViewModel.lstRelationId = it.subList(1,it.size)
-          }
-        })
 
         profileDetailViewModel.lstLastName.await().observe(viewLifecycleOwner, Observer {
             binding.spLastname.setItems(it.toTypedArray())
             binding.spLastname.setExpandTint(R.color.black)
-        })
-        profileDetailViewModel.lastNameIds.await().observe(viewLifecycleOwner, Observer {
-            profileDetailViewModel.lstLastNameId = it
         })
 
         profileDetailViewModel.lstStateName.await().observe(viewLifecycleOwner, Observer {
@@ -358,9 +357,6 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             binding.spState.setExpandTint(R.color.black)
         })
 
-        profileDetailViewModel.stateIds.await().observe(viewLifecycleOwner, Observer {
-            profileDetailViewModel.lstStateId = it
-        })
         val cities= profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
         binding.spCity.setItems(cities.toTypedArray())
         binding.spCity.setExpandTint(R.color.black)
@@ -368,9 +364,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     }
 
     override fun getScanResult(response: SmartFilterResponse) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         Utility.hideSweetProgress()

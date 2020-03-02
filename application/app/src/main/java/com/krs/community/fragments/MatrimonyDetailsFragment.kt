@@ -159,7 +159,6 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         }catch (e:Exception){
             e.printStackTrace()
         }
-
     }
 
     private val mListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->

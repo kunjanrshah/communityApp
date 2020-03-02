@@ -29,29 +29,19 @@ class ProfileDetailViewModel(
     lateinit var mImageUploadListener: ImageUploadListener
 
     var selectedRelationId = 0
-    lateinit var lstRelationId: List<Int>
     val relationName by lazyDeferred {
         mProfileDetailRepository.getRelationById(selectedRelationId)
     }
     val lstRelationName by lazyDeferred {
         mProfileDetailRepository.getRelations()
     }
-    val relationIds by lazyDeferred {
-        mProfileDetailRepository.getRelationIds()
-    }
 
     var selectedLastNameId = 0
-    lateinit var lstLastNameId: List<Int>
-
     val lastName by lazyDeferred {
         mProfileDetailRepository.getLastNameById(selectedLastNameId)
     }
-
     val lstLastName by lazyDeferred {
         mProfileDetailRepository.getLastName()
-    }
-    val lastNameIds by lazyDeferred {
-        mProfileDetailRepository.getLastNameIds()
     }
 
     val getLocalCommName by lazyDeferred {
@@ -59,15 +49,11 @@ class ProfileDetailViewModel(
     }
 
     var selectedStateId = 0
-    lateinit var lstStateId: List<Int>
     val stateName by lazyDeferred {
         mProfileDetailRepository.getstateNameById(selectedStateId)
     }
     val lstStateName by lazyDeferred {
         mProfileDetailRepository.getStateName()
-    }
-    val stateIds by lazyDeferred {
-        mProfileDetailRepository.getStateIds()
     }
 
     var selectedCityId: Int = 0
@@ -75,98 +61,65 @@ class ProfileDetailViewModel(
     val cityName by lazyDeferred {
         mProfileDetailRepository.getcityNameById(selectedCityId)
     }
-    val cityId by lazyDeferred {
-        mProfileDetailRepository.getCityId(selectedCityName)
-    }
-
 
     val lstCityName by lazyDeferred {
         mProfileDetailRepository.getListCityName()
     }
 
-
     var selectedNativeId = 0
-    lateinit var lstNativeId: List<Int>
     val nativeName by lazyDeferred {
         mProfileDetailRepository.getNativeNameById(selectedNativeId)
     }
     val lstNativeName by lazyDeferred {
         mProfileDetailRepository.getNativeNames()
     }
-    val nativeIds by lazyDeferred {
-        mProfileDetailRepository.getNativeIds()
-    }
 
     var selectedEducationId = 0
-    lateinit var lstEducationId: List<Int>
     val educationName by lazyDeferred {
         mProfileDetailRepository.getEducationById(selectedEducationId)
     }
     val lstEducationName by lazyDeferred {
         mProfileDetailRepository.getEducationNames()
     }
-    val educationIds by lazyDeferred {
-        mProfileDetailRepository.getEducationIds()
-    }
 
     var selectedActivityId = 0
-    lateinit var lstActivityId: List<Int>
     val activityName by lazyDeferred {
         mProfileDetailRepository.getActivityById(selectedActivityId)
     }
     val lstActivityName by lazyDeferred {
         mProfileDetailRepository.getActivityNames()
     }
-    val activityIds by lazyDeferred {
-        mProfileDetailRepository.getActivityIds()
-    }
 
     var selectedGotraId = 0
-    lateinit var lstGotraId: List<Int>
     val gotraName by lazyDeferred {
         mProfileDetailRepository.getGotraById(selectedGotraId)
     }
     val lstGotraName by lazyDeferred {
         mProfileDetailRepository.getGotraNames()
     }
-    val gotraIds by lazyDeferred {
-        mProfileDetailRepository.getGotraIds()
-    }
 
     var selectedBusinessCategoryId = 0
-    lateinit var lstBusinessCategoryId: List<Int>
     val businessCategoryName by lazyDeferred {
         mProfileDetailRepository.getBusinessCategoryById(selectedBusinessCategoryId)
     }
     val lstBusinessCategoryName by lazyDeferred {
         mProfileDetailRepository.getBusinessCategoryNames()
     }
-    val businessCategoryIds by lazyDeferred {
-        mProfileDetailRepository.getBusinessCategoryIds()
-    }
 
     var selectedBusinessSubCategoryId = 0
-    lateinit var lstBusinessSubCategoryId: List<Int>
     val businessSubCategoryName by lazyDeferred {
         mProfileDetailRepository.getBusinessSubCategoryById(selectedBusinessCategoryId)
     }
     val lstBusinessSubCategoryName by lazyDeferred {
         mProfileDetailRepository.getBusinessSubCategoryNames()
     }
-    val businessSubCategoryIds by lazyDeferred {
-        mProfileDetailRepository.getBusinessSubCategoryIds()
-    }
 
     var selectedOccupationId = 0
-    lateinit var lstOccupationId: List<Int>
     val occupationName by lazyDeferred {
         mProfileDetailRepository.getOccupationById(selectedOccupationId)
     }
     val lstOccupationName by lazyDeferred {
         mProfileDetailRepository.getOccupationNames()
-    }
-    val occupationIds by lazyDeferred {
-        mProfileDetailRepository.getOccupationId()
     }
 
     suspend fun getCityNamebyState(id: Int): List<String> {
@@ -216,6 +169,9 @@ class ProfileDetailViewModel(
         return mProfileDetailRepository.getIdByLastName(name)
     }
 
+    suspend fun getIdByRelation(name: String): Int {
+        return mProfileDetailRepository.getIdByRelation(name)
+    }
 
     fun getMemberByFilters(jsonObject: JsonObject) {
         completableJob = Job()
@@ -272,11 +228,9 @@ class ProfileDetailViewModel(
 
                     val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, _type)
 
-
                     response.let {
                         withContext(Dispatchers.Main) {
                             Log.d("Response", response.toString())
-//
                             if (response.get("success").asString.equals("success")) {
                                 mImageUploadListener.getResult(response.getAsJsonObject("data"))
                             } else {

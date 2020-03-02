@@ -55,11 +55,11 @@ class SettingFragment : Fragment() {
         switchDialog = root.findViewById<LabeledSwitch>(R.id.switch_dialog)
         val isShow = Guru.getBoolean(getString(R.string.isdialogshow), false)
 
-        val isShowCallLog= Utility.CallLogPermission((activity as AppCompatActivity))
-        val isShowCallPhone= Utility.CallPhonePermission((activity as AppCompatActivity))
+        val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
+        val isShowCallPhone = Utility.checkReadPhoneStatePermission((activity as AppCompatActivity))
 
         if (isShow && isShowCallLog && isShowCallPhone){
-            switchDialog?.isOn = Utility.CallLogPermission((activity as AppCompatActivity))
+            switchDialog?.isOn = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
         }else{
             switchDialog?.isOn = false
         }
@@ -97,7 +97,7 @@ class SettingFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun permissionCheck(show: Boolean, showCallLog: Boolean, showCallPhone: Boolean) {
         if (show && showCallLog && showCallPhone){
-            switchDialog?.isOn = Utility.CallLogPermission((activity as AppCompatActivity))
+            switchDialog?.isOn = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
         }else{
             switchDialog?.isOn = false
             PhoneCallPermission()

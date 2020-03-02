@@ -1,17 +1,4 @@
-/*
- * Copyright (c) 2019. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
- */
-
 package com.krs.community.bkservice;
-/*
- * Copyright (c) 2019. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
- */
-
-/*
- * Created by Fabio Ciravegna, The University of Sheffield. All rights reserved.
- * no part of this code can be used without explicit permission by the author
- * f.ciravegna@shef.ac.uk
- */
 
 import android.content.Context;
 import android.content.Intent;

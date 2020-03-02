@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -16,7 +15,6 @@
         android:scrollbars="none">
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -57,6 +55,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:paddingLeft="10dp"
+                        android:inputType="textCapCharacters"
                         android:background="@drawable/border_color_gray"
                         android:fontFamily="@font/montserrat_semibold"
                         android:singleLine="true" />
@@ -132,7 +131,7 @@
                         android:id="@+id/fname"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:inputType="textFilter"
+                        android:inputType="textFilter|textCapWords"
                         android:digits="@string/restrict_space"
                         android:paddingLeft="10dp"
                         android:background="@drawable/border_color_gray"
@@ -209,7 +208,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:paddingLeft="10dp"
-                        android:inputType="textFilter"
+                        android:inputType="textFilter|textCapWords"
                         android:digits="@string/restrict_space"
                         android:background="@drawable/border_color_gray"
                         android:fontFamily="@font/montserrat_regular"
@@ -235,7 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:paddingLeft="10dp"
-                        android:inputType="textFilter"
+                        android:inputType="textFilter|textCapWords"
                         android:digits="@string/restrict_space"
                         android:background="@drawable/border_color_gray"
                         android:fontFamily="@font/montserrat_regular"
@@ -451,7 +450,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:paddingLeft="10dp"
-                        android:inputType="textFilter"
+                        android:inputType="textFilter|textCapWords"
                         android:digits="@string/restrict_space"
                         android:background="@drawable/border_color_gray"
                         android:fontFamily="@font/montserrat_regular"
@@ -516,7 +515,7 @@
                         android:background="@drawable/border_color_gray"
                         android:drawablePadding="10dp"
                         android:fontFamily="@font/montserrat_regular"
-                        android:inputType="textMultiLine"
+                        android:inputType="textMultiLine|textCapWords"
                         android:lines="3"
                         android:maxLines="3"
                         android:gravity="top|left"

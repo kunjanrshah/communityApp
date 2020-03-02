@@ -258,7 +258,10 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
-            setScreenLayout();
+            if (NetworkChecker.isNetworkConnected(this)) {
+                setScreenLayout();
+            }
+
         });
     }
     private void registerNetworkBroadcastForNougat() {
