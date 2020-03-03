@@ -102,6 +102,7 @@ dependencies {
     implementation 'com.github.smarteist:autoimageslider:1.2.0'
 
     implementation 'net.gotev:uploadservice:4.2.0'
+    implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'de.blox:graphview:0.4.2'
     implementation project(':multisearchviewlib')
     implementation project(':slycalendarview')

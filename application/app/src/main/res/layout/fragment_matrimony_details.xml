@@ -356,6 +356,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:text="@string/mangal"
+                        android:visibility="gone"
                         android:id="@+id/chk_is_mangal"
                         android:fontFamily="@font/montserrat_regular"
                         android:textSize="16sp" />
@@ -366,6 +367,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:text="@string/shani"
+                        android:visibility="gone"
                         android:id="@+id/chk_is_shani"
                         android:fontFamily="@font/montserrat_regular"
                         android:textSize="16sp" />

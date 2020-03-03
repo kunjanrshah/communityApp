@@ -139,12 +139,7 @@ public class Utility {
     };
     private static ProgressDialog pDialog;
     private static Logger logger = new Logger(Utility.class.getSimpleName());
-    /* public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
-         float ratio = Math.min(maxImageSize / realImage.getWidth(), maxImageSize / realImage.getHeight());
-         int width = Math.round(ratio * realImage.getWidth());
-         int height = Math.round(ratio * realImage.getHeight());
-         return Bitmap.createScaledBitmap(realImage, width, height, filter);
-     }*/
+
     private static int[] imageResources = new int[]{R.drawable.export_dot, R.drawable.family_tree_dot, R.drawable.whatsapp_dot, R.drawable.qr_code_dot, R.drawable.share_dot, R.drawable.location_dot};
     private static int[] textResources = new int[]{R.string._export, R.string._qrcode, R.string._share, R.string._location, R.string._whatsapp, R.string._family_tree};
     private static int imageResourceIndex = 0;
@@ -160,11 +155,6 @@ public class Utility {
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-  /*  public static boolean checkPhoneCallPermission(Context mContext) {
-        int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
-    }*/
-
     public static boolean checkReadCallLogPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALL_LOG);
         return permissionState == PackageManager.PERMISSION_GRANTED;
@@ -174,38 +164,6 @@ public class Utility {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
-/*
-    public static boolean hasCamera(@NonNull Context mContext) {
-        return (hasPermission(mContext, Manifest.permission.CAMERA));
-    }
-
-    public static boolean hasCallPhone(@NonNull Context mContext) {
-        return (!hasPermission(mContext, Manifest.permission.CALL_PHONE));
-    }
-
-    public static boolean hasAccessLocation(@NonNull Context mContext) {
-        return (hasPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION));
-    }
-
-    public static boolean hasSMS(@NonNull Context mContext) {
-        return (hasPermission(mContext, Manifest.permission.SEND_SMS));
-    }
-
-    public static boolean hasReadContacts(@NonNull Context mContext) {
-        return (Utility.hasPermission(mContext, Manifest.permission.READ_CONTACTS));
-    }
-
-    public static boolean hasReadStoragePermission(@NonNull Context mContext) {
-        return (hasPermission(mContext,Manifest.permission.READ_EXTERNAL_STORAGE ));
-    }
-
-    public static boolean hasWriteStoragePermission(@NonNull Context mContext) {
-        return (hasPermission(mContext,Manifest.permission.WRITE_EXTERNAL_STORAGE ));
-    }
-
-    private static boolean hasPermission(@NonNull Context mContext, @NonNull String perm) {
-        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(mContext, perm));
-    }*/
 
     public static boolean checkExternalStoragePermission(Context mContext) {
         int permissionState;
@@ -250,17 +208,6 @@ public class Utility {
             sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
         return sb.toString();
     }
-
-     /*if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
-            val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
-            requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE)
-        }
-
-        if (checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
-            val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
-            requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE_TELEPHONE)
-        }*/
-
 
     public static JSONObject getServerErrorJsonObject(Context context) {
         JSONObject jsonObject = new JSONObject();
@@ -1385,13 +1332,6 @@ public class Utility {
         return formatedDate;
     }
 
-    public static void getDeviceId(Context mContext) {
-        @SuppressLint("HardwareIds") String m_androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        AppConstants.DEVICE_ID_VALUE = m_androidId;
-        Log.d("DEVICE_ID", "m_androidId: " + m_androidId);
-    }
-
-
     public static int getDiffYears(Date first, Date last) {
         Calendar a = getCalendar(first);
         Calendar b = getCalendar(last);
@@ -1481,6 +1421,16 @@ public class Utility {
             e.printStackTrace();
         }
     }
+
+    public static String getPath() {
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CommunityApp";
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return filePath;
+    }
+
 
     public static void startSweetProgress(Context context, String title, String message) {
         if (dialog != null && dialog.isShowing()) {

@@ -31,6 +31,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.FamilyTreeListActivity
+import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
@@ -127,7 +128,6 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     }
                 }
 
-
                 if (member.mobile.isEmpty()){
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
@@ -204,12 +204,9 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     }
                     viewHolder.boomMenuButton.addBuilder(builder)
                 }
-
                 holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
 
-
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
-
                 applyProfilePicture(holder, member)
                 applyClickEvents(holder, position,member)
             }
@@ -241,30 +238,35 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     }
 
     private fun userContactList() {
+        Coroutines.io {
+            Coroutines.main {
+                Utility.startSweetProgress(context!!, getString(R.string.app_name), "Fetching Your Contacts")
+            }
+            getContactsIntoArrayList()
+            val jsonObject = JSONObject()
+            jsonObject.put(context!!.getString(R.string.user_id), Guru.getString(context!!.getString(R.string.user_id), ""))
+            jsonObject.put(context!!.getString(R.string.id), Guru.getString(context!!.getString(R.string.member_id), ""))
+            jsonObject.put(context!!.getString(R.string.access_token), Guru.getString(context!!.getString(R.string.access_token), ""))
+            val jsonArray = JSONArray(StoreContacts)
+            jsonObject.put("mobiles", jsonArray)
+            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
 
-        Utility.startSweetProgress(context!!,getString(R.string.app_name),"Fetching Your Contacts")
-        getContactsIntoArrayList()
-        val jsonObject = JSONObject()
-        jsonObject.put(context!!.getString(R.string.user_id), Guru.getString(context!!.getString(R.string.user_id), ""))
-        jsonObject.put(context!!.getString(R.string.id), Guru.getString(context!!.getString(R.string.member_id), ""))
-        jsonObject.put(context!!.getString(R.string.access_token), Guru.getString(context!!.getString(R.string.access_token), ""))
-        val jsonArray = JSONArray(StoreContacts)
-        jsonObject.put("mobiles", jsonArray)
-        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-
-        Log.e("updated----",""+updated);
-        contactListViewModel.getContactList(updated)
-
+            Log.e("updated----", "" + updated);
+            contactListViewModel.getContactList(updated)
+        }
     }
 
     private fun getContactsIntoArrayList() {
         cursor = activity!!.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
+        StoreContacts.clear()
         while (cursor!!.moveToNext()) {
             name = cursor!!.getString(cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
             phonenumber = cursor!!.getString(cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
             val strNumber = phonenumber.toString().replace(" ", "").replace("+91", "");
             if (strNumber.length == 10) {
-                StoreContacts.add(strNumber)
+                if (!StoreContacts.contains(strNumber)) {
+                    StoreContacts.add(strNumber)
+                }
             }
         }
         cursor!!.close()
@@ -272,20 +274,17 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
 
     override fun getMembers(response: SmartFilterResponse) {
         Utility.hideSweetProgress()
-
-        Log.e("Frist Time", " success ")
         if (response.success) {
             if (response.members.size > 0) {
                 lstMembers.clear()
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
+            } else {
+                rvSearch?.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
             }
-
-            Log.e("Frist Time", " success ")
-            Log.e("members", "" + response.members)
-
+        } else {
+            rvSearch?.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
         }
-
     }
 
     override suspend fun getFailure(message: String) {
@@ -320,7 +319,6 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         }
         }
     }
-
 
     inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         val boomMenuButton: BoomMenuButton = itemView.findViewById(R.id.bmb1)
@@ -367,7 +365,17 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
             }
         }
 
+        holder.messageContainer.setOnClickListener { view -> onMessageRowClicked(position, holder.itemView) }
     }
+
+    private fun onMessageRowClicked(position: Int, v: View) {
+
+        val intent = Intent(activity, ProfileDetailActivity::class.java)
+        intent.putExtra(getString(R.string.member), lstMembers.get(position))
+        startActivity(intent)
+        Utility.fade(activity)
+    }
+
 
     fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {

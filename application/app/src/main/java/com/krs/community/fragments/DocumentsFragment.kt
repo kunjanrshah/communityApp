@@ -1,8 +1,10 @@
 package com.krs.community.fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,16 +18,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.downloader.Error
+import com.downloader.OnDownloadListener
+import com.downloader.PRDownloader
+import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.adapter.UploadDialogAdapter
 import com.krs.community.listeners.ByDocumentListener
+import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.UploadedFile
 import com.krs.community.responses.UploadedFilesResponse
-import com.krs.community.utils.AppConstants
+import com.krs.community.utils.*
 import com.krs.community.utils.AppConstants.UPLOAD_DOCUMENT
-import com.krs.community.utils.MovableFloatingActionButton
-import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.DocumentsListModel
 import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
@@ -34,7 +41,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner, ParallaxRecyclerAdapter.OnLoadMore {
+class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner {
     override val kodein by kodein()
 
     private lateinit var btnupload: MovableFloatingActionButton
@@ -47,13 +54,23 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
     private var uploadedFileName = ""
     private lateinit var tvCount: TextView
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_documents, container, false)
 
         documentsListModel = ViewModelProvider(this, documentListViewModelFactory).get(DocumentsListModel::class.java)
         documentsListModel.byDocumentListener = this
         btnupload = root.findViewById<View>(R.id.btnupload) as MovableFloatingActionButton
+
         rvDocuments = root.findViewById(R.id.rv_documents)
+
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+        if (loginMember?.role.equals(getString(R.string.User))) {
+            btnupload.visibility = View.GONE
+        } else {
+            btnupload.visibility = View.VISIBLE
+        }
         btnupload.setOnClickListener {
 
             val adapter: UploadDialogAdapter = UploadDialogAdapter(context)
@@ -78,7 +95,28 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                 holder.tvFile.text = uploadfile.name
                 holder.tvDate.text = Utility.changeDateFormat(uploadfile.createdAt, Utility.yyyy_MM_dd_TIME, Utility.dd_MM_yyyy_TIME)
                 holder.llDownload.setOnClickListener {
+                    if (Utility.checkExternalStoragePermission(activity)) {
+                        PRDownloader.download(uploadfile.filename, Utility.getPath(), "${uploadfile.name}.png").build()
+                                .setOnStartOrResumeListener {
+                                    Utility.startSweetDialog(activity, SweetAlertDialog.PROGRESS_TYPE, "Documents", "Downloading...")
+                                }
+                                .start(object : OnDownloadListener {
+                                    override fun onDownloadComplete() {
+                                        Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, "Documents", "File is downloaded in CommunityApp folder")
+                                    }
 
+                                    override fun onError(error: Error?) {
+                                        Utility.startSweetDialog(activity, SweetAlertDialog.ERROR_TYPE, "Documents", "Something went wrong!")
+                                        Log.d("PRDownloader", "onError: $error")
+                                    }
+                                })
+                    } else {
+                        Utility.requestStoragePermission(activity as AppCompatActivity)
+                    }
+
+
+
+                    rvDocuments.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_SHORT)
                 }
             }
 
@@ -91,7 +129,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
             }
         }
 
-        rvDocuments.layoutManager = LinearLayoutManager(activity)
+        rvDocuments.layoutManager = LinearLayoutManager(activity!!)
         rvDocuments.setHasFixedSize(true)
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
@@ -101,11 +139,17 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         adapter.setParallaxHeader(header, rvDocuments)
-        adapter.setContext(this)
-
         rvDocuments.adapter = adapter
-        documentsListModel.getUploadedFiles()
+        Coroutines.io {
+            Coroutines.main {
+                Utility.startSweetProgress(context!!, getString(R.string.app_name), "Fetching uploaded files")
+            }
+            documentsListModel.getUploadedFiles()
+        }
 
+        if (!Utility.checkExternalStoragePermission(activity)) {
+            Utility.requestStoragePermission(activity as AppCompatActivity)
+        }
 
         return root
     }
@@ -154,7 +198,6 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                 .setConfirmText("Upload Now")
                 .setConfirmClickListener {
                     it.dismissWithAnimation()
-
                     MultipartUploadRequest(activity!!, serverUrl = UPLOAD_DOCUMENT)
                             .setMethod("POST")
                             .addFileToUpload(
@@ -163,9 +206,8 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                             )
                             .addParameter(getString(R.string.filename), uploadedFileName)
                             .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
-
                             .startUpload()
-
+                    rvDocuments.snackbar("Uploading start in your notification", Snackbar.LENGTH_INDEFINITE)
 
                 }
                 .setCancelText("Later")
@@ -182,17 +224,19 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
             listUpload.addAll(response.data)
             adapter.notifyDataSetChanged()
         }
+        Utility.hideSweetProgress()
     }
 
     override suspend fun getFailure(message: String) {
+        Coroutines.main {
+            Utility.displaySnackBarWithBottomMargin(rvDocuments, message)
+            Utility.hideSweetProgress()
+        }
     }
 
     inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         var llDownload: LinearLayout = view.findViewById(R.id.ll_download)
         var tvFile: TextView = view.findViewById(R.id.tv_file)
         var tvDate: TextView = view.findViewById(R.id.tv_date)
-    }
-
-    override fun loadApi() {
     }
 }

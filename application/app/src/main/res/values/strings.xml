@@ -76,7 +76,7 @@
         <item>Paytm</item>
         <item>Register</item>
         <item>Tour</item>
-        <item>My Contact</item>
+        <item>My Contacts</item>
     </string-array>
 
     <string name="married" translatable="false">Married</string>

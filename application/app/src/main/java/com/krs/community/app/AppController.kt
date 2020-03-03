@@ -18,6 +18,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
 import com.crashlytics.android.Crashlytics
+import com.downloader.PRDownloader
+import com.downloader.PRDownloaderConfig
 import com.facebook.FacebookSdk
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.github.squti.guru.Guru
@@ -189,6 +191,12 @@ class AppController : Application(), KodeinAware{
                 .requestEmail().build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
+        val config = PRDownloaderConfig.newBuilder()
+                .setDatabaseEnabled(true)
+                .setReadTimeout(30_000)
+                .setConnectTimeout(30_000)
+                .build()
+        PRDownloader.initialize(getApplicationContext(), config)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))

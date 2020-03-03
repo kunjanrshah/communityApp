@@ -108,11 +108,17 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
-                        viewHolder.tvName.text = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        Coroutines.main {
+                            viewHolder.tvName.text = name
+                        }
                     }
 
                     if (!member.cityId.isNullOrEmpty()) {
-                        holder.tvArea.text = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
+                        val city = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
+                        Coroutines.main {
+                            holder.tvArea.text = city
+                        }
                     }
                 }
 
@@ -135,7 +141,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
-
 
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 viewHolder.itemView.isActivated = selectedItems.get(position, false)
@@ -202,9 +207,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         selectedItems.clear()
         if (response.success) {
             if (response.members.size > 0) {
-              //  lstMembers.clear()
                 tvCount.visibility = View.VISIBLE
-                tvCount.text = getString(R.string.mem)+" ${response.totalRecords}"+getString(R.string.found)
+                tvCount.text = getString(R.string.mem) + " ${response.totalRecords} " + getString(R.string.found)
 
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
@@ -212,7 +216,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                // rvSearch.layoutManager?.scrollToPosition(selectedPosition)
                 //selectedPosition = lstMembers.size - 1
                 DashboardActivity.stop = false
-
                 if (response.totalRecords <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, getString(R.string.endNonActives), Snackbar.LENGTH_LONG).show()
@@ -466,7 +469,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText(getString(R.string.Approved) + " ${selectedItemPositions.size}" + " Profiles!")
+                                .setContentText("Approve" + " ${selectedItemPositions.size}" + " Profiles!")
                                 .setConfirmText(getString(R.string.YesApprovenon))
                                 .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {

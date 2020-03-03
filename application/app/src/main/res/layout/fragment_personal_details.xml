@@ -271,7 +271,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="@string/blood_groupDetails" />
+                            android:text="@string/current_activityDetails" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -283,11 +283,11 @@
                             android:textAlignment="center">
 
                             <com.krs.community.jrspinner.JRSpinner
-                                android:id="@+id/sp_bg"
+                                android:id="@+id/sp_current_activity"
                                 app:backgroundTint="@color/colorPrimary"
                                 app:jrs_icon_tint="@color/colorPrimary"
                                 app:jrs_multiple="false"
-                                app:jrs_title="@string/selectBlood"
+                                app:jrs_title="@string/selectCurrentActivity"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="10dp"
@@ -303,7 +303,9 @@
 
                     </LinearLayout>
 
+
                     <LinearLayout
+                        android:visibility="gone"
                         android:layout_marginLeft="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -345,6 +347,7 @@
                         </RelativeLayout>
 
                     </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -398,15 +401,15 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="@string/current_activityDetails" />
+                            android:text="@string/blood_groupDetails" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -418,11 +421,11 @@
                             android:textAlignment="center">
 
                             <com.krs.community.jrspinner.JRSpinner
-                                android:id="@+id/sp_current_activity"
+                                android:id="@+id/sp_bg"
                                 app:backgroundTint="@color/colorPrimary"
                                 app:jrs_icon_tint="@color/colorPrimary"
                                 app:jrs_multiple="false"
-                                app:jrs_title="@string/selectCurrentActivity"
+                                app:jrs_title="@string/selectBlood"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="10dp"
@@ -437,6 +440,7 @@
                         </RelativeLayout>
 
                     </LinearLayout>
+
 
                 </LinearLayout>
 

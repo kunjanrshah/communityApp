@@ -76,7 +76,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var request: LocationRequest
     private var scanId: String? = null
-    private var userId: String? = null
     private var isStopService = false
 
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
@@ -101,7 +100,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         member = intent.getSerializableExtra(getString(R.string.member)) as Member?
         scanId = intent.getStringExtra(getString(R.string.scanId))
 
-        userId = Guru.getString(getString(R.string.user_id), "")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             changeStatusbarColor(this, R.color.white, false)
         }
@@ -139,7 +137,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
 
         if (member?.isLocationEnable == "1") {
-            binding.switchLocation.isActivated = true
+            //binding.switchLocation.isActivated = true
             binding.switchLocation.isOn = true
             binding.switchLocation.labelOn = "ON"
             binding.tvDistance.text = getString(R.string.Finding)
@@ -152,9 +150,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             binding.switchLocation.isOn = false
             binding.switchLocation.labelOff = "OFF"
             binding.tvDistance.text = getString(R.string.user)
-            if (!userId.equals(member?.id)) {
+            /*if (!userId.equals(member?.id)) {
                 binding.switchLocation.isActivated = false
-            }
+            }*/
         }
 
         if (checkFineLocationPermission(this)) {
@@ -335,7 +333,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         stopService(ProcessMainClass.serviceIntent)
         val jsonObject = JSONObject()
         jsonObject.put(getString(R.string.is_location_enable), "0")
-        jsonObject.put(getString(R.string.user_id), userId)
+        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
         jsonObject.put(getString(R.string.id), member?.id)
         jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
         val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
@@ -347,6 +345,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         binding.txtTitle.text = "${member?.firstName}" + getString(R.string.Profile)
 
         val memberId = Guru.getString(getString(R.string.member_id), "")
+        binding.switchLocation.isEnabled = memberId.equals(member?.id)
         if (member?.id == memberId) {
             binding.tvSave.visibility = View.VISIBLE
             binding.tvSave.text = getString(R.string.save)
@@ -362,13 +361,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         if (!member?.isLocationEnable.isNullOrEmpty() && member?.isLocationEnable.equals("1")) {
             binding.switchLocation.isOn = true
-            binding.switchLocation.isEnabled = true
         } else {
             binding.tvDistance.text = getString(R.string.Distance)
             binding.switchLocation.isOn = false
-            if (!userId.equals(member?.id)) {
-                binding.switchLocation.isEnabled = false
-            }
         }
 
         if (!member?.profilePic.isNullOrEmpty()) {
@@ -389,7 +384,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         listFragments.get(3).arguments = bundle
         binding.viewpager.offscreenPageLimit = 4
         binding.viewpager.adapter = MyPagerAdapter(listFragments, supportFragmentManager)
-        Utility.hideKeyboard(this)
+        hideKeyboard(this)
     }
 
     override fun getScanResult(response: SmartFilterResponse) {
@@ -507,7 +502,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             if (requestCode == PICK_GALLERY_REQUEST) {
                 val selectedUri = data?.data
 
-                Log.e("selectedUri",""+selectedUri);
+                Log.e("selectedUri", "" + selectedUri)
                 if (selectedUri != null) {
                     startCrop(selectedUri, this)
                 } else {
@@ -524,10 +519,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                             try {
                                 Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
 
-                                Log.e("resultUri---",""+resultUri);
+                                Log.e("resultUri---", "" + resultUri)
                                 val uploadImage = File(resultUri.path.toString())
 
-                                Log.e("uploadImage---",""+uploadImage);
+                                Log.e("uploadImage---", "" + uploadImage)
 
                                 startSweetProgress(this, "Image", getString(R.string.loading))
                                 profileDetailViewModel.uploadImage(uploadImage, member?.id.toString(), getString(R.string.profile))

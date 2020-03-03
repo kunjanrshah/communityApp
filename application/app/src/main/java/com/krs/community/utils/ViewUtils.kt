@@ -846,7 +846,7 @@ private fun createPdf(mContext: Context, fname: String, test: String) {
             .setContentBaseUrl(null)
             .setPageSize(PrintAttributes.MediaSize.ISO_A4)
             .setContent(test)
-            .setFilePath(Environment.getExternalStorageDirectory().absolutePath + "/Community")
+            .setFilePath(Utility.getPath())
             .setCallbackListener(object : CreatePdf.PdfCallbackListener {
                 override fun onFailure(errorMsg: String) {
                     Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show()
