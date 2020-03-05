@@ -2,19 +2,21 @@ package com.krs.community.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.adapter.SmartFilterAdapter
 import com.krs.community.app.AppController
+import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
@@ -32,7 +34,6 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
     private lateinit var expandableListView: ExpandableListView
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-    var extendedFAB: ExtendedFloatingActionButton? = null
     override val kodein by kodein()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -41,25 +42,17 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
-
         val rootView = inflater.inflate(R.layout.fragment_smart_search, container, false)
-
+        val fab = rootView.findViewById(R.id.fab) as MovableFloatingActionButton
+        val lp = fab.layoutParams as CoordinatorLayout.LayoutParams
+        fab.coordinatorLayout = lp
+        fab.setOnClickListener {
+            Utility.hideKeyboard(activity)
+            Handler().postDelayed({ adapter?.openBottomSheetDailog() }, 250)
+        }
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, ExpandableFilterListFragment::class.simpleName)
-        extendedFAB = rootView.findViewById<ExtendedFloatingActionButton>(R.id.ext_fab)
-        extendedFAB?.setOnClickListener {
-            if (extendedFAB!!.isExtended) {
-                extendedFAB!!.shrink()
-            } else {
-                extendedFAB!!.extend()
-            }
-            // Utility.hideKeyboard(activity)
-            // Handler().postDelayed({ adapter?.openBottomSheetDailog() }, 250)
-        }
 
-        /* val mfab = rootView.findViewById(R.id.mfab) as MovableFloatingActionButton
-        val lp = mfab.layoutParams as CoordinatorLayout.LayoutParams
-        mfab.coordinatorLayout = lp*/
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
 
         expandableListView = rootView.findViewById(R.id.lst_expandable)
@@ -81,10 +74,6 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
             adapter?.clearAll()
         }
 
-        /*mfab.setOnClickListener { v: View? ->
-            Utility.hideKeyboard(activity)
-            Handler().postDelayed({ adapter?.openBottomSheetDailog() }, 250)
-        }*/
         expandableListView.setOnScrollListener(object : OnScrollObserver() {
             override fun onScrollUp() {
                 Log.d(TAG, "onScrollUp")

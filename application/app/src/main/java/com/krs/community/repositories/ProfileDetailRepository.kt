@@ -187,9 +187,9 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun getLastNameById(id: Int): LiveData<String> {
+    suspend fun getLastNameById(id: Int): String {
         return withContext(Dispatchers.IO) {
-            db.getLastNameDao().getLastNameById(id)
+            db.getLastNameDao().getLastName(id)
         }
     }
     suspend fun getLastName(): LiveData<List<String>> {
@@ -215,6 +215,14 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
             db.getCityDao().getcityNameById(id)
         }
     }
+
+    suspend fun getcityName(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getCityDao().getcityName(id)
+        }
+    }
+
+
 
     suspend fun getCityIdByName(name: String): Int {
         return withContext(Dispatchers.IO) {
@@ -253,7 +261,7 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun getstateNameById(id: Int): LiveData<String> {
+    suspend fun getstateNameById(id: Int): String {
         return withContext(Dispatchers.IO) {
             db.getStatesDao().getstateNameById(id)
         }

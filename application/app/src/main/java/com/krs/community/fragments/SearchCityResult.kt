@@ -33,6 +33,7 @@ import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.AtoZBottomAdapter
+import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
@@ -63,9 +64,8 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.util.*
 
-class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore, AtoZBottomAdapter.ISortingRecords, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner, EditMemberListener {
+class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore, AtoZBottomAdapter.ISortingRecords, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner, EditMemberListener, ExportAdapter.exportPdfListener {
 
     companion object {
         var alpha: String = ""
@@ -73,7 +73,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     }
 
     private var selectedPosition = 0
-
     private lateinit var cityId: String
     private lateinit var cityName: String
     private val members = ArrayList<Member>()
@@ -101,6 +100,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private lateinit var loginMem: Member
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
+    private var exportDialog: DialogPlus? = null
     private lateinit var ivExport: ImageView
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -114,6 +114,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
+
         AppController.mApplication.start = 0
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
@@ -198,7 +199,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, getString(R.string.expo) + "${member.firstName}" + getString(R.string.sdetails), getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.expo) + " " + "${member.firstName}" + getString(R.string.sdetails), getString(R.string.please_wait))
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -281,30 +282,21 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         }
         ivExport.setOnClickListener {
 
+            if (Utility.checkExternalStoragePermission(activity)) {
+                val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
+                adapter.setExportListner(this@SearchCityResult)
+                exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
+                        .setAdapter(adapter)
+                        .setGravity(Gravity.BOTTOM)
+                        .setCancelable(true)
+                        .setExpanded(true, 800)
+                        .setContentBackgroundResource(R.drawable.popup_top_corner)
+                        .create()
+                exportDialog?.show()
+            } else {
+                Utility.requestStoragePermission(activity as AppCompatActivity)
+            }
 
-            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.you_sure))
-                    .setContentText(getString(R.string.export_search_result))
-                    .setConfirmText(getString(R.string.YesExport))
-                    .setCancelText(getString(R.string.no))
-                    .setConfirmClickListener {
-                        it.dismiss()
-                        if (members.size > 0) {
-                            Handler().post {
-                                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
-                            }
-                            createMemberListPDF(activity as AppCompatActivity, members, profileDetailViewModel)
-                            Handler().postDelayed({
-                                Utility.hideSweetProgress()
-                            }, 7000)
-                        } else {
-                            binding.llParent.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
-                        }
-                    }
-                    .setCancelClickListener {
-                        it.dismiss()
-                    }
-                    .show()
         }
         tvCount = header.findViewById(R.id.tv_count)
 
@@ -860,11 +852,24 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 .show()
     }
 
+    override fun exportPdf(filters: ArrayList<String>) {
+        if (members.size > 0) {
+            Handler().post {
+                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+            }
+            createMemberListPDF(activity as AppCompatActivity, members, filters, profileDetailViewModel)
+            Handler().postDelayed({
+                Utility.hideSweetProgress()
+            }, 7000)
+        } else {
+            binding.llParent.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+        }
+    }
+
     override fun cancelDialog() {
         actionMode?.finish()
         changeRoleDialog?.dismiss()
         setLocationDialog?.dismiss()
+        exportDialog?.dismiss()
     }
-
-
 }

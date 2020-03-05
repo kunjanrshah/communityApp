@@ -58,20 +58,23 @@
                 android:layout_marginBottom="5dp"
                 android:divider="#ffffff"
                 android:dividerHeight="0dp"
-                android:scrollbars="none">
+                android:scrollbars="none" />
 
-                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                    android:id="@+id/ext_fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="DONE"
-                    app:icon="@drawable/ic_done_white_24dp" />
-
-            </ExpandableListView>
+            <com.krs.community.utils.MovableFloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="70dp"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/rocket"
+                app:borderWidth="0dp"
+                app:elevation="6dp"
+                app:fabSize="normal"
+                app:maxImageSize="56dp" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
     </LinearLayout>
 

@@ -21,12 +21,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
+import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.app.SearchLiveo
 import com.krs.community.databinding.ActivityFavoriteBinding
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.RoomMemberListener
+import com.krs.community.model.Member
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
@@ -42,13 +45,16 @@ import java.text.Normalizer
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener,LocationAdapter.SetLocationListner {
+class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
 
     private lateinit var roomMemberViewModel: RoomMemberViewModel
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var mBinding:ActivityFavoriteBinding
     private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
     private var mAdapter: FavoriteAdapter? = null
-    private var setLocationDialog: DialogPlus? = null
+    private var locationDialog: DialogPlus? = null
+    private var exportDialog: DialogPlus? = null
     private var lstMember = ArrayList<RoomMember>()
     override val kodein by kodein()
 
@@ -59,13 +65,12 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener = this
-
+        profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@FavoriteProfileActivity, FavoriteProfileActivity.javaClass.simpleName)
 
@@ -97,6 +102,21 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
         } else if(id == android.R.id.home){
             finish()
             Utility.fade(this)
+        } else if (id == R.id.action_export) {
+            if (Utility.checkExternalStoragePermission(this)) {
+                val adapter: ExportAdapter = ExportAdapter(this@FavoriteProfileActivity)
+                adapter.setExportListner(this@FavoriteProfileActivity)
+                exportDialog = DialogPlus.newDialog(this@FavoriteProfileActivity)
+                        .setAdapter(adapter)
+                        .setGravity(Gravity.BOTTOM)
+                        .setCancelable(true)
+                        .setExpanded(true, 800)
+                        .setContentBackgroundResource(R.drawable.popup_top_corner)
+                        .create()
+                exportDialog?.show()
+            } else {
+                Utility.requestStoragePermission(this)
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -111,7 +131,6 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
             }
         }
     }
-
 
     private fun onInitView(){
         mBinding=  DataBindingUtil.setContentView(this,R.layout.activity_favorite)
@@ -137,14 +156,13 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
         }
     }
 
-
     override fun refreshList() {
         mAdapter = FavoriteAdapter(lstMember as MutableList<RoomMember>)
         mBinding.recyclerView.adapter = mAdapter
     }
 
     override fun getRoomMembers(response: List<RoomMember>) {
-        if (response.size > 0) {
+        if (response.isNotEmpty()) {
             lstMember.addAll(response)
 
             mAdapter = FavoriteAdapter(lstMember as MutableList<RoomMember>)
@@ -201,7 +219,8 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
             var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
             var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
            var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
-
+           var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+           var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -215,8 +234,15 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
             viewHolder.lstFound.visibility=View.GONE
             viewHolder.iconFront.visibility=View.VISIBLE
             viewHolder.iconBack.visibility=View.GONE
-
+            viewHolder.badge.setNumber(member.memberCount)
             viewHolder.tvName.text = member.firstName
+
+            if (member.status == "2") {
+                viewHolder.ivVerify.visibility = View.VISIBLE
+            } else {
+                viewHolder.ivVerify.visibility = View.GONE
+            }
+
             if(!member.subCastId.isNullOrEmpty()){
                 roomMemberViewModel.getLastName(member.subCastId.toInt()).observeForever {
                     viewHolder.tvName.text = member.firstName + " " + it
@@ -228,8 +254,6 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                     viewHolder.tvArea.text = member.area + " " + it
                 }
             }
-           /* viewHolder.tvEmail.text = member.emailAddress
-            viewHolder.tvMobile.text = member.mobile*/
             if (member.gender.equals("Male")) {
                 viewHolder.ivGender.setBackgroundResource(R.drawable.male)
             } else {
@@ -254,7 +278,7 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                 viewHolder.tvRole.text = resources.getString(R.string.Member)
             }
             if (!member.updatedDt.isNullOrEmpty()) {
-                viewHolder.tvUpdate.text = getString(R.string.Updated) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                viewHolder.tvUpdate.text = getString(R.string.Updated) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
             }
 
             viewHolder.boomMenuButton.clearBuilders()
@@ -266,9 +290,9 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                         val profileDetailViewModel = ViewModelProvider(this@FavoriteProfileActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
                         createMemberPDF(this@FavoriteProfileActivity, getMemberFromRoomMember(member),profileDetailViewModel)
 
-                        Handler().post(Runnable {
+                        Handler().post {
                             Utility.startSweetProgress(this@FavoriteProfileActivity, getString(R.string.ExportingList)+" ${member.firstName}" +getString(R.string.DetailList), getString(R.string.please_wait))
-                        })
+                        }
                         Handler().postDelayed({
                             Utility.hideSweetProgress()
                         }, 5000)
@@ -300,14 +324,14 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
                     } else if (it == 5) {
                         val adapter: LocationAdapter = LocationAdapter(this@FavoriteProfileActivity,getMemberFromRoomMember(member))
                         adapter.setLocationListner(this@FavoriteProfileActivity)
-                        setLocationDialog = DialogPlus.newDialog(this@FavoriteProfileActivity)
+                        locationDialog = DialogPlus.newDialog(this@FavoriteProfileActivity)
                                 .setAdapter(adapter)
                                 .setGravity(Gravity.BOTTOM)
                                 .setCancelable(true)
                                 .setExpanded(true, 600)
                                 .setContentBackgroundResource(R.drawable.popup_top_corner)
                                 .create()
-                        setLocationDialog?.show()
+                        locationDialog?.show()
 
                     }
                 }
@@ -376,7 +400,30 @@ class FavoriteProfileActivity : AppCompatActivity() , SearchLiveo.OnSearchListen
         }
     }
 
+    override fun exportPdf(filters: ArrayList<String>) {
+        if (lstMember.size > 0) {
+            Handler().post {
+                Utility.startSweetProgress(this, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+            }
+            Coroutines.io {
+                val expMems = ArrayList<Member>()
+                for (member in lstMember) {
+                    expMems.add(getMemberFromRoomMember(member))
+                }
+                Coroutines.main {
+                    createMemberListPDF(this, expMems, filters, profileDetailViewModel)
+                }
+            }
+            Handler().postDelayed({
+                Utility.hideSweetProgress()
+            }, 7000)
+        } else {
+            mBinding.recyclerView.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+        }
+    }
+
     override fun cancelDialog() {
-        setLocationDialog?.dismiss()
+        locationDialog?.dismiss()
+        exportDialog?.dismiss()
     }
 }

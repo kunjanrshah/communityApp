@@ -392,6 +392,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         if (!response.otp.isNullOrBlank()) {
             card_view_mobile.visibility = View.GONE
             card_view_otp.visibility = View.VISIBLE
+            tv_otp.text = loginViewModel?.mobile
             startSMSListener()
             ReceviedOTP = response.otp
         } else {

@@ -2,7 +2,6 @@ package com.krs.community.adapter
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,15 +47,11 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         }
 
         viewHolder.ivCancel.setOnClickListener { v: View? ->
-
-            Log.e("ivCancel--","ivCancel----");
             setLocationListner?.cancelDialog()
-
         }
 
         viewHolder.llHome.setOnClickListener { v: View? ->
 
-            Log.e("homeLat--",""+member.homeLat);
             if(!member.homeLat.isNullOrEmpty() &&  !member.homeLng.isNullOrEmpty()){
                 Utility.showDirections(mContext as Activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}'s Home")
             }
@@ -64,15 +59,12 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
 
         viewHolder.llOffice.setOnClickListener { v: View? ->
 
-            Log.e("officeLat--",""+member.officeLat);
             if(!member.officeLat.isNullOrEmpty() &&  !member.officeLng.isNullOrEmpty()){
                 Utility.showDirections(mContext as Activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Office")
             }
         }
 
         viewHolder.llUser.setOnClickListener { v: View? ->
-
-            Log.e("userLat--",""+member.userLat);
 
             if(!member.userLat.isNullOrEmpty() &&  !member.userLng.isNullOrEmpty() && isShareLocation()){
                 Utility.showDirections(mContext as Activity, member.userLat.toDouble(), member.userLng.toDouble(), "${member.firstName}'s Location")

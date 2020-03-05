@@ -146,7 +146,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                         .setContentText(getString(R.string.withGoogleMap))
                         .setConfirmText(getString(R.string.View))
                         .setNeutralText(getString(R.string.set))
-                        .setCustomImage(R.drawable.ic_medk)
+                        .setCustomImage(R.drawable.icon_ghanchi)
                         .setConfirmClickListener {
                             it.dismiss()
                             Utility.showDirections(activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}" + getString(R.string.homeDetail))
@@ -310,18 +310,16 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     private fun setMemberLastname() = Coroutines.main {
      if(member.subCastId.isNotEmpty()){
          profileDetailViewModel.selectedLastNameId = Integer.parseInt(member.subCastId)
-         profileDetailViewModel.lastName.await().observeForever {
-             binding.spLastname.setText(it)
-         }
+         val lname = profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
+         binding.spLastname.setText(lname)
      }
     }
 
     private fun setMemberState() = Coroutines.main {
      if(member.stateId.isNotEmpty()){
          profileDetailViewModel.selectedStateId = Integer.parseInt(member.stateId)
-         profileDetailViewModel.stateName.await().observeForever {
-             binding.spState.setText(it)
-         }
+         val name = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
+         binding.spState.setText(name)
      }
     }
 

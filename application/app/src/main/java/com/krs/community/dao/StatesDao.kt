@@ -17,7 +17,7 @@ interface StatesDao {
     fun getStateNames() : LiveData<List<String>>
 
     @Query("SELECT name FROM States WHERE id == :id")
-    fun getstateNameById(id:Int) : LiveData<String>
+    fun getstateNameById(id: Int): String
 
     @Query("SELECT id FROM States WHERE name == :name")
     fun getstateIdByName(name:String) : Int

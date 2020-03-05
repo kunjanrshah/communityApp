@@ -37,6 +37,7 @@ import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
+import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
@@ -63,7 +64,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore,MyRoleAdapter.iChangeRoleListner,RoomMemberListener,  LocationAdapter.SetLocationListner {
+class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, RoomMemberListener, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
 
     private lateinit var rvSearch: RecyclerView
     private lateinit var frameRoot: FrameLayout
@@ -90,7 +91,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
     private val lstKeyword = ArrayList<String>()
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
-
+    private var exportDialog: DialogPlus? = null
     private var reverseAllAnimations = false
     private var selectedItems: SparseBooleanArray = SparseBooleanArray()
     private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
@@ -106,7 +107,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
             Utility.changeStatusbarColor(activity, R.color.white, false)
         }
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, SearchListFragment::class.simpleName)
 
         smartSearchViewModel = ViewModelProvider(this, smartSearchViewModelFactory).get(SmartSearchViewModel::class.java)
@@ -114,7 +115,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
 
         smartSearchViewModel.mByKeywordListener = this
-        roomMemberViewModel.mRoomMemberListener= this
+        roomMemberViewModel.mRoomMemberListener = this
 
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
         loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
@@ -140,30 +141,20 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
         ivExport = header.findViewById(R.id.iv_export)
         ivExport.setOnClickListener {
-
-            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.you_sure))
-                    .setContentText(getString(R.string.export_search_result))
-                    .setConfirmText(getString(R.string.YesExport))
-                    .setCancelText(getString(R.string.no))
-                    .setConfirmClickListener {
-                        it.dismiss()
-                        if (lstMembers.size > 0) {
-                            Handler().post {
-                                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
-                            }
-                            createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
-                            Handler().postDelayed({
-                                Utility.hideSweetProgress()
-                            }, 7000)
-                        } else {
-                            rvSearch.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
-                        }
-                    }
-                    .setCancelClickListener {
-                        it.dismiss()
-                    }
-                    .show()
+            if (Utility.checkExternalStoragePermission(activity as AppCompatActivity)) {
+                val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
+                adapter.setExportListner(this@SearchListFragment)
+                exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
+                        .setAdapter(adapter)
+                        .setGravity(Gravity.BOTTOM)
+                        .setCancelable(true)
+                        .setExpanded(true, 800)
+                        .setContentBackgroundResource(R.drawable.popup_top_corner)
+                        .create()
+                exportDialog?.show()
+            } else {
+                Utility.requestStoragePermission(activity as AppCompatActivity)
+            }
         }
 
         rvAdapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
@@ -187,21 +178,21 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     }
                 }
 
-                if (member.mobile.isEmpty()){
+                if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()){
+                if (member.emailAddress.isEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
@@ -233,7 +224,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, getString(R.string.ExportList)+"${member.firstName}" +getString(R.string.DetailsList), getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.ExportList) + "${member.firstName}" + getString(R.string.DetailsList), getString(R.string.please_wait))
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -290,7 +281,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
                 applyIconAnimation(viewHolder, position)
                 applyImportant(viewHolder, member)
-                applyClickEvents(viewHolder, position,member)
+                applyClickEvents(viewHolder, position, member)
                 applyProfilePicture(viewHolder, member)
             }
 
@@ -350,8 +341,8 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
         DashboardActivity.stop = true
 
-        val keyword= arguments?.getString("keyword")
-        if(!keyword.isNullOrEmpty()){
+        val keyword = arguments?.getString("keyword")
+        if (!keyword.isNullOrEmpty()) {
             searchWord = keyword
             DashboardActivity.stop = false
             getMembersByKeyword()
@@ -359,10 +350,12 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
         return rootView
     }
+
     fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
+
     class FoundListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var txtName: TextView = v.findViewById(R.id.txt_name)
     }
@@ -441,8 +434,8 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                 lstMembers.add(item)
             }
             rvAdapter.notifyDataSetChanged()
-              rvSearch.layoutManager?.scrollToPosition(selectedPosition)
-              selectedPosition = lstMembers.size - 1
+            rvSearch.layoutManager?.scrollToPosition(selectedPosition)
+            selectedPosition = lstMembers.size - 1
             if (Integer.parseInt(response.totalRecords) <= AppController.mApplication.length) {
                 DashboardActivity.stop = true
                 if (Integer.parseInt(response.totalRecords) == 0) {
@@ -591,7 +584,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         })
     }
 
-    private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {
+    private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {
 
         holder.iconImp.setOnClickListener {
 
@@ -620,7 +613,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
             try {
                 val path = getString(R.string.base_url_original) + "" + member.profilePic
                 Log.d(TAG, "path: $path")
-                openImageDialog(activity as AppCompatActivity,path)
+                openImageDialog(activity as AppCompatActivity, path)
             } catch (e: Exception) {
                 e.message
             }
@@ -637,11 +630,11 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
     @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
-                holder.imgProfile.isClickable = true
-                val url=resources.getString(R.string.base_url_thumb)+member.profilePic
-                Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
-                holder.imgProfile.colorFilter = null
-                holder.iconText.visibility = View.GONE
+            holder.imgProfile.isClickable = true
+            val url = resources.getString(R.string.base_url_thumb) + member.profilePic
+            Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
+            holder.imgProfile.colorFilter = null
+            holder.iconText.visibility = View.GONE
 
         } else {
             holder.imgProfile.isClickable = false
@@ -765,7 +758,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-             return false
+            return false
         }
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean =
@@ -774,7 +767,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText(getString(R.string.WantDisable)+"${selectedItemPositions.size}"+getString(R.string.Proffiles))
+                                .setContentText(getString(R.string.WantDisable) + "${selectedItemPositions.size}" + getString(R.string.Proffiles))
                                 .setConfirmText(getString(R.string.YesDisable))
                                 .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {
@@ -794,7 +787,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                                     jsonObject.put(getString(R.string.idList), Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                                     lstMembers.clear()
-                                    tvRecords.visibility=View.GONE
+                                    tvRecords.visibility = View.GONE
                                     rvAdapter.notifyDataSetChanged()
                                     mShimmerViewContainer.startShimmerAnimation()
                                     mShimmerViewContainer.visibility = View.VISIBLE
@@ -899,7 +892,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.you_sure))
-                .setContentText("${selectedItemPositions.size}"+getString(R.string.ProfileList) +"'$role'!")
+                .setContentText("${selectedItemPositions.size}" + getString(R.string.ProfileList) + "'$role'!")
                 .setConfirmText(getString(R.string.YesPlList))
                 .setCancelText(getString(R.string.no))
                 .setConfirmClickListener {
@@ -909,17 +902,17 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                     jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
 
-                    var changed=""
-                    if(role == getString(R.string.Local_Admin)){
+                    var changed = ""
+                    if (role == getString(R.string.Local_Admin)) {
                         changed = getString(R.string.LOCAL_ADMIN)
-                    }else if(role == getString(R.string.Sub_Admin)) {
+                    } else if (role == getString(R.string.Sub_Admin)) {
                         changed = getString(R.string.SUB_ADMIN)
-                    }else{
+                    } else {
                         changed = getString(R.string.User)
                     }
 
                     jsonObject.put(getString(R.string.role), changed)
-                    val loginuser= Guru.getString(getString(R.string.loginMember),"")
+                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
                     val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
                     jsonObject.put(getString(R.string.local_community_id), member.localCommunityId)
                     jsonObject.put(getString(R.string.sub_community_id), member.subCommunityId)
@@ -933,7 +926,7 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
                     jsonObject.put(getString(R.string.idList), Ids)
                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                     lstMembers.clear()
-                    tvRecords.visibility=View.GONE
+                    tvRecords.visibility = View.GONE
                     rvAdapter.notifyDataSetChanged()
                     mShimmerViewContainer.startShimmerAnimation()
                     mShimmerViewContainer.visibility = View.VISIBLE
@@ -947,6 +940,19 @@ class SearchListFragment : Fragment(), KodeinAware,ByKeywordListener, ParallaxRe
 
     }
 
+    override fun exportPdf(filters: ArrayList<String>) {
+        if (lstMembers.size > 0) {
+            Handler().post {
+                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+            }
+            createMemberListPDF(activity as AppCompatActivity, lstMembers, filters, profileDetailViewModel)
+            Handler().postDelayed({
+                Utility.hideSweetProgress()
+            }, 7000)
+        } else {
+            rvSearch.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+        }
+    }
 
     override fun cancelDialog() {
         actionMode?.finish()

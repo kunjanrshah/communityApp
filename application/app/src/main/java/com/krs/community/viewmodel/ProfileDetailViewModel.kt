@@ -40,6 +40,11 @@ class ProfileDetailViewModel(
     val lastName by lazyDeferred {
         mProfileDetailRepository.getLastNameById(selectedLastNameId)
     }
+
+    suspend fun getLastNameById(id: Int): String {
+        return mProfileDetailRepository.getLastNameById(id)
+    }
+
     val lstLastName by lazyDeferred {
         mProfileDetailRepository.getLastName()
     }
@@ -52,6 +57,11 @@ class ProfileDetailViewModel(
     val stateName by lazyDeferred {
         mProfileDetailRepository.getstateNameById(selectedStateId)
     }
+
+    suspend fun getstateNameById(id: Int): String {
+        return mProfileDetailRepository.getstateNameById(id)
+    }
+
     val lstStateName by lazyDeferred {
         mProfileDetailRepository.getStateName()
     }
@@ -62,6 +72,10 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getcityNameById(selectedCityId)
     }
 
+    suspend fun getcityName(id: Int): String {
+        return mProfileDetailRepository.getcityName(id)
+    }
+
     val lstCityName by lazyDeferred {
         mProfileDetailRepository.getListCityName()
     }
@@ -70,6 +84,7 @@ class ProfileDetailViewModel(
     val nativeName by lazyDeferred {
         mProfileDetailRepository.getNativeNameById(selectedNativeId)
     }
+
     val lstNativeName by lazyDeferred {
         mProfileDetailRepository.getNativeNames()
     }

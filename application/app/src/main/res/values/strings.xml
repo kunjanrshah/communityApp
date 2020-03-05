@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">MEDK Samaj</string>
-
+    <string name="app_name">Ghanchi Samaj</string>
     <string name="action_delete">Delete</string>
     <string name="action_disable">Disable</string>
     <string name="action_location">Location</string>

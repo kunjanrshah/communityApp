@@ -34,6 +34,7 @@ import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
+import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
@@ -58,16 +59,14 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.util.*
 
-class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, RoomMemberListener, LocationAdapter.SetLocationListner {
+class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, RoomMemberListener, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
 
     override val kodein by kodein()
 
     private lateinit var rvFilters: RecyclerView
     private lateinit var mShimmerViewContainer: ShimmerFrameLayout
     private val lstMembers: ArrayList<Member> = ArrayList()
-
     private lateinit var actionModeCallback: ActionModeCallback
     private var actionMode: ActionMode? = null
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
@@ -88,7 +87,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
     private val roomMemberFactory: RoomMemberViewModelFactory by instance()
-
+    private var exportDialog: DialogPlus? = null
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
     private var loginMember: Member? = null
@@ -98,7 +97,6 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, SmartFilterResult::class.simpleName)
-
 
         llRoot = rootView.findViewById(R.id.ll_parent)
         selectedItems = SparseBooleanArray()
@@ -262,29 +260,23 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
 
-            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.you_sure))
-                    .setContentText(getString(R.string.export_search_result))
-                    .setConfirmText(getString(R.string.YesExport))
-                    .setCancelText(getString(R.string.no))
-                    .setConfirmClickListener {
-                        it.dismiss()
-                        if (lstMembers.size > 0) {
-                            Handler().post {
-                                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
-                            }
-                            createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
-                            Handler().postDelayed({
-                                Utility.hideSweetProgress()
-                            }, 7000)
-                        } else {
-                            rvFilters.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
-                        }
-                    }
-                    .setCancelClickListener {
-                        it.dismiss()
-                    }
-                    .show()
+            if (Utility.checkExternalStoragePermission(activity)) {
+                val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
+                adapter.setExportListner(this@SmartFilterResult)
+                exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
+                        .setAdapter(adapter)
+                        .setGravity(Gravity.BOTTOM)
+                        .setCancelable(true)
+                        .setExpanded(true, 800)
+                        .setContentBackgroundResource(R.drawable.popup_top_corner)
+                        .create()
+                exportDialog?.show()
+
+            } else {
+                Utility.requestStoragePermission(activity as AppCompatActivity)
+            }
+
+
         }
 
         adapter.setParallaxHeader(header, rvFilters)
@@ -842,10 +834,25 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 .show()
     }
 
+    override fun exportPdf(filters: ArrayList<String>) {
+        if (lstMembers.size > 0) {
+            Handler().post {
+                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+            }
+            createMemberListPDF(activity as AppCompatActivity, lstMembers, filters, profileDetailViewModel)
+            Handler().postDelayed({
+                Utility.hideSweetProgress()
+            }, 7000)
+        } else {
+            rvFilters.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+        }
+    }
+
     override fun cancelDialog() {
         actionMode?.finish()
         changeRoleDialog?.dismiss()
         setLocationDialog?.dismiss()
+        exportDialog?.dismiss()
     }
 
 }

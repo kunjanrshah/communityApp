@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
@@ -30,6 +29,7 @@ import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
+import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentMatrimonylistBinding
@@ -54,7 +54,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener, ParallaxRecyclerAdapter.OnLoadMore, LocationAdapter.SetLocationListner {
+class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener, ParallaxRecyclerAdapter.OnLoadMore, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
 
     private var lstMembers = ArrayList<Member>()
     override val kodein by kodein()
@@ -70,6 +70,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
     private lateinit var binding: FragmentMatrimonylistBinding
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private var setLocationDialog: DialogPlus? = null
+    private var exportDialog: DialogPlus? = null
     private lateinit var tvRecords: TextView
     private lateinit var ivExport: ImageView
 
@@ -119,29 +120,20 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         }
 
         ivExport.setOnClickListener {
-            if (lstMembers.size > 0) {
 
-                SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.you_sure))
-                        .setContentText(getString(R.string.export_search_result))
-                        .setConfirmText(getString(R.string.YesExport))
-                        .setCancelText(getString(R.string.no))
-                        .setConfirmClickListener {
-                            it.dismiss()
-                            Handler().post {
-                                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
-                            }
-                            createMemberListPDF(activity as AppCompatActivity, lstMembers, profileDetailViewModel)
-                            Handler().postDelayed({
-                                Utility.hideSweetProgress()
-                            }, 7000)
-                        }
-                        .setCancelClickListener {
-                            it.dismiss()
-                        }
-                        .show()
+            if (Utility.checkExternalStoragePermission(activity as AppCompatActivity)) {
+                val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
+                adapter.setExportListner(this@MatrimonyListFragment)
+                exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
+                        .setAdapter(adapter)
+                        .setGravity(Gravity.BOTTOM)
+                        .setCancelable(true)
+                        .setExpanded(true, 800)
+                        .setContentBackgroundResource(R.drawable.popup_top_corner)
+                        .create()
+                exportDialog?.show()
             } else {
-                binding.listMatrimony.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+                Utility.requestStoragePermission(activity as AppCompatActivity)
             }
         }
 
@@ -177,7 +169,6 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                     }
                 }
 
-
                 val age = Utility.getAge(member.birthDate, Utility.yyyy_MM_dd)
                 if (age in 0..100) {
                     holder.tvAge.text = "$age"
@@ -186,9 +177,6 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 }
                 viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 holder.tvStatus.text = member.maritalStatus
-
-                /*holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile*/
 
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
@@ -427,7 +415,6 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         var messageContainer: LinearLayout = v.findViewById(R.id.message_container1)
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var llMobile: LinearLayout = v.findViewById(R.id.ll_mobile)
-        var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
@@ -497,7 +484,22 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         }
     }
 
+    override fun exportPdf(filters: ArrayList<String>) {
+        if (lstMembers.size > 0) {
+            Handler().post {
+                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+            }
+            createMemberListPDF(activity as AppCompatActivity, lstMembers, filters, profileDetailViewModel)
+            Handler().postDelayed({
+                Utility.hideSweetProgress()
+            }, 7000)
+        } else {
+            binding.listMatrimony.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
+        }
+    }
+
     override fun cancelDialog() {
         setLocationDialog?.dismiss()
+        exportDialog?.dismiss()
     }
 }

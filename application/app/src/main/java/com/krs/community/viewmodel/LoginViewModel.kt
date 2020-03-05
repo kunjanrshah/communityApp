@@ -31,6 +31,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     var job_forgot: CompletableJob? = null
     var mobile: String? = ""
     var country_code: String? = ""
+    val otp_lable = ""
     var otp_timer: ObservableField<String>? = ObservableField()
     var mAuth: FirebaseAuth? = null
     var cTimer: CountDownTimer? = null
@@ -139,8 +140,6 @@ class LoginViewModel(private val loginRepository: LoginRepository,
             e.printStackTrace()
         }
     }
-
-
 
     fun getLoginUser(req_login: AppConstants.LoginRequest) {
         job_login = Job()
