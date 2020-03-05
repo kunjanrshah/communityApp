@@ -42,7 +42,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
         mCurrentService = this
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Log.d(TAG, "restarting Service !!")
         try {
@@ -89,7 +89,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
             Log.i(TAG, "restarting foreground")
             try {
                 val notification = Notification()
-                startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.icon_app))
+                startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_medk))
                 Log.i(TAG, "restarting foreground successful")
                 easyWayLocation?.startLocation()
                 // serviceIntent = Intent(this, CallReceiver::class.java)

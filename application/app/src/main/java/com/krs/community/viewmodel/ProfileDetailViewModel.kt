@@ -12,7 +12,7 @@ import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import kotlinx.coroutines.*
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
@@ -213,17 +213,17 @@ class ProfileDetailViewModel(
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
                     val requestFile = RequestBody.create(
-                            MediaType.parse("image/*"),
+                            "image/*".toMediaTypeOrNull(),
                             file
                     )
                     val body = MultipartBody.Part.createFormData("uploaded_file", file.name, requestFile)
                     val id = RequestBody.create(
-                            MediaType.parse("text/plain"),
+                            "text/plain".toMediaTypeOrNull(),
                             id)
 
 
                     val _type = RequestBody.create(
-                            MediaType.parse("text/plain"),
+                            "text/plain".toMediaTypeOrNull(),
                             type)
 
                     val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, _type)

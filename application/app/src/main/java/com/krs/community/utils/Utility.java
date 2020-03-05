@@ -189,16 +189,13 @@ public class Utility {
         ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_REQUEST);
     }
 
-    public static void requestPhoneCallPermission(AppCompatActivity mActivity) {
-        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_REQUEST);
-    }
-
-    public static void requestReadCallLogPermission(AppCompatActivity mActivity) {
-        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG}, READ_CALL_LOG);
-    }
-
-    public static void requestReadPhoneStatePermission(AppCompatActivity mActivity) {
-        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE);
+    public static void requestPermissions(AppCompatActivity mActivity) {
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
+        }
     }
 
     public static String getRandomString(final int sizeOfRandomString) {

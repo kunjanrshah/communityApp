@@ -46,12 +46,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.MapTracking.LocationJobService
 import com.krs.community.R
-import com.krs.community.activity.MapTrackingActivity
 import com.krs.community.app.AppController
 import com.krs.community.listeners.IFamilyMembersListener
 import com.krs.community.model.Member
@@ -77,7 +75,7 @@ class MapTrackingActivity : AppCompatActivity(), Listener, KodeinAware, IFamilyM
     var mapFragment: SupportMapFragment? = null
     var mMap: GoogleMap? = null
     var mapLoaded = false
-    var carMarker: Marker? = null
+    var headMarker: Marker? = null
     var oldLocation: Location? = null
     var bearing = 0f
     var registered = false
@@ -87,8 +85,7 @@ class MapTrackingActivity : AppCompatActivity(), Listener, KodeinAware, IFamilyM
     var Latitude = 0.0
     var Longitude = 0.0
     lateinit var mainHandler: Handler
-    private var memberId:String?=null
-    var headId:String?=null
+
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     lateinit var members:ArrayList<Member>
@@ -100,8 +97,7 @@ class MapTrackingActivity : AppCompatActivity(), Listener, KodeinAware, IFamilyM
 
         mainHandler = Handler(Looper.getMainLooper())
 
-        memberId = Guru.getString(getString(R.string.member_id), "")
-        headId = Guru.getString(getString(R.string.user_id), "")
+
 
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
@@ -170,6 +166,8 @@ class MapTrackingActivity : AppCompatActivity(), Listener, KodeinAware, IFamilyM
     private fun getFamilyDetails(){
 
         val jsonObject= JSONObject()
+        val memberId = Guru.getString(getString(R.string.member_id), "")
+        val headId = Guru.getString(getString(R.string.user_id), "")
         if(!memberId.isNullOrEmpty()){
             jsonObject.put(getString(R.string.id),memberId)
         }
@@ -411,7 +409,7 @@ class MapTrackingActivity : AppCompatActivity(), Listener, KodeinAware, IFamilyM
             return
         }
         if (mMap != null && mapLoaded) {
-            if (carMarker == null) {
+            if (headMarker == null) {
                 oldLocation = location
                 val markerOptions = MarkerOptions()
                 val car = BitmapDescriptorFactory.fromResource(R.drawable.pintracking)
@@ -419,13 +417,13 @@ class MapTrackingActivity : AppCompatActivity(), Listener, KodeinAware, IFamilyM
                 markerOptions.anchor(0.5f, 0.5f) // set the car image to center of the point instead of anchoring to above or below the location
                 markerOptions.flat(true) // set as true, so that when user rotates the map car icon will remain in the same direction
                 markerOptions.position(LatLng(location.latitude, location.longitude))
-                carMarker = mMap!!.addMarker(markerOptions)
+                headMarker = mMap!!.addMarker(markerOptions)
                 bearing = if (location.hasBearing()) { // if location has bearing set the same bearing to marker(if location is acquired using GPS bearing will be available)
                     location.bearing
                 } else {
                     0f // no need to calculate bearing as it will be the first point
                 }
-                carMarker?.setRotation(bearing)
+                headMarker?.setRotation(bearing)
                 moveThread = MoveThread()
                 moveThread!!.setNewPoint(LatLng(location.latitude, location.longitude), 16f)
                 handler!!.post(moveThread)
@@ -435,9 +433,9 @@ class MapTrackingActivity : AppCompatActivity(), Listener, KodeinAware, IFamilyM
                 } else { // if not, calculate bearing between old location and new location point
                     oldLocation!!.bearingTo(location)
                 }
-                carMarker!!.rotation = bearing
+                headMarker!!.rotation = bearing
                 moveThread!!.setNewPoint(LatLng(location.latitude, location.longitude), mMap!!.cameraPosition.zoom) // set the map zoom to current map's zoom level as user may zoom the map while tracking.
-                animateMarkerToICS(carMarker, LatLng(location.latitude, location.longitude)) // animate the marker smoothly
+                animateMarkerToICS(headMarker, LatLng(location.latitude, location.longitude)) // animate the marker smoothly
             }
         } else {
             Log.e("map null or not loaded", "")
@@ -524,8 +522,7 @@ class MapTrackingActivity : AppCompatActivity(), Listener, KodeinAware, IFamilyM
     override fun getFamilyMembers(data: FamilyDetailResponse) {
         if (data.success) {
             members = data.member as ArrayList<Member>
-
-            Log.e("fname---",""+members[0].firstName)
+            // updateMarker()
         }
     }
 }

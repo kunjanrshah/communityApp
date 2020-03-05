@@ -133,26 +133,6 @@ fun advancedConfig(uCrop: UCrop, context: Context): UCrop {
     return uCrop.withOptions(options)
 }
 
-fun displayNeverAskAgainDialog(context: Context) {
-
-    SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-            .setTitleText("Storage Read Permission")
-            .setContentText("Permission is needed to pick image from gallery for your Profile. Please permit the permission through " + "Settings screen.\n\nSelect Permissions -> Enable permission")
-            .setConfirmText("Permit Manually")
-            .setCustomImage(R.drawable.ic_app)
-            .setCancelText("Cancel")
-            .showCancelButton(true)
-            .setConfirmClickListener { sDialog ->
-                sDialog.dismiss()
-                val intent = Intent()
-                intent.action = android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                val uri = Uri.fromParts("package", context.packageName, null)
-                intent.data = uri
-                context.startActivity(intent)
-            }
-            .show()
-}
-
 fun openImageDialog(activity: AppCompatActivity,url: String) {
     val dialog = Dialog(activity)
     dialog.setCancelable(true)
@@ -188,7 +168,7 @@ fun promptReadPermission(context: Context) {
                 .setContentText(context.getString(R.string.gallrypermission))
                 .setConfirmText(context.getString(R.string.YesPleaseCity))
                 .setCancelText(context.getString(R.string.no))
-                .setCustomImage(R.drawable.icon_app)
+                .setCustomImage(R.drawable.ic_medk)
                 .showCancelButton(true)
                 .setConfirmClickListener { sDialog ->
                     sDialog.dismiss()
@@ -866,7 +846,7 @@ fun displayPDFDialog(context: Context,name:String,filePath:String,content:String
     SweetAlertDialog(context, SweetAlertDialog.PDF_TYPE)
             .setTitleText("$name's Profile")
             .setContentText("You can View, Share and Print the PDF Profile")
-            .setCustomImage(R.drawable.ic_app)
+            .setCustomImage(R.drawable.app_logo)
             .showCancelButton(true)
             .setNeutralText("Print")
             .setNeutralClickListener {sDialog ->

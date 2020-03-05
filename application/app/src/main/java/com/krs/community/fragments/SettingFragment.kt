@@ -1,6 +1,5 @@
 package com.krs.community.fragments
 
-import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -58,12 +57,7 @@ class SettingFragment : Fragment() {
         val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
         val isShowCallPhone = Utility.checkReadPhoneStatePermission((activity as AppCompatActivity))
 
-        if (isShow && isShowCallLog && isShowCallPhone){
-            switchDialog?.isOn = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
-        }else{
-            switchDialog?.isOn = false
-        }
-
+        switchDialog?.isOn = isShow && isShowCallLog && isShowCallPhone
 
         switchDialog?.setOnClickListener {
 
@@ -71,12 +65,11 @@ class SettingFragment : Fragment() {
                 Guru.putBoolean(getString(R.string.isdialogshow), false)
             } else {
                 Guru.putBoolean(getString(R.string.isdialogshow), true)
-                Guru.putBoolean(getString(R.string.isdialogApi), true)
-                // permissionCheck(isShow,isShowCallLog,isShowCallPhone)
+                permissionCheck(isShowCallLog, isShowCallPhone)
 
                 SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Help")
-                        .setContentText("Enjoy this feature some mobile need to enable AutoStart mode")
+                        .setContentText("To enjoy this feature some mobile need to enable AutoStart mode")
                         .setConfirmText("Yes,Please")
                         .setConfirmClickListener {
                             it.dismissWithAnimation()
@@ -95,70 +88,30 @@ class SettingFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun permissionCheck(show: Boolean, showCallLog: Boolean, showCallPhone: Boolean) {
-        if (show && showCallLog && showCallPhone){
-            switchDialog?.isOn = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
-        }else{
+    private fun permissionCheck(showCallLog: Boolean, showCallPhone: Boolean) {
+        if (showCallLog && showCallPhone) {
             switchDialog?.isOn = false
-            PhoneCallPermission()
-            CallPermission()
+        } else {
+            switchDialog?.isOn = true
+            Utility.requestPermissions(activity as AppCompatActivity)
         }
     }
-
-    private fun PhoneCallPermission() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED || (activity as AppCompatActivity).checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
-                val permissions = arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE)
-                requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE)
-            }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun CallPermission() {
-
-        if ((activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED || (activity as AppCompatActivity).checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_DENIED) {
-            val permissions = arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG)
-            requestPermissions(permissions, PERMISSION_REQUEST_READ_PHONE_STATE_CALL)
-        }
-    }
-
-
-    /*fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
-        when (requestCode) {
-            PERMISSION_REQUEST_READ_PHONE_STATE -> if (grantResults.size > 0) {
-                val locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                val cameraAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED
-                if (locationAccepted && cameraAccepted)
-                    Snackbar.make(view!!, "Permission Granted, Now you can access location data and camera.", Snackbar.LENGTH_LONG).show() else {
-                    Snackbar.make(view!!, "Permission Denied, You cannot access location data and camera.", Snackbar.LENGTH_LONG).show()
-
-                }
-            }
-        }
-    }*/
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {PERMISSION_REQUEST_READ_PHONE_STATE ->
-        {
-            if (grantResults.size > 0) {
-                val CallAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                if (CallAccepted)
-                // Snackbar.make(view!!, "Permission Granted, Now you can access location data and camera.", Snackbar.LENGTH_LONG).show()
-                else {
+        when (requestCode) {
+            PERMISSION_REQUEST_READ_PHONE_STATE -> {
+                if (grantResults.isNotEmpty()) {
+                    val callAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    if (!callAccepted) {
                     Snackbar.make(view!!, "Permission Required for Phone Call Dialog Feature", Snackbar.LENGTH_LONG).show()
                     switchDialog?.isOn = false
                 }
             }
-
         }else -> {
-            if (grantResults.size > 0) {
-                val CallAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                if (CallAccepted)
-                // Snackbar.make(view!!, "Permission Granted, Now you can access location data and camera.", Snackbar.LENGTH_LONG).show()
-                else {
+            if (grantResults.isNotEmpty()) {
+                val callAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                if (!callAccepted) {
                     Snackbar.make(view!!, "Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG).show()
                     switchDialog?.isOn = false
                 }

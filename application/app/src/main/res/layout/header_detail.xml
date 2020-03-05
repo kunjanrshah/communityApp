@@ -219,7 +219,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_marginTop="20dp"
-                            android:background="@drawable/map"
+                            android:background="@drawable/world_map"
                             />
                     </LinearLayout>
                 </LinearLayout>

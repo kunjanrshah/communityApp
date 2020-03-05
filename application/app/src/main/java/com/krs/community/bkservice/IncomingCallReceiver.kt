@@ -12,6 +12,7 @@ import com.github.squti.guru.Guru
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.IncomingCallActivity
 import com.krs.community.repositories.ContactListRepository
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.ApiException
@@ -23,11 +24,9 @@ import org.json.JSONObject
 
 class IncomingCallReceiver : BroadcastReceiver() {
 
-    var completableJob: CompletableJob? = null
-    var contactListRepository = ContactListRepository(ApiServices(), null)
-
+    private var completableJob: CompletableJob? = null
+    private var contactListRepository = ContactListRepository(ApiServices(), null)
     private var isShow: Boolean = true;
-    private var isDialog: Boolean = true;
 
     override fun onReceive(context: Context, intent: Intent) {
         try {
@@ -37,18 +36,11 @@ class IncomingCallReceiver : BroadcastReceiver() {
                     super.onCallStateChanged(state, incomingNumber)
 
                     Log.e("incomingNumber---", "number===" + incomingNumber);
-                    isShow = Guru.getBoolean(context.getString(R.string.isdialogshow), true)
-                    isDialog = Guru.getBoolean(context.getString(R.string.isdialogApi), true)
-
-
-                    Log.e("isDialog---", "" + isDialog);
                     Log.e("state---", "" + state);
 
-                    //  if (isDialog) {
+                    isShow = Guru.getBoolean(context.getString(R.string.isdialogshow), true)
                         if (state == 1 && incomingNumber.isNotEmpty()) {
                             if (isShow) {
-                                Guru.putBoolean(context.getString(R.string.isdialogApi), false)
-
                                 val jsonObject = JSONObject()
                                 jsonObject.put(context.getString(R.string.user_id), Guru.getString(context.getString(R.string.user_id), ""))
                                 jsonObject.put(context.getString(R.string.id), Guru.getString(context.getString(R.string.member_id), ""))
@@ -58,14 +50,11 @@ class IncomingCallReceiver : BroadcastReceiver() {
                                 jsonArray.put(number)
                                 jsonObject.put("mobiles", jsonArray)
                                 val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-
-
                                 Log.e("updated---", "" + updated);
                                 getContactList(context, updated)
                             }
                         }
                     }
-                // }
             }, PhoneStateListener.LISTEN_CALL_STATE)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -74,7 +63,6 @@ class IncomingCallReceiver : BroadcastReceiver() {
 
     fun getContactList(context: Context, jsonObject: JsonObject) {
 
-        Log.e("Frist Time", "Api call");
         completableJob = Job()
         completableJob.let { thejob ->
 
@@ -84,12 +72,10 @@ class IncomingCallReceiver : BroadcastReceiver() {
                     response.let {
                         withContext(Dispatchers.Main) {
 
-                            Log.e("Frist Time", " Response ")
                             Log.e("response", " " + response.success)
-
                             if (response.success) {
                                 Log.e("Frist Time", " success ")
-                                val intent = Intent(context, MyCustomDialog::class.java)
+                                val intent = Intent(context, IncomingCallActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                                 val mBundle = Bundle()
@@ -104,18 +90,15 @@ class IncomingCallReceiver : BroadcastReceiver() {
                     }
                 } catch (e: ApiException) {
                     e.message?.let {
-                        Guru.putBoolean(context.getString(R.string.isdialogApi), true)
                         Log.e("ApiException--", "" + e.toString());
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
-                        Guru.putBoolean(context.getString(R.string.isdialogApi), true)
                         Log.e("NoInternetException--", "" + e.toString());
                     }
                 } catch (e: Exception) {
                     e.message?.let {
                         Log.e("Exception--", "" + e.toString());
-                        Guru.putBoolean(context.getString(R.string.isdialogApi), true)
                     }
                 }
                 thejob.complete()

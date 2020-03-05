@@ -84,16 +84,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
         dashboardViewModel.listener = this
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkReadCallLogPermission(this)) {
-                requestReadCallLogPermission(this)
-            }
-
-            if (checkReadPhoneStatePermission(this)) {
-                requestReadPhoneStatePermission(this)
-            }
-
-        }
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
@@ -199,6 +189,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         super.onResume()
         loadProfile()
         hideSweetProgress()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(this)
+        }
 
         if (checkFineLocationPermission(this)) {
             val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager

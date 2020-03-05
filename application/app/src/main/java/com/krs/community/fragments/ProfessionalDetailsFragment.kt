@@ -126,33 +126,44 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
             binding.tvDistance.text = "Work"
         }
         binding.llWork.setOnClickListener {
-            SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                    .setTitleText(getString(R.string.OfficeLocation))
-                    .setContentText(getString(R.string.WithGoogle))
-                    .setConfirmText(getString(R.string.SetDetail))
-                    .setCancelText(getString(R.string.ViewDetails))
-                    .setCustomImage(R.drawable.ic_app)
-                    .setConfirmClickListener {
-                        it.dismiss()
-                        if (member.headId == "0" && !member.id.isNullOrEmpty()) {
-                            val jsonObject = JSONObject()
-                            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                            jsonObject.put(getString(R.string.id), member.id)
-                            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-                            jsonObject.put(getString(R.string.office_lat), ProfileDetailActivity.cur_lat.value)
-                            jsonObject.put(getString(R.string.office_lng), ProfileDetailActivity.cur_lng.value)
-                            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                            startSweetProgress(activity, getString(R.string.updatingLocationDetail), getString(R.string.PleasWaitDetails))
-                            profileDetailViewModel.updateProfile(profile, true)
-                        } else {
-                            displaySnackBarWithBottomMargin(ll_main, getString(R.string.headDetails))
+
+            if (binding.tvDistance.text.toString() != "Work") {
+                val memberId = Guru.getString(getString(R.string.member_id), "")
+                if (memberId == member.id) {
+                    SweetAlertDialog(activity, SweetAlertDialog.FORGOT_TYPE)
+                } else {
+                    SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                }
+                        .setTitleText(getString(R.string.OfficeLocation))
+                        .setContentText(getString(R.string.WithGoogle))
+                        .setConfirmText(getString(R.string.View))
+                        .setNeutralText(getString(R.string.set))
+                        .setCustomImage(R.drawable.ic_medk)
+                        .setConfirmClickListener {
+                            it.dismiss()
+                            showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Work")
                         }
-                    }
-                    .setCancelClickListener {
-                        it.dismiss()
-                        showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Work")
-                    }
-                    .show()
+                        .setNeutralClickListener {
+                            it.dismiss()
+                            if (member.headId == "0" && !member.id.isNullOrEmpty()) {
+                                val jsonObject = JSONObject()
+                                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                                jsonObject.put(getString(R.string.id), member.id)
+                                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                jsonObject.put(getString(R.string.office_lat), ProfileDetailActivity.cur_lat.value)
+                                jsonObject.put(getString(R.string.office_lng), ProfileDetailActivity.cur_lng.value)
+                                val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                startSweetProgress(activity, getString(R.string.updatingLocationDetail), getString(R.string.PleasWaitDetails))
+                                profileDetailViewModel.updateProfile(profile, true)
+                            } else {
+                                displaySnackBarWithBottomMargin(ll_main, getString(R.string.headDetails))
+                            }
+                        }
+                        .show()
+            } else {
+                binding.llMain.snackbar("Office location not set", Snackbar.LENGTH_SHORT)
+            }
+
         }
 
         if (!member.workDetails.isNullOrEmpty()) {

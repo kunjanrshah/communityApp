@@ -40,7 +40,6 @@
                 android:textSize="18sp"     />
         </LinearLayout>
 
-
         <TextView
             android:id="@+id/tv_save"
             android:layout_width="wrap_content"
@@ -54,9 +53,16 @@
     </LinearLayout>
 
     <FrameLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_verify"
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/sunglasses" />
 
         <TextView
             android:id="@+id/tv_percent"
@@ -130,7 +136,6 @@
 
             </FrameLayout>
 
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -176,12 +181,7 @@
                         android:textSize="12sp" />
 
                 </LinearLayout>
-                <!--<TextView
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="User Location" />-->
+
             </LinearLayout>
 
         </LinearLayout>

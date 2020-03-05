@@ -43,7 +43,7 @@
                 android:layout_width="250dp"
                 android:layout_height="24dp"
                 tools:ignore="ContentDescription"
-                android:background="@drawable/text_with_logo" />
+                android:background="@drawable/logo_with_text_medk" />
         </LinearLayout>
 
         <ImageView

@@ -106,6 +106,18 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 holder.tvArea.text = member.area
                 holder.tvAddr.text = member.address
 
+                if (member.status == "2") {
+                    holder.ivVerify.visibility = View.VISIBLE
+                    if (member.updatedDt.isNotEmpty()) {
+                        holder.tvCreated.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
+                } else {
+                    holder.ivVerify.visibility = View.GONE
+                    if (member.createdDt.isNotEmpty()) {
+                        holder.tvCreated.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
+                }
+
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
@@ -293,6 +305,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
+        var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var tvCreated: TextView = itemView.findViewById(R.id.tv_created)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {

@@ -17,10 +17,10 @@
     <uses-permission android:name="android.permission.RECEIVE_LAUNCH_BROADCASTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -35,7 +35,7 @@
 
     <application
         android:name=".app.AppController"
-        android:icon="@drawable/icon_app"
+        android:icon="@drawable/ic_medk"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/MyMaterialTheme"
@@ -198,7 +198,7 @@
         </provider>
 
         <activity
-            android:name=".bkservice.MyCustomDialog"
+            android:name=".activity.IncomingCallActivity"
             android:noHistory="true"
             android:theme="@style/Theme.Transparent" />
 

@@ -288,6 +288,10 @@ public class Member implements Serializable {
     @Expose
     private String updatedDt="0";
 
+    @SerializedName("created_dt")
+    @Expose
+    private String createdDt = "0";
+
     @SerializedName("matches")
     @Expose
     private List<String> matches = null;
@@ -994,5 +998,13 @@ public class Member implements Serializable {
 
     public void setMembersCount(int membersCount) {
         this.membersCount = membersCount;
+    }
+
+    public String getCreatedDt() {
+        return createdDt;
+    }
+
+    public void setCreatedDt(String createdDt) {
+        this.createdDt = createdDt;
     }
 }

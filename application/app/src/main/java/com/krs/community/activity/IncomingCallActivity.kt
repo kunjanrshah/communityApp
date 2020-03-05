@@ -1,10 +1,11 @@
-package com.krs.community.bkservice
+package com.krs.community.activity
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -12,7 +13,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.github.squti.guru.Guru
 import com.krs.community.R
 import com.krs.community.app.AppDatabase.Companion.invoke
 import com.krs.community.model.Member
@@ -20,7 +20,7 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import de.hdodenhof.circleimageview.CircleImageView
 
-class MyCustomDialog : Activity() {
+class IncomingCallActivity : Activity() {
     private lateinit var member: Member
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -52,7 +52,7 @@ class MyCustomDialog : Activity() {
                 val city = database.getCityDao().getcityName(cityId.toInt())
                 val LocationEnable = member.isLocationEnable
                 val str = getString(R.string.base_url_thumb) + member.profilePic
-                var age = 34
+                var age = 0
                 try {
                     if (!member.birthDate.isNullOrEmpty()) {
                         val mdate = Utility.changeDateFormat(member.birthDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
@@ -66,13 +66,19 @@ class MyCustomDialog : Activity() {
 
                 Coroutines.main {
                     tvName.text = member.firstName + " " + lastname
-                    tvAge.text = " ($age)"
+                    if (age == 0) {
+                        tvAge.visibility = View.GONE
+                    } else {
+                        tvAge.visibility = View.VISIBLE
+                        tvAge.text = " ($age)"
+                    }
+
                     tvArea.text = member.area
                     tvCity.text = city
 
-                    //   if (member.companyName.isNotEmpty()) {
-                    tvWork.text = "Mamaji graphics" //member.companyName
-                    //  }
+                    if (member.companyName.isNotEmpty()) {
+                        tvWork.text = member.companyName
+                    }
                     Glide.with(this).load(str).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(ivProfile)
                     if (member.gender == "Male") {
                         ivGender.setBackgroundResource(R.drawable.male)
@@ -90,29 +96,34 @@ class MyCustomDialog : Activity() {
             llEmail.setOnClickListener { sendEmail() }
             ivCancel.setOnClickListener {
                 onBackPressed()
-                Guru.putBoolean(this@MyCustomDialog.getString(R.string.isdialogApi), true)
             }
             llUser.setOnClickListener {
                 if (member.isLocationEnable.equals("1", ignoreCase = true)) {
                     if (member.userLat != null && !member.userLat.isEmpty() && member.userLng != null && !member.userLng.isEmpty()) {
                         val userLat = member.userLat
                         val userLng = member.userLng
-                        Utility.showDirections(this@MyCustomDialog, userLat.toDouble(), userLng.toDouble(), "")
+                        Utility.showDirections(this@IncomingCallActivity, userLat.toDouble(), userLng.toDouble(), "")
                     }
+                } else {
+                    Toast.makeText(this, "${member.firstName} location is private", Toast.LENGTH_SHORT).show()
                 }
             }
             llHome.setOnClickListener {
                 if (member.homeLat != null && !member.homeLat.isEmpty() && member.homeLng != null && !member.homeLng.isEmpty()) {
                     val homeLat = member.homeLat
                     val homeLng = member.homeLng
-                    Utility.showDirections(this@MyCustomDialog, homeLat.toDouble(), homeLng.toDouble(), member.address)
+                    Utility.showDirections(this@IncomingCallActivity, homeLat.toDouble(), homeLng.toDouble(), member.address)
+                } else {
+                    Toast.makeText(this, "Home location is not set", Toast.LENGTH_SHORT).show()
                 }
             }
             llOffice.setOnClickListener {
                 if (member.officeLat != null && !member.officeLat.isEmpty() && member.officeLng != null && !member.officeLng.isEmpty()) {
                     val OfficeLat = member.officeLat
                     val OfficeLng = member.officeLng
-                    Utility.showDirections(this@MyCustomDialog, OfficeLat.toDouble(), OfficeLng.toDouble(), member.businessAddress)
+                    Utility.showDirections(this@IncomingCallActivity, OfficeLat.toDouble(), OfficeLng.toDouble(), member.businessAddress)
+                } else {
+                    Toast.makeText(this, "Office location is not set", Toast.LENGTH_SHORT).show()
                 }
             }
         } catch (e: Exception) {
@@ -123,13 +134,10 @@ class MyCustomDialog : Activity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        Guru.putBoolean(this@MyCustomDialog.getString(R.string.isdialogApi), true)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
-        Guru.putBoolean(this@MyCustomDialog.getString(R.string.isdialogApi), true)
 
     }
 

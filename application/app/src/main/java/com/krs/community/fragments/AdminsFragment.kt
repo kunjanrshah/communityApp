@@ -161,9 +161,6 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                     }
                 }
 
-                /*viewHolder.tvEmail.text = member.emailAddress
-                viewHolder.tvMobile.text = member.mobile*/
-
                 if (member.mobile.isEmpty()){
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
@@ -319,7 +316,6 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         },4000)
     }
 
-
     override fun getMembers(response: SmartFilterResponse) {
         if(response.success){
             if (count == 1) {
@@ -332,13 +328,18 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                 if(response.members!=null && response.members.size>0){
                     lstAdmins.addAll(response.members)
                 }
-                adapter.notifyDataSetChanged()
-                shimmerFrameLayout.stopShimmerAnimation()
-                shimmerFrameLayout.visibility=View.GONE
-                actionMode?.finish()
-                selectedItems.clear()
-                cancelDialog()
             }
+        }
+        if (count != 1) {
+            adapter.notifyDataSetChanged()
+            shimmerFrameLayout.stopShimmerAnimation()
+            shimmerFrameLayout.visibility = View.GONE
+            actionMode?.finish()
+            selectedItems.clear()
+            cancelDialog()
+        }
+        if (lstAdmins.size == 0 && count == 2) {
+            rvAdmins.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
         }
     }
 

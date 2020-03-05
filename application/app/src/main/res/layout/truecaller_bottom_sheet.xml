@@ -22,17 +22,17 @@
             android:layout_margin="10dp"
             android:orientation="horizontal">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="@string/vastipatrak"
+                android:text="@string/app_name"
                 android:textColor="@color/colorDark"
                 android:textSize="18sp" />
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_cancel"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
@@ -52,10 +52,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -67,9 +68,7 @@
                     android:layout_height="70dp"
                     android:background="@drawable/user_profile" />
 
-
-
-                    <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_gender"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -77,11 +76,11 @@
                         android:layout_gravity="center"
                         android:background="@drawable/male" />
 
-
-
             </LinearLayout>
 
             <LinearLayout
+                android:layout_gravity="top"
+                android:gravity="top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -93,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -102,17 +101,16 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_age"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="(32)"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginStart="15dp"
@@ -127,7 +125,7 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_area"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -136,7 +134,7 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_city"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -146,7 +144,7 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginStart="10dp"
@@ -161,7 +159,7 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_work"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -171,7 +169,7 @@
                         android:textSize="16sp" />
 
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginStart="15dp"
@@ -188,35 +186,34 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="5dp"
+            android:layout_margin="5dp"
             android:alpha="0.5"
             android:background="@color/colorGray" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="10dp"
+            android:gravity="top"
+            android:paddingBottom="20dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/ll_call"
                 android:layout_width="wrap_content"
-                android:gravity="center"
-                android:layout_marginLeft="40dp"
+                android:layout_marginStart="60dp"
+                android:gravity="top"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_marginLeft="20dp"
-                    android:paddingLeft="20dp"
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:background="@drawable/phone_call" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Call Me"
                     android:textColor="@color/colorPrimary"
@@ -241,19 +238,19 @@
                 android:id="@+id/ll_email"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="top"
                 android:layout_marginRight="40dp"
                 android:orientation="horizontal">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:background="@drawable/ic_email" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Email Me"
                     android:textColor="@color/colorPrimary"

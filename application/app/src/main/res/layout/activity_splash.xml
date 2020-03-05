@@ -26,7 +26,7 @@
         android:layout_marginTop="40dp"
         android:alpha="0"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/splash_logo" />
+        android:src="@drawable/splash_logo_medk" />
 
 
     <LinearLayout

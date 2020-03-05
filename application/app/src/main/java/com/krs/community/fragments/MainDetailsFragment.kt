@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -31,6 +32,7 @@ import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import kotlinx.android.synthetic.main.fragment_main_details.*
@@ -132,37 +134,44 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.chkRented.isChecked = member.isRented.equals("1")
 
         binding.llHome.setOnClickListener {
-            SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                    .setTitleText(getString(R.string.homeLocation))
-                    .setContentText(getString(R.string.withGoogleMap))
-                    .setConfirmText(getString(R.string.set))
-                    .setCancelText(getString(R.string.View))
-                    .setCustomImage(R.drawable.ic_app)
-                    .setConfirmClickListener {
-                        it.dismiss()
-                        if(member.headId=="0" && !member.id.isNullOrEmpty()){
-                            val jsonObject = JSONObject()
-                            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-                            jsonObject.put(getString(R.string.id), member.id)
-                            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
-                            jsonObject.put(getString(R.string.home_lat), ProfileDetailActivity.cur_lat.value)
-                            jsonObject.put(getString(R.string.home_lng), ProfileDetailActivity.cur_lng.value)
 
-                            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-
-                            Utility.startSweetProgress(activity, getString(R.string.updatingLocation), getString(R.string.PleaseWait))
-                            profileDetailViewModel.updateProfile(profile, true)
-                        }else{
-                            Utility.displaySnackBarWithBottomMargin(ll_main,getString(R.string.OnlyFamilyHeadLocation))
+            if (binding.tvDistance.text.toString() != "Home") {
+                val memberId = Guru.getString(getString(R.string.member_id), "")
+                if (memberId == member.id) {
+                    SweetAlertDialog(activity, SweetAlertDialog.FORGOT_TYPE)
+                } else {
+                    SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                }
+                        .setTitleText(getString(R.string.homeLocation))
+                        .setContentText(getString(R.string.withGoogleMap))
+                        .setConfirmText(getString(R.string.View))
+                        .setNeutralText(getString(R.string.set))
+                        .setCustomImage(R.drawable.ic_medk)
+                        .setConfirmClickListener {
+                            it.dismiss()
+                            Utility.showDirections(activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}" + getString(R.string.homeDetail))
                         }
+                        .setNeutralClickListener {
+                            it.dismiss()
+                            if (member.headId == "0" && !member.id.isNullOrEmpty()) {
+                                val jsonObject = JSONObject()
+                                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                                jsonObject.put(getString(R.string.id), member.id)
+                                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                                jsonObject.put(getString(R.string.home_lat), ProfileDetailActivity.cur_lat.value)
+                                jsonObject.put(getString(R.string.home_lng), ProfileDetailActivity.cur_lng.value)
+                                val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                                Utility.startSweetProgress(activity, getString(R.string.updatingLocation), getString(R.string.PleaseWait))
+                                profileDetailViewModel.updateProfile(profile, true)
+                            } else {
+                                Utility.displaySnackBarWithBottomMargin(ll_main, getString(R.string.OnlyFamilyHeadLocation))
+                            }
+                        }
+                        .show()
+            } else {
+                binding.llMain.snackbar("Home location not set", Snackbar.LENGTH_SHORT)
+            }
 
-
-                    }
-                    .setCancelClickListener {
-                        it.dismiss()
-                        Utility.showDirections(activity,member.homeLat.toDouble(),member.homeLng.toDouble(),"${member.firstName}"+getString(R.string.homeDetail))
-                    }
-                    .show()
         }
 
         binding.edtAddr.addTextChangedListener(object:TextWatcher{

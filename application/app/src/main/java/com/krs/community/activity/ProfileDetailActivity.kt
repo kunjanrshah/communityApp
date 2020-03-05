@@ -137,7 +137,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
 
         if (member?.isLocationEnable == "1") {
-            //binding.switchLocation.isActivated = true
             binding.switchLocation.isOn = true
             binding.switchLocation.labelOn = "ON"
             binding.tvDistance.text = getString(R.string.Finding)
@@ -150,9 +149,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             binding.switchLocation.isOn = false
             binding.switchLocation.labelOff = "OFF"
             binding.tvDistance.text = getString(R.string.user)
-            /*if (!userId.equals(member?.id)) {
-                binding.switchLocation.isActivated = false
-            }*/
         }
 
         if (checkFineLocationPermission(this)) {
@@ -235,7 +231,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                                 it.dismissWithAnimation()
                                 startSweetProgress(this, getString(R.string.updatingProfile), getString(R.string.pleaseWait))
                                 jsonObject.put(getString(R.string.id), member?.id)
-                                // jsonObject.put(getString(R.string.status), "2")
+                                jsonObject.put(getString(R.string.status), "2")
                                 val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                                 profileDetailViewModel.updateProfile(profile, true)
                             }
@@ -366,6 +362,12 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             binding.switchLocation.isOn = false
         }
 
+        if (member?.status == "2") {
+            binding.ivVerify.visibility = View.VISIBLE
+        } else {
+            binding.ivVerify.visibility = View.GONE
+        }
+
         if (!member?.profilePic.isNullOrEmpty()) {
             try {
                 val str = resources.getString(R.string.base_url_thumb) + member?.profilePic
@@ -416,6 +418,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 val percentage = Utility.calculatePercentage(member)
                 setPercentage(percentage)
                 str = getString(R.string.profileUpdate)
+                binding.ivVerify.visibility = View.VISIBLE
             } else {
                 str = getString(R.string.locationUpdate)
             }
