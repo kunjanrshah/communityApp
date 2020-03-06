@@ -626,7 +626,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText("want to disable ${selectedItemPositions.size} Profiles!")
+                                .setContentText(getString(R.string.WantDisable) + "${selectedItemPositions.size}" + getString(R.string.Proffiles))
                                 .setConfirmText(getString(R.string.yesDisable))
                                 .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {

@@ -203,7 +203,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
                 b = Bitmap.createBitmap(binding.ivCode.getDrawingCache());
                 String str=member.getId()+"   "+member.getFirstName()+"   "+date;
-                Bitmap bmp= Utility.drawTextToBitmap(b,str);
+                Bitmap bmp = Utility.drawTextToBitmap(b, str, QRCodeActivity.this);
                 saveImage(bmp);
 
             }, 1000);

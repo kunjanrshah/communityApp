@@ -80,7 +80,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     private val registerViewModelFactory: RegisterViewModelFactory by instance()
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -19,6 +19,10 @@ public class UploadedFile {
     @Expose
     private String createdAt;
 
+    @SerializedName("file_url")
+    @Expose
+    private String fileUrl;
+
     public String getId() {
         return id;
     }
@@ -51,4 +55,11 @@ public class UploadedFile {
         this.createdAt = createdAt;
     }
 
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
 }

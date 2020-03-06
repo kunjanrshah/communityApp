@@ -1519,7 +1519,7 @@ public class Utility {
         return bitmap;
     }
 
-    public static Bitmap drawTextToBitmap(Bitmap bitmap, String gText) {
+    public static Bitmap drawTextToBitmap(Bitmap bitmap, String gText, Context context) {
         //  Resources resources = mcontext.getResources();
         // float scale = resources.getDisplayMetrics().density;
 
@@ -1550,7 +1550,7 @@ public class Utility {
         int y = (bitmap.getHeight() + bounds.height()) - 40;
 
         canvas.drawText(gText, x, y, paint);
-        canvas.drawText("Community App", x + 50, 25, paint);
+        canvas.drawText(context.getString(R.string.app_name), x + 50, 25, paint);
         return bitmap;
     }
 

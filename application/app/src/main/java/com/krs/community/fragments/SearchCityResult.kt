@@ -106,7 +106,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, SearchCityResult::class.simpleName)
 
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
@@ -412,11 +412,15 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             binding.shimmerViewContainer.visibility = View.GONE
 
             if (message.toLowerCase().contains("success")) {
-                setupList()
+                Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, context?.getString(R.string.app_name), message)
+                /*if (message.toLowerCase().contains("role")) {
+
+                } else {
+                    setupList()
+                }*/
             } else {
                 Snackbar.make(binding.llParent, getString(R.string.went_wrong), Snackbar.LENGTH_LONG).show()
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -688,8 +692,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText(getString(R.string.ShareCity) + " ${selectedItemPositions.size}" + getString(R.string.ProfileCity))
-                                .setConfirmText(getString(R.string.YesCity))
+                                .setContentText(getString(R.string.WantDisable) + " ${selectedItemPositions.size} " + getString(R.string.ProfileCity))
+                                .setConfirmText(getString(R.string.YesDisable))
                                 .setCancelText(getString(R.string.no))
                                 .setConfirmClickListener {
                                     it.dismiss()

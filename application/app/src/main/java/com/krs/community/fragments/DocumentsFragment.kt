@@ -36,6 +36,7 @@ import com.krs.community.utils.AppConstants.UPLOAD_DOCUMENT
 import com.krs.community.viewmodel.DocumentsListModel
 import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
+import lumenghz.com.pullrefresh.PullToRefreshView
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -53,6 +54,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
     private var uploadDialog: DialogPlus? = null
     private var uploadedFileName = ""
     private lateinit var tvCount: TextView
+    private lateinit var pullToRefreshView: PullToRefreshView
 
     @SuppressLint("RestrictedApi")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,9 +63,8 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
         documentsListModel = ViewModelProvider(this, documentListViewModelFactory).get(DocumentsListModel::class.java)
         documentsListModel.byDocumentListener = this
         btnupload = root.findViewById<View>(R.id.btnupload) as MovableFloatingActionButton
-
+        pullToRefreshView = root.findViewById(R.id.pull_to_refresh)
         rvDocuments = root.findViewById(R.id.rv_documents)
-
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
         val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
         if (loginMember?.role.equals(getString(R.string.User))) {
@@ -87,7 +88,19 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                     .create()
             uploadDialog?.show()
         }
+        pullToRefreshView.setOnRefreshListener {
 
+            pullToRefreshView.postDelayed(Runnable {
+                pullToRefreshView.setRefreshing(false);
+            }, 5000)
+
+            Coroutines.io {
+                Coroutines.main {
+                    Utility.startSweetProgress(context!!, getString(R.string.app_name), "Fetching uploaded files")
+                }
+                documentsListModel.getUploadedFiles()
+            }
+        }
         adapter = object : ParallaxRecyclerAdapter<UploadedFile>(listUpload) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder?, adapter: ParallaxRecyclerAdapter<UploadedFile>?, i: Int) {
                 val uploadfile = listUpload[i]
@@ -96,7 +109,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                 holder.tvDate.text = Utility.changeDateFormat(uploadfile.createdAt, Utility.yyyy_MM_dd_TIME, Utility.dd_MM_yyyy_TIME)
                 holder.llDownload.setOnClickListener {
                     if (Utility.checkExternalStoragePermission(activity)) {
-                        PRDownloader.download(uploadfile.filename, Utility.getPath(), "${uploadfile.name}.png").build()
+                        PRDownloader.download(uploadfile.fileUrl, Utility.getPath(), uploadfile.filename).build()
                                 .setOnStartOrResumeListener {
                                     Utility.startSweetDialog(activity, SweetAlertDialog.PROGRESS_TYPE, "Documents", "Downloading...")
                                 }
@@ -218,6 +231,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
     }
 
     override fun getDocuments(response: UploadedFilesResponse) {
+        pullToRefreshView.setRefreshing(false);
         if (response.success) {
             listUpload.clear()
             tvCount.text = "Total Record Founds: " + response.data.size

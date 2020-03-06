@@ -66,13 +66,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
                 android:layout_marginRight="10dp"
+                android:backgroundTint="@android:color/white"
                 android:layout_marginBottom="70dp"
-                android:backgroundTint="@android:color/transparent"
                 android:src="@drawable/rocket"
                 app:borderWidth="0dp"
                 app:elevation="6dp"
                 app:fabSize="normal"
-                app:maxImageSize="56dp" />
+                app:maxImageSize="40dp" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

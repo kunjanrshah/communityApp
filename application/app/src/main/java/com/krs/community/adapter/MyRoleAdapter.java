@@ -23,7 +23,6 @@ public class MyRoleAdapter extends BaseAdapter {
     iChangeRoleListner changeRoleListner=null;
     private List<String> lstRole;
     private ArrayAdapter<String> roleAdapter;
-
     public MyRoleAdapter(Context context) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -35,6 +34,8 @@ public class MyRoleAdapter extends BaseAdapter {
         lstRole.add(mContext.getString(R.string.subAdmin));
         roleAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, lstRole);
         roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
     }
 
     public void setChangeRoleListner(iChangeRoleListner changeRoleListner) {
@@ -68,6 +69,7 @@ public class MyRoleAdapter extends BaseAdapter {
         }
 
         viewHolder.spRole.setAdapter(roleAdapter);
+
         viewHolder.btnChange.setOnClickListener(v -> {
             String role= lstRole.get(viewHolder.spRole.getSelectedIndex());
             changeRoleListner.changeRole(role);

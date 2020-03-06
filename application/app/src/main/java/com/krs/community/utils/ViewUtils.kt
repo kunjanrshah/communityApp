@@ -166,7 +166,7 @@ fun promptReadPermission(context: Context) {
             .setContentText(context.getString(R.string.gallrypermission))
             .setConfirmText(context.getString(R.string.YesPleaseCity))
             .setCancelText(context.getString(R.string.no))
-            .setCustomImage(R.drawable.icon_ghanchi)
+            .setCustomImage(R.drawable.ic_medk)
             .showCancelButton(true)
             .setConfirmClickListener { sDialog ->
                 sDialog.dismiss()
@@ -924,16 +924,16 @@ fun shareFile(context: Context, filePath: String) {
         val path = Uri.fromFile(file)
         intent.type = "application/pdf"
         intent.putExtra(Intent.EXTRA_STREAM, path)
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Sharing File from Community App")
-        intent.putExtra(Intent.EXTRA_TEXT, "Sharing File from Community App")
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Sharing File from " + context.getString(R.string.app_name))
+        intent.putExtra(Intent.EXTRA_TEXT, "Sharing File from " + context.getString(R.string.app_name))
 
         context.startActivity(Intent.createChooser(intent, "Share File Details"))
     }
 }
 
 fun shareDetails(activity: FragmentActivity?, name: String, mobile: String, email: String, area: String, address: String) {
-
-    val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community \n \n" +
+    val appName = activity?.getString(R.string.app_name)
+    val text = "Install your " + appName + "\n" + "https://play.google.com/store/apps/details?id=com.krs.community \n \n" +
             "Name : " + name + "\n" +
             "Mobile : " + mobile + "\n" +
             "Email : " + email + "\n" +

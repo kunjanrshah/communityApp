@@ -56,6 +56,7 @@
             <CheckBox
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="16sp"
+                android:visibility="gone"
                 android:id="@+id/chk_is_shani"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,6 +66,7 @@
             <CheckBox
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="16sp"
+                android:visibility="gone"
                 android:id="@+id/chk_is_mangal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

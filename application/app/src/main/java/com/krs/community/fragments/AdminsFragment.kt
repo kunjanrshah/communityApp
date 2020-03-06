@@ -56,7 +56,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListener, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner  {
+class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
 
     override val kodein by kodein()
     private var lstAdmins: ArrayList<Member> = ArrayList()
@@ -69,14 +69,14 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
     private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
 
-    private lateinit var tvCount:TextView
-    private var loginUserSubCommunityId=""
-    private var loginUserLocalCommunityId=""
+    private lateinit var tvCount: TextView
+    private var loginUserSubCommunityId = ""
+    private var loginUserLocalCommunityId = ""
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private lateinit var llRoot: FrameLayout
     private lateinit var rvAdmins: RecyclerView
-    private var count=0
+    private var count = 0
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
     private var reverseAllAnimations = false
@@ -96,15 +96,15 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
 
 
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
-        llRoot= root.findViewById(R.id.ll_root)
+        llRoot = root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""
 
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
 
-        smartFilterViewModel.mByFilterListener =this
-        roomMemberViewModel.mRoomMemberListener=this
+        smartFilterViewModel.mByFilterListener = this
+        roomMemberViewModel.mRoomMemberListener = this
 
         actionModeCallback = ActionModeCallback()
         (activity as AppCompatActivity).supportActionBar?.hide()
@@ -112,86 +112,86 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
                 val holder = viewHolder as ListViewHolder
 
-                if(lstAdmins.size>0){
-                    tvCount.visibility=View.VISIBLE
+                if (lstAdmins.size > 0) {
+                    tvCount.visibility = View.VISIBLE
                     tvCount.text = "${lstAdmins.size} Admins found"
-                }else{
-                    tvCount.visibility=View.GONE
+                } else {
+                    tvCount.visibility = View.GONE
                 }
                 val member = lstAdmins[i]
                 holder.tvName.text = member.firstName
                 viewHolder.tvArea.text = member.area
-                val strRole=member.role
+                val strRole = member.role
                 when {
                     strRole == resources.getString(R.string.LOCAL_ADMIN) -> {
                         holder.tvRole.text = resources.getString(R.string.Local_Admin)
                         Coroutines.io {
-                           val name= smartFilterViewModel.getLocalCommunity(member.localCommunityId)
-                            Coroutines.main{
-                                holder.tvRegion.text=name
+                            val name = smartFilterViewModel.getLocalCommunity(member.localCommunityId)
+                            Coroutines.main {
+                                holder.tvRegion.text = name
                             }
                         }
                     }
                     strRole == resources.getString(R.string.SUB_ADMIN) -> {
                         holder.tvRole.text = resources.getString(R.string.Sub_Admin)
                         Coroutines.io {
-                            val name= smartFilterViewModel.getSubCommunity(member.subCommunityId)
-                            holder.tvRegion.text=name
+                            val name = smartFilterViewModel.getSubCommunity(member.subCommunityId)
+                            holder.tvRegion.text = name
                         }
                     }
                     else -> {
                         holder.tvRole.text = resources.getString(R.string.User)
-                        holder.tvRegion.text=""
+                        holder.tvRegion.text = ""
                     }
                 }
 
                 Coroutines.io {
-                    if(!member.subCastId.isNullOrEmpty()){
-                        val name=member.firstName+" "+smartFilterViewModel.getLastNameById(member.subCastId.toInt())
-                        Coroutines.main{
-                            viewHolder.tvName.text=name
+                    if (!member.subCastId.isNullOrEmpty()) {
+                        val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        Coroutines.main {
+                            viewHolder.tvName.text = name
                         }
                     }
 
-                    if(!member.cityId.isNullOrEmpty()){
-                        val area= member.area+" "+smartFilterViewModel.getCityNamebyId(member.cityId)
-                        Coroutines.main{
-                            viewHolder.tvArea.text =area
+                    if (!member.cityId.isNullOrEmpty()) {
+                        val area = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
+                        Coroutines.main {
+                            viewHolder.tvArea.text = area
                         }
                     }
                 }
 
-                if (member.mobile.isEmpty()){
+                if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()){
+                if (member.emailAddress.isEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
 
-                if(member.headId == "0"){
+                if (member.headId == "0") {
                     holder.tvType.text = resources.getString(R.string.Family_Head)
-                }else{
+                } else {
                     holder.tvType.text = resources.getString(R.string.Member)
                 }
 
                 viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 viewHolder.itemView.isActivated = selectedItems.get(i, false)
 
-                applyProfilePicture(holder,member)
-                applyClickEvents(holder, i,member)
+                applyProfilePicture(holder, member)
+                applyClickEvents(holder, i, member)
                 applyImportant(viewHolder, member)
                 applyIconAnimation(viewHolder, i)
                 holder.boomMenuButton.clearBuilders()
@@ -271,25 +271,25 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         rvAdmins.adapter = adapter
         rvAdmins.setHasFixedSize(true)
 
-        val loginuser= Guru.getString(getString(R.string.loginMember),"")
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
         val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
-        loginUserSubCommunityId=member.subCommunityId
-        loginUserLocalCommunityId=member.localCommunityId
+        loginUserSubCommunityId = member.subCommunityId
+        loginUserLocalCommunityId = member.localCommunityId
 
         getSubAdmin()
         return root
     }
 
-    private fun getSubAdmin(){
-        count=1
-        val jsonObject=JSONObject()
+    private fun getSubAdmin() {
+        count = 1
+        val jsonObject = JSONObject()
         jsonObject.put(getString(R.string.start), AppController.mApplication.start)
         jsonObject.put(getString(R.string.length), AppController.mApplication.length)
-        val jsonObj=JSONObject()
-        jsonObj.put(getString(R.string.role),resources.getString(R.string.SUB_ADMIN))
-        jsonObj.put(getString(R.string.sub_community_id),loginUserSubCommunityId)
-        jsonObject.put(getString(R.string.filter_by),jsonObj)
-        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        val jsonObj = JSONObject()
+        jsonObj.put(getString(R.string.role), resources.getString(R.string.SUB_ADMIN))
+        jsonObj.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
+        jsonObject.put(getString(R.string.filter_by), jsonObj)
+        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)
         shimmerFrameLayout.startShimmerAnimation()
         shimmerFrameLayout.visibility = View.VISIBLE
@@ -298,48 +298,44 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         Utility.hideKeyboard(activity)
     }
 
-    private fun getLocalAdmin(){
-        count=2
-        val jsonObject=JSONObject()
+    private fun getLocalAdmin() {
+        count = 2
+        val jsonObject = JSONObject()
         jsonObject.put(getString(R.string.start), AppController.mApplication.start)
         jsonObject.put(getString(R.string.length), AppController.mApplication.length)
-        val jsonObj=JSONObject()
-        jsonObj.put(getString(R.string.role),resources.getString(R.string.LOCAL_ADMIN))
-        jsonObj.put(getString(R.string.local_community_id),loginUserLocalCommunityId)
-        jsonObject.put(getString(R.string.filter_by),jsonObj)
-        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        val jsonObj = JSONObject()
+        jsonObj.put(getString(R.string.role), resources.getString(R.string.LOCAL_ADMIN))
+        jsonObj.put(getString(R.string.local_community_id), loginUserLocalCommunityId)
+        jsonObject.put(getString(R.string.filter_by), jsonObj)
+        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)
 
         Handler().postDelayed({
             shimmerFrameLayout.stopShimmerAnimation()
-            shimmerFrameLayout.visibility=View.GONE
-        },4000)
+            shimmerFrameLayout.visibility = View.GONE
+        }, 4000)
     }
 
     override fun getMembers(response: SmartFilterResponse) {
-        if(response.success){
-            if (count == 1) {
-                lstAdmins.clear()
-                if(response.members!=null && response.members.size>0){
-                    lstAdmins.addAll(response.members)
-                }
-                getLocalAdmin()
-            }else if (count == 2) {
-                if(response.members!=null && response.members.size>0){
-                    lstAdmins.addAll(response.members)
-                }
+        if (count == 1) {
+            lstAdmins.clear()
+            if (response.members != null && response.members.size > 0) {
+                lstAdmins.addAll(response.members)
             }
-        }
-        if (count != 1) {
+            getLocalAdmin()
+        } else if (count == 2) {
+            if (response.members != null && response.members.size > 0) {
+                lstAdmins.addAll(response.members)
+            }
             adapter.notifyDataSetChanged()
             shimmerFrameLayout.stopShimmerAnimation()
             shimmerFrameLayout.visibility = View.GONE
             actionMode?.finish()
             selectedItems.clear()
             cancelDialog()
-        }
-        if (lstAdmins.size == 0 && count == 2) {
-            rvAdmins.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
+            if (lstAdmins.size == 0) {
+                rvAdmins.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
+            }
         }
     }
 
@@ -352,10 +348,10 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
     }
 
     override suspend fun getFailure(message: String) {
-        if(message.toLowerCase().contains("success")){
+        if (message.toLowerCase().contains("success")) {
             getSubAdmin()
-        }else{
-            llRoot.snackbar(getString(R.string.went_wrong),Snackbar.LENGTH_LONG)
+        } else {
+            llRoot.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         }
     }
 
@@ -368,9 +364,9 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         var tvType: TextView = v.findViewById(R.id.tv_type)
         var tvRole: TextView = v.findViewById(R.id.tv_role)
         var tvRegion: TextView = v.findViewById(R.id.tv_region)
-        var iconProfile:ImageView= v.findViewById(R.id.icon_profile1)
-        var iconText:TextView= v.findViewById(R.id.icon_text1)
-        var llMobile:LinearLayout= v.findViewById(R.id.llMobile)
+        var iconProfile: ImageView = v.findViewById(R.id.icon_profile1)
+        var iconText: TextView = v.findViewById(R.id.icon_text1)
+        var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var iconImp: ImageView = v.findViewById(R.id.icon_star)
         var messageContainer: LinearLayout = v.findViewById(R.id.message_container1)
         var iconBack: RelativeLayout = v.findViewById(R.id.icon_back1)
@@ -432,7 +428,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
             try {
                 val path = getString(R.string.base_url_original) + "" + member.profilePic
                 Log.d(TAG, "path: $path")
-                openImageDialog(activity as AppCompatActivity,path)
+                openImageDialog(activity as AppCompatActivity, path)
             } catch (e: Exception) {
                 e.message
             }
@@ -522,9 +518,9 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
         if (!TextUtils.isEmpty(member.profilePic)) {
             if (member.profilePic.isNotEmpty()) {
                 holder.iconProfile.isClickable = true
-                val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+                val url = resources.getString(R.string.base_url_thumb) + member.profilePic
                 Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.iconProfile)
-            }else{
+            } else {
                 holder.iconProfile.isClickable = false
             }
             holder.iconProfile.colorFilter = null
@@ -564,17 +560,17 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                     jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                     jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
 
-                    var changed=""
-                    if(role == getString(R.string.Local_Admin)){
+                    var changed = ""
+                    if (role == getString(R.string.Local_Admin)) {
                         changed = getString(R.string.LOCAL_ADMIN)
-                    }else if(role == getString(R.string.Sub_Admin)) {
+                    } else if (role == getString(R.string.Sub_Admin)) {
                         changed = getString(R.string.SUB_ADMIN)
-                    }else{
+                    } else {
                         changed = getString(R.string.User)
                     }
 
                     jsonObject.put(getString(R.string.role), changed)
-                    jsonObject.put(getString(R.string.local_community_id),loginUserLocalCommunityId)
+                    jsonObject.put(getString(R.string.local_community_id), loginUserLocalCommunityId)
                     jsonObject.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
 
                     var Ids = ""
@@ -586,7 +582,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                     jsonObject.put(getString(R.string.idList), Ids)
                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                     lstAdmins.clear()
-                    tvCount.visibility=View.GONE
+                    tvCount.visibility = View.GONE
                     adapter.notifyDataSetChanged()
                     shimmerFrameLayout.startShimmerAnimation()
                     shimmerFrameLayout.visibility = View.VISIBLE
@@ -623,7 +619,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                         val selectedItemPositions = getSelectedItems()
                         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(getString(R.string.you_sure))
-                                .setContentText(getString(R.string.wantDisable)+"${selectedItemPositions.size}"+getString(R.string.profileAdmins) )
+                                .setContentText(getString(R.string.wantDisable) + "${selectedItemPositions.size}" + getString(R.string.profileAdmins))
                                 .setConfirmText(getString(R.string.YesDisable))
                                 .setCancelText(getString(R.string.NoAdmins))
                                 .setConfirmClickListener {
@@ -643,7 +639,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener,RoomMemberListe
                                     jsonObject.put(getString(R.string.idList), Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                                     lstAdmins.clear()
-                                    tvCount.visibility=View.GONE
+                                    tvCount.visibility = View.GONE
                                     adapter.notifyDataSetChanged()
                                     shimmerFrameLayout.startShimmerAnimation()
                                     shimmerFrameLayout.visibility = View.VISIBLE

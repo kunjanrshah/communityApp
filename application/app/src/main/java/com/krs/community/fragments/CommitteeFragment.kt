@@ -32,6 +32,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.FamilyTreeListActivity
+import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
@@ -370,7 +371,12 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
             intent.data = Uri.parse(str)
             startActivity(intent)
         }
-
+        holder.messageContainer.setOnClickListener {
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), lstMember[position])
+            startActivity(intent)
+            Utility.fade(activity)
+        }
     }
 
 
@@ -598,6 +604,8 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         val llDesignation: LinearLayout = itemView.findViewById(R.id.ll_designation)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+        var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
+
     }
 
     override fun onResume() {

@@ -96,7 +96,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         llLogout.setOnClickListener { v: View? ->
             TTFancyGifDialog.Builder(activity)
                     .setTitle(getString(R.string.you_sure))
-                    .setMessage("Logout the Community App")
+                    .setMessage("Logout the " + getString(R.string.app_name))
                     .setPositiveBtnText("Yes")
                     .setPositiveBtnBackground("#22b573")
                     .setNegativeBtnText("No")
