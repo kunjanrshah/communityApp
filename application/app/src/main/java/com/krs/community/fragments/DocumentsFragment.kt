@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.adapter.UploadDialogAdapter
+import com.krs.community.app.AppController
 import com.krs.community.listeners.ByDocumentListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -115,7 +116,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                                 }
                                 .start(object : OnDownloadListener {
                                     override fun onDownloadComplete() {
-                                        Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, "Documents", "File is downloaded in CommunityApp folder")
+                                        Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, "Documents", "File is downloaded in " + AppController.mApplication.getString(R.string.app_name) + "folder")
                                     }
 
                                     override fun onError(error: Error?) {

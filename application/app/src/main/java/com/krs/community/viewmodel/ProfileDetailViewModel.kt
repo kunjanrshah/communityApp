@@ -3,6 +3,7 @@ package com.krs.community.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.lazyDeferred
 import com.krs.community.listeners.EditMemberListener
@@ -53,6 +54,10 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getLocalCommName()
     }
 
+    suspend fun getLocalCommunity(id: Int): LiveData<List<String>> {
+        return mProfileDetailRepository.getLocalCommunity(id)
+    }
+
     var selectedStateId = 0
     val stateName by lazyDeferred {
         mProfileDetailRepository.getstateNameById(selectedStateId)
@@ -64,6 +69,10 @@ class ProfileDetailViewModel(
 
     val lstStateName by lazyDeferred {
         mProfileDetailRepository.getStateName()
+    }
+
+    val lstSubCommName by lazyDeferred {
+        mProfileDetailRepository.getSubCommName()
     }
 
     var selectedCityId: Int = 0

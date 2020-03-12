@@ -81,12 +81,24 @@ class LoginViewModel(private val loginRepository: LoginRepository,
         job_forgot?.cancel()
     }
 
-    fun loginWithMobile() {
+    fun loginWithOTP() {
         try {
             val loginRequest = AppConstants.LoginRequest()
             loginRequest.username = mobile
             loginRequest.hashcode = Guru.getString(app.applicationContext.getString(R.string.hash_key), "")
             loginRequest.login_type = "1"
+            getLoginUser(loginRequest)
+        } catch (e: Exception) {
+            Utility.hideSweetProgress()
+            e.printStackTrace()
+        }
+    }
+
+    fun loginWithMobile(number: String) {
+        try {
+            val loginRequest = AppConstants.LoginRequest()
+            loginRequest.username = number
+            loginRequest.login_type = "2"
             getLoginUser(loginRequest)
         } catch (e: Exception) {
             Utility.hideSweetProgress()

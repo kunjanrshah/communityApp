@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -169,32 +170,29 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     (viewHolder as FamilyDetailViewHolder).tvName.text = "${member.firstName} ${member.lastName}"
                     viewHolder.tvSubtext.text = member.relation
 
-                    /*viewHolder.tvEmail.text = member.emailAddress
-                    viewHolder.tvMobile.text = member.mobile*/
-
                     if (member.mobile.isEmpty()){
                         viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                         viewHolder.ivMobile.visibility = View.GONE
-                        viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                        viewHolder.tvMobile.setTextColor(ContextCompat.getColor(this@FamilyDetailActivity, R.color.gray_btn_bg_color))
                     }else{
                         viewHolder.ivMobile.visibility = View.VISIBLE
                         viewHolder.tvMobile.text = member.mobile
-                        viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
+                        viewHolder.tvMobile.setTextColor(ContextCompat.getColor(this@FamilyDetailActivity, R.color.com_facebook_blue))
                     }
 
                     if (member.emailAddress.isEmpty()){
                         viewHolder.ivEmail.visibility = View.GONE
                         viewHolder.tvEmail.text = getString(R.string.email_not_available)
-                        viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                        viewHolder.tvEmail.setTextColor(ContextCompat.getColor(this@FamilyDetailActivity, R.color.gray_btn_bg_color))
                     }else{
-                        viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                        viewHolder.tvEmail.setTextColor(ContextCompat.getColor(this@FamilyDetailActivity, R.color.red_btn_bg_color))
                         viewHolder.ivEmail.visibility = View.VISIBLE
                         viewHolder.tvEmail.text = member.emailAddress
                     }
 
                     viewHolder.tvUpdate.text = "updated "+changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
-                    var imgLogin: Int
+                    val imgLogin: Int
                     if(member.loginStatus==1){
                         imgLogin=R.drawable.ic_logout
                         viewHolder.tvLogin.text = "See you again!"
@@ -234,13 +232,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             if(!member.profilePassword.isNullOrEmpty()){
 
                                 if(memberId==member.id){
-                                    textMsg = "Exit "
+                                    textMsg = "Exit"
                                 }else if(member.loginStatus==1 && member.onlineStatus==0){
-                                    textMsg = "Exit "
+                                    textMsg = "Exit"
                                 }else if(member.loginStatus==0){
-                                    textMsg = "Enter "
+                                    textMsg = "Enter"
                                 }else if(member.onlineStatus==1){
-                                    textMsg = "Exit "
+                                    textMsg = "Exit"
                                 }
 
                                 var gif: Int = R.drawable.gif5
@@ -250,7 +248,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
                                 TTFancyGifDialog.Builder(this@FamilyDetailActivity)
                                         .setTitle(getString(R.string.you_sure))
-                                        .setMessage(textMsg + getString(R.string.Communityapp))
+                                        .setMessage(textMsg + " the " + getString(R.string.app_name) + " App")
                                         .setPositiveBtnText( getString(R.string.yes))
                                         .setPositiveBtnBackground("#22b573")
                                         .setNegativeBtnText(getString(R.string.no))
@@ -298,15 +296,15 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }
                     viewHolder.boomMenuButton.clearBuilders()
                     for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                        val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                        val builder: TextInsideCircleButton.Builder? = getTextInsideCircleButtonBuilder()
                         builder?.listener {
                             if (it == 0) {
 
                                 createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
 
-                                Handler().post(Runnable {
-                                    startSweetProgress(this@FamilyDetailActivity, getString(R.string._export) +"${member.firstName}"+getString(R.string.sdetails), getString(R.string.please_wait))
-                                })
+                                Handler().post {
+                                    startSweetProgress(this@FamilyDetailActivity, getString(R.string._export) + member.firstName + getString(R.string.sdetails), getString(R.string.please_wait))
+                                }
                                 Handler().postDelayed({
                                     hideSweetProgress()
                                 }, 5000)
@@ -315,8 +313,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             } else if (it == 1) {
                                 Toast.makeText(this@FamilyDetailActivity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                                 return@listener
-                                val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
-                                startActivity(intent)
+                                /* val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
+                                 startActivity(intent)*/
                             } else if (it == 2) {
                                 if (!member.mobile.isNullOrEmpty()) {
                                     sendWhatsappMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
@@ -326,14 +324,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             } else if (it == 3) {
                                 val mBundle = Bundle()
                                 mBundle.putSerializable(getString(R.string.member), member)
-                                val intent: Intent = Intent(this@FamilyDetailActivity, QRCodeActivity::class.java)
+                                val intent = Intent(this@FamilyDetailActivity, QRCodeActivity::class.java)
                                 intent.putExtras(mBundle)
                                 startActivity(intent)
                                 fade(this@FamilyDetailActivity)
                             } else if (it == 4) {
                                 shareDetails(this@FamilyDetailActivity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, member.area, member.address)
                             } else if (it == 5) {
-                                val adapter: LocationAdapter = LocationAdapter(this@FamilyDetailActivity, member)
+                                val adapter = LocationAdapter(this@FamilyDetailActivity, member)
                                 adapter.setLocationListner(this@FamilyDetailActivity)
                                 setLocationDialog = DialogPlus.newDialog(this@FamilyDetailActivity)
                                         .setAdapter(adapter)
@@ -350,7 +348,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     viewHolder.boomMenuButton.setOnClickListener {
                         viewHolder.boomMenuButton.boom()
                     }
-                    applyClickEvents(viewHolder, i,member)
+                    applyClickEvents(viewHolder, member)
                     applyProfilePicture(viewHolder, member)
                 }
                 override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -393,6 +391,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             startActivity(intent)  */
 
             val intent = Intent(this, MapTrackingActivity::class.java)
+            intent.putExtra("head_id", headId)
             startActivity(intent)
 
             fade(this)
@@ -401,7 +400,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         login.setOnClickListener {
             TTFancyGifDialog.Builder(this)
                     .setTitle(getString(R.string.you_sure))
-                    .setMessage(getString(R.string.LogoutComApp))
+                    .setMessage(getString(R.string.LogoutComApp) + " " + getString(R.string.app_name) + " App")
                     .setPositiveBtnText(getString(R.string.yes))
                     .setPositiveBtnBackground("#22b573")
                     .setNegativeBtnText(getString(R.string.no))
@@ -449,7 +448,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         } else {
             imgProfile.isClickable = false
             imgProfile.setImageResource(R.drawable.bg_circle)
-            imgProfile.setColorFilter(Utility.getRandomMaterialColor(this@FamilyDetailActivity, "400"))
+            imgProfile.setColorFilter(getRandomMaterialColor(this@FamilyDetailActivity, "400"))
             iconText.visibility = View.VISIBLE
         }
 
@@ -479,18 +478,17 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             e.message
         }
 
-
         val tvLabel: TextView = header.findViewById(R.id.tv_label)
         tvLabel.text=getString(R.string.fmilyList)+" (${members.size})"
 
         header.bmb.clearBuilders()
         for (i in 0 until header.bmb.piecePlaceEnum.pieceNumber()) {
-            val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+            val builder: TextInsideCircleButton.Builder? = getTextInsideCircleButtonBuilder()
             builder?.listener {
                 if (it == 0) {
                     createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
                     Handler().post {
-                        startSweetProgress(this@FamilyDetailActivity,  getString(R.string._export)+"${member.firstName}"+getString(R.string.sdetails), getString(R.string.please_wait))
+                        startSweetProgress(this@FamilyDetailActivity, getString(R.string._export) + " " + member.firstName + getString(R.string.sdetails), getString(R.string.please_wait))
                     }
                     Handler().postDelayed({
                         hideSweetProgress()
@@ -498,8 +496,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 } else if (it == 1) {
                     Toast.makeText(this@FamilyDetailActivity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                     return@listener
-                    val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
-                    startActivity(intent)
+                    /* val intent: Intent = Intent(this@FamilyDetailActivity, FamilyTreeListActivity::class.java)
+                     startActivity(intent)*/
                 } else if (it == 2) {
                     if (!member.mobile.isNullOrEmpty()) {
                         sendWhatsappMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
@@ -509,14 +507,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 } else if (it == 3) {
                     val mBundle = Bundle()
                     mBundle.putSerializable(getString(R.string.member), member)
-                    val intent: Intent = Intent(this@FamilyDetailActivity, QRCodeActivity::class.java)
+                    val intent = Intent(this@FamilyDetailActivity, QRCodeActivity::class.java)
                     intent.putExtras(mBundle)
                     startActivity(intent)
                     fade(this@FamilyDetailActivity)
                 } else if (it == 4) {
                     shareDetails(this@FamilyDetailActivity, tvName.text.toString(), member.mobile, member.emailAddress, member.area, member.address)
                 } else if (it == 5) {
-                    val adapter: LocationAdapter = LocationAdapter(this@FamilyDetailActivity, member)
+                    val adapter = LocationAdapter(this@FamilyDetailActivity, member)
                     adapter.setLocationListner(this@FamilyDetailActivity)
                     setLocationDialog = DialogPlus.newDialog(this@FamilyDetailActivity)
                             .setAdapter(adapter)
@@ -557,7 +555,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }
                     TTFancyGifDialog.Builder(this)
                             .setTitle(getString(R.string.you_sure))
-                            .setMessage(textMsg + " " + getString(R.string.Communityapp))
+                            .setMessage(textMsg + " the " + getString(R.string.app_name) + " App")
                             .setPositiveBtnText(getString(R.string.yes))
                             .setPositiveBtnBackground("#22b573")
                             .setNegativeBtnText(getString(R.string.no))
@@ -611,7 +609,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             holder.iconText.visibility = View.VISIBLE
         }
     }
-    private fun applyClickEvents(holder: FamilyDetailViewHolder, position: Int, member: Member) {
+
+    private fun applyClickEvents(holder: FamilyDetailViewHolder, member: Member) {
         holder.tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + holder.tvMobile.text
@@ -640,7 +639,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         var frontLayout: FrameLayout = v.findViewById(R.id.front_layout)
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var llDelete: LinearLayout = v.findViewById(R.id.ll_delete)
-        var llLogin: LinearLayout = v.findViewById(R.id.ll_login)
         var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         val imgState: ImageView = v.findViewById(R.id.img_state)

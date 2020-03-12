@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -22,6 +21,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
@@ -30,16 +30,14 @@ import com.google.gson.JsonObject
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.databinding.ActivityRegisterBinding
-import com.krs.community.entities.LastName
-import com.krs.community.entities.States
-import com.krs.community.entities.SubCommunity
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.listeners.ImageUploadListener
-import com.krs.community.model.Datum
 import com.krs.community.model.RegisterModel
 import com.krs.community.utils.*
+import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RegisterViewModel
+import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
 import com.wessam.library.NetworkChecker
@@ -60,14 +58,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
-    private lateinit var lstLastnameId:Array<Int?>
-    private lateinit var lstStateId:Array<Int?>
-    private lateinit var lstCityId:Array<Int?>
-    private lateinit var lstSubCommId:Array<Int?>
-    private lateinit var lstLocalCommId:Array<Int?>
     lateinit var binding:ActivityRegisterBinding
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
+    private lateinit var dashboardViewModel: DashboardViewModel
+
     private var resultUri: Uri?=null
     private var mNetworkReceiver: BroadcastReceiver? = null
     private var isLogin: Boolean = true
@@ -79,11 +74,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     override val kodein by kodein()
     private val registerViewModelFactory: RegisterViewModelFactory by instance()
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+    private val factory: DashboardViewModelFactory by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        isLogin = intent.getBooleanExtra("isLogin", true)
+        isLogin = intent.getBooleanExtra(getString(R.string.is_logged_in), true)
         mNetworkReceiver = NetworkChangeReceiver()
 
         registerNetworkBroadcastForNougat()
@@ -122,7 +118,8 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             }
         }
     }
-    @SuppressLint("NewApi")
+
+    @SuppressLint("NewApi", "ClickableViewAccessibility")
     fun setScreenLayout() {
         if (NetworkChecker.isNetworkConnected(this)) {
             logger = Logger(TAG)
@@ -132,6 +129,8 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
             profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
             profileDetailViewModel.mImageUploadListener=this
+
+            dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
 
             binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
             binding.lifecycleOwner = this
@@ -149,23 +148,22 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                 binding.txtAlready.visibility = View.INVISIBLE
             }
 
-            binding.btnRegister.setOnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        btn_register.background = resources.getDrawable(R.drawable.btn_registration_pressed)
-                        return@setOnTouchListener true
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        btn_register.background = resources.getDrawable(R.drawable.btn_registration)
-                        btn_register.performClick()
-                        return@setOnTouchListener true
-                    }
-                    else -> return@setOnTouchListener false
-                }
-            }
+            /*   binding.btnRegister.setOnTouchListener { v, event ->
+                   when (event.action) {
+                       MotionEvent.ACTION_DOWN -> {
+                           btn_register.background = resources.getDrawable(R.drawable.btn_registration_pressed)
+                           return@setOnTouchListener true
+                       }
+                       MotionEvent.ACTION_UP -> {
+                           btn_register.background = resources.getDrawable(R.drawable.btn_registration)
+                           btn_register.performClick()
+                           return@setOnTouchListener true
+                       }
+                       else -> return@setOnTouchListener false
+                   }
+               }*/
 
             binding.btnRegister.setOnClickListener {
-
                 Utility.startSweetProgress(this, getString(R.string.RegisterFamily), resources.getString(R.string.loading))
                 registerViewModel.getUserRegistration()
             }
@@ -179,55 +177,81 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                 binding.imgCancel.visibility = View.GONE
             }
 
-            /*get Lastnames */
-            registerViewModel.getUserLastName()
+            Coroutines.main {
 
-            /*get countries */
-            /*spinnerCountries.setItems(CountryData.countryNames)
-            spinnerCountries.setExpandTint(R.color.black)
-            spinnerCountries.select(0)
-            registerViewModel.country_code=CountryData.countryAreaCodes[0]*/
+                dashboardViewModel.fetchLastName()
+                profileDetailViewModel.lstLastName.await().observe(this, Observer {
+                    spinnerLname.setItems(it.toTypedArray())
+                    spinnerLname.setExpandTint(R.color.black)
+                })
+
+                dashboardViewModel.fetchState()
+                profileDetailViewModel.lstStateName.await().observe(this, Observer {
+                    spinnerStates.setItems(it.toTypedArray())
+                    spinnerStates.setExpandTint(R.color.black)
+                })
+
+                dashboardViewModel.fetchSubCommunities()
+                profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
+                    spinnerSub.setItems(it.toTypedArray())
+                    spinnerSub.setExpandTint(R.color.black)
+                })
+
+                dashboardViewModel.fetchCity()
+                dashboardViewModel.fetchLocalCommunities()
+            }
 
             binding. spinnerCountries.setOnItemClickListener { pos->
                 registerViewModel.countryCode =CountryData.countryAreaCodes[pos]
             }
 
-            /*get states */
-            registerViewModel.getUserStates()
-            binding. spinnerStates.setOnItemClickListener {
-                Utility.startSweetProgress(this,getString(R.string.FetchingCity),resources.getString(R.string.loading))
-                registerViewModel.stateId=lstStateId[it]
-                registerViewModel.fetchCitiesForStateId(it + 1)
+            binding.spinnerStates.setOnItemClickListener {
+                Coroutines.main {
+                    registerViewModel.stateId = (it + 1)
+                    val lstCity = profileDetailViewModel.getCityNamebyState(it + 1)
+                    spinnerCities.clear()
+                    registerViewModel.cityId = null
+                    spinnerCities.setItems(lstCity.toTypedArray())
+                    spinnerCities.setExpandTint(R.color.black)
+                }
             }
 
-
-            /*get sub communities */
-            registerViewModel.getLstSubCommunity()
-            binding. spinnerSub.setOnItemClickListener {
-                Utility.startSweetProgress(this, getString(R.string.fetching_local_community), resources.getString(R.string.loading))
-                registerViewModel.subCommId=lstSubCommId[it]
-                registerViewModel.getLstLocalCommunity(it + 1)
+            binding.spinnerSub.setOnItemClickListener {
+                Coroutines.main {
+                    registerViewModel.subCommId = (it + 1)
+                    profileDetailViewModel.getLocalCommunity(it + 1).observeForever {
+                        spinnerLocal.clear()
+                        registerViewModel.localCommId = null
+                        spinnerLocal.setItems(it.toTypedArray())
+                        spinnerLocal.setExpandTint(R.color.black)
+                    }
+                }
             }
 
-            binding.spinnerLname.setOnItemClickListener {position->
-                Log.d(TAG,"spinnerLname: "+lstLastnameId[position])
-                registerViewModel.lastnameId=lstLastnameId[position]
+            binding.spinnerLname.setOnItemClickListener {
+                Coroutines.io {
+                    registerViewModel.lastnameId = profileDetailViewModel.getIdByLastName(binding.spinnerLname.text.toString())
+                    Log.d(TAG, "lname id: " + registerViewModel.lastnameId)
+                }
             }
 
             binding.spinnerCities.setOnItemClickListener {position->
-                Log.d(TAG,"spinnerCities: "+lstCityId[position])
-                registerViewModel.cityId=lstCityId[position]
+                Coroutines.io {
+                    registerViewModel.cityId = profileDetailViewModel.getCityIdByName(binding.spinnerCities.text.toString())
+                    Log.d(TAG, "cityId: " + registerViewModel.cityId)
+                }
             }
 
             binding.spinnerLocal.setOnItemClickListener {position->
-                Log.d(TAG,"spinnerLocal: "+lstLocalCommId[position])
-                registerViewModel.localCommId=lstLocalCommId[position]
+                Coroutines.io {
+                    registerViewModel.localCommId = profileDetailViewModel.getLocalCommunityId(binding.spinnerLocal.text.toString())
+                    Log.d(TAG, "localCommId: " + registerViewModel.localCommId)
+                }
             }
 
             val lstGender = arrayOf(getString(R.string.male), getString(R.string.female))
             binding.spinnerGender.setItems(lstGender)
             binding.spinnerGender.setExpandTint(R.color.black)
-
 
             binding.spinnerGender.setOnItemClickListener {position->
 
@@ -243,9 +267,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                if (NetworkChecker.isNetworkConnected(context)) {
-                    setScreenLayout()
-                } else {
+                if (!NetworkChecker.isNetworkConnected(context)) {
                     setNoInternetLayout()
                 }
             } catch (e: java.lang.Exception) {
@@ -262,7 +284,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         }
     }
 
-
     private fun unregisterNetworkBroadcastForNougat() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -276,14 +297,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         }
     }
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode==PICK_GALLERY_REQUEST){
             pickFromGallery(this)
         }
     }
-
 
     private fun ScrollView.scrollToBottom() {
         val lastChild = getChildAt(childCount - 1)
@@ -351,73 +370,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         binding.spinnerLocal.setText("Select Local Community")
     }
 
-    override fun getStates(data: List<States>) {
-        val lstState = Array<String?>(data.size) { null }
-        lstStateId = Array(data.size) { null }
-        for ((index, stateData) in data.withIndex()) {
-            lstState[index] = stateData.name
-            lstStateId[index] = stateData.id
-        }
-        spinnerStates.setItems(lstState)
-        spinnerStates.setExpandTint(R.color.black)
-    }
-
-    override fun getCities(data: List<Datum>) {
-        val lstCity = Array<String?>(data.size) { null }
-        lstCityId = Array(data.size) { null }
-        for ((index, cityData) in data.withIndex()) {
-            lstCity[index] = cityData.name
-            lstCityId[index] = Integer.parseInt(cityData.id)
-        }
-        spinnerCities.clear()
-        spinnerCities.setTitle("Select ${spinnerStates.text}'s City")
-        spinnerCities.setItems(lstCity)
-        spinnerCities.setExpandTint(R.color.black)
-        if(Utility.dialog!=null && Utility.dialog.isShowing) {
-            Utility.dialog.dismissWithAnimation()
-        }
-
-    }
-
-    override fun getSubCommunity(data: List<SubCommunity>) {
-        val lstSubCom = Array<String?>(data.size) { null }
-        lstSubCommId = Array(data.size) { null }
-        for ((index, subData) in data.withIndex()) {
-            lstSubCom[index] = subData.name
-            lstSubCommId[index] = subData.id
-        }
-        spinnerSub.setItems(lstSubCom)
-    }
-
-    override fun getLocalCommunity(data: List<Datum>) {
-        val lstLocal = Array<String?>(data.size) { null }
-        lstLocalCommId = Array(data.size) { null }
-        for ((index, LocalData) in data.withIndex()) {
-            lstLocal[index] = LocalData.name
-            lstLocalCommId[index] = Integer.parseInt(LocalData.id)
-        }
-        spinnerLocal.clear()
-        spinnerLocal.setTitle("Select ${spinnerSub.text}'s Local Community")
-        spinnerLocal.setItems(lstLocal)
-        spinnerLocal.setExpandTint(R.color.black)
-        if(Utility.dialog!=null && Utility.dialog.isShowing) {
-            Utility.dialog.dismissWithAnimation()
-        }
-    }
-
-
-    override fun getLastname(data: List<LastName>) {
-        val lstLastname = Array<String?>(data.size) { null }
-        lstLastnameId = Array(data.size) { null }
-        for ((index, stateData) in data.withIndex()) {
-            lstLastname[index] = stateData.name
-            lstLastnameId[index]=stateData.id
-        }
-
-        spinnerLname.setItems(lstLastname)
-        spinnerLname.setExpandTint(R.color.black)
-    }
-
     override fun getResult(profile: JsonObject) {
         Utility.hideSweetProgress()
         successResponse(getString(R.string.RequestAdmin))
@@ -480,7 +432,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     override fun loadingProgress(showLoader: Boolean) {
         mShowLoader = showLoader
     }
-
 
 }
 

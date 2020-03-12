@@ -448,7 +448,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
                     android:textSize="16sp"
-                    android:background="@drawable/btn_registration"
+                    android:background="@drawable/btn_registration_selection"
                     android:fontFamily="@font/montserrat_semibold"
                     android:gravity="center"
                     android:text="@string/register"

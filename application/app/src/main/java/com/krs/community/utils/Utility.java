@@ -67,6 +67,7 @@ import com.github.squti.guru.Guru;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.krs.community.R;
+import com.krs.community.app.AppController;
 import com.krs.community.fragments.CalendarFragment;
 import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.fragments.ExpandableFilterListFragment;
@@ -1420,7 +1421,7 @@ public class Utility {
     }
 
     public static String getPath() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CommunityApp";
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.app_name);
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();

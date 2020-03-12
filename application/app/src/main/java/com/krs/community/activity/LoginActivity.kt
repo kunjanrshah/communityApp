@@ -9,6 +9,8 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.telephony.SubscriptionInfo
+import android.telephony.SubscriptionManager
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -26,6 +28,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -60,7 +63,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.util.*
-
+import kotlin.collections.ArrayList
 
 class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener {
 
@@ -180,6 +183,54 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 loginViewModel?.cancelTimer()
             }
 
+            binding.fabLogin.setOnClickListener {
+
+                val lstNumber = ArrayList<String>()
+                val lstCarrier = ArrayList<String>()
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    if (checkReadPhoneStatePermission(this)) {
+                        val subscriptionManager: SubscriptionManager = SubscriptionManager.from(applicationContext)
+                        val subsInfoList: List<SubscriptionInfo> = subscriptionManager.activeSubscriptionInfoList
+
+                        for (subscriptionInfo in subsInfoList) {
+                            var number: String = subscriptionInfo.number
+                            val carrier: String = subscriptionInfo.carrierName.toString()
+                            if (number.isNotEmpty()) {
+                                if (number.length > 10) {
+                                    number = number.substring((number.length - 10), number.length)
+                                }
+                                lstNumber.add(number)
+                                lstCarrier.add(carrier)
+                            }
+                        }
+                    } else {
+                        requestPermissions(this@LoginActivity)
+                    }
+                }
+
+                if (lstNumber.size > 1) {
+                    TTFancyGifDialog.Builder(this@LoginActivity)
+                            .setTitle("Choose SIM")
+                            .setMessage("Family Head Device Login")
+                            .setPositiveBtnText(lstCarrier.get(0))
+                            .setPositiveBtnBackground("#22b573")
+                            .setNegativeBtnText(lstCarrier.get(1))
+                            .setNegativeBtnBackground("#c1272d")
+                            .setGifResource(R.drawable.gif14)
+                            .isCancellable(true)
+                            .OnPositiveClicked {
+                                startSweetProgress(this@LoginActivity, "Login with ${lstNumber[0]}", getString(R.string.loading))
+                                loginViewModel?.loginWithMobile(lstNumber.get(0))
+                            }
+                            .OnNegativeClicked {
+                                startSweetProgress(this@LoginActivity, "Login with ${lstNumber[1]}", getString(R.string.loading))
+                                loginViewModel?.loginWithMobile(lstNumber.get(1))
+                            }
+                            .build()
+                }
+            }
+
             binding.btnLoginFb.setOnClickListener { v ->
 
                 LoginManager.getInstance().logInWithReadPermissions(this@LoginActivity, Arrays.asList("email", "public_profile"))
@@ -192,7 +243,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                             try {
                                 val email = `object`.getString("email")
 
-                                Log.e("email",""+email);
+                                Log.e("email", "" + email)
                                 //val url = `object`.getJSONObject("picture").getJSONObject("data").getString("url")
                                 loginViewModel?.loginWithFB(email)
                             } catch (e: JSONException) {
@@ -256,7 +307,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                     }
                     if (isOnline(this)) {
                         startSweetProgress(this, getString(R.string.otp_send), getString(R.string.loading))
-                        loginViewModel?.loginWithMobile()
+                        loginViewModel?.loginWithOTP()
                     }
                 }
             }
@@ -405,8 +456,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     private fun goToFamilyDetailScreen() {
-        Guru.putString(getString(R.string.user_id),member.id)
-        Guru.putString(getString(R.string.access_token),member.accessToken)
+        Guru.putString(getString(R.string.user_id), member.id)
+        Guru.putString(getString(R.string.access_token), member.accessToken)
         val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra(getString(R.string.id), member.id)
@@ -459,7 +510,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN && resultCode!=0) {
+        if (requestCode == RC_SIGN_IN && resultCode != 0) {
             try {
                 startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
                 loginViewModel?.loginWithGoogle(data)

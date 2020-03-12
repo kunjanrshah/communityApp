@@ -326,7 +326,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         if (member.role != getString(R.string.User)) {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
-                            bundle.putBoolean("isLogin", false)
+                            bundle.putBoolean(getString(R.string.is_logged_in), false)
                             intent.putExtras(bundle)
                             startActivity(intent)
                             Utility.fade(activity)

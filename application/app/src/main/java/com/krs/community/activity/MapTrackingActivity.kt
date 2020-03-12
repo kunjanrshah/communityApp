@@ -68,7 +68,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     private lateinit var mainHandler: Handler
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
-    private lateinit var memberId: String
+    private lateinit var headId: String
     private val locations = HashMap<String, Location>()
     private val oldLocations = HashMap<String, Location>()
     private val lstMarkers = HashMap<String, Marker>()
@@ -76,7 +76,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map_tracking)
-        memberId = Guru.getString(getString(R.string.member_id), "").toString()
+        headId = intent.getStringExtra("head_id")
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@MapTrackingActivity, MapTrackingActivity::class.java.simpleName)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
@@ -94,7 +94,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
 
         mapFragment?.getMapAsync { googleMap ->
             mMap = googleMap
-            val point = CameraUpdateFactory.newLatLngZoom(LatLng(locations[memberId]!!.latitude, locations[memberId]!!.longitude), 8f)
+            val point = CameraUpdateFactory.newLatLngZoom(LatLng(locations[headId]!!.latitude, locations[headId]!!.longitude), 8f)
             mMap?.moveCamera(point)
             mMap?.animateCamera(CameraUpdateFactory.zoomTo(11f))
             mMap?.setOnMapLoadedCallback {
@@ -116,8 +116,8 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
 
         val jsonObject= JSONObject()
         val headId = Guru.getString(getString(R.string.user_id), "")
-        if (memberId.isNotEmpty()) {
-            jsonObject.put(getString(R.string.id),memberId)
+        if (this.headId.isNotEmpty()) {
+            jsonObject.put(getString(R.string.id), this.headId)
         }
         jsonObject.put(getString(R.string.head_id),headId)
         val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
@@ -129,7 +129,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
 
             val members = data.member as ArrayList<Member>
             for (member in members) {
-                if (member.id == memberId) {
+                if (member.id == headId) {
                     if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
                         val loc = Location(LocationManager.GPS_PROVIDER)
                         loc.latitude = member.homeLat.toDouble()
@@ -192,7 +192,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         mLocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
-                    locations[memberId] = location
+                    locations[headId] = location
                     updateMarker()
                 }
             }

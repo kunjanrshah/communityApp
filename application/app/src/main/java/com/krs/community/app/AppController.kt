@@ -81,7 +81,7 @@ class AppController : Application(), KodeinAware{
         bind() from singleton { ApiServices() }
         bind() from singleton { AppDatabase(instance()) }
 
-        bind() from singleton {  RegisterRepository(instance(),instance()) }
+        bind() from singleton { RegisterRepository(instance()) }
         bind() from singleton {  LoginRepository(instance()) }
         bind() from singleton {  PasswordRepository(instance()) }
         bind() from singleton {  ShareEventRepository(instance()) }
