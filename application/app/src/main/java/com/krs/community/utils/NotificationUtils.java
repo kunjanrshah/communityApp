@@ -13,21 +13,23 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.krs.community.R;
-import com.krs.community.app.Config;
+import com.krs.community.app.NotificationReceiver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,9 +48,6 @@ public class NotificationUtils {
         this.mContext = mContext;
     }
 
-    /**
-     * Method checks if the app is in background or not
-     */
     public static boolean isAppIsInBackground(Context context) {
         boolean isInBackground = true;
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -75,7 +74,6 @@ public class NotificationUtils {
         return !isInBackground;
     }
 
-    // Clears notification tray messages
     public static void clearNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
@@ -94,14 +92,107 @@ public class NotificationUtils {
         return 0;
     }
 
-    public void showNotificationMessage(String title, String message, String timeStamp, @NonNull Intent intent) {
-        showNotificationMessage(title, message, timeStamp, intent, null);
+    private Bitmap getBitmapFromURL(String strURL) {
+        try {
+            URL url = new URL(strURL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public void showNotificationMessage(String title, String message, String timeStamp, @NonNull Intent intent, String id) {
-        showNotificationMessage(title, message, timeStamp, intent, null, id);
+    private void playNotificationSound() {
+        try {
+            Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + mContext.getPackageName() + "/raw/notification");
+            Ringtone r = RingtoneManager.getRingtone(mContext, alarmSound);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    public void getBitmapAsyncAndNotification(String imageUrl, String timeStamp, String title, String message, @NonNull Intent intent, String id) {
+        final Bitmap[] bitmap = {null};
+        if (!TextUtils.isEmpty(imageUrl)) {
+            if (imageUrl.length() > 4 && Patterns.WEB_URL.matcher(imageUrl).matches()) {
+                Glide.with(mContext.getApplicationContext())
+                        .asBitmap()
+                        .load(imageUrl)
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                bitmap[0] = resource;
+                                displayImageNotification(bitmap[0], timeStamp, title, message, intent, id);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                Bitmap bitmap1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.user_profile);
+                                displayImageNotification(bitmap1, timeStamp, title, message, intent, id);
+                            }
+                        });
+            }
+        }
+    }
+
+    private void displayImageNotification(Bitmap bitmap, String timeStamp, String title, String message, @NonNull Intent intent, String id) {
+        String CHANNEL_ID = mContext.getString(R.string.notification_channel_id);
+        final PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent broadcastIntent = new Intent(mContext, NotificationReceiver.class);
+        broadcastIntent.putExtra("toastMessage", message);
+        PendingIntent actionIntent = PendingIntent.getBroadcast(mContext, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        final Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + mContext.getPackageName() + "/raw/notification");
+
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
+
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        inboxStyle.addLine("9427051418");
+        inboxStyle.addLine("kunjanrshah@gmail.com");
+        inboxStyle.addLine("Home Address");
+        inboxStyle.addLine("Ahmedabad, Gujarat");
+        /*NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+        bigPictureStyle.setBigContentTitle(title);
+        bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
+        bigPictureStyle.bigPicture(bitmap);*/
+
+        Notification notification;
+        notification = mBuilder.setSmallIcon(R.drawable.notification_icon).setTicker(title)
+                .setWhen(getTimeMilliSec(timeStamp)).setAutoCancel(true)
+                .setContentTitle(title).setContentIntent(resultPendingIntent)
+                .setSound(alarmSound)
+                .setStyle(inboxStyle)//bigPictureStyle
+                .setContentIntent(resultPendingIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(mContext.getResources().getColor(R.color.colorPrimary))
+                .addAction(R.drawable.ic_medk, "Call", resultPendingIntent)
+                .addAction(R.drawable.ic_medk, "WhatsApp", actionIntent)
+                .addAction(R.drawable.ic_medk, "Approve", resultPendingIntent)
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setLargeIcon(bitmap).setContentText(message)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}).setLights(Color.RED, 0, 1).build();
+
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "CommunityAppNotification", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        if (notificationManager != null) {
+            notificationManager.notify(Integer.parseInt(id), notification);
+            playNotificationSound();
+        }
+    }
+
+/*
     public void showNotificationMessage(final String title, final String message, final String timeStamp, @NonNull Intent intent, @Nullable String imageUrl, String id) {
         // Check for empty push message
         if (TextUtils.isEmpty(message)) return;
@@ -119,13 +210,11 @@ public class NotificationUtils {
         if (!TextUtils.isEmpty(imageUrl)) {
 
             if (imageUrl.length() > 4 && Patterns.WEB_URL.matcher(imageUrl).matches()) {
-
                 Bitmap bitmap = getBitmapFromURL(imageUrl);
-
                 if (bitmap != null) {
-                    showBigNotification(bitmap, mBuilder, icon, title, message, resultPendingIntent, alarmSound);
+                    showBigNotification(bitmap, mBuilder, icon, title, message, resultPendingIntent, alarmSound,id);
                 } else {
-                    showSmallNotification(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+                    showSmallNotification(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound,id);
                 }
             }
         } else {
@@ -140,9 +229,13 @@ public class NotificationUtils {
         Notification.Builder builder = new Notification.Builder(mContext);
 
         Notification notification = builder.setContentTitle(message)
-                /*.setContentText(message)*/
-                /* .setTicker("New Message Alert!")*/.setSmallIcon(icon).setAutoCancel(false).setSound(alarmSound).setWhen(getTimeMilliSec(timeStamp)).setContentIntent(resultPendingIntent).build();
-        String CHANNEL_ID = "channelId";
+                */
+    /*.setContentText(message)*//*
+
+     */
+    /* .setTicker("New Message Alert!")*//*
+.setSmallIcon(icon).setAutoCancel(false).setSound(alarmSound).setWhen(getTimeMilliSec(timeStamp)).setContentIntent(resultPendingIntent).build();
+        String CHANNEL_ID = id;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setChannelId(CHANNEL_ID);
         }
@@ -159,10 +252,9 @@ public class NotificationUtils {
         notificationManager.notify(Integer.parseInt(id), notification);
     }
 
-    private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
+    private void showSmallNotification(NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound,String id) {
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
         inboxStyle.addLine(message);
 
         Notification notification;
@@ -172,52 +264,10 @@ public class NotificationUtils {
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
-            notificationManager.notify(Config.NOTIFICATION_ID, notification);
+            notificationManager.notify(Integer.parseInt(id), notification);
         }
     }
+*/
 
-    private void showBigNotification(Bitmap bitmap, NotificationCompat.Builder mBuilder, int icon, String title, String message, PendingIntent resultPendingIntent, Uri alarmSound) {
-        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
-        bigPictureStyle.setBigContentTitle(title);
-        bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
-        bigPictureStyle.bigPicture(bitmap);
-        Notification notification;
-        notification = mBuilder.setSmallIcon(R.drawable.notification_icon).setTicker(title).setWhen(System.currentTimeMillis()).setAutoCancel(true).setContentTitle(title).setContentIntent(resultPendingIntent).setSound(alarmSound).setStyle(bigPictureStyle).setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
-                /* .setWhen(getTimeMilliSec(timeStamp))
-                 .setSmallIcon(R.mipmap.app_icon)*/.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon)).setContentText(message).setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}).setLights(Color.RED, 0, 1).build();
 
-        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.notify(Config.NOTIFICATION_ID_BIG_IMAGE, notification);
-        }
-    }
-
-    /**
-     * Downloading push notification image before displaying it in
-     * the notification tray
-     */
-    private Bitmap getBitmapFromURL(String strURL) {
-        try {
-            URL url = new URL(strURL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    // Playing notification sound
-    public void playNotificationSound() {
-        try {
-            Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + mContext.getPackageName() + "/raw/notification");
-            Ringtone r = RingtoneManager.getRingtone(mContext, alarmSound);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

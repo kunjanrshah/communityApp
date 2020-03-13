@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MEDK Samaj</string>
+    <string name="folder_name">community</string>
     <string name="action_delete">Delete</string>
     <string name="action_disable">Disable</string>
     <string name="action_location">Location</string>
@@ -1220,6 +1221,7 @@
     <string name="filename">filename</string>
     <string name="asa">adad</string>
     <string name="is_logged_in">isLogin</string>
+    <string name="notification_channel_id" translatable="false">101</string>
 
 
 </resources>

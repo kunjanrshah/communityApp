@@ -3,15 +3,11 @@ package com.krs.community.utils;
 public class AppConstants {
 
     public static final String TRANSITION_CARD = "card_transition_";
-    public static final String NOTIFICATION = "notification";
     public static final String DEVICE_TOKEN = "device_token";
     public static final String API_KEY_VALUE = "q1fgdfggfw2e2rt3y5u6i8iug12fh123yhhddaf";
     public static final String PREF_NAME = "Vastipatrak";
-    public static final String USER_ID = "user_id";
     public static final String INSERT = "insert";
     public static final String VERSION = "version";
-    public static final String PUSH_MESSAGE = "push_message";
-    public static final String PROFILE_ID = "profile_id";
     public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
     public static final String UPLOAD_DOCUMENT = APPLICATION_BASE_URL + "UploadFiles";
 

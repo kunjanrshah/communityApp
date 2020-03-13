@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -55,11 +56,12 @@ import static com.facebook.AccessTokenManager.TAG;
 
 public class QRCodeActivity extends AppCompatActivity {
 
+    private static final int SELECT_PHOTO = 100;
     Bitmap b;
     Handler handler;
-    private static final int SELECT_PHOTO = 100;
-    private Member member;
     NetworkChangeReceiver mNetworkReceiver;
+    FragmentByQrcodeBinding binding;
+    private Member member;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,12 +73,12 @@ public class QRCodeActivity extends AppCompatActivity {
 
         if (NetworkChecker.isNetworkConnected(this)) {
             setScreenLayout();
-        }else{
+        } else {
             setNoInternetLayout();
         }
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(QRCodeActivity.this,QRCodeActivity.class.getSimpleName());
+        mApp.FirebaseAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
     }
 
     private void setNoInternetLayout() {
@@ -91,7 +93,7 @@ public class QRCodeActivity extends AppCompatActivity {
         anim.setRepeatCount(Animation.INFINITE);
         AppCompatImageView imageView = findViewById(R.id.no_internet_image);
         imageView.setAnimation(anim);
-        AppCompatButton retryButton=findViewById(R.id.retry_button);
+        AppCompatButton retryButton = findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
             if (NetworkChecker.isNetworkConnected(this)) {
                 setScreenLayout();
@@ -99,15 +101,16 @@ public class QRCodeActivity extends AppCompatActivity {
         });
     }
 
+
     private void setScreenLayout() {
-        FragmentByQrcodeBinding binding = DataBindingUtil.setContentView(this,R.layout.fragment_by_qrcode);
+        binding = DataBindingUtil.setContentView(this, R.layout.fragment_by_qrcode);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(this,R.color.colorBG,false);
+            Utility.changeStatusbarColor(this, R.color.colorBG, false);
         }
 
-        Bundle mBundle=getIntent().getExtras();
-        if (mBundle != null){
+        Bundle mBundle = getIntent().getExtras();
+        if (mBundle != null) {
             member = (Member) mBundle.getSerializable("member");
         }
 
@@ -202,11 +205,11 @@ public class QRCodeActivity extends AppCompatActivity {
                 binding.ivCode.buildDrawingCache(true);
 
                 b = Bitmap.createBitmap(binding.ivCode.getDrawingCache());
-                String str=member.getId()+"   "+member.getFirstName()+"   "+date;
+                String str = member.getId() + "   " + member.getFirstName() + "   " + date;
                 Bitmap bmp = Utility.drawTextToBitmap(b, str, QRCodeActivity.this);
                 saveImage(bmp);
 
-            }, 1000);
+            }, 500);
 
         });
 
@@ -230,61 +233,49 @@ public class QRCodeActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterNetworkBroadcastForNougat();
     }
+
     private void unregisterNetworkBroadcastForNougat() {
-        try{
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 unregisterReceiver(mNetworkReceiver);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 unregisterReceiver(mNetworkReceiver);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    class NetworkChangeReceiver extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try{
-                if (NetworkChecker.isNetworkConnected(context)) {
-                    setScreenLayout();
-                }else{
-                    setNoInternetLayout();
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-    private void shareImageUri(Uri uri){
+    private void shareImageUri(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setType("image/png");
         startActivity(intent);
     }
-    private Uri saveImage(Bitmap image) {
-        File imagesFolder = new File(getCacheDir(), "images");
+
+    private void saveImage(Bitmap image) {
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
+        File imagesFolder = new File(path);
         Uri uri = null;
         try {
             imagesFolder.mkdirs();
-            File file = new File(imagesFolder, "shared_image.png");
-
+            File file = new File(imagesFolder, "qrcode.png");
             FileOutputStream stream = new FileOutputStream(file);
             image.compress(Bitmap.CompressFormat.PNG, 100, stream);
             stream.flush();
             stream.close();
             uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
-
-
-            Log.e("uri--",""+uri);
+            Log.e("uri--", "" + uri);
         } catch (IOException e) {
             Log.d(TAG, "IOException while trying to write file for sharing: " + e.getMessage());
         }
-
-        shareImageUri(uri);
-        return uri;
+        if (uri != null) {
+            shareImageUri(uri);
+        } else {
+            Utility.displaySnackBarWithBottomMargin(binding.scrollView, getString(R.string.went_wrong));
+        }
     }
 
     @Override
@@ -312,16 +303,16 @@ public class QRCodeActivity extends AppCompatActivity {
 
                     try {
                         Result result = reader.decode(bitmap);
-                      String  output = result.getText();
-                        Log.d("QRCODE Result:","output: "+output);
+                        String output = result.getText();
+                        Log.d("QRCODE Result:", "output: " + output);
                         if (output != null) {
                             String decrypted = "";
                             try {
                                 decrypted = AESUtils.decrypt(output);
                                 Log.e(TAG, "decrypted:" + decrypted);
 
-                                Intent mIntent=new Intent(this,ProfileDetailActivity.class);
-                                mIntent.putExtra(getString(R.string.scanId),decrypted);
+                                Intent mIntent = new Intent(this, ProfileDetailActivity.class);
+                                mIntent.putExtra(getString(R.string.scanId), decrypted);
                                 startActivity(mIntent);
 
                             } catch (Exception e) {
@@ -332,6 +323,22 @@ public class QRCodeActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+        }
+    }
+
+    class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (NetworkChecker.isNetworkConnected(context)) {
+                    setScreenLayout();
+                } else {
+                    setNoInternetLayout();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

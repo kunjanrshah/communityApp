@@ -110,6 +110,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
+        requestPermissions(this@LoginActivity)
     }
 
     private fun setNoInternetLayout() {
@@ -474,13 +475,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         loginViewModel!!.status.value = false
         Log.d(TAG, "login data: $message")
     }
-
-    // Fetches reg id from shared preferences
-    /* private fun displayFirebaseRegId() {
-         val pref = applicationContext.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE)
-         val regId = pref.getString(AppConstants.DEVICE_TOKEN, null)
-         Log.e(TAG, "Firebase reg id: " + regId!!)
-     }*/
 
     override fun onResume() {
         super.onResume()

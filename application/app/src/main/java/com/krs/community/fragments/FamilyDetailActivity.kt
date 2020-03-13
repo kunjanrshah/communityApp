@@ -98,6 +98,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         rvDetail.layoutManager = mLayoutManager
         rvDetail.itemAnimator = DefaultItemAnimator()
         memberId = Guru.getString(getString(R.string.member_id), "")
+        requestStoragePermission(this)
     }
 
     override fun onPause() {
@@ -384,17 +385,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
         imgMap.setOnClickListener {
 
-            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
-
+            //val url=resources.getString(R.string.base_url_thumb)+member.profilePic
             /*val intent = Intent(this, MapviewActivity::class.java)
             intent.putExtra("image", url)
             startActivity(intent)  */
-
-            val intent = Intent(this, MapTrackingActivity::class.java)
+            Utility.displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
+            return@setOnClickListener
+            /*val intent = Intent(this, MapTrackingActivity::class.java)
             intent.putExtra("head_id", headId)
             startActivity(intent)
-
-            fade(this)
+            fade(this)*/
         }
 
         login.setOnClickListener {

@@ -44,6 +44,7 @@ import com.krs.community.listeners.UpdateVersionListener
 import com.krs.community.model.Member
 import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.Coroutines
+import com.krs.community.utils.NotificationUtils
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
@@ -83,7 +84,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         binding = DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
         dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
         dashboardViewModel.listener = this
-
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
@@ -188,6 +188,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun onResume() {
         super.onResume()
         loadProfile()
+        NotificationUtils.clearNotifications(applicationContext)
         hideSweetProgress()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(this)
@@ -195,7 +196,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         if (checkFineLocationPermission(this)) {
             val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 getLocationDetail = GetLocationDetail(this, this)
                 request = LocationRequest()
                 request.interval = INTERVAL

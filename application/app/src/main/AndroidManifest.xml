@@ -49,6 +49,10 @@
             android:required="false" />
 
         <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/notification_channel_id" />
+
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cd2b567af7b407b2736293035d07a280439e584e" />
         <meta-data
@@ -177,7 +181,8 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </receiver> <!-- Firebase Notifications -->
+        </receiver>
+        <!-- Firebase Notifications -->
         <service
             android:name=".service.MyFirebaseMessagingService"
             tools:ignore="ExportedService">
@@ -209,6 +214,8 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".app.NotificationReceiver" />
 
         <activity
             android:name="com.paytm.pgsdk.PaytmPGActivity"

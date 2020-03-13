@@ -2,25 +2,45 @@ package com.krs.community.adapter
 
 import android.app.Activity
 import android.content.Context
+import android.location.Location
+import android.location.LocationManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
 import com.example.easywaylocation.EasyWayLocation
+import com.example.easywaylocation.Listener
 import com.github.squti.guru.Guru
+import com.google.android.gms.location.LocationRequest
 import com.google.gson.Gson
 import com.krs.community.R
-import com.krs.community.activity.DashboardActivity.Companion.cur_lat
-import com.krs.community.activity.DashboardActivity.Companion.cur_lng
 import com.krs.community.model.Member
 import com.krs.community.utils.Utility
 
-class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter() {
+class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter(), Listener {
     var mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private var easyWayLocation: EasyWayLocation? = null
     private var setLocationListner: SetLocationListner? = null
+    var cur_lat = MutableLiveData<Double>()
+    var cur_lng = MutableLiveData<Double>()
 
+    private lateinit var request: LocationRequest
     fun setLocationListner(setLocationListner: SetLocationListner?) {
         this.setLocationListner = setLocationListner
+        if (Utility.checkFineLocationPermission(mContext)) {
+            val manager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                request = LocationRequest()
+                request.interval = Utility.INTERVAL
+                request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+                easyWayLocation = EasyWayLocation(mContext, request, true, this)
+                easyWayLocation?.startLocation()
+            }
+        } else {
+            Utility.requestFineLocationPermission(mContext as AppCompatActivity)
+        }
     }
 
     override fun getCount(): Int {
@@ -80,7 +100,6 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         cur_lng.observeForever {
             setDistance(viewHolder.tvHomeDist,viewHolder.tvOfficeDist,viewHolder.tvUserDist)
         }
-
         return convertView!!
     }
 
@@ -101,7 +120,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     }
 
     private fun setDistance(tvHome:TextView,tvOffice:TextView,tvUser:TextView){
-        if(!member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1") && isShareLocation()){
+        if (!member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1")) {
             if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
                 val userDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
                 tvUser.text= String.format("%.2f KM", userDist)
@@ -132,6 +151,19 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         var tvUserDist: TextView = view.findViewById(R.id.tv_user_dist)
         var tvHomeDist: TextView = view.findViewById(R.id.tv_home_dist)
         var tvOfficeDist: TextView = view.findViewById(R.id.tv_office_dist)
+    }
+
+    override fun locationCancelled() {
+        TODO("Not yet implemented")
+    }
+
+    override fun locationOn() {
+        TODO("Not yet implemented")
+    }
+
+    override fun currentLocation(location: Location?) {
+        cur_lat.postValue(location?.latitude)
+        cur_lng.postValue(location?.longitude)
     }
 
 }

@@ -1421,7 +1421,7 @@ public class Utility {
     }
 
     public static String getPath() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.app_name);
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();
@@ -1675,7 +1675,7 @@ public class Utility {
     }
 
     public static void store(Bitmap bm, String fileName, Context context) {
-        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
         File dir = new File(dirPath);
         if (!dir.exists()) dir.mkdirs();
         File file = new File(dirPath, fileName);

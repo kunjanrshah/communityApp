@@ -888,7 +888,7 @@ fun displayPDFDialog(context: Context, name: String, filePath: String, content: 
                         .setContentBaseUrl(null)
                         .setPageSize(PrintAttributes.MediaSize.ISO_A4)
                         .setContent(content)
-                        .setFilePath(Environment.getExternalStorageDirectory().absolutePath + "/Community").create()
+                        .setFilePath(Environment.getExternalStorageDirectory().absolutePath + "/" + AppController.mApplication.getString(R.string.folder_name)).create()
             }
             .setConfirmText("Share")
             .setConfirmClickListener { sDialog ->
