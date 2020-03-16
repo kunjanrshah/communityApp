@@ -97,7 +97,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
 
             Coroutines.io {
                 Coroutines.main {
-                    Utility.startSweetProgress(context!!, getString(R.string.app_name), "Fetching uploaded files")
+                    Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchinguploadedfiles))
                 }
                 documentsListModel.getUploadedFiles()
             }

@@ -37,7 +37,8 @@
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:background="@drawable/map" />
+                android:background="@drawable/world_map" />
+
         </RelativeLayout>
 
 

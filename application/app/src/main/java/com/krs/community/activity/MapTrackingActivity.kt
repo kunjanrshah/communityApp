@@ -116,12 +116,27 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         if (data.success) {
 
             val members = data.member as ArrayList<Member>
-            for (member in members) {
+            /*for (member in members) {
                 if (member.id == headId) {
                     if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
                         val loc = Location(LocationManager.GPS_PROVIDER)
                         loc.latitude = member.homeLat.toDouble()
                         loc.longitude = member.homeLng.toDouble()
+
+
+                        if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
+
+                            loc.latitude = member.officeLat.toDouble()
+                            loc.longitude = member.officeLng.toDouble()
+                        }
+
+                        Log.e("officeLat--",""+member.officeLat.toDouble())
+                        Log.e("officeLng--",""+member.officeLng.toDouble())
+
+                        Log.e("homeLat--",""+member.homeLat.toDouble())
+                        Log.e("homeLng--",""+member.homeLng.toDouble())
+
+                        Toast.makeText(this,"homeLat"+member.homeLat.toDouble(),Toast.LENGTH_SHORT).show();
                         locations[member.id] = loc
                     }
                 } else {
@@ -129,8 +144,74 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                         val loc = Location(LocationManager.GPS_PROVIDER)
                         loc.latitude = member.userLat.toDouble()
                         loc.longitude = member.userLng.toDouble()
+
+                        Log.e("userLat--",""+member.userLat.toDouble())
+                        Log.e("userLng--",""+member.userLng.toDouble())
                         locations[member.id] = loc
                     }
+
+                   *//* if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
+                        val loc = Location(LocationManager.GPS_PROVIDER)
+                        loc.latitude = member.homeLat.toDouble()
+                        loc.longitude = member.homeLng.toDouble()
+
+                        Log.e("homeLat--",""+member.homeLat.toDouble())
+                        Log.e("homeLng--",""+member.homeLng.toDouble())
+
+                        Toast.makeText(this,"homeLat"+member.homeLat.toDouble(),Toast.LENGTH_SHORT).show();
+                        locations[member.id] = loc
+                    }*//*
+                }
+            }*/
+
+            for (member in members) {
+                if (member.id == headId) {
+                    if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
+                        val loc = Location(LocationManager.GPS_PROVIDER)
+                        loc.latitude = member.homeLat.toDouble()
+                        loc.longitude = member.homeLng.toDouble()
+                        Log.e("homeLat--",""+member.homeLat.toDouble())
+                        Log.e("homeLng--",""+member.homeLng.toDouble())
+                        locations[member.id] = loc
+                    }
+
+                    if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
+                        val loc = Location(LocationManager.GPS_PROVIDER)
+                        loc.latitude = member.officeLat.toDouble()
+                        loc.longitude = member.officeLng.toDouble()
+
+                        Log.e("officeLat--",""+member.officeLat.toDouble())
+                        Log.e("officeLng--",""+member.officeLng.toDouble())
+                        locations[member.id] = loc
+                    }
+                }
+                if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
+                    val loc = Location(LocationManager.GPS_PROVIDER)
+                    loc.latitude = member.homeLat.toDouble()
+                    loc.longitude = member.homeLng.toDouble()
+                    Log.e("homeLat--",""+member.homeLat.toDouble())
+                    Log.e("homeLng--",""+member.homeLng.toDouble())
+                    locations[member.id] = loc
+                }
+
+                if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
+                    val loc = Location(LocationManager.GPS_PROVIDER)
+                    loc.latitude = member.officeLat.toDouble()
+                    loc.longitude = member.officeLng.toDouble()
+
+                    Log.e("officeLat--",""+member.officeLat.toDouble())
+                    Log.e("officeLng--",""+member.officeLng.toDouble())
+                    locations[member.id] = loc
+                }
+
+                if (!member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
+                    val loc = Location(LocationManager.GPS_PROVIDER)
+                    loc.latitude = member.userLat.toDouble()
+                    loc.longitude = member.userLng.toDouble()
+
+                    Log.e("userLat--",""+member.userLat.toDouble())
+                    Log.e("userLng--",""+member.userLng.toDouble())
+                    locations[member.id] = loc
                 }
             }
             if (locations.size > 0) {
@@ -146,6 +227,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
 
     override fun onPause() {
         super.onPause()
+
         stopLocationUpdates()
     }
 
@@ -197,6 +279,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                         }
                     }
                     locations[headId] = location
+
                     updateMarker()
                 }
             }
@@ -244,20 +327,67 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     }
 
     private fun updateMarker() {
-        if (locations.isEmpty()) {
+       /* if (locations.isEmpty()) {
             return
-        }
+        }*/
         if (mMap != null && mapLoaded) {
             for (loc in locations) {
                 if (lstMarkers[loc.key] == null) {
                     oldLocations[loc.key] = loc.value
-                    val markerOptions = MarkerOptions()
+                    val markerOptions1 = MarkerOptions()
                     val car = BitmapDescriptorFactory.fromResource(R.drawable.pintracking)
-                    markerOptions.icon(car)
-                    markerOptions.anchor(0.5f, 0.5f)
-                    markerOptions.flat(true)
-                    markerOptions.position(LatLng(loc.value.latitude, loc.value.longitude))
-                    lstMarkers[loc.key] = mMap!!.addMarker(markerOptions)
+                    markerOptions1.icon(car)
+                    markerOptions1.anchor(0.5f, 0.5f)
+                    markerOptions1.flat(true)
+                    markerOptions1.position(LatLng(23.0387, 72.6308))
+                    mMap!!.  addMarker(markerOptions1)
+
+                    val markerOptions2 = MarkerOptions()
+                    markerOptions2.icon(car)
+                    markerOptions2.anchor(0.5f, 0.5f)
+                    markerOptions2.flat(true)
+                    markerOptions2.position(LatLng(22.9952, 72.6041))
+                    mMap!!.  addMarker(markerOptions2)
+
+                    val markerOptions3 = MarkerOptions()
+                    markerOptions3.icon(car)
+                    markerOptions3.anchor(0.5f, 0.5f)
+                    markerOptions3.flat(true)
+                    markerOptions3.position(LatLng(23.0524, 72.5337))
+                    mMap!!.  addMarker(markerOptions3)
+
+                    val markerOptions4 = MarkerOptions()
+                    markerOptions4.icon(car)
+                    markerOptions4.anchor(0.5f, 0.5f)
+                    markerOptions4.flat(true)
+                    markerOptions4.position(LatLng(23.1013, 72.5407))
+                    mMap!!.  addMarker(markerOptions4)
+
+                    val markerOptions5 = MarkerOptions()
+                    markerOptions5.icon(car)
+                    markerOptions5.anchor(0.5f, 0.5f)
+                    markerOptions5.flat(true)
+                    markerOptions5.position(LatLng(22.9664, 72.6159))
+                    mMap!!.  addMarker(markerOptions5)
+
+                    val markerOptions6 = MarkerOptions()
+                    markerOptions6.icon(car)
+                    markerOptions6.anchor(0.5f, 0.5f)
+                    markerOptions6.flat(true)
+                    markerOptions6.position(LatLng(23.0337, 72.4634))
+                    mMap!!.  addMarker(markerOptions6)
+
+                    val markerOptions7 = MarkerOptions()
+                    markerOptions7.icon(car)
+                    markerOptions7.anchor(0.5f, 0.5f)
+                    markerOptions7.flat(true)
+                    markerOptions7.position(LatLng(23.0275, 72.4869))
+                    mMap!!.  addMarker(markerOptions7)
+
+                   /* Log.e("latitude--",""+loc.value.latitude);
+                    Log.e("longitude--",""+loc.value.longitude);*/
+                  //  markerOptions.position(LatLng(loc.value.latitude, loc.value.longitude))
+                  //  lstMarkers[loc.key] = mMap!!.addMarker(markerOptions1)
                     bearing = if (loc.value.hasBearing()) { // if location has bearing set the same bearing to marker(if location is acquired using GPS bearing will be available)
                         loc.value.bearing
                     } else {
@@ -318,7 +448,9 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                 }
 
                 override fun onAnimationCancel(animator: Animator) {}
+
                 override fun onAnimationRepeat(animator: Animator) {}
+
             })
             animator.start()
         }

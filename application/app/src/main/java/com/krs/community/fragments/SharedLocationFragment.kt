@@ -26,10 +26,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.activity.FamilyTreeListActivity
-import com.krs.community.activity.MapviewActivity
-import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.activity.QRCodeActivity
+import com.krs.community.activity.*
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmnetSharedLocationBinding
@@ -112,6 +109,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
                 /*holder.tvEmail.text = member.emailAddress
                 holder.tvMobile.text = member.mobile*/
+
                 if (member.gender.equals("Male")) {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
                 } else {
@@ -131,6 +129,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+
                 }else{
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
@@ -223,9 +222,16 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
         img_map.setOnClickListener { v: View? ->
 
-            val intent = Intent(activity, MapviewActivity::class.java)
+           /* val intent = Intent(activity, MapviewActivity::class.java)
             intent.putExtra("image", "imageUrl")
-            startActivity(intent)  }
+            startActivity(intent)*/
+
+            val intent = Intent(activity, MapTrackingActivity::class.java)
+            intent.putExtra("head_id", members.get(0).headId)
+            startActivity(intent)
+            Utility.fade(activity)
+
+        }
         adapter.setParallaxHeader(header, binding.rvLocation)
         binding.rvLocation.adapter = adapter
         getSharedProfiles()

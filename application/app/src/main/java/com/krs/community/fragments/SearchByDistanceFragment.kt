@@ -94,6 +94,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     private val byDistanceViewModelFactory: ByDistanceViewModelFactory by instance()
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
     private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+    var memberId:String?=null
 
     private var byDistanceAdapter: ParallaxRecyclerAdapter<Member>? = null
 
@@ -107,7 +108,6 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, SearchByDistanceFragment::class.simpleName)
-
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         mByDistanceViewModel = ViewModelProvider(this, byDistanceViewModelFactory).get(ByDistanceViewModel::class.java)
@@ -137,6 +137,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         callDistanceAPI()
         curr_lat.postValue(DashboardActivity.cur_lat.value)
         curr_lng.postValue(DashboardActivity.cur_lng.value)
+        memberId = Guru.getString(getString(R.string.member_id), "")
+
         return root
     }
 
@@ -172,6 +174,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         rbtnAll = header.findViewById(R.id.rbtnAll)
         tvRecords= header.findViewById(R.id.tv_total)
         img_map= header.findViewById(R.id.img_map)
+
         rbtnHome.setOnClickListener { v ->
             rbtnHome.isChecked = true
             rbtnOffice.isChecked = false
@@ -208,9 +211,14 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         }
 
         img_map.setOnClickListener { v ->
-            val intent = Intent(activity, MapviewActivity::class.java)
+            /*val intent = Intent(activity, MapviewActivity::class.java)
             intent.putExtra("image", "imageUrl")
+            startActivity(intent)*/
+
+            val intent = Intent(activity, MapTrackingActivity::class.java)
+            intent.putExtra("head_id", memberId)
             startActivity(intent)
+            Utility.fade(activity)
         }
 
         val imgCancel = header.findViewById<ImageView>(R.id.img_cancel)

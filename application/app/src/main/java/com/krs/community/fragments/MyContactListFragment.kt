@@ -93,7 +93,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
 
                 if (lstMembers.size > 0) {
                     tvCount.visibility = View.VISIBLE
-                    tvCount.text = "Member ${lstMembers.size} found"
+                    tvCount.text = getString(R.string.members)+" ${lstMembers.size} "+getString(R.string.found)
                 } else {
                     tvCount.visibility = View.GONE
                 }
@@ -159,7 +159,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
                 if (member.updatedDt.isNotEmpty()) {
-                    holder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    holder.tvUpdate.text = getString(R.string.updated) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                 }
 
                 holder.boomMenuButton.clearBuilders()
@@ -234,7 +234,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         val tvTitle = header.findViewById<TextView>(R.id.tv_title)
-        tvTitle.text = "My Contacts"
+        tvTitle.text = getString(R.string.mycontacts)
         adapter.setParallaxHeader(header, rvSearch)
         rvSearch?.adapter = adapter
         enableRuntimePermission()
@@ -245,7 +245,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     private fun userContactList() {
         Coroutines.io {
             Coroutines.main {
-                Utility.startSweetProgress(context!!, getString(R.string.app_name), "Fetching Your Contacts")
+                Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchingcontacts))
             }
             getContactsIntoArrayList()
             val jsonObject = JSONObject()
@@ -318,7 +318,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 if (Accepted) {
                     userContactList()
                 }else {
-                    Snackbar.make(view!!, "Permission Canceled, Now your application cannot access CONTACTS.", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(view!!, getString(R.string.permissioncontact), Snackbar.LENGTH_LONG).show()
                 }
             }
         }
