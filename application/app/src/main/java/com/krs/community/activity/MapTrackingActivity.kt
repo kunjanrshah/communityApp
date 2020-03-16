@@ -124,13 +124,20 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                         loc.longitude = member.homeLng.toDouble()
                         locations[member.id] = loc
                     }
-                } else {
-                    if (!member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
-                        val loc = Location(LocationManager.GPS_PROVIDER)
-                        loc.latitude = member.userLat.toDouble()
-                        loc.longitude = member.userLng.toDouble()
-                        locations[member.id] = loc
-                    }
+                }
+
+                if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
+                    val loc = Location(LocationManager.GPS_PROVIDER)
+                    loc.latitude = member.officeLat.toDouble()
+                    loc.longitude = member.officeLng.toDouble()
+                    locations[member.id] = loc
+                }
+
+                if (!member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
+                    val loc = Location(LocationManager.GPS_PROVIDER)
+                    loc.latitude = member.userLat.toDouble()
+                    loc.longitude = member.userLng.toDouble()
+                    locations[member.id] = loc
                 }
             }
             if (locations.size > 0) {

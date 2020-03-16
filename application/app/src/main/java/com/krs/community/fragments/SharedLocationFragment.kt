@@ -85,8 +85,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragmnet_shared_location, container, false)
 
-
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, SharedLocationFragment::class.simpleName)
 
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
@@ -117,21 +116,21 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 } else {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
                 }
-                if (member.mobile.isEmpty()){
+                if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()){
+                if (member.emailAddress.isEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
@@ -143,6 +142,23 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
+                }
+
+                val arrayId = member.sharingId?.split(',')
+                val memId = Guru.getString(getString(R.string.member_id), "")
+                var isShare = false
+                if (arrayId != null) {
+                    for (id in arrayId) {
+                        if (memId == id) {
+                            isShare = true
+                            break
+                        }
+                    }
+                }
+                if (isShare) {
+                    holder.cardViewList.background = ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.round_corner_itemlist)
+                } else {
+                    holder.cardViewList.background = ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.round_corner_gray)
                 }
 
                 holder.boomMenuButton.clearBuilders()
@@ -225,14 +241,14 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
             val intent = Intent(activity, MapviewActivity::class.java)
             intent.putExtra("image", "imageUrl")
-            startActivity(intent)  }
+            startActivity(intent)
+        }
         adapter.setParallaxHeader(header, binding.rvLocation)
         binding.rvLocation.adapter = adapter
         getSharedProfiles()
 
         return binding.root
     }
-
 
 
     override fun onResume() {
@@ -256,10 +272,9 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
         jsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-        jsonObj.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+        jsonObj.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
         val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
         filterViewModel.getSharedProfiles(updated)
-
     }
 
     private fun toggleSelected(pos: Int) {
@@ -472,6 +487,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+        var cardViewList: LinearLayout = v.findViewById(R.id.card_view_list)
 
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)
@@ -508,7 +524,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                                 val jsonObject = JSONObject()
                                 jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                                 jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                                jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+                                jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
 
                                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
                                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
@@ -569,6 +585,18 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 if (response.members.size > 0) {
                     members.clear()
                     members.addAll(response.members)
+
+                    for (member1 in response.membersharing) {
+                        var isAdd = true
+                        for (member2 in response.members) {
+                            if (member1.id == member2.id) {
+                                isAdd = false
+                            }
+                        }
+                        if (isAdd) {
+                            members.add(member1)
+                        }
+                    }
                     adapter.notifyDataSetChanged()
                 }
             }

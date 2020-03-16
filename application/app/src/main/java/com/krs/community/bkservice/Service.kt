@@ -33,7 +33,6 @@ class Service : android.app.Service(), Listener, AddressCallBack {
     private var getLocationDetail: GetLocationDetail? = null
     private var completableJob: CompletableJob? = null
 
-
     override fun onCreate() {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -141,7 +140,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
                     val userId = Guru.getString(getString(R.string.user_id), "")
-                    val id = Guru.getString(getString(R.string.user_id), "")
+                    val id = Guru.getString(getString(R.string.member_id), "")
                     if (!userId.isNullOrEmpty() && !id.isNullOrEmpty()) {
                         val jsonObject = JSONObject()
                         jsonObject.put(getString(R.string.user_id), userId)

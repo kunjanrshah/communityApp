@@ -20,10 +20,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -65,6 +67,7 @@ import java.util.*
 class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
     private var sharedProfiles = ArrayList<Member>()
+    private var duplicateIds = ArrayList<String>()
     private var defaultProfiles = ArrayList<Member>()
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var filterViewModel: SmartFilterViewModel
@@ -311,7 +314,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         Utility.movetoFragment(activity, ShareEventFragment())
                     }
                     9 -> {
-                       // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         //startActivity(Intent(activity, ActivityDebugTools::class.java))
                         Utility.movetoFragment(activity, DocumentsFragment())
                     }
@@ -340,7 +343,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         Utility.movetoFragment(activity, TourVideoFragment())
                     }
                     13 -> {
-
                         Utility.movetoFragment(activity, MyContactListFragment())
                     }
                 }
@@ -353,6 +355,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         var tvName: TextView = v.findViewById(R.id.tv_name)
         var iconText: TextView = v.findViewById(R.id.icon_text)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile)
+        var iconContainer: RelativeLayout = v.findViewById(R.id.icon_container)
         var cardViewRecentList: CardView = v.findViewById(R.id.card_view_recent_list)
     }
 
@@ -368,12 +371,37 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             holder.iconText.text = member.firstName.substring(0, 1)
             applyProfilePicture(holder, member)
 
+            val arrayId = member.sharingId?.split(',')
+            val memId = Guru.getString(getString(R.string.member_id), "")
+            var isShare = "sharedByLoginUser"
+            if (arrayId != null) {
+                for (id in arrayId) {
+                    if (duplicateIds.contains(id)) {
+                        isShare = "bothHaveShared"
+                        break
+                    } else if (memId == id) {
+                        isShare = "sharedToLoginUser"
+                        break
+                    }
+                }
+            }
+            if (isShare == "sharedByLoginUser") {
+                holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.bg_gray))
+            } else if (isShare == "bothHaveShared") {
+                holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.link))
+            } else if (isShare == "sharedToLoginUser") {
+                holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+            }
+
             holder.cardViewRecentList.setOnClickListener {
-                Utility.startSweetProgress(activity, getString(R.string.MoveProfile), getString(R.string.loading))
-                val intent = Intent(activity, ProfileDetailActivity::class.java)
-                intent.putExtra(getString(R.string.member), member)
-                startActivity(intent)
-                fade(activity)
+                moveToProfileDetail()
+            }
+
+            holder.iconContainer.setOnClickListener {
+                moveToProfileDetail()
+            }
+            holder.imgProfile.setOnClickListener {
+                moveToProfileDetail()
             }
         }
 
@@ -406,28 +434,45 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         }
     }
 
+    private fun moveToProfileDetail() {
+        Utility.startSweetProgress(activity, getString(R.string.MoveProfile), getString(R.string.loading))
+        val intent = Intent(activity, ProfileDetailActivity::class.java)
+        intent.putExtra(getString(R.string.member), member)
+        startActivity(intent)
+        fade(activity)
+    }
+
     private fun getSharedProfileList() {
-        /*     binding.shimmerViewContainer.startShimmerAnimation()
-             binding.shimmerViewContainer.visibility = View.VISIBLE
-             Handler().postDelayed({
-                 binding.shimmerViewContainer.stopShimmerAnimation()
-                 binding.shimmerViewContainer.visibility=View.GONE
-             },4000)*/
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
         jsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-        jsonObj.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+        jsonObj.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
         val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
         filterViewModel.getSharedProfiles(updated)
     }
 
     override fun getMembers(response: SmartFilterResponse) {
-        /*binding.shimmerViewContainer.stopShimmerAnimation()
-       binding.shimmerViewContainer.visibility = View.GONE*/
         if (response.success) {
             if (response.members != null && response.members.size > 0) {
                 sharedProfiles.clear()
+                duplicateIds.clear()
                 sharedProfiles.addAll(response.members)
+
+                for (member1 in response.membersharing) {
+                    var isAdd = true
+                    for (member2 in response.members) {
+                        if (member1.id == member2.id) {
+                            isAdd = false
+                            break
+                        }
+                    }
+                    if (isAdd) {
+                        sharedProfiles.add(member1)
+                    } else {
+                        duplicateIds.add(member1.id)
+                    }
+                }
+
                 sharedAdapter = SharedProfileAdapter(sharedProfiles)
                 binding.lstSharedProfile.adapter = sharedAdapter
                 binding.lblShared.visibility = View.VISIBLE

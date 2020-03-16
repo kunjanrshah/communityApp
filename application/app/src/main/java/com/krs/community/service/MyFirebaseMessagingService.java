@@ -34,15 +34,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
             String userId = remoteMessage.getData().get("user_id");
-            String userName = remoteMessage.getData().get("user_name");
-            String userPhoto = remoteMessage.getData().get("user_photo");
             String message = remoteMessage.getData().get("message");
 
             long tsLong = System.currentTimeMillis() / 1000;
             String ts = Long.toString(tsLong);
 
             Intent resultIntent = new Intent(getApplicationContext(), DashboardActivity.class);
-            showNotification(getApplicationContext(), userName, message, ts, resultIntent, userPhoto, userId);
+            //showNotification(getApplicationContext(), userName, message, ts, resultIntent, userPhoto, userId);
         }
     }
 

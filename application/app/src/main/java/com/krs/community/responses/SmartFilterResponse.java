@@ -1,10 +1,11 @@
 
 package com.krs.community.responses;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.krs.community.model.Member;
+
+import java.util.List;
 
 public class SmartFilterResponse {
 
@@ -20,6 +21,10 @@ public class SmartFilterResponse {
     @SerializedName("members")
     @Expose
     private List<Member> members = null;
+
+    @SerializedName("membersharing")
+    @Expose
+    private List<Member> membersharing = null;
 
     public Boolean getSuccess() {
         return success;
@@ -51,5 +56,13 @@ public class SmartFilterResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public List<Member> getMembersharing() {
+        return membersharing;
+    }
+
+    public void setMembersharing(List<Member> membersharing) {
+        this.membersharing = membersharing;
     }
 }

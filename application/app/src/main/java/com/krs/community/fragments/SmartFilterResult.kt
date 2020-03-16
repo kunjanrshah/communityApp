@@ -697,7 +697,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                                     val jsonObject = JSONObject()
                                     jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                                     jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                                    jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+                                    jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
 
                                     var Ids = ""
                                     val loginuser = Guru.getString(getString(R.string.loginMember), "")
