@@ -199,8 +199,9 @@ public class QRCodeActivity extends AppCompatActivity {
             String date = df.format(Calendar.getInstance().getTime());
 
             handler = new Handler();
+            Utility.startSweetProgress(this, "QRCode Gallery", "Generating QRCode...");
             handler.postDelayed(() -> {
-
+                Utility.hideSweetProgress();
                 binding.ivCode.setDrawingCacheEnabled(true);
                 binding.ivCode.buildDrawingCache(true);
 
@@ -209,7 +210,7 @@ public class QRCodeActivity extends AppCompatActivity {
                 Bitmap bmp = Utility.drawTextToBitmap(b, str, QRCodeActivity.this);
                 saveImage(bmp);
 
-            }, 500);
+            }, 1000);
 
         });
 

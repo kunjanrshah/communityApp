@@ -72,6 +72,7 @@ import com.krs.community.fragments.CalendarFragment;
 import com.krs.community.fragments.DashboardFragment;
 import com.krs.community.fragments.ExpandableFilterListFragment;
 import com.krs.community.fragments.FragmentDrawer;
+import com.krs.community.fragments.MatrimonyListFragment;
 import com.krs.community.fragments.SmartFilterResult;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.model.Member;
@@ -416,9 +417,11 @@ public class Utility {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat(input);
             SimpleDateFormat outputFormat = new SimpleDateFormat(output);
-            if (!inputDateStr.isEmpty()) {
+            if (inputDateStr != null && !inputDateStr.isEmpty()) {
                 Date date = inputFormat.parse(inputDateStr);
-                outputDateStr = outputFormat.format(date);
+                if (date != null) {
+                    outputDateStr = outputFormat.format(date);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -739,7 +742,7 @@ public class Utility {
         FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.container_body);
         if (currentFragment != null) {
-            if (currentFragment.getClass().getSimpleName().equals(fragment.getClass().getSimpleName())) {
+            if (currentFragment.getClass().getSimpleName().equals(fragment.getClass().getSimpleName()) && !currentFragment.getClass().getSimpleName().equals(MatrimonyListFragment.class.getSimpleName())) {
                 return;
             }
         }

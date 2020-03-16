@@ -205,7 +205,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, getString(R.string.ExportingList) + "${member.firstName}" + getString(R.string.DetailList), getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.ExportingList) + " " + "${member.firstName}" + getString(R.string.DetailList), getString(R.string.please_wait))
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()

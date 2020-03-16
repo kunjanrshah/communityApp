@@ -364,27 +364,31 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     viewHolder.tvUser.text=getString(R.string.userDetails)
                     viewHolder.tvUserDist.text=getDistance(member.distance)
                 }else if(nearBy.equals("All")){
-
-                    val nearBy: List<String> = member.nearBy.split(",")
-                    val elements: List<String> = member.distance.split(",")
-                    for(count in nearBy.indices){
-                        if(nearBy[count].contains("home")){
-                            viewHolder.llHome.visibility=View.VISIBLE
-                            viewHolder.tvHome.visibility=View.VISIBLE
-                            viewHolder.tvHome.text=getString(R.string.homeDistance)
-                            viewHolder.tvHomeDist.text=getDistance(elements[count].trim())
-                        }else if(nearBy[count].contains("office")){
-                            viewHolder.llOffice.visibility=View.VISIBLE
-                            viewHolder.tvOffice.visibility=View.VISIBLE
-                            viewHolder.tvOffice.text="Office"
-                            viewHolder.tvOfficeDist.text=getDistance(elements[count].trim())
-                        }else if(nearBy[count].contains("user")){
-                            viewHolder.llUser.visibility=View.VISIBLE
-                            viewHolder.tvUser.visibility=View.VISIBLE
-                            viewHolder.tvUser.text="User"
-                            viewHolder.tvUserDist.text=getDistance(elements[count].trim())
+                    try {
+                        val nearBy: List<String> = member.nearBy.split(",")
+                        val elements: List<String> = member.distance.split(",")
+                        for (count in nearBy.indices) {
+                            if (nearBy[count].contains("home")) {
+                                viewHolder.llHome.visibility = View.VISIBLE
+                                viewHolder.tvHome.visibility = View.VISIBLE
+                                viewHolder.tvHome.text = getString(R.string.homeDistance)
+                                viewHolder.tvHomeDist.text = getDistance(elements[count].trim())
+                            } else if (nearBy[count].contains("office")) {
+                                viewHolder.llOffice.visibility = View.VISIBLE
+                                viewHolder.tvOffice.visibility = View.VISIBLE
+                                viewHolder.tvOffice.text = "Office"
+                                viewHolder.tvOfficeDist.text = getDistance(elements[count].trim())
+                            } else if (nearBy[count].contains("user")) {
+                                viewHolder.llUser.visibility = View.VISIBLE
+                                viewHolder.tvUser.visibility = View.VISIBLE
+                                viewHolder.tvUser.text = "User"
+                                viewHolder.tvUserDist.text = getDistance(elements[count].trim())
+                            }
                         }
+                    } catch (e: java.lang.Exception) {
+                        e.printStackTrace()
                     }
+
                 }
 
                 viewHolder.tvUpdate.text=Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd_TIME,Utility.dd_MM_yyyy_TIME)
@@ -421,12 +425,17 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
     fun getDistance(dist:String):String{
         var distance=""
-        val index= dist.indexOf(".")
-        distance = if(dist.length>(index+3)){
-            dist.substring(0,(index+3))
-        }else{
-            dist
+        try {
+            val index = dist.indexOf(".")
+            distance = if (dist.length > (index + 3)) {
+                dist.substring(0, (index + 3))
+            } else {
+                dist
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
+
         return "$distance KM"
     }
 

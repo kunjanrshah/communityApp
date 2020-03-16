@@ -222,11 +222,11 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun getcityName(id: Int): String {
-        return withContext(Dispatchers.IO) {
-            db.getCityDao().getcityName(id)
-        }
-    }
+    /* suspend fun getcityName(id: Int): String {
+         return withContext(Dispatchers.IO) {
+             db.getCityDao().getcityName(id)
+         }
+     }*/
 
     suspend fun getCityIdByName(name: String): Int {
         return withContext(Dispatchers.IO) {
@@ -270,7 +270,6 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
             db.getStatesDao().getstateNameById(id)
         }
     }
-
     suspend fun getStateName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getStatesDao().getStateNames()

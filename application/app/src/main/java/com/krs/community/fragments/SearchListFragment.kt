@@ -166,7 +166,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 val viewHolder: MyViewHolder = viewHolder as MyViewHolder
 
                 val member = lstMembers[position]
-                viewHolder.badge.setNumber(member.membersCount)
+                var count = member.membersCount
+                if (count != 0) {
+                    count += 1
+                }
+                viewHolder.badge.setNumber(count)
                 viewHolder.tvName.text = member.firstName
                 smartSearchViewModel.getLastName(member.subCastId.toInt()).observeForever {
                     viewHolder.tvName.text = member.firstName + " " + it
@@ -441,8 +445,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 if (Integer.parseInt(response.totalRecords) == 0) {
                     //  Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
 
-                    var gif: Int = R.drawable.gif14
-
+                    val gif: Int = R.drawable.gif14
                     TTFancyGifDialog.Builder(activity)
                             //.setTitle(getString(R.string.you_sure))
                             .setMessage("No Record Found")
@@ -474,12 +477,28 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 mShimmerViewContainer.visibility = View.GONE
             }
         } else {
-            rvSearch.visibility = View.GONE
-            tvRecords.visibility = View.GONE
+            // rvSearch.visibility = View.GONE
+            // tvRecords.visibility = View.GONE
             ivExport.visibility = View.GONE
+            DashboardActivity.stop = true
             llLabel.visibility = View.VISIBLE
             mShimmerViewContainer.stopShimmerAnimation()
             mShimmerViewContainer.visibility = View.GONE
+
+            val gif: Int = R.drawable.gif14
+            TTFancyGifDialog.Builder(activity)
+                    //.setTitle(getString(R.string.you_sure))
+                    .setMessage("No Record Found")
+                    .setPositiveBtnText("OK")
+                    .setPositiveBtnBackground("#843f52")
+                    .setGifResource(gif)
+                    .isCancellable(false)
+                    .OnPositiveClicked {
+
+                    }
+                    .build()
+
+            //  Snackbar.make(frameRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -495,11 +514,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     mShimmerViewContainer.stopShimmerAnimation()
                 }
                 mShimmerViewContainer.visibility = View.GONE
-                tvRecords.visibility = View.GONE
+                //    tvRecords.visibility = View.GONE
                 llLabel.visibility = View.VISIBLE
                 ivExport.visibility = View.GONE
-                rvSearch.visibility = View.GONE
-                DashboardActivity.stop = false
+                //  rvSearch.visibility = View.GONE
+                DashboardActivity.stop = true
                 mShimmerViewContainer.stopShimmerAnimation()
                 mShimmerViewContainer.visibility = View.GONE
             }

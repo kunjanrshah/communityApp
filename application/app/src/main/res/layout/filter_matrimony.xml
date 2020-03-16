@@ -235,8 +235,8 @@
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:background="@drawable/round_corner_primary"
-            android:textColor="@color/white"
+            android:background="@drawable/round_corner_white"
+            android:textColor="@color/black1"
             android:gravity="center"
             android:text="@string/female" />
 

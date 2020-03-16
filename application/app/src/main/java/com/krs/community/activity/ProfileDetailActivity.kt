@@ -126,6 +126,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
 
         if (!scanId.isNullOrEmpty()) {
+            startSweetProgress(this, getString(R.string.app_name), getString(R.string.loading))
             val jsonObject = JSONObject()
             jsonObject.put("" + mApplication.start, "0")
             jsonObject.put("" + mApplication.length, "1")
@@ -390,11 +391,18 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
     override fun getScanResult(response: SmartFilterResponse) {
+
         if (response.success) {
             member = response.members[0]
             val percentage = Utility.calculatePercentage(member)
             setPercentage(percentage)
-            setMemberValues()
+            Handler().postDelayed({
+                hideSweetProgress()
+                setMemberValues()
+            }, 1000)
+
+        } else {
+            hideSweetProgress()
         }
     }
 

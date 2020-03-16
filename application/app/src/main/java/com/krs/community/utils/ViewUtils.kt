@@ -166,7 +166,7 @@ fun promptReadPermission(context: Context) {
             .setContentText(context.getString(R.string.gallrypermission))
             .setConfirmText(context.getString(R.string.YesPleaseCity))
             .setCancelText(context.getString(R.string.no))
-            .setCustomImage(R.drawable.ic_medk)
+            .setCustomImage(R.drawable.icon_ghanchi)
             .showCancelButton(true)
             .setConfirmClickListener { sDialog ->
                 sDialog.dismiss()
@@ -235,6 +235,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
 
     btnMale.setOnClickListener {
         isMale = true
+        isFemale = false
         btnMale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
         btnMale.setTextColor(context.resources.getColor(R.color.white))
         btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_white)
@@ -242,6 +243,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
     }
     btnFemale.setOnClickListener {
         isFemale = true
+        isMale = false
         btnMale.background = context.resources.getDrawable(R.drawable.round_corner_white)
         btnMale.setTextColor(context.resources.getColor(R.color.black))
         btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
@@ -265,7 +267,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
         btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_white)
         btnFemale.setTextColor(context.resources.getColor(R.color.black))
 
-        btnFemale.performClick()
+        // btnFemale.performClick()
         rangeSeekbar.setMinStartValue(0f)
         rangeSeekbar.setMaxStartValue(100f)
         rangeSeekbar.apply()
@@ -388,7 +390,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
             Guru.putString("mdialog", jsonObject.toString())
 
             Coroutines.main {
-                moveToFragmentListScreen(context as FragmentActivity, jsonObject.toString())
+                moveToMatrimonyListScreen(context as FragmentActivity, jsonObject.toString())
             }
 
         }
@@ -397,7 +399,7 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
     dialog.show()
 }
 
-fun moveToFragmentListScreen(activity: FragmentActivity?, filter: String) {
+fun moveToMatrimonyListScreen(activity: FragmentActivity?, filter: String) {
     val fragment = MatrimonyListFragment()
     val bundle = Bundle()
     bundle.putString("filter", filter)
@@ -517,7 +519,9 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
         }
 
         if (!member.cityId.isNullOrEmpty()) {
-            city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
+            profileDetailViewModel.getcityName(Integer.parseInt(member.cityId)).observeForever {
+                city = it
+            }
         }
 
         val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
@@ -603,193 +607,195 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
     }
 }
 
-fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: ProfileDetailViewModel) = Coroutines.main {
+fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: ProfileDetailViewModel) {
 
-    //------- Main Detail---------
-    var bDate = ""
-    var exDate = ""
-    var mDate = ""
-    if (!member.birthDate.isNullOrEmpty()) {
-        bDate = Utility.changeDateFormat(member.birthDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
-    }
-    if (!member.expireDate.isNullOrEmpty()) {
-        exDate = Utility.changeDateFormat(member.expireDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
-    }
-    if (!member.marriageDate.isNullOrEmpty()) {
-        mDate = Utility.changeDateFormat(member.marriageDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
-    }
+    Coroutines.main {
+        //------- Main Detail---------
+        var bDate = ""
+        var exDate = ""
+        var mDate = ""
+        if (!member.birthDate.isNullOrEmpty()) {
+            bDate = Utility.changeDateFormat(member.birthDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+        }
+        if (!member.expireDate.isNullOrEmpty()) {
+            exDate = Utility.changeDateFormat(member.expireDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+        }
+        if (!member.marriageDate.isNullOrEmpty()) {
+            mDate = Utility.changeDateFormat(member.marriageDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+        }
 
-    val df = SimpleDateFormat("dd.MM.yyyy h:mm a") //'at'
-    val currentdate = df.format(Calendar.getInstance().time)
+        val df = SimpleDateFormat("dd.MM.yyyy h:mm a") //'at'
+        val currentdate = df.format(Calendar.getInstance().time)
 
-    var name = member.firstName
-    val gender = member.gender
-    val father = member.fatherName
-    val mother = member.motherName
-    val email = member.emailAddress
-    val mobile = member.mobile
-    var state = member.stateId
-    var city = member.cityId
-    val area = member.area
-    val address = member.address
-    val pincode = member.pincode
+        var name = member.firstName
+        val gender = member.gender
+        val father = member.fatherName
+        val mother = member.motherName
+        val email = member.emailAddress
+        val mobile = member.mobile
+        var state = member.stateId
+        var city = member.cityId
+        val area = member.area
+        val address = member.address
+        val pincode = member.pincode
 
-    if (!member.subCastId.isNullOrEmpty()) {
-        val lname = profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
-        name = member.firstName + " " + lname
-    }
+        if (!member.subCastId.isNullOrEmpty()) {
+            val lname = profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
+            name = member.firstName + " " + lname
+        }
 
-    if (!member.stateId.isNullOrEmpty()) {
-        state = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
-    }
+        if (!member.stateId.isNullOrEmpty()) {
+            state = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
+        }
 
-    if (!member.cityId.isNullOrEmpty()) {
-        city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
-    }
+        profileDetailViewModel.getcityName(Integer.parseInt(member.cityId)).observeForever {
+            city = it
+        }
 
-    val header = "<center>  <h1><b>${mContext.getString(R.string.app_name)}</b></h1> </center> <object align=right>$currentdate</object>"
-    val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
-    val headerImage = "<img src=$path alt=$name>"
-    val labelMain = "<b>Main Detail  </b> "
-    val lblGender = "<font color=#843f52> Gender: </font>"
-    val lblFather = "<font color=#843f52> FatherName:  </font>"
-    val lblMother = "<font color=#843f52> MotherName:  </font>"
-    val lblEmail = "<font color=#843f52> Email:  </font>"
-    val lblMobile = "<font color=#843f52> Mobile:  </font>"
-    val lblState = "<font color=#843f52> State:  </font>"
-    val lblCity = "<font color=#843f52> City:  </font>"
-    val lblArea = "<font color=#843f52> Area:  </font>"
-    val lblAddress = "<font color=#843f52> Address:  </font>"
-    val lblPinCode = "<font color=#843f52> Pincode:  </font>"
+        val header = "<center>  <h1><b>${mContext.getString(R.string.app_name)}</b></h1> </center> <object align=right>$currentdate</object>"
+        val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
+        val headerImage = "<img src=$path alt=$name>"
+        val labelMain = "<b>Main Detail  </b> "
+        val lblGender = "<font color=#843f52> Gender: </font>"
+        val lblFather = "<font color=#843f52> FatherName:  </font>"
+        val lblMother = "<font color=#843f52> MotherName:  </font>"
+        val lblEmail = "<font color=#843f52> Email:  </font>"
+        val lblMobile = "<font color=#843f52> Mobile:  </font>"
+        val lblState = "<font color=#843f52> State:  </font>"
+        val lblCity = "<font color=#843f52> City:  </font>"
+        val lblArea = "<font color=#843f52> Area:  </font>"
+        val lblAddress = "<font color=#843f52> Address:  </font>"
+        val lblPinCode = "<font color=#843f52> Pincode:  </font>"
 
-    //------- Personal Detail---------
-    var strRole = ""
-    if (member.role.equals("LOCAL_ADMIN")) {
-        strRole = "Local Admin"
-    } else if (member.role.equals("SUB_ADMIN")) {
-        strRole = "Sub Admin"
-    } else {
-        strRole = "User"
-    }
+        //------- Personal Detail---------
+        var strRole = ""
+        if (member.role.equals("LOCAL_ADMIN")) {
+            strRole = "Local Admin"
+        } else if (member.role.equals("SUB_ADMIN")) {
+            strRole = "Sub Admin"
+        } else {
+            strRole = "User"
+        }
 
-    val lblPersonal = "<b> Personal </b>"
-    val lblRole = "<font color=#843f52> Role:  </font>"
-    val lblBdate = "<font color=#843f52> BirthDate:  </font>"
-    val lblNative = "<font color=#843f52> Native:  </font>"
-    val lblEdate = "<font color=#843f52> ExpireDate:  </font>"
-    val lblBG = "<font color=#843f52> Blood Group:  </font>"
-    val lblEducation = "<font color=#843f52> Eduction:  </font>"
-    val lblActivity = "<font color=#843f52> Current Activity:  </font>"
-    val lblMarital = "<font color=#843f52> Marital Status:  </font>"
-    val lblMdate = "<font color=#843f52> MarriageDate:  </font>"
-    val lblLaddress = "<font color=#843f52> Local Address:  </font>"
+        val lblPersonal = "<b> Personal </b>"
+        val lblRole = "<font color=#843f52> Role:  </font>"
+        val lblBdate = "<font color=#843f52> BirthDate:  </font>"
+        val lblNative = "<font color=#843f52> Native:  </font>"
+        val lblEdate = "<font color=#843f52> ExpireDate:  </font>"
+        val lblBG = "<font color=#843f52> Blood Group:  </font>"
+        val lblEducation = "<font color=#843f52> Eduction:  </font>"
+        val lblActivity = "<font color=#843f52> Current Activity:  </font>"
+        val lblMarital = "<font color=#843f52> Marital Status:  </font>"
+        val lblMdate = "<font color=#843f52> MarriageDate:  </font>"
+        val lblLaddress = "<font color=#843f52> Local Address:  </font>"
 
-    val bloodGroup = member.bloodGroup
-    val maritalStatus = member.maritalStatus
-    val localAddress = member.localAddress
-    var native = member.nativePlaceId
-    var education = member.educationId
-    var currentActivity = member.currentActivityId
+        val bloodGroup = member.bloodGroup
+        val maritalStatus = member.maritalStatus
+        val localAddress = member.localAddress
+        var native = member.nativePlaceId
+        var education = member.educationId
+        var currentActivity = member.currentActivityId
 
-    if (!member.nativePlaceId.isNullOrEmpty()) {
-        profileDetailViewModel.selectedNativeId = Integer.parseInt(member.nativePlaceId)
-        profileDetailViewModel.nativeName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
-            native = it
-        })
-    }
-    if (!member.educationId.isNullOrEmpty()) {
-        profileDetailViewModel.selectedEducationId = Integer.parseInt(member.educationId)
-        profileDetailViewModel.educationName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
-            education = it
-        })
-    }
+        if (!member.nativePlaceId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedNativeId = Integer.parseInt(member.nativePlaceId)
+            profileDetailViewModel.nativeName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+                native = it
+            })
+        }
+        if (!member.educationId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedEducationId = Integer.parseInt(member.educationId)
+            profileDetailViewModel.educationName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+                education = it
+            })
+        }
 
-    if (!member.currentActivityId.isNullOrEmpty()) {
-        profileDetailViewModel.selectedActivityId = Integer.parseInt(member.currentActivityId)
-        profileDetailViewModel.activityName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
-            currentActivity = it
-        })
-    }
+        if (!member.currentActivityId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedActivityId = Integer.parseInt(member.currentActivityId)
+            profileDetailViewModel.activityName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+                currentActivity = it
+            })
+        }
 
-    //------- Professional Detail---------
-    val lblProfessional = "<b> Professional </b>"
-    val lblLogo = "<font color=#843f52> Logo:  </font>"
-    val lblCompany = "<font color=#843f52> Company Name:  </font>"
-    val lblWorkCat = "<font color=#843f52> Work Category:  </font>"
-    val lblWorkSubCat = "<font color=#843f52> Work Sub Category:  </font>"
-    val lblOcc = "<font color=#843f52> Occupation:  </font>"
-    val lblWorkDetail = "<font color=#843f52> Work Detail:  </font>"
-    val lblWebsite = "<font color=#843f52> WebSite URL:  </font>"
-    val lblWorkAddr = "<font color=#843f52> Work Address:  </font>"
+        //------- Professional Detail---------
+        val lblProfessional = "<b> Professional </b>"
+        val lblLogo = "<font color=#843f52> Logo:  </font>"
+        val lblCompany = "<font color=#843f52> Company Name:  </font>"
+        val lblWorkCat = "<font color=#843f52> Work Category:  </font>"
+        val lblWorkSubCat = "<font color=#843f52> Work Sub Category:  </font>"
+        val lblOcc = "<font color=#843f52> Occupation:  </font>"
+        val lblWorkDetail = "<font color=#843f52> Work Detail:  </font>"
+        val lblWebsite = "<font color=#843f52> WebSite URL:  </font>"
+        val lblWorkAddr = "<font color=#843f52> Work Address:  </font>"
 
-    val companyName = member.companyName
-    val bpath = mContext.getString(R.string.base_url_thumb) + member.businessLogo
-    val logo = "<img src=$bpath alt=$companyName>"
-    val website = member.website
-    val workDetails = member.workDetails
-    val businessAddress = member.businessAddress
-    var workcategory = member.businessCategoryId
-    var worksubCategory = member.businessSubCategoryId
-    var occupation = member.occupationId
+        val companyName = member.companyName
+        val bpath = mContext.getString(R.string.base_url_thumb) + member.businessLogo
+        val logo = "<img src=$bpath alt=$companyName>"
+        val website = member.website
+        val workDetails = member.workDetails
+        val businessAddress = member.businessAddress
+        var workcategory = member.businessCategoryId
+        var worksubCategory = member.businessSubCategoryId
+        var occupation = member.occupationId
 
-    if (!member.businessCategoryId.isNullOrEmpty()) {
-        profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessCategoryId)
-        profileDetailViewModel.businessCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
-            workcategory = it
-        })
-    }
+        if (!member.businessCategoryId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessCategoryId)
+            profileDetailViewModel.businessCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+                workcategory = it
+            })
+        }
 
-    if (!member.businessSubCategoryId.isNullOrEmpty()) {
-        profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessSubCategoryId)
-        profileDetailViewModel.businessSubCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
-            workcategory = it
-        })
-    }
+        if (!member.businessSubCategoryId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessSubCategoryId)
+            profileDetailViewModel.businessSubCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+                workcategory = it
+            })
+        }
 
-    if (!member.businessCategoryId.isNullOrEmpty()) {
-        profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessCategoryId)
-        profileDetailViewModel.businessCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
-            worksubCategory = it
-        })
-    }
+        if (!member.businessCategoryId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedBusinessCategoryId = Integer.parseInt(member.businessCategoryId)
+            profileDetailViewModel.businessCategoryName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+                worksubCategory = it
+            })
+        }
 
-    if (!member.occupationId.isNullOrEmpty()) {
-        profileDetailViewModel.selectedOccupationId = Integer.parseInt(member.occupationId)
-        profileDetailViewModel.occupationName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
-            occupation = it
-        })
-    }
+        if (!member.occupationId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedOccupationId = Integer.parseInt(member.occupationId)
+            profileDetailViewModel.occupationName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+                occupation = it
+            })
+        }
 
-    //------- Matrimony Detail---------
-    val lblAbout = "<font color=#843f52> About Me:  </font>"
-    val lblFBurl = "<font color=#843f52> Facebook Profile URL:  </font>"
-    val lblBtime = "<font color=#843f52> Birth Time:  </font>"
-    val lblBPlace = "<font color=#843f52> Birth Place:  </font>"
-    val lblHobby = "<font color=#843f52> Hobby:  </font>"
-    val lblExpectation = "<font color=#843f52> Expectation:  </font>"
-    val lblWeight = "<font color=#843f52> Weight:  </font>"
-    val lblHeight = "<font color=#843f52> Height:  </font>"
-    val lblGotra = "<font color=#843f52> Gotra:  </font>"
-    val lblMatrimony = "<b> Matrimony </b> "
+        //------- Matrimony Detail---------
+        val lblAbout = "<font color=#843f52> About Me:  </font>"
+        val lblFBurl = "<font color=#843f52> Facebook Profile URL:  </font>"
+        val lblBtime = "<font color=#843f52> Birth Time:  </font>"
+        val lblBPlace = "<font color=#843f52> Birth Place:  </font>"
+        val lblHobby = "<font color=#843f52> Hobby:  </font>"
+        val lblExpectation = "<font color=#843f52> Expectation:  </font>"
+        val lblWeight = "<font color=#843f52> Weight:  </font>"
+        val lblHeight = "<font color=#843f52> Height:  </font>"
+        val lblGotra = "<font color=#843f52> Gotra:  </font>"
+        val lblMatrimony = "<b> Matrimony </b> "
 
-    val about = member.aboutMe
-    val facebookProfile = member.facebookProfile
-    val birthTime = member.birthTime
-    val birthPlace = member.birthPlace
-    val hobby = member.hobby
-    val expectation = member.expectation
-    val weight = member.weight
-    val height = member.height
-    var gotra = member.gotraId
+        val about = member.aboutMe
+        val facebookProfile = member.facebookProfile
+        val birthTime = member.birthTime
+        val birthPlace = member.birthPlace
+        val hobby = member.hobby
+        val expectation = member.expectation
+        val weight = member.weight
+        val height = member.height
+        var gotra = member.gotraId
 
-    if (!member.gotraId.isNullOrEmpty()) {
-        profileDetailViewModel.selectedGotraId = Integer.parseInt(member.gotraId)
-        profileDetailViewModel.gotraName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
-            gotra = it
-        })
-    }
+        if (!member.gotraId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedGotraId = Integer.parseInt(member.gotraId)
+            profileDetailViewModel.gotraName.await().observe(mContext as AppCompatActivity, androidx.lifecycle.Observer {
+                gotra = it
+            })
+        }
 
-    Handler().postDelayed({
+        Coroutines.main {
+            Handler().postDelayed({
         val MainDetail = header + "<br><h3><b>" +
                 name + "</b></h3><br>" +
                 headerImage + "<br><br>" +
@@ -848,6 +854,9 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
         }
 
     }, 1500)
+        }
+
+    }
 }
 
 private fun createPdf(mContext: Context, fname: String, test: String) {

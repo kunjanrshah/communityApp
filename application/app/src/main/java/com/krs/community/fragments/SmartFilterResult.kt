@@ -138,8 +138,11 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 } else {
                     holder.ivVerify.visibility = View.GONE
                 }
-
-                holder.badge.setNumber(member.membersCount)
+                var count = member.membersCount
+                if (count != 0) {
+                    count += 1
+                }
+                holder.badge.setNumber(count)
 
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {

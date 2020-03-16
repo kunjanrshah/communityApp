@@ -40,7 +40,7 @@ class SmartSearchViewModel(
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
                     val response = mSmartSearchRepository.searchByKeyword(jsonObject)
-                    response.member?.let {
+                    response.let {
                         withContext(Dispatchers.Main) {
                             mByKeywordListener.getMembers(response)
                             thejob.complete()

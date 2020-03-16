@@ -234,7 +234,11 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             viewHolder.lstFound.visibility=View.GONE
             viewHolder.iconFront.visibility=View.VISIBLE
             viewHolder.iconBack.visibility=View.GONE
-            viewHolder.badge.setNumber(member.memberCount)
+            var count = member.memberCount
+            if (count != 0) {
+                count += 1
+            }
+            viewHolder.badge.setNumber(count)
             viewHolder.tvName.text = member.firstName
 
             if (member.status == "2") {
@@ -291,7 +295,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                         createMemberPDF(this@FavoriteProfileActivity, getMemberFromRoomMember(member),profileDetailViewModel)
 
                         Handler().post {
-                            Utility.startSweetProgress(this@FavoriteProfileActivity, getString(R.string.ExportingList)+" ${member.firstName}" +getString(R.string.DetailList), getString(R.string.please_wait))
+                            Utility.startSweetProgress(this@FavoriteProfileActivity, getString(R.string.ExportingList) + " " + " ${member.firstName}" + getString(R.string.DetailList), getString(R.string.please_wait))
                         }
                         Handler().postDelayed({
                             Utility.hideSweetProgress()

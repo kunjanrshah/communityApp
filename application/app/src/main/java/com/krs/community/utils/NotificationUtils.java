@@ -173,9 +173,9 @@ public class NotificationUtils {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary))
-                .addAction(R.drawable.ic_medk, "Call", resultPendingIntent)
-                .addAction(R.drawable.ic_medk, "WhatsApp", actionIntent)
-                .addAction(R.drawable.ic_medk, "Approve", resultPendingIntent)
+                .addAction(R.drawable.bg_circle, "Call", resultPendingIntent)
+                .addAction(R.drawable.bg_circle, "WhatsApp", actionIntent)
+                .addAction(R.drawable.bg_circle, "Approve", resultPendingIntent)
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setLargeIcon(bitmap).setContentText(message)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}).setLights(Color.RED, 0, 1).build();

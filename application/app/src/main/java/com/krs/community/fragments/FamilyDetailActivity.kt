@@ -304,7 +304,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                 createMemberPDF(this@FamilyDetailActivity, member, profileDetailViewModel)
 
                                 Handler().post {
-                                    startSweetProgress(this@FamilyDetailActivity, getString(R.string._export) + member.firstName + getString(R.string.sdetails), getString(R.string.please_wait))
+                                    startSweetProgress(this@FamilyDetailActivity, getString(R.string._export) + " " + member.firstName + getString(R.string.sdetails), getString(R.string.please_wait))
                                 }
                                 Handler().postDelayed({
                                     hideSweetProgress()
@@ -389,12 +389,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             /*val intent = Intent(this, MapviewActivity::class.java)
             intent.putExtra("image", url)
             startActivity(intent)  */
-            Utility.displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
-            return@setOnClickListener
-            /*val intent = Intent(this, MapTrackingActivity::class.java)
+            /* Utility.displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
+             return@setOnClickListener*/
+            val intent = Intent(this, MapTrackingActivity::class.java)
             intent.putExtra("head_id", headId)
             startActivity(intent)
-            fade(this)*/
+            fade(this)
         }
 
         login.setOnClickListener {

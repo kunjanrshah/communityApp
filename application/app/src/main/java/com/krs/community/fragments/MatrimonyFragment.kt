@@ -17,7 +17,7 @@ import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentMatrimonyBinding
 import com.krs.community.utils.Utility
-import com.krs.community.utils.moveToFragmentListScreen
+import com.krs.community.utils.moveToMatrimonyListScreen
 import com.krs.community.utils.openFilter
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
@@ -72,14 +72,14 @@ class MatrimonyFragment : Fragment(), KodeinAware {
             if(binding.edtName.text.trim().isNotEmpty()){
                 val jsonObject=JSONObject()
                 jsonObject.put(getString(R.string.first_name),binding.edtName.text.trim())
-                moveToFragmentListScreen(activity,jsonObject.toString())
+                moveToMatrimonyListScreen(activity, jsonObject.toString())
             }else{
                 binding.edtName.error=getString(R.string.enterName)
             }
 
         }
         binding.btnSkip.setOnClickListener {
-            moveToFragmentListScreen(activity,"")
+            moveToMatrimonyListScreen(activity, "")
         }
 
         return binding.root

@@ -210,13 +210,18 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                     }
                 }
 
-                if (lstNumber.size > 1) {
+                if (lstNumber.size == 0) {
+                    displaySnackBarWithBottomMargin(binding.llLogin, "SIMCard not found!")
+                } else if (lstNumber.size == 1) {
+                    startSweetProgress(this@LoginActivity, "Login with ${lstNumber[0]}", getString(R.string.loading))
+                    loginViewModel?.loginWithMobile(lstNumber[0])
+                } else if (lstNumber.size > 1) {
                     TTFancyGifDialog.Builder(this@LoginActivity)
                             .setTitle("Choose SIM")
                             .setMessage("Family Head Device Login")
-                            .setPositiveBtnText(lstCarrier.get(0))
+                            .setPositiveBtnText(lstCarrier[0])
                             .setPositiveBtnBackground("#22b573")
-                            .setNegativeBtnText(lstCarrier.get(1))
+                            .setNegativeBtnText(lstCarrier[1])
                             .setNegativeBtnBackground("#c1272d")
                             .setGifResource(R.drawable.gif14)
                             .isCancellable(true)
