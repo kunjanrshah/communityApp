@@ -1222,6 +1222,12 @@
     <string name="asa">adad</string>
     <string name="is_logged_in">isLogin</string>
     <string name="notification_channel_id" translatable="false">101</string>
+    <string name="mycontacts">My Contacts</string>
+    <string name="fetchingcontacts">Fetching Your Contacts</string>
+    <string name="permissioncontact">Permission Canceled, Now your application cannot access CONTACTS.</string>
+    <string name="updated">\"Updated \"</string>
+    <string name="members">Member</string>
+    <string name="fetchinguploadedfiles">Fetching uploaded files</string>
 
 
 </resources>
