@@ -108,6 +108,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, SearchCityResult::class.simpleName)
+        mApp.FacebookAnalytics(context, SearchCityResult::class.simpleName)
 
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         loginMem = Gson().fromJson(loginMember, Member::class.java)

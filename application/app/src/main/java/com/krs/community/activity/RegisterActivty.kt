@@ -92,6 +92,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
+        mApp.FacebookAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
 
     }
 
@@ -164,7 +165,9 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                }*/
 
             binding.btnRegister.setOnClickListener {
+
                 Utility.startSweetProgress(this, getString(R.string.RegisterFamily), resources.getString(R.string.loading))
+
                 registerViewModel.getUserRegistration()
             }
 
@@ -316,9 +319,70 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             .addSpotlight(btn_register, getString(R.string.RegisterButton), getString(R.string.FillUpYourDetail)+"\n "+getString(R.string.ClickToRegister), getString(R.string.btnRegister))
             .startSequence()
 
-    override fun getRegisterFailure(message: String,filed:Int) {
+    override fun getRegisterFailure(message: String?, filed:Int) {
         Utility.hideSweetProgress()
-        root_layout.snackbar(message, Snackbar.LENGTH_LONG)
+        if(message.equals("fname")){
+            root_layout.snackbar(getString(R.string.enter_firstname), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("lastnameId")){
+            root_layout.snackbar(getString(R.string.enter_lastname), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("email")){
+            root_layout.snackbar(getString(R.string.enter_email), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("gender")){
+            root_layout.snackbar(getString(R.string.enter_gender), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("mobile")){
+            root_layout.snackbar(getString(R.string.enter_mobile), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("pass")){
+            root_layout.snackbar(getString(R.string.enter_password), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("pass?")){
+            root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("cpass")){
+            root_layout.snackbar(getString(R.string.confirm_password), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("cpass?")){
+            root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("!pass")){
+            root_layout.snackbar(getString(R.string.password_mismatch), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("address")){
+            root_layout.snackbar(getString(R.string.enter_home_address), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("stateId")){
+            root_layout.snackbar(getString(R.string.select_state), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("cityId")){
+            root_layout.snackbar(getString(R.string.select_city), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("subCommId")){
+            root_layout.snackbar(getString(R.string.select_sub_comm), Snackbar.LENGTH_LONG)
+            return
+        }
+        if(message.equals("localCommId")){
+            root_layout.snackbar(getString(R.string.select_local), Snackbar.LENGTH_LONG)
+            return
+        }
+
+      //  root_layout.snackbar(getString(R.string.lastname), Snackbar.LENGTH_LONG)
         when(filed){
             1 -> binding.edtHeadName.requestFocus()
             2 -> binding.spinnerLname.requestFocus()

@@ -108,6 +108,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, SearchByDistanceFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, SearchByDistanceFragment::class.simpleName)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         mByDistanceViewModel = ViewModelProvider(this, byDistanceViewModelFactory).get(ByDistanceViewModel::class.java)

@@ -97,6 +97,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, SmartFilterResult::class.simpleName)
+        mApp.FacebookAnalytics(context, SmartFilterResult::class.simpleName)
 
         llRoot = rootView.findViewById(R.id.ll_parent)
         selectedItems = SparseBooleanArray()

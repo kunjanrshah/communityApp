@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ઘાંચી</string>
+    <string name="app_name">મુસ્લિમ ઘાંચી સમાજ</string>
 
     <string name="action_delete">કાઢી નાંખવું</string>
     <string name="action_disable">અક્ષમ કરો</string>
@@ -41,10 +41,10 @@
         <item>એડમિન</item>
         <item>પ્રતિબંધિત</item>
         <item>ન્યૂપોસ્ટ</item>
-        <item>દસ્તાવેજો</item>
-        <item>પાઓટમ</item>
-        <item>નવું</item>
-        <item>પ્રવાસ</item>
+        <item>અપલોડ્સ</item>
+        <item>પેટીએમ</item>
+        <item>રજિસ્ટર</item>
+        <item>ગાઈડ</item>
         <item>મારો સંપર્ક</item>
     </string-array>
 
@@ -319,7 +319,7 @@
 
 
 
-    <string name="office">હોદ્દો</string>
+    <string name="office">ઓફિસ</string>
 
     <!-- MyRole Adapter -->
 
@@ -651,7 +651,7 @@
     <string name="profileRole">રૂપરેખાની ભૂમિકામાં બદલવામાં આવશે</string>
 
     <!-- Statistic Fragment -->
-    <string name="samaj_statistics">સમાજ આંકડા</string>
+    <string name="samaj_statistics">સમાજ ના આંકડા</string>
     <string name="search_village_here">ગામ અહીં શોધો</string>
     <string name="unmarried_female">અપરિણીત સ્ત્રી</string>
 
@@ -748,13 +748,13 @@
     <string name="SearchName">શોધ નામ</string>
     <string name="Find">રેકોર્ડ્સ શોધો</string>
     <string name="AllNotification">બધી સૂચનાઓ</string>
-    <string name="AllFilter">બધા ગાળકો</string>
-    <string name="youFilte">તમે ફલાઇન ફિલ્ટર્સની સૂચિ જોઈ શકો છો અને તેને સંપાદિત, કા deleteી અથવા લાગુ કરી શકો છો.</string>
+    <string name="AllFilter">બધા ફિલ્ટર</string>
+    <string name="youFilte">તમે ફલાઇન ફિલ્ટર્સની સૂચિ જોઈ શકો છો અને તેને સંપાદિત, કાઢી નાખો અથવા લાગુ કરી શકો છો.</string>
     <string name="LocalCommnunity">સ્થાનિક સમુદાય</string>
     <string name="Community">સમિતિ</string>
     <string name="Designation">ડિઝાઇન</string>
     <string name="Duration">અવધિ</string>
-    <string name="SarchKeyword">કી કી શોધો</string>
+    <string name="SarchKeyword">શબ્દ શોધો</string>
     <string name="Commi">સમિતિ</string>
     <string name="RegionName">પ્રદેશનું નામ</string>
     <string name="DurationCommitee">અવધિ</string>
@@ -879,5 +879,71 @@
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">તમે ઘણા ફિલ્ટર વિકલ્પો (જેમ કે કુટુંબના વડા, કુટુંબના સભ્યો, મોબાઇલ નંબર, ઇમેઇલ આઈડી વગેરે ...) નો ઉપયોગ કરીને તમે અહીં શોધી શકો છો</string>
     <string name="export_search_result">Export search result!</string>
     <string name="select_filter">Please select filter!</string>
+    <string name="liveo_search_view_search">શોધો</string>
+    <string name="liveo_search_view_arrow">બહાર નીકળો શોધ</string>
+    <string name="liveo_search_view_voice">અવાજ શોધ</string>
+    <string name="liveo_search_view_close">ક્વેરી ટેક્સ્ટને કા Deleteી નાખો</string>
+    <string name="liveo_not_supported">સપોર્ટેડ નથી</string>
+    <string name="location_permissions_denied_feedback">અંતરની ગણતરી માટે સ્થાન પરવાનગીની જરૂર છે</string>
+    <string name="all_permissions_denied_feedback">કેટલીક જાદુઈ કરવા માટે તે બધી મંજૂરીઓની જરૂર છે</string>
+    <string name="permission_rationale_settings_button_text">સેટિંગ્સ</string>
+    <string name="permission_rationale_title">અમને આ પરવાનગીની જરૂર છે</string>
+    <string name="permission_rationale_message">કેટલીક ફેન્સી સામગ્રી કરવા માટે આ પરવાનગીની જરૂર છે તેથી કૃપા કરીને, તેને મંજૂરી આપો!</string>
+    <string name="camera_permission_denied_dialog_title">કેમેરા પરવાનગી વિનંતી</string>
+    <string name="camera_permission_denied_dialog_feedback">જ્યાં સુધી તમે પરવાનગી વિનંતીને સ્વીકારો નહીં ત્યાં સુધી ક્યૂઆરકોડ શેરિંગ અને પ્રોફાઇલ છબી ઉપલબ્ધ રહેશે નહીં</string>
+    <string name="enter_pin">કૃપા કરી તમારો પિન દાખલ કરો</string>
+    <string name="went_wrong">કંઈક ખોટું થયું!</string>
+    <string name="RegisterFamilyPhoto">તમારો ફોટો અપલોડ કરી રહ્યો છે</string>
+    <string name="download">ડાઉનલોડ કરો</string>
+    <string name="birth_timeDetail">જન્મ સમય</string>
+    <string name="YesExport">તેને નિકાસ કરો!</string>
+    <string name="admin_only">ફક્ત એડમિન માટે</string>
+    <string name="default_filter_name">નામ</string>
+    <string name="enter_filter_value">કૃપા કરીને શોધ માટે ગાળકો દાખલ કરો</string>
+    <string name="smart_filter">સ્માર્ટ ફિલ્ટર</string>
+    <string name="isdialogshow">ડાયલોગશો છે</string>
+    <string name="uploaded_file">અપલોડ કરેલી ફાઇલ</string>
+    <string name="filename">ફાઈલનું નામ</string>
+    <string name="is_logged_in">પ્રવેશ કરો</string>
+    <string name="mycontacts">મારા સંપર્કો</string>
+    <string name="fetchingcontacts">તમારા સંપર્કોનું આનયન કરી રહ્યું છે</string>
+    <string name="permissioncontact">પરવાનગી રદ કરવામાં આવી છે, હવે તમારી એપ્લિકેશન સંપર્કો cannotક્સેસ કરી શકતી નથી.</string>
+    <string name="updated">અપડેટ</string>
+    <string name="members">સભ્ય</string>
+    <string name="fetchinguploadedfiles">અપલોડ કરેલી ફાઇલોનું આનયન</string>
+    <string name="verify_otp">ચકાસો</string>
+    <string name="ok">બરાબર</string>
 
+    <string name="newupdate">નવું અપડેટ ઉપલબ્ધ છે</string>
+    <string name="thereversion">એપ્લિકેશનનું નવું સંસ્કરણ ઉપલબ્ધ છે, કૃપા કરીને હવે તેને અપડેટ કરો.</string>
+    <string name="updatenow">હવે અપડેટ કરો</string>
+
+    <string name="otp_verification">ઓટીપી ચકાસણી</string>
+    <string name="enter_the_otp_you_have_received_to">તમે પ્રાપ્ત કરેલ ઓટીપી દાખલ કરો</string>
+    <string name="resend_otplogin">ફરીથી મોકલો ઓટીપી</string>
+
+    <string name="QrCode">ક્યૂઆરકોડ ગેલેરી</string>
+    <string name="Generatingcode">ક્યૂઆરકોડ જનરેટ કરી રહ્યું છે ...</string>
+    <string name="search_by_calendar">કેલેન્ડર દ્વારા શોધો</string>
+
+
+
+    <string name="total_family">કુલ કુટુંબ</string>
+    <string name="total_members">કુલ સભ્યો</string>
+    <string name="total_male">કુલ પુરુષ</string>
+    <string name="total_female">કુલ સ્ત્રી</string>
+    <string name="unmarried_male">અપરિણીત પુરૂષ</string>
+
+    <string name="uploads">અપલોડ્સ</string>
+    <string name="fetchingfiles">અપલોડ કરેલી ફાઇલોનું આનયન</string>
+    <string name="somethingwrong">કંઈક ખોટું થયું!</string>
+    <string name="filedownloded">ફાઇલ ડાઉનલોડ કરવામાં આવી છે</string>
+    <string name="folder">ફોલ્ડર</string>
+    <string name="uploadfile">ફાઈલ અપલોડ કરો</string>
+    <string name="doyouupload">શું તમે અપલોડ કરવા માંગો છો?</string>
+    <string name="uploadnow">હવે અપલોડ કરો</string>
+    <string name="uploadingstart">તમારી સૂચનાથી અપલોડ કરવાનું પ્રારંભ કરો</string>
+    <string name="totalrecord">મળી કુલ રેકોર્ડ:</string>
+    <string name="filenameupload">અપલોડ કરવા માટે ફાઇલ નામ</string>
+    <string name="pleasename">કૃપા કરી નામ દાખલ કરો</string>
 </resources>

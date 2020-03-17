@@ -60,7 +60,7 @@ fun ProgressBar.hide() {
 
 fun View.snackbar(message: String, snack: Int) {
     Snackbar.make(this, message, snack).also { snackbar ->
-        snackbar.setAction("Ok") {
+        snackbar.setAction(context.getString(R.string.ok)) {
             snackbar.dismiss()
         }
     }.show()

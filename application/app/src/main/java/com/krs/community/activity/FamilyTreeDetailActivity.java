@@ -117,6 +117,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(FamilyTreeDetailActivity.this,FamilyTreeDetailActivity.class.getSimpleName());
+        mApp.FacebookAnalytics(FamilyTreeDetailActivity.this,FamilyTreeDetailActivity.class.getSimpleName());
 
 
         if (NetworkChecker.isNetworkConnected(this)) {

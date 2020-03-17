@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">घांची</string>
+    <string name="app_name">"मुस्लिम घांची समाज "</string>
 
     <string name="action_delete">हटाएं</string>
     <string name="action_disable">अक्षम</string>
@@ -94,9 +94,9 @@
         <item>वर्जित</item>
         <item>नई पोस्ट</item>
         <item>दस्तावेज़</item>
-        <item>Paytm</item>
-        <item>नया</item>
-        <item>यात्रा</item>
+        <item>पेटीएम</item>
+        <item>रजिस्टर करें</item>
+        <item>गाइड</item>
         <item>मेरे संपर्क</item>
     </string-array>
 
@@ -874,6 +874,75 @@
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">आप कई फ़िल्टर विकल्पों (जैसे परिवार के मुखिया, परिवार के सदस्य, मोबाइल नंबर, ईमेल आईडी आदि) का उपयोग करके यहां खोज सकते हैं ...</string>
     <string name="export_search_result">Export search result!</string>
     <string name="select_filter">Please select filter!</string>
+    <string name="btnRegister">रजिस्टर</string>
+    <string name="Register">रजिस्टर करें</string>
+    <string name="RequestAdmin">आपके व्यवस्थापक को अनुरोध भेजा गया</string>
+    <string name="CannotImage">चयनित छवि पुनः प्राप्त नहीं कर सकता</string>
+    <string name="LocationOff">जिप्स बंद</string>
+    <string name="LocationOn">जीपीएस पर</string>
 
+    <string name="liveo_search_view_arrow">खोज से बाहर निकलें</string>
+    <string name="liveo_search_view_voice">आवाज खोज</string>
+    <string name="liveo_search_view_close">क्वेरी टेक्स्ट हटाएं</string>
+    <string name="liveo_not_supported">समर्थित नहीं</string>
+    <string name="location_permissions_denied_feedback">दूरी की गणना के लिए स्थान की अनुमति की आवश्यकता होती है</string>
+    <string name="all_permissions_denied_feedback">कुछ जादू करने के लिए उन सभी अनुमतियों की आवश्यकता होती है</string>
+    <string name="permission_rationale_settings_button_text">समायोजन</string>
+    <string name="permission_rationale_title">हमें इसकी अनुमति चाहिए</string>
+    <string name="permission_rationale_message">कुछ फैंसी सामान करने के लिए इस अनुमति की आवश्यकता है इसलिए कृपया, इसे अनुमति दें!</string>
+    <string name="camera_permission_denied_dialog_title">कैमरा अनुमति का अनुरोध</string>
+    <string name="camera_permission_denied_dialog_feedback">जब तक आप अनुमति के अनुरोध को स्वीकार नहीं करते तब तक QRCode साझाकरण और प्रोफ़ाइल छवि उपलब्ध नहीं होगी</string>
+    <string name="enter_pin">कृपया अपना पिन दर्ज करें</string>
+    <string name="went_wrong">कुछ गलत हो गया!</string>
+    <string name="RegisterFamilyPhoto">अपनी फोटो अपलोड करना</string>
+    <string name="download">डाउनलोड</string>
+    <string name="birth_timeDetail">जन्म समय</string>
+    <string name="YesExport">इसे निर्यात करें!</string>
+    <string name="admin_only">केवल व्यवस्थापक के लिए</string>
+    <string name="default_filter_name">नाम</string>
+    <string name="enter_filter_value">कृपया खोज के लिए फ़िल्टर दर्ज करें</string>
+    <string name="smart_filter">स्मार्ट फ़िल्टर</string>
+    <string name="isdialogshow">डायलॉगशॉ है</string>
+    <string name="uploaded_file">अपलोड की गई फ़ाइल</string>
+    <string name="filename">फ़ाइल का नाम</string>
+    <string name="is_logged_in">लॉगिन है</string>
+    <string name="mycontacts">मेरे संपर्क</string>
+    <string name="fetchingcontacts">अपने संपर्क लाना</string>
+    <string name="permissioncontact">अनुमति रद्द कर दी गई है, अब आपका एप्लिकेशन CONTACTS तक नहीं पहुंच सकता है।</string>
+    <string name="updated">अपडेट किया गया</string>
+    <string name="members">सदस्य</string>
+    <string name="fetchinguploadedfiles">अपलोड की गई फ़ाइलें प्राप्त कर रहा है</string>
+    <string name="or_login_with">आपका लॉगिन</string>
+    <string name="verify_otp">सत्यापित करें</string>
+    <string name="liveo_search_view_search">खोज</string>
+    <string name="ok">ठीक है</string>
+    <string name="newupdate">नई सूचना उपलब्ध है</string>
+    <string name="thereversion">एप्लिकेशन का एक नया संस्करण उपलब्ध है कृपया इसे अभी अपडेट करें।</string>
+    <string name="updatenow">अभी अपडेट करें</string>
 
+    <string name="otp_verification">टीओपी सत्यापन</string>
+    <string name="enter_the_otp_you_have_received_to">आपके द्वारा प्राप्त ओटीपी दर्ज करें</string>
+    <string name="resend_otplogin">पुन: भेजें टीओपी</string>
+    <string name="QrCode">क्यूआर कोड गैलरी</string>
+    <string name="Generatingcode">क्यूआर कोड जनरेट कर रहा है ...</string>
+    <string name="search_by_calendar">कैलेंडर द्वारा खोजें</string>
+
+    <string name="total_family">कुल परिवार</string>
+    <string name="total_members">कुल सदस्य</string>
+    <string name="total_male">कुल पुरुष</string>
+    <string name="total_female">कुल महिला</string>
+    <string name="unmarried_male">अविवाहित पुरुष</string>
+
+    <string name="uploads">अपलोड</string>
+    <string name="fetchingfiles">अपलोड की गई फ़ाइलें प्राप्त कर रहा है</string>
+    <string name="somethingwrong">कुछ गलत हो गया!</string>
+    <string name="filedownloded">फ़ाइल में डाउनलोड किया गया है</string>
+    <string name="folder">फ़ोल्डर</string>
+    <string name="uploadfile">दस्तावेज अपलोड करें</string>
+    <string name="doyouupload">क्या आप अपलोड करना चाहते हैं</string>
+    <string name="uploadnow">अभी अपलोड करें</string>
+    <string name="uploadingstart">अपनी अधिसूचना में प्रारंभ अपलोड करना</string>
+    <string name="totalrecord">कुल रिकॉर्ड आधार:</string>
+    <string name="filenameupload">अपलोड करने के लिए फ़ाइल का नाम</string>
+    <string name="pleasename">कृपया नाम दर्ज करें</string>
 </resources>

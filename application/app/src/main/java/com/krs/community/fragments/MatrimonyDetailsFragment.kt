@@ -42,6 +42,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
         member = arguments?.getSerializable(getString(R.string.member)) as Member

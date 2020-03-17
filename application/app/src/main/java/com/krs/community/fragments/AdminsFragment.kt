@@ -93,6 +93,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, AdminsFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, AdminsFragment::class.simpleName)
 
 
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)

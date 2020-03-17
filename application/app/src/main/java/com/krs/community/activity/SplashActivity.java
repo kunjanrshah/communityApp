@@ -55,6 +55,7 @@ public class SplashActivity extends AppCompatActivity {
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(SplashActivity.this,SplashActivity.class.getSimpleName());
+        mApp.FacebookAnalytics(SplashActivity.this,SplashActivity.class.getSimpleName());
     }
 
     private void setNoInternetLayout(){

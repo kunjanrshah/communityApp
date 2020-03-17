@@ -57,6 +57,7 @@ public class FamilyTreeListActivity extends AppCompatActivity {
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(FamilyTreeListActivity.this,FamilyTreeListActivity.class.getSimpleName());
+        mApp.FacebookAnalytics(FamilyTreeListActivity.this,FamilyTreeListActivity.class.getSimpleName());
 
 
     }

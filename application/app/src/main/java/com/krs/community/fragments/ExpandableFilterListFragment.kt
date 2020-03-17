@@ -52,6 +52,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         }
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, ExpandableFilterListFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, ExpandableFilterListFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
 

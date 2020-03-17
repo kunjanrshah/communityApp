@@ -71,6 +71,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@PinViewActivity, PinViewActivity.javaClass.simpleName)
+        mApp.FacebookAnalytics(this@PinViewActivity, PinViewActivity.javaClass.simpleName)
     }
 
     private fun setNoInternetLayout() {

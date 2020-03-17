@@ -106,6 +106,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, CommitteeFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, CommitteeFragment::class.simpleName)
 
         frameRoot = root.findViewById(R.id.shimmer_view_container)
         shimmerFrameLayout=root.findViewById(R.id.shimmer_view_container)

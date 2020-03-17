@@ -80,6 +80,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, NonActivesFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, NonActivesFragment::class.simpleName)
 
 
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)

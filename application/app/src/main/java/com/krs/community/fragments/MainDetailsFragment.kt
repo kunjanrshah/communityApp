@@ -57,6 +57,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, MainDetailsFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, MainDetailsFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener=this

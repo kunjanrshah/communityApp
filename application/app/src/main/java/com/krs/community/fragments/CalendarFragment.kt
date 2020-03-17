@@ -121,6 +121,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, CalendarFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, CalendarFragment::class.simpleName)
 
 
         calendarSearchViewModel = ViewModelProvider(this, calendarSearchViewModelFactory).get(CalendarSearchViewModel::class.java)
@@ -204,7 +205,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             }
         }else {
             DashboardActivity.stop = false
-            Snackbar.make(recyclerView, "No Data Found", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(recyclerView, getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
         }
     }
 

@@ -139,6 +139,9 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     loc.longitude = member.userLng.toDouble()
                     locations[member.id] = loc
                 }
+
+                updateMarker()
+
             }
             if (locations.size > 0) {
                 updateMarker()
@@ -165,9 +168,11 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         val builder = LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest!!)
         val client = LocationServices.getSettingsClient(this)
         val task = client.checkLocationSettings(builder.build())
+
         task.addOnSuccessListener(this) {
             startLocationUpdates()
         }
+
         task.addOnFailureListener(this) { e ->
             val statusCode = (e as ApiException).statusCode
             when (statusCode) {
@@ -257,6 +262,8 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         if (mMap != null && mapLoaded) {
             for (loc in locations) {
                 if (lstMarkers[loc.key] == null) {
+
+                    Log.e("hii","null");
                     oldLocations[loc.key] = loc.value
                     val markerOptions = MarkerOptions()
                     val car = BitmapDescriptorFactory.fromResource(R.drawable.pintracking)
@@ -274,14 +281,20 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     moveThread = MoveThread()
                     moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), 16f)
                     handler?.post(moveThread)
+                    animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
+
+
                 } else {
+                    Log.e("hii"," not null");
                     bearing = if (loc.value.hasBearing()) {
                         loc.value.bearing
                     } else {
                         oldLocations[loc.key]!!.bearingTo(loc.value)
                     }
                     lstMarkers[loc.key]?.rotation = bearing
+                    moveThread = MoveThread()
                     moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), mMap!!.cameraPosition.zoom)
+                    handler?.post(moveThread)
                     animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
                 }
             }

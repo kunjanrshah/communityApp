@@ -109,6 +109,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, SearchListFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, SearchListFragment::class.simpleName)
 
         smartSearchViewModel = ViewModelProvider(this, smartSearchViewModelFactory).get(SmartSearchViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
@@ -448,8 +449,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     val gif: Int = R.drawable.gif14
                     TTFancyGifDialog.Builder(activity)
                             //.setTitle(getString(R.string.you_sure))
-                            .setMessage("No Record Found")
-                            .setPositiveBtnText("OK")
+                            .setMessage(getString(R.string.noFoundNonActives))
+                            .setPositiveBtnText(getString(R.string.ok))
                             .setPositiveBtnBackground("#843f52")
                             .setGifResource(gif)
                             .isCancellable(false)
@@ -488,8 +489,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             val gif: Int = R.drawable.gif14
             TTFancyGifDialog.Builder(activity)
                     //.setTitle(getString(R.string.you_sure))
-                    .setMessage("No Record Found")
-                    .setPositiveBtnText("OK")
+                    .setMessage(getString(R.string.noFoundNonActives))
+                    .setPositiveBtnText(getString(R.string.ok))
                     .setPositiveBtnBackground("#843f52")
                     .setGifResource(gif)
                     .isCancellable(false)

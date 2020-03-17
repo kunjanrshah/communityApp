@@ -101,6 +101,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, DashboardFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, DashboardFragment::class.simpleName)
 
         filterViewModel = ViewModelProvider(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
         filterViewModel.mByFilterListener = this

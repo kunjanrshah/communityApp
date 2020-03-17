@@ -18,7 +18,7 @@
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat_medium"
-            android:text="File Name to upload"
+            android:text="@string/filenameupload"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
 
@@ -50,7 +50,7 @@
         android:drawableStart="@drawable/edit"
         android:drawablePadding="15dp"
         android:fontFamily="@font/montserrat_regular"
-        android:hint="Uploading file name"
+        android:hint="@string/filenameupload"
         android:imeOptions="actionNext"
         android:nextFocusDown="@+id/edt_mobile"
         android:paddingStart="10dp"
@@ -68,7 +68,7 @@
         android:layout_marginBottom="10dp"
         android:background="@drawable/round_corner_primary"
         android:fontFamily="@font/montserrat_semibold"
-        android:text="Upload"
+        android:text="@string/uploads"
         android:textColor="@color/white" />
 
 </LinearLayout>

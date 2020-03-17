@@ -341,7 +341,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Region"
+                android:text="@string/RoleAdmins"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -399,7 +399,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Designation"
+                android:text="@string/Designation"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 

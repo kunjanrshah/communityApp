@@ -79,6 +79,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
+        mApp.FacebookAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
     }
 
     private void setNoInternetLayout() {
@@ -199,7 +200,7 @@ public class QRCodeActivity extends AppCompatActivity {
             String date = df.format(Calendar.getInstance().getTime());
 
             handler = new Handler();
-            Utility.startSweetProgress(this, "QRCode Gallery", "Generating QRCode...");
+            Utility.startSweetProgress(this, getString(R.string.QrCode), getString(R.string.Generatingcode));
             handler.postDelayed(() -> {
                 Utility.hideSweetProgress();
                 binding.ivCode.setDrawingCacheEnabled(true);
