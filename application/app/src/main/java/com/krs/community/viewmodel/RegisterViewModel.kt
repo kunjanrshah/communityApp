@@ -37,6 +37,7 @@ class RegisterViewModel(
 
     var iRegisterListener: IRegisterListener? = null
     var TAG: String = RegisterViewModel::class.java.simpleName
+    private lateinit var completableJob: CompletableJob
 
     private var jobStates: CompletableJob? = null
     private var jobCities: CompletableJob? = null
@@ -56,8 +57,6 @@ class RegisterViewModel(
 
     fun getUserRegistration() {
         val register: AppConstants.UserRegister=AppConstants.UserRegister()
-
-
 
             if(fname.isNullOrBlank()){
 

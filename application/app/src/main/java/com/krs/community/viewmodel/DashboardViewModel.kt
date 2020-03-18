@@ -87,7 +87,7 @@ class DashboardViewModel(
         mDashboardRepository.insertMasterCounts(masterCounts)
     }
 
-    suspend fun getMasterCounts(): MasterCounts {
+    suspend fun getMasterCounts(): MasterCounts? {
         return mDashboardRepository.getMasterCounts()
     }
 

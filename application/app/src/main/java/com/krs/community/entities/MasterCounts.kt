@@ -16,12 +16,13 @@ data class MasterCounts(
         var districts: Int,
         var educations: Int,
         var local_community: Int,
-        var native: Int,
+        var native_place: Int,
         var occupation: Int,
         var relations: Int,
         var states: Int,
         var sub_casts: Int,
-        var sub_community: Int
+        var sub_community: Int,
+        var gotra: Int
 ) {
-    constructor() : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    constructor() : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 }

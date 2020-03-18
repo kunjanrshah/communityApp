@@ -399,6 +399,29 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
     dialog.show()
 }
 
+fun showVersionDialog(activity: FragmentActivity) {
+
+    SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+            .setTitleText(activity.getString(R.string.newupdate))
+            .setContentText(activity.getString(R.string.thereversion))
+            .setNeutralText(activity.getString(R.string.updatenow))
+            .setNeutralClickListener {
+                it.dismissWithAnimation()
+                val appPackageName = activity.packageName
+                try {
+                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
+                } catch (e: android.content.ActivityNotFoundException) {
+                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                }
+            }
+            .setCancelText("Later")
+            .setCancelClickListener {
+                it.dismissWithAnimation()
+            }
+            .show()
+}
+
+
 fun moveToMatrimonyListScreen(activity: FragmentActivity?, filter: String) {
     val fragment = MatrimonyListFragment()
     val bundle = Bundle()

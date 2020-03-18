@@ -36,7 +36,6 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.TranslateApi.Language
 import com.krs.community.TranslateApi.TranslateAPI
-import com.krs.community.TranslateApi.TranslateAPI.TranslateListener
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
@@ -244,6 +243,7 @@ class AppController : Application(), KodeinAware {
 
     }
 
+
     override fun onTerminate() {
 
 
@@ -268,11 +268,6 @@ class AppController : Application(), KodeinAware {
                 retrofitBase.apiServices.getUserStatus(updated)
             }
         }
-    }
-
-
-    fun setConnectivityListener(listener: ConnectivityReceiver.ConnectivityReceiverListener) {
-        ConnectivityReceiver.connectivityReceiverListener = listener
     }
 
     override fun attachBaseContext(base: Context) {

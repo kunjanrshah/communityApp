@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -24,7 +23,6 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
@@ -51,6 +49,7 @@ import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.NotificationUtils
 import com.krs.community.utils.Utility.*
+import com.krs.community.utils.showVersionDialog
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
@@ -366,43 +365,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     override fun getVersionResponse(response: UserStatusResponse) {
         if (!response.success) {
-            SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(getString(R.string.newupdate))
-                    .setContentText(getString(R.string.thereversion))
-                    .setNeutralText(getString(R.string.updatenow))
-                    .setNeutralClickListener {
-                        it.dismissWithAnimation()
-                        val appPackageName = packageName
-                        try {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
-                        } catch (e: android.content.ActivityNotFoundException) {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
-                        }
-                    }
-                    .setCancelText("Later")
-                    .setCancelClickListener {
-                        it.dismissWithAnimation()
-                    }
+            showVersionDialog(this)
         }
     }
-
-    /*private fun getMasterList() = Coroutines.main {
-        dashboardViewModel.fetchState()
-        dashboardViewModel.fetchCity()
-        dashboardViewModel.fetchRelations()
-        dashboardViewModel.fetchSubCommunities()
-        dashboardViewModel.fetchLocalCommunities()
-        dashboardViewModel.fetchLastName()
-        dashboardViewModel.fetchEducation()
-        dashboardViewModel.fetchGotra()
-        dashboardViewModel.fetchBusinessCategory()
-        dashboardViewModel.fetchBusinessSubCategory()
-        dashboardViewModel.fetchNative()
-        dashboardViewModel.fetchCurrentActivity()
-        dashboardViewModel.fetchOccupation()
-        dashboardViewModel.fetchCommittee()
-        dashboardViewModel.fetchDesignation()
-    }*/
 
     override fun getMastersResponse(response: MasterUpdateResponse) {
         if (response.success) {
@@ -419,7 +384,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 counts.districts = Integer.parseInt(response.countList.districts)
                 counts.educations = Integer.parseInt(response.countList.educations)
                 counts.local_community = Integer.parseInt(response.countList.localCommunity)
-                counts.native = Integer.parseInt(response.countList.native)
+                counts.native_place = Integer.parseInt(response.countList.native)
                 counts.occupation = Integer.parseInt(response.countList.occupation)
                 counts.relations = Integer.parseInt(response.countList.relations)
                 counts.states = Integer.parseInt(response.countList.states)
@@ -430,7 +395,19 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 if (dbCount == null) {
                     dashboardViewModel.insertMasterCounts(counts)
                     dashboardViewModel.fetchBusinessCategory(counts.business_categories)
-
+                    dashboardViewModel.fetchBusinessSubCategory(counts.business_sub_categories)
+                    dashboardViewModel.fetchState(counts.states)
+                    dashboardViewModel.fetchCity(counts.cities)
+                    dashboardViewModel.fetchRelations(counts.relations)
+                    dashboardViewModel.fetchSubCommunities(counts.sub_community)
+                    dashboardViewModel.fetchLocalCommunities(counts.local_community)
+                    dashboardViewModel.fetchLastName(counts.sub_casts)
+                    dashboardViewModel.fetchEducation(counts.educations)
+                    dashboardViewModel.fetchNative(counts.native_place)
+                    dashboardViewModel.fetchCurrentActivity(counts.current_activity)
+                    dashboardViewModel.fetchOccupation(counts.occupation)
+                    dashboardViewModel.fetchCommittee(counts.committees)
+                    dashboardViewModel.fetchDesignation(counts.designations)
                 } else {
                     if (dbCount.business_categories != counts.business_categories) {
                         dashboardViewModel.fetchBusinessCategory(counts.business_categories)
@@ -459,8 +436,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     if (dbCount.educations != counts.educations) {
                         dashboardViewModel.fetchEducation(counts.educations)
                     }
-                    if (dbCount.native != counts.native) {
-                        dashboardViewModel.fetchNative(counts.native)
+                    if (dbCount.native_place != counts.native_place) {
+                        dashboardViewModel.fetchNative(counts.native_place)
                     }
                     if (dbCount.current_activity != counts.current_activity) {
                         dashboardViewModel.fetchCurrentActivity(counts.current_activity)
@@ -481,7 +458,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
     }
 
-    override fun getFailure(msg: String) {
+    override suspend fun getFailure(msg: String) {
 
     }
 
