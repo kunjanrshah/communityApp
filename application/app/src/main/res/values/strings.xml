@@ -1254,5 +1254,6 @@
     <string name="totalrecord">"Total Record Founds: "</string>
     <string name="filenameupload">File Name to upload</string>
     <string name="pleasename">Please enter name</string>
+    <string name="localCommId" translatable="false">localCommId</string>
 
 </resources>

@@ -30,10 +30,15 @@ import com.google.gson.JsonObject
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.databinding.ActivityRegisterBinding
+import com.krs.community.entities.MasterCounts
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.listeners.ImageUploadListener
+import com.krs.community.listeners.UpdateListener
 import com.krs.community.model.RegisterModel
+import com.krs.community.responses.MasterUpdateResponse
+import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.Utility.isOnline
 import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RegisterViewModel
@@ -53,17 +58,17 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.io.File
 
-class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterListener,KodeinAware, ImageUploadListener {
+class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterListener, KodeinAware, ImageUploadListener, UpdateListener {
 
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
     private lateinit var logger: Logger
-    lateinit var binding:ActivityRegisterBinding
+    lateinit var binding: ActivityRegisterBinding
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var dashboardViewModel: DashboardViewModel
 
-    private var resultUri: Uri?=null
+    private var resultUri: Uri? = null
     private var mNetworkReceiver: BroadcastReceiver? = null
     private var isLogin: Boolean = true
 
@@ -93,6 +98,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
         mApp.FacebookAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
+
 
     }
 
@@ -126,12 +132,13 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             logger = Logger(TAG)
 
             registerViewModel = ViewModelProvider(this, registerViewModelFactory).get(RegisterViewModel::class.java)
-            registerViewModel.iRegisterListener=this
+            registerViewModel.iRegisterListener = this
 
             profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
-            profileDetailViewModel.mImageUploadListener=this
+            profileDetailViewModel.mImageUploadListener = this
 
             dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
+            dashboardViewModel.listener = this
 
             binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
             binding.lifecycleOwner = this
@@ -149,30 +156,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                 binding.txtAlready.visibility = View.INVISIBLE
             }
 
-            /*   binding.btnRegister.setOnTouchListener { v, event ->
-                   when (event.action) {
-                       MotionEvent.ACTION_DOWN -> {
-                           btn_register.background = resources.getDrawable(R.drawable.btn_registration_pressed)
-                           return@setOnTouchListener true
-                       }
-                       MotionEvent.ACTION_UP -> {
-                           btn_register.background = resources.getDrawable(R.drawable.btn_registration)
-                           btn_register.performClick()
-                           return@setOnTouchListener true
-                       }
-                       else -> return@setOnTouchListener false
-                   }
-               }*/
-
             binding.btnRegister.setOnClickListener {
-
                 Utility.startSweetProgress(this, getString(R.string.RegisterFamily), resources.getString(R.string.loading))
-
                 registerViewModel.getUserRegistration()
             }
-
             binding.txtAlready.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
-
             binding.txtHowRegister.setOnClickListener { registerViewModel.onHowRegisterClicked(this) }
             binding.imgCancel.visibility = View.GONE
             binding.imgCancel.setOnClickListener {
@@ -180,32 +168,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                 binding.imgCancel.visibility = View.GONE
             }
 
-            Coroutines.main {
-
-                //  dashboardViewModel.fetchLastName()
-                profileDetailViewModel.lstLastName.await().observe(this, Observer {
-                    spinnerLname.setItems(it.toTypedArray())
-                    spinnerLname.setExpandTint(R.color.black)
-                })
-
-                //   dashboardViewModel.fetchState()
-                profileDetailViewModel.lstStateName.await().observe(this, Observer {
-                    spinnerStates.setItems(it.toTypedArray())
-                    spinnerStates.setExpandTint(R.color.black)
-                })
-
-                //    dashboardViewModel.fetchSubCommunities()
-                profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
-                    spinnerSub.setItems(it.toTypedArray())
-                    spinnerSub.setExpandTint(R.color.black)
-                })
-
-                //  dashboardViewModel.fetchCity()
-                //   dashboardViewModel.fetchLocalCommunities()
+            if (isOnline(this)) {
+                dashboardViewModel.getMasterUpdate()
             }
 
-            binding. spinnerCountries.setOnItemClickListener { pos->
-                registerViewModel.countryCode =CountryData.countryAreaCodes[pos]
+            binding.spinnerCountries.setOnItemClickListener { pos ->
+                registerViewModel.countryCode = CountryData.countryAreaCodes[pos]
             }
 
             binding.spinnerStates.setOnItemClickListener {
@@ -238,14 +206,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
                 }
             }
 
-            binding.spinnerCities.setOnItemClickListener {position->
+            binding.spinnerCities.setOnItemClickListener { position ->
                 Coroutines.io {
                     registerViewModel.cityId = profileDetailViewModel.getCityIdByName(binding.spinnerCities.text.toString())
                     Log.d(TAG, "cityId: " + registerViewModel.cityId)
                 }
             }
 
-            binding.spinnerLocal.setOnItemClickListener {position->
+            binding.spinnerLocal.setOnItemClickListener { position ->
                 Coroutines.io {
                     registerViewModel.localCommId = profileDetailViewModel.getLocalCommunityId(binding.spinnerLocal.text.toString())
                     Log.d(TAG, "localCommId: " + registerViewModel.localCommId)
@@ -256,17 +224,36 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             binding.spinnerGender.setItems(lstGender)
             binding.spinnerGender.setExpandTint(R.color.black)
 
-            binding.spinnerGender.setOnItemClickListener {position->
+            binding.spinnerGender.setOnItemClickListener { position ->
 
-                registerViewModel.gender=lstGender[position]
-                Log.e("spinnerGender--",""+lstGender[position]);
+                registerViewModel.gender = lstGender[position]
+                Log.e("spinnerGender--", "" + lstGender[position]);
 
             }
             binding.imgProfile.setOnClickListener { v ->
                 pickFromGallery(this)
             }
+
+            Coroutines.main {
+                profileDetailViewModel.lstLastName.await().observe(this, Observer {
+                    spinnerLname.setItems(it.toTypedArray())
+                    spinnerLname.setExpandTint(R.color.black)
+                })
+
+                profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
+                    spinnerSub.setItems(it.toTypedArray())
+                    spinnerSub.setExpandTint(R.color.black)
+                })
+
+                profileDetailViewModel.lstStateName.await().observe(this, Observer {
+                    spinnerStates.setItems(it.toTypedArray())
+                    spinnerStates.setExpandTint(R.color.black)
+                })
+
+            }
         }
     }
+
     inner class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
@@ -278,12 +265,13 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             }
         }
     }
+
     private fun registerNetworkBroadcastForNougat() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver,  IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
     }
 
@@ -302,7 +290,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==PICK_GALLERY_REQUEST){
+        if (requestCode == PICK_GALLERY_REQUEST) {
             pickFromGallery(this)
         }
     }
@@ -310,80 +298,80 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     private fun ScrollView.scrollToBottom() {
         val lastChild = getChildAt(childCount - 1)
         val bottom = lastChild.bottom + paddingBottom
-        val delta = bottom - (scrollY+ height)
+        val delta = bottom - (scrollY + height)
         smoothScrollBy(0, delta)
     }
 
     private fun showSequence() = SpotlightSequence.getInstance(this, null)
             .addSpotlight(txt_how_register, getString(R.string.youtubeVideo), getString(R.string.HowToRegister), getString(R.string.hoeRegister))
-            .addSpotlight(btn_register, getString(R.string.RegisterButton), getString(R.string.FillUpYourDetail)+"\n "+getString(R.string.ClickToRegister), getString(R.string.btnRegister))
+            .addSpotlight(btn_register, getString(R.string.RegisterButton), getString(R.string.FillUpYourDetail) + "\n " + getString(R.string.ClickToRegister), getString(R.string.btnRegister))
             .startSequence()
 
-    override fun getRegisterFailure(message: String?, filed:Int) {
+    override fun getRegisterFailure(message: String?, filed: Int) {
         Utility.hideSweetProgress()
-        if(message.equals("fname")){
+        if (message.equals("fname")) {
             root_layout.snackbar(getString(R.string.enter_firstname), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("lastnameId")){
+        if (message.equals("lastnameId")) {
             root_layout.snackbar(getString(R.string.enter_lastname), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("email")){
+        if (message.equals("email")) {
             root_layout.snackbar(getString(R.string.enter_email), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("gender")){
+        if (message.equals("gender")) {
             root_layout.snackbar(getString(R.string.enter_gender), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("mobile")){
+        if (message.equals("mobile")) {
             root_layout.snackbar(getString(R.string.enter_mobile), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("pass")){
+        if (message.equals("pass")) {
             root_layout.snackbar(getString(R.string.enter_password), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("pass?")){
+        if (message.equals("pass?")) {
             root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("cpass")){
+        if (message.equals("cpass")) {
             root_layout.snackbar(getString(R.string.confirm_password), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("cpass?")){
+        if (message.equals("cpass?")) {
             root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("!pass")){
+        if (message.equals("!pass")) {
             root_layout.snackbar(getString(R.string.password_mismatch), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("address")){
+        if (message.equals("address")) {
             root_layout.snackbar(getString(R.string.enter_home_address), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("stateId")){
+        if (message.equals("stateId")) {
             root_layout.snackbar(getString(R.string.select_state), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("cityId")){
+        if (message.equals("cityId")) {
             root_layout.snackbar(getString(R.string.select_city), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("subCommId")){
+        if (message.equals("subCommId")) {
             root_layout.snackbar(getString(R.string.select_sub_comm), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals("localCommId")){
+        if (message.equals("localCommId")) {
             root_layout.snackbar(getString(R.string.select_local), Snackbar.LENGTH_LONG)
             return
         }
 
-      //  root_layout.snackbar(getString(R.string.lastname), Snackbar.LENGTH_LONG)
-        when(filed){
+        //  root_layout.snackbar(getString(R.string.lastname), Snackbar.LENGTH_LONG)
+        when (filed) {
             1 -> binding.edtHeadName.requestFocus()
             2 -> binding.spinnerLname.requestFocus()
             3 -> binding.edtEmailId.requestFocus()
@@ -403,15 +391,15 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
     override fun getRegisterSuccess(data: RegisterModel) {
         Utility.hideSweetProgress()
         Log.d(TAG, "onRegisterButtonClick")
-        if(resultUri!=null){
+        if (resultUri != null) {
             try {
                 val uploadImage = File(resultUri?.path.toString())
                 Utility.startSweetProgress(this, getString(R.string.RegisterFamilyPhoto), getString(R.string.loading))
-                profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(),getString(R.string.profile))
+                profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(), getString(R.string.profile))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }else{
+        } else {
             successResponse(data.message)
         }
     }
@@ -446,12 +434,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
     override suspend fun getFailure(message: String) {
 
-        withContext(Main){
-            if(Utility.dialog!=null && Utility.dialog.isShowing) {
+        withContext(Main) {
+            if (Utility.dialog != null && Utility.dialog.isShowing) {
                 Utility.dialog.dismissWithAnimation()
             }
             Utility.hideSweetProgress()
-            root_layout.snackbar(message,Snackbar.LENGTH_INDEFINITE)
+            root_layout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
         }
     }
 
@@ -468,7 +456,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             if (requestCode == PICK_GALLERY_REQUEST) {
                 val selectedUri = data!!.data
                 if (selectedUri != null) {
-                    startCrop(selectedUri,this)
+                    startCrop(selectedUri, this)
                 } else {
                     Toast.makeText(this@RegisterActivty, getString(R.string.CannotImage), Toast.LENGTH_SHORT).show()
                 }
@@ -482,14 +470,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
             }
         }
         if (resultCode == RESULT_ERROR) {
-            handleCropError(data!!,this)
+            handleCropError(data!!, this)
         }
     }
 
-   override fun onCropFinish(result: UCropFragment.UCropResult) {
+    override fun onCropFinish(result: UCropFragment.UCropResult) {
         when (result.mResultCode) {
-            RESULT_OK -> handleCropResult(result.mResultData,this,binding.imgProfile)
-            RESULT_ERROR -> handleCropError(result.mResultData,this)
+            RESULT_OK -> handleCropResult(result.mResultData, this, binding.imgProfile)
+            RESULT_ERROR -> handleCropError(result.mResultData, this)
         }
     }
 
@@ -497,5 +485,97 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
         mShowLoader = showLoader
     }
 
+    override fun getVersionResponse(response: UserStatusResponse) {
+        showVersionDialog(this)
+    }
+
+
+    override fun getMastersResponse(response: MasterUpdateResponse) {
+        if (response.success) {
+            Coroutines.io {
+
+                val counts = MasterCounts()
+                counts.business_categories = -1
+                counts.business_sub_categories = -1
+                counts.committees = -1
+                counts.current_activity = -1
+                counts.designations = -1
+                counts.districts = -1
+                counts.educations = -1
+                counts.gotra = -1
+                counts.native_place = -1
+                counts.occupation = -1
+                counts.relations = -1
+                counts.states = Integer.parseInt(response.countList.states)
+                counts.cities = Integer.parseInt(response.countList.cities)
+                counts.sub_casts = Integer.parseInt(response.countList.subCasts)
+                counts.sub_community = Integer.parseInt(response.countList.subCommunity)
+                counts.local_community = Integer.parseInt(response.countList.localCommunity)
+
+                val dbCount = dashboardViewModel.getMasterCounts()
+                if (dbCount == null) {
+                    dashboardViewModel.insertMasterCounts(counts)
+                    dashboardViewModel.fetchState(counts.states)
+                    dashboardViewModel.fetchCity(counts.cities)
+                    dashboardViewModel.fetchSubCommunities(counts.sub_community)
+                    dashboardViewModel.fetchLocalCommunities(counts.local_community)
+                    dashboardViewModel.fetchLastName(counts.sub_casts)
+
+                    Coroutines.main {
+                        profileDetailViewModel.lstLastName.await().observe(this, Observer {
+                            spinnerLname.setItems(it.toTypedArray())
+                            spinnerLname.setExpandTint(R.color.black)
+                        })
+
+                        profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
+                            spinnerSub.setItems(it.toTypedArray())
+                            spinnerSub.setExpandTint(R.color.black)
+                        })
+
+                        profileDetailViewModel.lstStateName.await().observe(this, Observer {
+                            spinnerStates.setItems(it.toTypedArray())
+                            spinnerStates.setExpandTint(R.color.black)
+                        })
+
+                    }
+
+                } else {
+                    if (dbCount.states != counts.states) {
+                        dashboardViewModel.fetchState(counts.states)
+                        Coroutines.main {
+                            profileDetailViewModel.lstStateName.await().observe(this, Observer {
+                                spinnerStates.setItems(it.toTypedArray())
+                                spinnerStates.setExpandTint(R.color.black)
+                            })
+                        }
+                    }
+                    if (dbCount.cities != counts.cities) {
+                        dashboardViewModel.fetchCity(counts.cities)
+                    }
+                    if (dbCount.sub_community != counts.sub_community) {
+                        dashboardViewModel.fetchSubCommunities(counts.sub_community)
+                        Coroutines.main {
+                            profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
+                                spinnerSub.setItems(it.toTypedArray())
+                                spinnerSub.setExpandTint(R.color.black)
+                            })
+                        }
+                    }
+                    if (dbCount.local_community != counts.local_community) {
+                        dashboardViewModel.fetchLocalCommunities(counts.local_community)
+                    }
+                    if (dbCount.sub_casts != counts.sub_casts) {
+                        dashboardViewModel.fetchLastName(counts.sub_casts)
+                        Coroutines.main {
+                            profileDetailViewModel.lstLastName.await().observe(this, Observer {
+                                spinnerLname.setItems(it.toTypedArray())
+                                spinnerLname.setExpandTint(R.color.black)
+                            })
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 

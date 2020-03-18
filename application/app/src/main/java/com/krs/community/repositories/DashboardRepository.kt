@@ -381,6 +381,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getDesignation(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateDesignationIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.designation),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -407,6 +410,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getCommittee(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateCommiteesIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.committee),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -433,6 +439,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getSubCommunity(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateSubCommIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.sub_community),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -459,6 +468,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getListLocalCommunity(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateLocalCommIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.local_community),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -485,6 +497,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getUserLastName(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateSubCastIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.last_name),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -511,6 +526,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getEducation(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateEducationIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.education),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -537,6 +555,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getGotra(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateGotraIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.gotra),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -562,6 +583,9 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date),date)
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getUserState(updated) }
+                if (response.success) {
+                    db.getMasterUpdateDao().updateStateIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.state),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -589,6 +613,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getListCity(updated) }
                 Log.d(TAG, "city response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateCitiesIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.city),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -644,6 +671,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getListBusinessSubCategory(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateBusinessSubCategoryIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.business_sub_category),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -670,6 +700,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getNative(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateNativeIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string._native),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -696,6 +729,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getOccupation(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateOccupationIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.occupation),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -722,6 +758,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getRelations(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateRelationIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.relation),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -748,6 +787,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getActivity(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateCurrentActivityIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.current_activity),response.last_updated)
                     lastUpdated.postValue(lastdate)

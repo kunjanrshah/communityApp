@@ -51,6 +51,10 @@ public class CountList {
     @Expose
     private String subCommunity;
 
+    @SerializedName("gotra")
+    @Expose
+    private String gotra;
+
     public String getBusinessCategories() {
         return businessCategories;
     }
@@ -171,4 +175,11 @@ public class CountList {
         this.subCommunity = subCommunity;
     }
 
+    public String getGotra() {
+        return gotra;
+    }
+
+    public void setGotra(String gotra) {
+        this.gotra = gotra;
+    }
 }

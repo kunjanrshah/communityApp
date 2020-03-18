@@ -6,5 +6,5 @@ import com.krs.community.responses.UserStatusResponse
 interface UpdateListener {
     fun getVersionResponse(response: UserStatusResponse)
     fun getMastersResponse(response: MasterUpdateResponse)
-    fun getFailure(msg: String)
+    suspend fun getFailure(msg: String)
 }
