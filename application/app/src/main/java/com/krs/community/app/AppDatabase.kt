@@ -9,7 +9,7 @@ import com.krs.community.entities.*
 
 @Database(entities = [RoomMember::class,Designation::class,Committee::class,States::class,Relations::class,Occupations::class,
                     Native::class,LastName::class,Gotra::class,Educations::class,CurrentActivity::class,City::class,
-                    BusinessSubCategory::class,BusinessCategory::class,SubCommunity::class,LocalCommunity::class,LastUpdated::class],
+    BusinessSubCategory::class, BusinessCategory::class, SubCommunity::class, LocalCommunity::class, LastUpdated::class, MasterCounts::class],
                     version = 1)
 abstract class AppDatabase :RoomDatabase() {
 
@@ -29,6 +29,7 @@ abstract class AppDatabase :RoomDatabase() {
     abstract fun getCommitteeDao(): CommitteeDao
     abstract fun getDesignationDao(): DesignationDao
     abstract fun getLastUpdatedDao(): LastUpdatedDao
+    abstract fun getMasterUpdateDao(): MasterUpdateDao
     abstract fun getRoomMemberDao(): RoomMemberDao
 
     companion object {

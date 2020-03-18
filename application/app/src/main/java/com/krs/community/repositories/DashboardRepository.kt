@@ -8,6 +8,7 @@ import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
 import com.krs.community.entities.*
+import com.krs.community.responses.MasterUpdateResponse
 import com.krs.community.responses.UserStatusResponse
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.Coroutines
@@ -348,6 +349,13 @@ class DashboardRepository(
         }
     }
 
+    suspend fun insertMasterCounts(masterCounts: MasterCounts) {
+        db.getMasterUpdateDao().saveMasterCounts(masterCounts)
+    }
+
+    suspend fun getMasterCounts(): MasterCounts {
+        return db.getMasterUpdateDao().getMasterCounts()
+    }
 
     suspend fun getUpdatedVersion(jsonObject: JsonObject): UserStatusResponse {
         return apiRequest {
@@ -355,7 +363,13 @@ class DashboardRepository(
         }
     }
 
-   suspend fun fetchDesignation() {
+    suspend fun getMasterUpdate(): MasterUpdateResponse {
+        return apiRequest {
+            api.getMasterUpdate()
+        }
+    }
+
+    suspend fun fetchDesignation(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.designation))
@@ -381,7 +395,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchCommittee() {
+    suspend fun fetchCommittee(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.committee))
@@ -407,7 +421,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchSubCommunities() {
+    suspend fun fetchSubCommunities(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.sub_community))
@@ -433,7 +447,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchLocalCommunities() {
+    suspend fun fetchLocalCommunities(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.local_community))
@@ -459,7 +473,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchLastName() {
+    suspend fun fetchLastName(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.last_name))
@@ -485,7 +499,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchEducation() {
+    suspend fun fetchEducation(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.education))
@@ -511,7 +525,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchGotra() {
+    suspend fun fetchGotra(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.gotra))
@@ -537,7 +551,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchState(){
+    suspend fun fetchState(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.state))
@@ -563,7 +577,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchCity() {
+    suspend fun fetchCity(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.city))
@@ -589,7 +603,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchBusinessCategory() {
+    suspend fun fetchBusinessCategory(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.business_category))
@@ -601,6 +615,9 @@ class DashboardRepository(
                 val updated=  JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getBusinessCategory(updated) }
                 Log.d(TAG, "response: $response")
+                if (response.success) {
+                    db.getMasterUpdateDao().updateBusinessCategoryIndex(index)
+                }
                 if(!response.last_updated.isNullOrEmpty()){
                     val lastdate=LastUpdated(AppController.mApplication.getString(R.string.business_category),response.last_updated)
                     lastUpdated.postValue(lastdate)
@@ -615,7 +632,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchBusinessSubCategory() {
+    suspend fun fetchBusinessSubCategory(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.business_sub_category))
@@ -641,7 +658,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchNative() {
+    suspend fun fetchNative(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string._native))
@@ -667,7 +684,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchOccupation() {
+    suspend fun fetchOccupation(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.occupation))
@@ -693,7 +710,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchRelations() {
+    suspend fun fetchRelations(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.relation))
@@ -719,7 +736,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchCurrentActivity() {
+    suspend fun fetchCurrentActivity(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date= db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.current_activity))

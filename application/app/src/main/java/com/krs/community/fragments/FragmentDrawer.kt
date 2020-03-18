@@ -101,7 +101,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
                     .setPositiveBtnBackground("#22b573")
                     .setNegativeBtnText("No")
                     .setNegativeBtnBackground("#c1272d")
-                    .setGifResource(R.drawable.gif2)
+                    .setGifResource(R.drawable.gif_logout)
                     .isCancellable(false)
                     .OnPositiveClicked {
                         if (Utility.isOnline(context)) {

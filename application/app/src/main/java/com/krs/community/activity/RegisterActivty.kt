@@ -179,26 +179,26 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback ,IRegisterLis
 
             Coroutines.main {
 
-                dashboardViewModel.fetchLastName()
+                //  dashboardViewModel.fetchLastName()
                 profileDetailViewModel.lstLastName.await().observe(this, Observer {
                     spinnerLname.setItems(it.toTypedArray())
                     spinnerLname.setExpandTint(R.color.black)
                 })
 
-                dashboardViewModel.fetchState()
+                //   dashboardViewModel.fetchState()
                 profileDetailViewModel.lstStateName.await().observe(this, Observer {
                     spinnerStates.setItems(it.toTypedArray())
                     spinnerStates.setExpandTint(R.color.black)
                 })
 
-                dashboardViewModel.fetchSubCommunities()
+                //    dashboardViewModel.fetchSubCommunities()
                 profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
                     spinnerSub.setItems(it.toTypedArray())
                     spinnerSub.setExpandTint(R.color.black)
                 })
 
-                dashboardViewModel.fetchCity()
-                dashboardViewModel.fetchLocalCommunities()
+                //  dashboardViewModel.fetchCity()
+                //   dashboardViewModel.fetchLocalCommunities()
             }
 
             binding. spinnerCountries.setOnItemClickListener { pos->

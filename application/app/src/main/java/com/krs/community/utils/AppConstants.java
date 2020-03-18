@@ -58,6 +58,7 @@ public class AppConstants {
         String INNER_LOGIN = "InnerLogin";
         String INNER_LOGOUT = "InnerLogout";
         String GET_USER_STATUS = "GetUserActivityStatus";
+        String GET_MASTER_UPDATE_COUNTS = "GetMasterUpdateCounts";
     }
 
     public interface TimeOut {
@@ -81,7 +82,7 @@ public class AppConstants {
         String sub_cast_id;
         String email_address;
         String mobile;
-        String plain_password;
+        String profile_password;
         String state_id;
         String city_id;
         String address;
@@ -93,8 +94,8 @@ public class AppConstants {
             return sub_cast_id;
         }
 
-        public String getPlain_password() {
-            return plain_password;
+        public String getProfile_password() {
+            return profile_password;
         }
 
         public String getState_id() {
@@ -141,8 +142,8 @@ public class AppConstants {
             this.mobile = mobile;
         }
 
-        public void setPlain_password(String plain_password) {
-            this.plain_password = plain_password;
+        public void setProfile_password(String profile_password) {
+            this.profile_password = profile_password;
         }
 
         public String getGender() {

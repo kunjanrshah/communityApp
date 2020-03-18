@@ -347,7 +347,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 }
             } else {
                 DashboardActivity.stop = true
-                var gif: Int = R.drawable.gif14
+                var gif: Int = R.drawable.gif_no_record
 
                 TTFancyGifDialog.Builder(activity)
                         .setMessage("No Record Found")

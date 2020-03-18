@@ -373,24 +373,25 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
             val arrayId = member.sharingId?.split(',')
             val memId = Guru.getString(getString(R.string.member_id), "")
-            var isShare = "sharedByLoginUser"
+            var isShare = false
             if (arrayId != null) {
                 for (id in arrayId) {
-                    if (duplicateIds.contains(id)) {
-                        isShare = "bothHaveShared"
-                        break
-                    } else if (memId == id) {
-                        isShare = "sharedToLoginUser"
+                    if (memId == id) {
+                        isShare = true
                         break
                     }
                 }
             }
-            if (isShare == "sharedByLoginUser") {
-                holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.bg_gray))
-            } else if (isShare == "bothHaveShared") {
-                holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.link))
-            } else if (isShare == "sharedToLoginUser") {
-                holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+            when {
+                duplicateIds.contains(member.id) -> {
+                    holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.colorTree1))
+                }
+                !isShare -> {
+                    holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.bg_gray))
+                }
+                isShare -> {
+                    holder.cardViewRecentList.setCardBackgroundColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+                }
             }
 
             holder.cardViewRecentList.setOnClickListener {

@@ -26,9 +26,11 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.activity.*
+import com.krs.community.activity.FamilyTreeListActivity
+import com.krs.community.activity.MapTrackingActivity
+import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
-import com.krs.community.activity.*
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmnetSharedLocationBinding
 import com.krs.community.entities.RoomMember
@@ -62,7 +64,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
     private var animationItemsIndex: SparseBooleanArray = SparseBooleanArray()
     private var reverseAllAnimations = false
     private val members: MutableList<Member> = ArrayList()
-
+    private var duplicateIds = java.util.ArrayList<String>()
     override val kodein by kodein()
 
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
@@ -107,8 +109,6 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
 
-                /*holder.tvEmail.text = member.emailAddress
-                holder.tvMobile.text = member.mobile*/
                 if (member.gender.equals("Male")) {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
                 } else {
@@ -134,7 +134,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     viewHolder.tvEmail.text = member.emailAddress
                 }
                 holder.imgLocation.visibility = View.GONE
-                holder.tvUpdate.text = getString(R.string.UpdateList) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                holder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
 
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
@@ -153,10 +153,17 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                         }
                     }
                 }
-                if (isShare) {
-                    holder.cardViewList.background = ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.round_corner_itemlist)
-                } else {
-                    holder.cardViewList.background = ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.round_corner_gray)
+
+                when {
+                    duplicateIds.contains(member.id) -> {
+                        holder.cardViewList.background = ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.round_corner_pink)
+                    }
+                    !isShare -> {
+                        holder.cardViewList.background = ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.round_corner_gray)
+                    }
+                    isShare -> {
+                        holder.cardViewList.background = ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.round_corner_itemlist)
+                    }
                 }
 
                 holder.boomMenuButton.clearBuilders()
@@ -236,16 +243,10 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
 
         img_map.setOnClickListener { v: View? ->
-
-            /*val intent = Intent(activity, MapviewActivity::class.java)
-            intent.putExtra("image", "imageUrl")
-            startActivity(intent)*/
-
             val intent = Intent(activity, MapTrackingActivity::class.java)
             intent.putExtra("head_id", members.get(0).headId)
             startActivity(intent)
             Utility.fade(activity)
-
         }
         adapter.setParallaxHeader(header, binding.rvLocation)
         binding.rvLocation.adapter = adapter
@@ -269,10 +270,9 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
     private fun getSharedProfiles() {
 
-        if (AppController.mApplication.start == 0) {
-            binding.shimmerViewContainer.startShimmerAnimation()
-            binding.shimmerViewContainer.visibility = View.VISIBLE
-        }
+        binding.shimmerViewContainer.startShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.VISIBLE
+
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
         jsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
@@ -578,7 +578,6 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         }
     }
 
-
     companion object {
         private var currentSelectedIndex = -1
     }
@@ -588,6 +587,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
             if (response.members != null) {
                 if (response.members.size > 0) {
                     members.clear()
+                    duplicateIds.clear()
                     members.addAll(response.members)
 
                     for (member1 in response.membersharing) {
@@ -599,6 +599,8 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                         }
                         if (isAdd) {
                             members.add(member1)
+                        } else {
+                            duplicateIds.add(member1.id)
                         }
                     }
                     adapter.notifyDataSetChanged()
@@ -623,7 +625,6 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
     }
 
     override fun getScanResult(response: SmartFilterResponse) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
@@ -635,10 +636,13 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
             }
             binding.rvLocation.snackbar("Location private successfully", Snackbar.LENGTH_LONG)
+            // getSharedProfiles()
         }
         deleteMessages()
         clearSelections()
+
         actionMode?.finish()
+
     }
 
     override suspend fun getFailure(message: String) {

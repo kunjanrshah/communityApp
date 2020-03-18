@@ -130,20 +130,20 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
     private fun deleteFamilyMember(id:String){
         mShimmerViewContainer?.startShimmerAnimation()
-        mShimmerViewContainer?.visibility=View.VISIBLE
-        val mJSONObject= JSONObject()
-        mJSONObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-        mJSONObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+        mShimmerViewContainer?.visibility = View.VISIBLE
+        val mJSONObject = JSONObject()
+        mJSONObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+        mJSONObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
         mJSONObject.put(getString(R.string.member_id), id)
-        deletedId= id
-        val records=  JsonParser().parse(mJSONObject.toString()) as JsonObject
+        deletedId = id
+        val records = JsonParser().parse(mJSONObject.toString()) as JsonObject
         familyDetailViewModel.deleteMember(records)
 
 
         Handler().postDelayed({
             mShimmerViewContainer?.stopShimmerAnimation()
-            mShimmerViewContainer?.visibility=View.GONE
-        },4000)
+            mShimmerViewContainer?.visibility = View.GONE
+        }, 4000)
     }
 
     override fun getFamilyMembers(data: FamilyDetailResponse) {
@@ -242,9 +242,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                     textMsg = "Exit"
                                 }
 
-                                var gif: Int = R.drawable.gif5
+                                var gif: Int = R.drawable.enter
                                 if (textMsg!!.contains("Exit")) {
-                                    gif = R.drawable.gif10
+                                    gif = R.drawable.exit_gif
                                 }
 
                                 TTFancyGifDialog.Builder(this@FamilyDetailActivity)
@@ -405,7 +405,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .setPositiveBtnBackground("#22b573")
                     .setNegativeBtnText(getString(R.string.no))
                     .setNegativeBtnBackground("#c1272d")
-                    .setGifResource(R.drawable.gif2)
+                    .setGifResource(R.drawable.gif_logout)
                     .isCancellable(false)
                     .OnPositiveClicked {
                         Guru.clear()
@@ -549,9 +549,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }else if(member.onlineStatus==1){
                         textMsg = getString(R.string.exitDetails)
                     }
-                    var gif: Int = R.drawable.gif5
+                    var gif: Int = R.drawable.enter
                     if (textMsg!!.contains(getString(R.string.exitDetails))) {
-                        gif = R.drawable.gif10
+                        gif = R.drawable.exit_gif
                     }
                     TTFancyGifDialog.Builder(this)
                             .setTitle(getString(R.string.you_sure))

@@ -4,11 +4,10 @@
      <!--<color name="colorPrimary">#ff2975</color>-->
     <color name="colorPrimary">#843f52</color>  //#92315C
     <color name="colorTree">#C54464</color>
+    <color name="colorTree1">#FBE9EE</color>
     <color name="colorText">#212121</color>
     <color name="shadow">#66000000</color>
-<!--
-     <color name="colorPrimaryDark">#C51162</color>
--->
+
     <color name="material_green_500">#4CAF50</color>
 
     <color name="colorPrivacyPolictyBG">#f2f2f2</color>

@@ -137,7 +137,7 @@ class RegisterViewModel(
         register.email_address=email
         register.mobile=mobile
         register.gender=gender
-        register.plain_password=pass
+        register.profile_password = pass
         register.address=address
         register.state_id=stateId.toString()
         register.city_id=cityId.toString()

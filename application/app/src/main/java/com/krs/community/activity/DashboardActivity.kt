@@ -38,10 +38,12 @@ import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.databinding.ActivityDashboardBinding
+import com.krs.community.entities.MasterCounts
 import com.krs.community.fragments.*
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
-import com.krs.community.listeners.UpdateVersionListener
+import com.krs.community.listeners.UpdateListener
 import com.krs.community.model.Member
+import com.krs.community.responses.MasterUpdateResponse
 import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.NotificationUtils
@@ -56,7 +58,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, UpdateVersionListener, LocationData.AddressCallBack {
+class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, UpdateListener, LocationData.AddressCallBack {
 
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -172,7 +174,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         })
 
         if (isOnline(this)) {
-            getMasterList()
+            //getMasterList()
+            dashboardViewModel.getMasterUpdate()
         }
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
@@ -252,23 +255,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
     }
 
-    private fun getMasterList() = Coroutines.main {
-        dashboardViewModel.fetchState()
-        dashboardViewModel.fetchCity()
-        dashboardViewModel.fetchRelations()
-        dashboardViewModel.fetchSubCommunities()
-        dashboardViewModel.fetchLocalCommunities()
-        dashboardViewModel.fetchLastName()
-        dashboardViewModel.fetchEducation()
-        dashboardViewModel.fetchGotra()
-        dashboardViewModel.fetchBusinessCategory()
-        dashboardViewModel.fetchBusinessSubCategory()
-        dashboardViewModel.fetchNative()
-        dashboardViewModel.fetchCurrentActivity()
-        dashboardViewModel.fetchOccupation()
-        dashboardViewModel.fetchCommittee()
-        dashboardViewModel.fetchDesignation()
-    }
+
 
     private val toolbarHeight: Int
         get() {
@@ -367,7 +354,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         cur_addr.postValue(locationData.full_address)
     }
 
-    override fun getSuccess(response: UserStatusResponse) {
+    override fun getVersionResponse(response: UserStatusResponse) {
         if (!response.success) {
             SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("New Update Available")
@@ -386,6 +373,101 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     .setCancelClickListener {
                         it.dismissWithAnimation()
                     }
+        }
+    }
+
+    /*private fun getMasterList() = Coroutines.main {
+        dashboardViewModel.fetchState()
+        dashboardViewModel.fetchCity()
+        dashboardViewModel.fetchRelations()
+        dashboardViewModel.fetchSubCommunities()
+        dashboardViewModel.fetchLocalCommunities()
+        dashboardViewModel.fetchLastName()
+        dashboardViewModel.fetchEducation()
+        dashboardViewModel.fetchGotra()
+        dashboardViewModel.fetchBusinessCategory()
+        dashboardViewModel.fetchBusinessSubCategory()
+        dashboardViewModel.fetchNative()
+        dashboardViewModel.fetchCurrentActivity()
+        dashboardViewModel.fetchOccupation()
+        dashboardViewModel.fetchCommittee()
+        dashboardViewModel.fetchDesignation()
+    }*/
+
+    override fun getMastersResponse(response: MasterUpdateResponse) {
+        if (response.success) {
+
+            Coroutines.io {
+
+                val counts = MasterCounts()
+                counts.business_categories = Integer.parseInt(response.countList.businessCategories)
+                counts.business_sub_categories = Integer.parseInt(response.countList.businessSubCategories)
+                counts.cities = Integer.parseInt(response.countList.cities)
+                counts.committees = Integer.parseInt(response.countList.committees)
+                counts.current_activity = Integer.parseInt(response.countList.currentActivity)
+                counts.designations = Integer.parseInt(response.countList.designations)
+                counts.districts = Integer.parseInt(response.countList.districts)
+                counts.educations = Integer.parseInt(response.countList.educations)
+                counts.local_community = Integer.parseInt(response.countList.localCommunity)
+                counts.native = Integer.parseInt(response.countList.native)
+                counts.occupation = Integer.parseInt(response.countList.occupation)
+                counts.relations = Integer.parseInt(response.countList.relations)
+                counts.states = Integer.parseInt(response.countList.states)
+                counts.sub_casts = Integer.parseInt(response.countList.subCasts)
+                counts.sub_community = Integer.parseInt(response.countList.subCommunity)
+                val dbCount = dashboardViewModel.getMasterCounts()
+
+                if (dbCount == null) {
+                    dashboardViewModel.insertMasterCounts(counts)
+                    dashboardViewModel.fetchBusinessCategory(counts.business_categories)
+
+                } else {
+                    if (dbCount.business_categories != counts.business_categories) {
+                        dashboardViewModel.fetchBusinessCategory(counts.business_categories)
+                    }
+                    if (dbCount.business_sub_categories != counts.business_sub_categories) {
+                        dashboardViewModel.fetchBusinessSubCategory(counts.business_sub_categories)
+                    }
+                    if (dbCount.states != counts.states) {
+                        dashboardViewModel.fetchState(counts.states)
+                    }
+                    if (dbCount.cities != counts.cities) {
+                        dashboardViewModel.fetchCity(counts.cities)
+                    }
+                    if (dbCount.relations != counts.relations) {
+                        dashboardViewModel.fetchRelations(counts.relations)
+                    }
+                    if (dbCount.sub_community != counts.sub_community) {
+                        dashboardViewModel.fetchSubCommunities(counts.sub_community)
+                    }
+                    if (dbCount.local_community != counts.local_community) {
+                        dashboardViewModel.fetchLocalCommunities(counts.local_community)
+                    }
+                    if (dbCount.sub_casts != counts.sub_casts) {
+                        dashboardViewModel.fetchLastName(counts.sub_casts)
+                    }
+                    if (dbCount.educations != counts.educations) {
+                        dashboardViewModel.fetchEducation(counts.educations)
+                    }
+                    if (dbCount.native != counts.native) {
+                        dashboardViewModel.fetchNative(counts.native)
+                    }
+                    if (dbCount.current_activity != counts.current_activity) {
+                        dashboardViewModel.fetchCurrentActivity(counts.current_activity)
+                    }
+                    if (dbCount.occupation != counts.occupation) {
+                        dashboardViewModel.fetchOccupation(counts.occupation)
+                    }
+                    if (dbCount.committees != counts.committees) {
+                        dashboardViewModel.fetchCommittee(counts.committees)
+                    }
+                    if (dbCount.designations != counts.designations) {
+                        dashboardViewModel.fetchDesignation(counts.designations)
+                    }
+                    //dashboardViewModel.fetchGotra(counts.gotra)
+                }
+
+            }
         }
     }
 
