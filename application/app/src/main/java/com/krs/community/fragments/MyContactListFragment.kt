@@ -78,6 +78,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         val root = inflater.inflate(R.layout.fragment_mycontactlist, container, false)
         val mApp = FacebookSdk.getApplicationContext() as AppController
         mApp.FirebaseAnalytics(context, MyContactListFragment::class.java.simpleName)
+        mApp.FacebookAnalytics(context, MyContactListFragment::class.java.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         contactListViewModel = ViewModelProvider(this, contactListViewModelFactory).get(ContactListViewModel::class.java)

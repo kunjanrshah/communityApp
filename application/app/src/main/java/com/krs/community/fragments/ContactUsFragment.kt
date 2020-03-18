@@ -31,6 +31,7 @@ class ContactUsFragment : Fragment() {
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, ContactUsFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, ContactUsFragment::class.simpleName)
 
         val card: CardView = layout.findViewById(R.id.card)
         card.setBackgroundResource(R.drawable.shadow_white_round_border)

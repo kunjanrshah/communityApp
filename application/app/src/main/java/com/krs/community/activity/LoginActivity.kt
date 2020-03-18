@@ -21,6 +21,7 @@ import android.view.WindowManager
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
@@ -110,6 +111,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
+        mApp.FacebookAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
         requestPermissions(this@LoginActivity)
     }
 
@@ -123,7 +125,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         anim.duration = 6000
         anim.repeatMode = AlphaAnimation.RESTART
         anim.repeatCount = Animation.INFINITE
-        val imageView = findViewById<AppCompatImageView>(R.id.no_internet_image)
+        val imageView = findViewById<ImageView>(R.id.no_internet_image)
         imageView.animation = anim
         val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
         retryButton.setOnClickListener { v: View? ->

@@ -98,7 +98,7 @@
                             android:layout_marginLeft="20dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="Total Villages"
+                            android:text="@string/total_villages"
                             android:textColor="@color/black3"
                             android:textSize="14sp" />
 
@@ -129,7 +129,7 @@
                             android:layout_marginLeft="20dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="Total Family"
+                            android:text="@string/total_family"
                             android:textColor="@color/black3"
                             android:textSize="14sp" />
 
@@ -160,7 +160,7 @@
                             android:layout_marginLeft="20dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="Total Members"
+                            android:text="@string/total_members"
                             android:textColor="@color/black3"
                             android:textSize="14sp" />
 
@@ -191,7 +191,7 @@
                             android:layout_marginLeft="20dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="Total Male"
+                            android:text="@string/total_male"
                             android:textColor="@color/black3"
                             android:textSize="14sp" />
 
@@ -222,7 +222,7 @@
                             android:layout_marginLeft="20dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="Total Female"
+                            android:text="@string/total_female"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
 
@@ -253,7 +253,7 @@
                             android:layout_marginLeft="20dp"
                             android:layout_weight="1"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="Unmarried Male"
+                            android:text="@string/unmarried_male"
                             android:textColor="@color/black3"
                             android:textSize="14sp" />
 

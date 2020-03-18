@@ -45,6 +45,7 @@ public class PaytmFragment extends Fragment {
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(getContext(),PaytmFragment.class.getSimpleName());
+        mApp.FacebookAnalytics(getContext(),PaytmFragment.class.getSimpleName());
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);

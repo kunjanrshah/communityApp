@@ -60,6 +60,7 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, NewsListFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, NewsListFragment::class.simpleName)
 
         newsViewModel = ViewModelProvider(this, factory).get(NewsViewModel::class.java)
         newsViewModel.mNewsListener =this

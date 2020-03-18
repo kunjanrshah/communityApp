@@ -81,6 +81,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, MatrimonyListFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, MatrimonyListFragment::class.simpleName)
 
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)

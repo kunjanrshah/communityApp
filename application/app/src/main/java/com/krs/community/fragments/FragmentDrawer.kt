@@ -83,6 +83,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, FragmentDrawer::class.simpleName)
+        mApp.FacebookAnalytics(context, FragmentDrawer::class.simpleName)
 
         val recyclerView: RecyclerView = layout.findViewById(R.id.drawerList)
         val tvSettings = layout.findViewById<TextView>(R.id.tv_settings)

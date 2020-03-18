@@ -57,6 +57,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, BrowseByCityFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, BrowseByCityFragment::class.simpleName)
 
         browseCityViewModel = ViewModelProvider(this, factory).get(BrowseCityViewModel::class.java)
 

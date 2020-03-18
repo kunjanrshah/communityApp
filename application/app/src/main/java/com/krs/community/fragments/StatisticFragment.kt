@@ -41,6 +41,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, StatisticFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, StatisticFragment::class.simpleName)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.bg_gray, false)

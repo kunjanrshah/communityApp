@@ -1,17 +1,17 @@
-<resources>
-    <string name="app_name">Muslim Ghanchi Samaj</string>
-    <string name="folder_name">community</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_disable">Disable</string>
-    <string name="action_location">Location</string>
-    <string name="action_active">Active</string>
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="MissingTranslation">Muslim Ghanchi Samaj</string>
+    <string name="folder_name" translatable="false">community</string>
+    <string name="action_delete" translatable="false">Delete</string>
+    <string name="action_disable" translatable="false">Disable</string>
+    <string name="action_location" translatable="false">Location</string>
+    <string name="action_active" translatable="false">Active</string>
+    <string name="drawer_open" translatable="false">Open</string>
+    <string name="drawer_close" translatable="false">Close</string>
 
-    <string name="nav_item_home">Home</string>
-    <string name="nav_item_filter">Filters</string>
-    <string name="nav_item_statistic">Statistics</string>
-    <string name="nav_item_committee">Committee</string>
+    <string name="nav_item_home" translatable="false">Home</string>
+    <string name="nav_item_filter" translatable="false">Filters</string>
+    <string name="nav_item_statistic" translatable="false">Statistics</string>
+    <string name="nav_item_committee" translatable="false">Committee</string>
 
 
     <string name="label_add_fact" translatable="false">Add Fact</string>
@@ -20,16 +20,16 @@
     <string name="label_add_audio" translatable="false">Add Audio</string>
     <string name="label_add_relative" translatable="false">Add Relative</string>
 
-    <string name="key_1">1</string>
-    <string name="key_2">2</string>
-    <string name="key_3">3</string>
-    <string name="key_4">4</string>
-    <string name="key_5">5</string>
-    <string name="key_6">6</string>
-    <string name="key_7">7</string>
-    <string name="key_8">8</string>
-    <string name="key_9">9</string>
-    <string name="key_0">0</string>
+    <string name="key_1" translatable="false">1</string>
+    <string name="key_2" translatable="false">2</string>
+    <string name="key_3" translatable="false">3</string>
+    <string name="key_4" translatable="false">4</string>
+    <string name="key_5" translatable="false">5</string>
+    <string name="key_6" translatable="false">6</string>
+    <string name="key_7" translatable="false">7</string>
+    <string name="key_8" translatable="false">8</string>
+    <string name="key_9" translatable="false">9</string>
+    <string name="key_0" translatable="false">0</string>
 
 
     <!-- <string name="how_to_forgot_1">1. If you forgot your hashkey</string>
@@ -46,9 +46,9 @@
      <string name="how_event_manage_12">12. Event management by Admin</string>
      <string name="how_admin_manage_13">13. Admin Management</string>-->
 
-    <string name="server_not_available">Server error</string>
+    <string name="server_not_available" translatable="false">Server error</string>
 
-    <string name="login_1">Ii5POjxrXA4</string>
+    <string name="login_1" translatable="false">Ii5POjxrXA4</string>
 
 
     <string-array name="bloodGroup">
@@ -72,10 +72,10 @@
         <item>Admin</item>
         <item>Restricted</item>
         <item>NewEvent</item>
-        <item>Documents</item>
+        <item>Uploads</item>
         <item>Paytm</item>
         <item>Register</item>
-        <item>Tour</item>
+        <item>guide</item>
         <item>My Contacts</item>
     </string-array>
 
@@ -154,9 +154,9 @@
     <string name="all_cities_list" translatable="false">all_cities</string>
 
     <!--Choose Language screen -->
-    <string name="choose_language">Change Language</string>
+    <string name="choose_language" translatable="false">Change Language</string>
 
-    <string name="register">Register</string>
+    <string name="register" translatable="false">Register</string>
 
     <!-- Login Screen -->
     <string name="login_now">Login Now</string>
@@ -165,12 +165,12 @@
     <string name="_mobile">Mobile</string>
     <string name="email">Email</string>
     <string name="enter_mobile_no">Enter Mobile no</string>
-    <string name="password">PIN</string>
+    <string name="password" translatable="false">PIN</string>
     <string name="_forgot_password">Forgot PIN?</string>
     <string name="or_login_with">Or Login with</string>
     <string name="enter_email_id">Enter Email ID</string>
-    <string name="send_sms">Send SMS</string>
-    <string name="resend_otp">Resend OTP</string>
+    <string name="send_sms" translatable="false">Send SMS</string>
+    <string name="resend_otp" translatable="false">Resend OTP</string>
     <string name="send_email">send email</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
     <string name="err_msg_blank">Please enter missing details</string>
@@ -214,7 +214,7 @@
     <string name="server_could_not_found">The server could not be found. Please try again after some time!!</string>
     <string name="parsing_error">Parsing error! Please try again after some time!!</string>
     <string name="connection_timeout">Connection TimeOut! Please check your internet connection.</string>
-    <string name="locale_sp">Locale_sp</string>
+    <string name="locale_sp" translatable="false">Locale_sp</string>
     <string name="verify_otp">Verify</string>
 
     <!-- Smart Screen -->
@@ -994,7 +994,6 @@
     <string name="search_village_here">Search Village Here</string>
     <string name="unmarried_female">Unmarried Female</string>
 
-
     <!-- Pther Fragment -->
 
     <string name="Mobile">Mobile</string>
@@ -1003,7 +1002,6 @@
     <string name="memberDetails">Member Code</string>
     <string name="relationDetails">Relation</string>
     <string name="select">Select</string>
-
 
     <string name="first_nameDetails">First Name</string>
     <string name="last_nameDetails">Last Name</string>
@@ -1104,10 +1102,9 @@
     <string name="CommiteeName">Committee name</string>
     <string name="DesignCommi">Designation</string>
 
-
     // 22-02-2020
-    <string name="no_internet">No internet connection!</string>
 
+    <string name="no_internet">No internet connection!</string>
     <string name="check_network">Please check your internet connection and try again</string>
     <string name="retry">Retry</string>
     <string name="fetching_local_community">Fetching Local Community</string>
@@ -1122,7 +1119,6 @@
     <string name="settings">Settings</string>
     <string name="storagePermission">Storage Read Permission</string>
     <string name="gallrypermission">Permission is needed to pick image from gallery</string>
-
 
     <string name="SelctLatname">Select Last Name</string>
     <string name="selecgender">Select Gender</string>
@@ -1159,7 +1155,6 @@
 
     <string name="selectstatus">Select Status</string>
     <string name="selectsurname">Select your Surname</string>
-
 
     <string name="kunjanrshah">kunjanrshah</string>
     <string name="dev_email">kunjanrshah@gmail.com</string>
@@ -1219,7 +1214,7 @@
     <string name="isdialogshow">isDialogShow</string>
     <string name="uploaded_file">uploaded_file</string>
     <string name="filename">filename</string>
-    <string name="asa">adad</string>
+    <string name="asa" translatable="false">adad</string>
     <string name="is_logged_in">isLogin</string>
     <string name="notification_channel_id" translatable="false">101</string>
     <string name="mycontacts">My Contacts</string>
@@ -1228,6 +1223,36 @@
     <string name="updated">\"Updated \"</string>
     <string name="members">Member</string>
     <string name="fetchinguploadedfiles">Fetching uploaded files</string>
+    <string name="ok">Ok</string>
+    <string name="newupdate">New Update Available</string>
+    <string name="thereversion">There is a newer version of app available please update it now.</string>
+    <string name="updatenow">Update Now</string>
 
+    <string name="otp_verification">OTP Verification</string>
+    <string name="enter_the_otp_you_have_received_to">Enter the OTP you have received to</string>
+    <string name="resend_otplogin">Resend OTP</string>
+
+    <string name="QrCode">QRCode Gallery</string>
+    <string name="Generatingcode">Generating QRCode...</string>
+    <string name="search_by_calendar">Search by Calendar</string>
+
+    <string name="total_family">Total Family</string>
+    <string name="total_members">Total Members</string>
+    <string name="total_male">Total Male</string>
+    <string name="total_female">Total Female</string>
+    <string name="unmarried_male">Unmarried Male</string>
+
+    <string name="uploads">Uploads</string>
+    <string name="fetchingfiles">Fetching uploaded files</string>
+    <string name="somethingwrong">Something went wrong!</string>
+    <string name="filedownloded">File is downloaded in</string>
+    <string name="folder">folder</string>
+    <string name="uploadfile">Upload File</string>
+    <string name="doyouupload">"Do you want to upload "</string>
+    <string name="uploadnow">Upload Now</string>
+    <string name="uploadingstart">Uploading start in your notification</string>
+    <string name="totalrecord">"Total Record Founds: "</string>
+    <string name="filenameupload">File Name to upload</string>
+    <string name="pleasename">Please enter name</string>
 
 </resources>

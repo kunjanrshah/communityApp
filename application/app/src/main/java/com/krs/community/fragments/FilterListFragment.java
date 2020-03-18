@@ -51,6 +51,7 @@ public class FilterListFragment extends Fragment {
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(getContext(),FilterListFragment.class.getSimpleName());
+        mApp.FacebookAnalytics(getContext(),FilterListFragment.class.getSimpleName());
 
         lstFilters = new ArrayList<>();
 

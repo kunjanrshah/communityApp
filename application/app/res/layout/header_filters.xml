@@ -34,7 +34,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Clear"
+                android:text="@string/clear"
                 android:textSize="18sp" />
 
         </LinearLayout>

@@ -112,7 +112,7 @@
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:fontFamily="@font/montserrat_regular"
-                    android:hint="Local Community"
+                    android:hint=""
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/rangeSeekbar"
                     android:paddingRight="10dp"

@@ -87,6 +87,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.FirebaseAnalytics(context, SharedLocationFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, SharedLocationFragment::class.simpleName)
 
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)

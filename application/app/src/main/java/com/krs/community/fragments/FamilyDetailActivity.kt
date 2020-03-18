@@ -80,6 +80,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
+        mApp.FacebookAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             changeStatusbarColor(this, R.color.colorPrimary, true)
@@ -421,6 +422,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         val tvName: TextView = header.findViewById(R.id.tv_name1)
         tvName.text = member.firstName+" "+member.lastName
+        val mApp = applicationContext as AppController
+        Log.e("firstName---",""+member.firstName);
+
+        val strDemo =  mApp.StringTranslateAPI(member.firstName);
+
+        Log.e("strDemo---",""+strDemo);
         val iconText: TextView = header.findViewById(R.id.icon_text1)
         iconText.text = tvName.text.substring(0, 1)
         val tvMobile: TextView = header.findViewById(R.id.tv_mobile)

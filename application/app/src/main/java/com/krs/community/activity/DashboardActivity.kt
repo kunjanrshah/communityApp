@@ -89,6 +89,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
+        mApp.FacebookAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
 
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
@@ -357,9 +358,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun getVersionResponse(response: UserStatusResponse) {
         if (!response.success) {
             SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("New Update Available")
-                    .setContentText("There is a newer version of app available please update it now.")
-                    .setNeutralText("Update Now")
+                    .setTitleText(getString(R.string.newupdate))
+                    .setContentText(getString(R.string.thereversion))
+                    .setNeutralText(getString(R.string.updatenow))
                     .setNeutralClickListener {
                         it.dismissWithAnimation()
                         val appPackageName = packageName

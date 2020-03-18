@@ -27,6 +27,7 @@ public class PrivacyPolicyFragment extends Fragment {
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(getContext(),PrivacyPolicyFragment.class.getSimpleName());
+        mApp.FacebookAnalytics(getContext(),PrivacyPolicyFragment.class.getSimpleName());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);

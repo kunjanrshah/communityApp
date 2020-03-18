@@ -60,7 +60,7 @@ public class UploadDialogAdapter extends BaseAdapter {
                 uploadListner.cancelDialog();
                 uploadListner.upload(str);
             } else {
-                Toast.makeText(mContext, "Please enter name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.pleasename, Toast.LENGTH_SHORT).show();
             }
         });
 

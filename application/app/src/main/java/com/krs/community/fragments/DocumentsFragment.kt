@@ -112,15 +112,15 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                     if (Utility.checkExternalStoragePermission(activity)) {
                         PRDownloader.download(uploadfile.fileUrl, Utility.getPath(), uploadfile.filename).build()
                                 .setOnStartOrResumeListener {
-                                    Utility.startSweetDialog(activity, SweetAlertDialog.PROGRESS_TYPE, "Documents", "Downloading...")
+                                    Utility.startSweetDialog(activity, SweetAlertDialog.PROGRESS_TYPE, getString(R.string.uploads), getString(R.string.download))
                                 }
                                 .start(object : OnDownloadListener {
                                     override fun onDownloadComplete() {
-                                        Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, "Documents", "File is downloaded in " + AppController.mApplication.getString(R.string.app_name) + "folder")
+                                        Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.uploads), getString(R.string.filedownloded) + AppController.mApplication.getString(R.string.app_name) + getString(R.string.folder))
                                     }
 
                                     override fun onError(error: Error?) {
-                                        Utility.startSweetDialog(activity, SweetAlertDialog.ERROR_TYPE, "Documents", "Something went wrong!")
+                                        Utility.startSweetDialog(activity, SweetAlertDialog.ERROR_TYPE, getString(R.string.uploads), getString(R.string.somethingwrong))
                                         Log.d("PRDownloader", "onError: $error")
                                     }
                                 })
@@ -148,7 +148,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
         val tvTitle = header.findViewById<TextView>(R.id.tv_title)
-        tvTitle.text = "Documents"
+        tvTitle.text = getString(R.string.uploads)
         tvCount = header.findViewById(R.id.tv_count)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
@@ -156,7 +156,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
         rvDocuments.adapter = adapter
         Coroutines.io {
             Coroutines.main {
-                Utility.startSweetProgress(context!!, getString(R.string.app_name), "Fetching uploaded files")
+                Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchingfiles))
             }
             documentsListModel.getUploadedFiles()
         }
@@ -207,9 +207,9 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
     private fun onFilePicked(filePath: String) {
 
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Upload File")
-                .setContentText("Do you want to upload $uploadedFileName?")
-                .setConfirmText("Upload Now")
+                .setTitleText(getString(R.string.uploadfile))
+                .setContentText(getString(R.string.doyouupload)+"$uploadedFileName?")
+                .setConfirmText(getString(R.string.uploadnow))
                 .setConfirmClickListener {
                     it.dismissWithAnimation()
                     MultipartUploadRequest(activity!!, serverUrl = UPLOAD_DOCUMENT)
@@ -221,7 +221,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                             .addParameter(getString(R.string.filename), uploadedFileName)
                             .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
                             .startUpload()
-                    rvDocuments.snackbar("Uploading start in your notification", Snackbar.LENGTH_INDEFINITE)
+                    rvDocuments.snackbar(getString(R.string.uploadingstart), Snackbar.LENGTH_INDEFINITE)
 
                 }
                 .setCancelText("Later")
@@ -235,7 +235,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
         pullToRefreshView.setRefreshing(false);
         if (response.success) {
             listUpload.clear()
-            tvCount.text = "Total Record Founds: " + response.data.size
+            tvCount.text = getString(R.string.totalrecord) + response.data.size
             listUpload.addAll(response.data)
             adapter.notifyDataSetChanged()
         }

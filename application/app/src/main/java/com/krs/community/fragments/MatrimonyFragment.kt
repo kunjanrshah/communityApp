@@ -40,6 +40,7 @@ class MatrimonyFragment : Fragment(), KodeinAware {
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, MatrimonyFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, MatrimonyFragment::class.simpleName)
 
         smartFilterViewModel = ViewModelProvider(this, factory).get(SmartFilterViewModel::class.java)
 

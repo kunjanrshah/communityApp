@@ -33,6 +33,7 @@ class SettingFragment : Fragment() {
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, SettingFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, SettingFragment::class.simpleName)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.colorBG, false)

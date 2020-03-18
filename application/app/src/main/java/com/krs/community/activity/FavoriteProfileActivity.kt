@@ -73,6 +73,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@FavoriteProfileActivity, FavoriteProfileActivity.javaClass.simpleName)
+        mApp.FacebookAnalytics(this@FavoriteProfileActivity, FavoriteProfileActivity.javaClass.simpleName)
 
         onInitView()
     }

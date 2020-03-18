@@ -68,6 +68,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
         mApp.FirebaseAnalytics(context, ShareEventFragment::class.simpleName)
+        mApp.FacebookAnalytics(context, ShareEventFragment::class.simpleName)
 
         shareEventViewModel = ViewModelProvider(this, shareEventFactory).get(ShareEventViewModel::class.java)
 

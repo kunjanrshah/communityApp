@@ -40,6 +40,7 @@ public class NotificationListFragment extends Fragment {
 
         AppController mApp = (AppController) getApplicationContext();
         mApp.FirebaseAnalytics(getContext(),NotificationListFragment.class.getSimpleName());
+        mApp.FacebookAnalytics(getContext(),NotificationListFragment.class.getSimpleName());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(), R.color.bg_gray, false);

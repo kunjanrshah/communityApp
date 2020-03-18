@@ -21,7 +21,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:text="Committee"
+            android:text="@string/Commi"
             android:textColor="@color/black1"
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginLeft="10dp"
-                android:text="Region name"
+                android:text="@string/RoleAdmins"
                 android:background="@null"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -79,7 +79,6 @@
                 android:layout_gravity="right|center_vertical"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
-
 
         </LinearLayout>
 
@@ -167,7 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Designation"
+                android:text="@string/Designation"
                 android:layout_marginLeft="10dp"
                 android:background="@null"
                 android:singleLine="true"
@@ -186,8 +185,5 @@
 
         </LinearLayout>
 
-
     </com.google.android.flexbox.FlexboxLayout>
-
-
 </LinearLayout>

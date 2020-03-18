@@ -39,7 +39,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="15dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="Search by Calendar"
+                    android:text="@string/search_by_calendar"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 

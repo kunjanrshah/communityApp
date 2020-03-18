@@ -672,21 +672,6 @@ public class EasyWayLocation {
         }
     }
 
-    public void showAlertDialog(String title, String message, Drawable drawable) {
-        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setTitle(title);
-        if (drawable != null) {
-            alertDialog.setIcon(drawable);
-        }
-        alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
 
     public static String getAddress(Context context, Double latitude, Double longitude, boolean country, boolean fullAddress) {
         String add = "";

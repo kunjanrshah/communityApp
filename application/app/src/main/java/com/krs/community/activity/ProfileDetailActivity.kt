@@ -85,6 +85,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@ProfileDetailActivity, ProfileDetailActivity.javaClass.simpleName)
+        mApp.FacebookAnalytics(this@ProfileDetailActivity, ProfileDetailActivity.javaClass.simpleName)
 
         getLocationDetail = GetLocationDetail(this, this)
         request = LocationRequest()
