@@ -9,11 +9,13 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -37,6 +39,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.app.AppController
+import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.entities.MasterCounts
 import com.krs.community.fragments.*
@@ -66,7 +69,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private var easyWayLocation: EasyWayLocation? = null
     private lateinit var request: LocationRequest
     private var menu: Menu? = null
-
+    private var poke: Intent? = null
+    private  var  doubleBackToExitPressedOnce : Boolean = false;
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
@@ -189,6 +193,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         dashboardViewModel.getUpdatedVersion(updated)*/
     }
 
+
+
+
+
+
     override fun onResume() {
         super.onResume()
         loadProfile()
@@ -226,6 +235,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     override fun onBackPressed() {
         backNavigation(this)
+
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -243,19 +253,18 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == FINE_LOCATION_REQUEST) {
             easyWayLocation?.startLocation()
-        }else{
+        } else {
             when (requestCode) {
                 PERMISSION_REQUEST_READ_PHONE_STATE ->
                     if (grantResults.size > 0) {
-                    val CallAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        val CallAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
                         if (!CallAccepted) {
-                        binding.containerBody.snackbar("Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG)
+                            binding.containerBody.snackbar("Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG)
+                        }
                     }
-                }
             }
         }
     }
-
 
 
     private val toolbarHeight: Int

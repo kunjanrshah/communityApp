@@ -11,9 +11,7 @@ import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import kotlinx.coroutines.*
 
-class SmartFilterViewModel(
-        private val mSmartFilterRepository: SmartFilterRepository,
-        var app: Application) : AndroidViewModel(app) {
+class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterRepository, var app: Application) : AndroidViewModel(app) {
 
     private var TAG: String = SmartFilterViewModel::class.java.simpleName
     private lateinit var completableJob: CompletableJob

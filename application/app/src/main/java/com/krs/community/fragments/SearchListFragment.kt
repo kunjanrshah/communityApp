@@ -446,6 +446,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 if (Integer.parseInt(response.totalRecords) == 0) {
                     //  Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
 
+                   // val gif: Int = R.drawable.gif_no_record
                     val gif: Int = R.drawable.gif_no_record
                     TTFancyGifDialog.Builder(activity)
                             //.setTitle(getString(R.string.you_sure))
@@ -483,9 +484,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             ivExport.visibility = View.GONE
             DashboardActivity.stop = true
             llLabel.visibility = View.VISIBLE
+
             mShimmerViewContainer.stopShimmerAnimation()
             mShimmerViewContainer.visibility = View.GONE
 
+          //  val gif: Int = R.drawable.gif_no_record
             val gif: Int = R.drawable.gif_no_record
             TTFancyGifDialog.Builder(activity)
                     //.setTitle(getString(R.string.you_sure))
