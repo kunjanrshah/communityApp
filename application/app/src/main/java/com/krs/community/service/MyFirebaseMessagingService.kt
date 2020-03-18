@@ -11,21 +11,20 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppDatabase
+import com.krs.community.model.LoginResponse
 import com.krs.community.repositories.SmartFilterRepository
-import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.*
 import kotlinx.coroutines.*
 import org.json.JSONObject
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.kodein
 
-class MyFirebaseMessagingService : FirebaseMessagingService() , KodeinAware{
-    override val kodein by kodein()
+class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private lateinit var completableJob: CompletableJob
 
-
+    var message = ""
+    var userId = ""
+    lateinit var mSmartFilterRepository: SmartFilterRepository
     override fun onNewToken(s: String) {
         super.onNewToken(s)
         Log.e("newToken", s)
@@ -38,11 +37,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() , KodeinAware{
         Log.e(TAG, "From: " + remoteMessage.from)
         if (remoteMessage.data.size > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.data.toString())
-            val userId = remoteMessage.data["user_id"]
-            val message = remoteMessage.data["message"]
+            userId = remoteMessage.data["user_id"].toString()
+            message = remoteMessage.data["message"].toString()
             val tsLong = System.currentTimeMillis() / 1000
             val ts = java.lang.Long.toString(tsLong)
-
 
 
             smartFilterSearch(userId)
@@ -59,12 +57,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() , KodeinAware{
 
             val jsonObj = JSONObject()
             jsonObj.put(getString(R.string.id), userId)
+
             val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
+            mSmartFilterRepository= SmartFilterRepository(ApiServices(), AppDatabase(applicationContext))
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
-                   val mSmartFilterRepository= SmartFilterRepository(ApiServices(), AppDatabase.invoke(applicationContext))
-                    val response = mSmartFilterRepository.searchByName(updated)
+                    val response = mSmartFilterRepository.searchByUser(updated)
                     response.let {
                         withContext(Dispatchers.Main) {
 
@@ -92,16 +91,41 @@ class MyFirebaseMessagingService : FirebaseMessagingService() , KodeinAware{
         }
     }
 
-    private fun getMembers(response: SmartFilterResponse) {
+    private suspend fun getMembers(response: LoginResponse) {
+
+        val firstName = response.data.firstName
+        val subCastId = response.data.subCastId
+        val mobile = response.data.mobile
+        val email = response.data.emailAddress
+        val photo =resources.getString(R.string.base_url_thumb)+ response.data.profilePic
+        val homeAddress = response.data.address
+        val cityId = response.data.cityId
+        var Lastname=""
+        var CityName =""
+
+        Coroutines.io {
+            Lastname =   mSmartFilterRepository.getLastNameById(subCastId.toInt())
+            CityName =   mSmartFilterRepository.getCityName(cityId)
+            val Fullname = firstName +" "+Lastname
+            val FullAddress = homeAddress +" "+CityName
+
+            Log.e("Fullname--",""+Fullname)
+            Log.e("FullAddress--",""+FullAddress)
+            Coroutines.main {
+                val resultIntent = Intent(applicationContext, DashboardActivity::class.java)
+                showNotification(getApplicationContext(),  resultIntent,Fullname,mobile,email,photo,FullAddress);
+            }
+
+        }
 
 
     }
 
-    private fun showNotification(context: Context, title: String, message: String, timeStamp: String, intent: Intent, imageUrl: String, user_id: String) {
+    private fun showNotification(context: Context, intent: Intent, fullname: String, mobile: String, email: String, photo: String, homeAddress: String) {
         val notificationUtils = NotificationUtils(context)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        notificationUtils.getBitmapAsyncAndNotification(imageUrl, timeStamp, title, message, intent, user_id)
+        notificationUtils.getBitmapAsyncAndNotification(message, intent,fullname,mobile,email,photo,homeAddress,userId)
     }
 
     companion object {

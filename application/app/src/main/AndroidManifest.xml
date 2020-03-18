@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.krs.community">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -215,8 +216,14 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".app.NotificationReceiver" />
 
+        <receiver android:name=".app.NotificationReceiver">
+            <!--<intent-filter>
+                <action android:name="Call" />
+                <action android:name="WhatsApp" />
+                <action android:name="Approve" />
+            </intent-filter>-->
+        </receiver>
         <activity
             android:name="com.paytm.pgsdk.PaytmPGActivity"
             android:configChanges="keyboardHidden|orientation|keyboard"

@@ -152,6 +152,9 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_MASTER_UPDATE_COUNTS)
     suspend fun getMasterUpdate(): Response<MasterUpdateResponse>
 
+    @POST(AppConstants.UrlPath.GET_USER_PROFILE)
+    suspend fun getUserProfile(@Body request: JsonObject): Response<LoginResponse>
+
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)
     suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id")id: RequestBody, @Part("type") type: RequestBody): Response<JsonObject>
