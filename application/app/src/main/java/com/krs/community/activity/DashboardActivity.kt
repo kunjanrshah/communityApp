@@ -8,13 +8,11 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -37,7 +35,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.app.AppController
-import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.entities.MasterCounts
 import com.krs.community.fragments.*
@@ -178,7 +175,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         })
 
         if (isOnline(this)) {
-            //getMasterList()
             dashboardViewModel.getMasterUpdate()
         }
 
@@ -191,11 +187,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         val updated=  JsonParser().parse(JsonObj.toString()) as JsonObject
         dashboardViewModel.getUpdatedVersion(updated)*/
     }
-
-
-
-
-
 
     override fun onResume() {
         super.onResume()
@@ -222,7 +213,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
     }
 
-
     override fun onPause() {
         super.onPause()
         if (checkFineLocationPermission(this)) {
@@ -234,7 +224,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     override fun onBackPressed() {
         backNavigation(this)
-
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -407,6 +396,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     dashboardViewModel.fetchOccupation(counts.occupation)
                     dashboardViewModel.fetchCommittee(counts.committees)
                     dashboardViewModel.fetchDesignation(counts.designations)
+                    dashboardViewModel.fetchGotra(counts.gotra)
                 } else {
                     if (dbCount.business_categories != counts.business_categories) {
                         dashboardViewModel.fetchBusinessCategory(counts.business_categories)
@@ -450,9 +440,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     if (dbCount.designations != counts.designations) {
                         dashboardViewModel.fetchDesignation(counts.designations)
                     }
-                    //dashboardViewModel.fetchGotra(counts.gotra)
+                    if (dbCount.gotra != counts.gotra) {
+                        dashboardViewModel.fetchGotra(counts.gotra)
+                    }
                 }
-
             }
         }
     }

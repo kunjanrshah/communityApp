@@ -345,13 +345,15 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
             intent.data = Uri.parse(str)
             startActivity(intent)
         }
-
-        holder.messageContainer.setOnClickListener { onMessageRowClicked(position) }
-        holder.messageContainer.setOnLongClickListener { view ->
-            onRowLongClicked(position)
-            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            true
+        if (members.get(position).password != "1") {
+            holder.messageContainer.setOnClickListener { onMessageRowClicked(position) }
+            holder.messageContainer.setOnLongClickListener { view ->
+                onRowLongClicked(position)
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                true
+            }
         }
+
     }
 
     private fun applyProfilePicture(holder: ListViewHolder, member: Member) {
@@ -585,28 +587,28 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
     override fun getMembers(response: SmartFilterResponse) {
         if (response.success) {
-            if (response.members != null) {
-                if (response.members.size > 0) {
                     members.clear()
                     duplicateIds.clear()
-                    members.addAll(response.members)
-
-                    for (member1 in response.membersharing) {
-                        var isAdd = true
-                        for (member2 in response.members) {
-                            if (member1.id == member2.id) {
-                                isAdd = false
-                            }
+            if (response.members != null && response.members.size > 0) {
+                members.addAll(response.members)
+            }
+            if (response.membersharing != null && response.membersharing.size > 0) {
+                for (member1 in response.membersharing) {
+                    var isAdd = true
+                    for (member2 in response.members) {
+                        if (member1.id == member2.id) {
+                            isAdd = false
                         }
-                        if (isAdd) {
-                            members.add(member1)
-                        } else {
-                            duplicateIds.add(member1.id)
+                    }
+                    if (isAdd) {
+                        member1.password = "1"
+                        members.add(member1)
+                    } else {
+                        duplicateIds.add(member1.id)
+                    }
                         }
                     }
                     adapter.notifyDataSetChanged()
-                }
-            }
         }
 
         binding.rvLocation.snackbar(response.message.toString(), Snackbar.LENGTH_LONG)
@@ -637,12 +639,13 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
             }
             binding.rvLocation.snackbar("Location private successfully", Snackbar.LENGTH_LONG)
-            // getSharedProfiles()
+            getSharedProfiles()
+            // deleteMessages()
+            clearSelections()
+            actionMode?.finish()
+        } else {
+            binding.rvLocation.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         }
-        deleteMessages()
-        clearSelections()
-
-        actionMode?.finish()
 
     }
 

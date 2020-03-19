@@ -10,24 +10,40 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.Listener
 import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
-import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.app.AppDatabase
+import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
+import com.krs.community.repositories.SmartFilterRepository
+import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.Utility
+import com.krs.community.viewmodel.SmartFilterViewModel
+import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
+import org.json.JSONObject
 
-class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter(), Listener {
+class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter(), Listener, ByFilterListener {
     var mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var easyWayLocation: EasyWayLocation? = null
     private var setLocationListner: SetLocationListner? = null
     var cur_lat = MutableLiveData<Double>()
     var cur_lng = MutableLiveData<Double>()
-
+    private lateinit var filterViewModel: SmartFilterViewModel
+    val filterViewModelFactory = SmartFilterViewModelFactory(SmartFilterRepository(ApiServices(), AppDatabase.invoke(mContext)))
     private lateinit var request: LocationRequest
+    private var tvUserDist: TextView? = null
+
     fun setLocationListner(setLocationListner: SetLocationListner?) {
+
+        filterViewModel = ViewModelProvider(mContext as AppCompatActivity, filterViewModelFactory).get(SmartFilterViewModel::class.java)
+        filterViewModel.mByFilterListener = this
         this.setLocationListner = setLocationListner
         if (Utility.checkFineLocationPermission(mContext)) {
             val manager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -37,6 +53,13 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
                 request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
                 easyWayLocation = EasyWayLocation(mContext, request, true, this)
                 easyWayLocation?.startLocation()
+
+                val jsonObj = JSONObject()
+                jsonObj.put(mContext.getString(R.string.user_id), Guru.getString(mContext.getString(R.string.user_id), ""))
+                jsonObj.put(mContext.getString(R.string.access_token), Guru.getString(mContext.getString(R.string.access_token), ""))
+                jsonObj.put(mContext.getString(R.string.id), Guru.getString(mContext.getString(R.string.member_id), ""))
+                val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
+                filterViewModel.getSharedProfiles(updated)
             }
         } else {
             Utility.requestFineLocationPermission(mContext as AppCompatActivity)
@@ -65,7 +88,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         } else {
             viewHolder = convertView.tag as ViewHolder
         }
-
+        tvUserDist = viewHolder.tvUserDist
         viewHolder.ivCancel.setOnClickListener { v: View? ->
             setLocationListner?.cancelDialog()
         }
@@ -74,6 +97,8 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
 
             if(!member.homeLat.isNullOrEmpty() &&  !member.homeLng.isNullOrEmpty()){
                 Utility.showDirections(mContext as Activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}'s Home")
+            } else {
+                Toast.makeText(mContext, "Home location not found!", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -81,29 +106,32 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
 
             if(!member.officeLat.isNullOrEmpty() &&  !member.officeLng.isNullOrEmpty()){
                 Utility.showDirections(mContext as Activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Office")
+            } else {
+                Toast.makeText(mContext, "Office location not found!", Toast.LENGTH_LONG).show()
             }
         }
 
         viewHolder.llUser.setOnClickListener { v: View? ->
-
-            if(!member.userLat.isNullOrEmpty() &&  !member.userLng.isNullOrEmpty() && isShareLocation()){
-                Utility.showDirections(mContext as Activity, member.userLat.toDouble(), member.userLng.toDouble(), "${member.firstName}'s Location")
-            }else{
-               Toast.makeText(mContext, R.string.Private,Toast.LENGTH_LONG).show()
+            if (viewHolder.tvUserDist.text.toString() != "Private") {
+                if (!member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
+                    Utility.showDirections(mContext as Activity, member.userLat.toDouble(), member.userLng.toDouble(), "${member.firstName}'s Location")
+                } else {
+                    Toast.makeText(mContext, "User location not found!", Toast.LENGTH_LONG).show()
+                }
             }
         }
 
         cur_lat.observeForever {
-            setDistance(viewHolder.tvHomeDist,viewHolder.tvOfficeDist,viewHolder.tvUserDist)
+            setDistance(viewHolder.tvHomeDist, viewHolder.tvOfficeDist)
         }
 
         cur_lng.observeForever {
-            setDistance(viewHolder.tvHomeDist,viewHolder.tvOfficeDist,viewHolder.tvUserDist)
+            setDistance(viewHolder.tvHomeDist, viewHolder.tvOfficeDist)
         }
         return convertView!!
     }
 
-    private fun isShareLocation():Boolean{
+    /*private fun isShareLocation():Boolean{
         val loginUser= Guru.getString(mContext.getString(R.string.loginMember),"")
         val loginMember = Gson().fromJson<Member>(loginUser, Member::class.java)
         var isShare=false
@@ -117,17 +145,9 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
             }
         }
         return isShare
-    }
+    }*/
 
-    private fun setDistance(tvHome:TextView,tvOffice:TextView,tvUser:TextView){
-        if (!member.isLocationEnable.isNullOrEmpty() && member.isLocationEnable.equals("1")) {
-            if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
-                val userDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
-                tvUser.text= String.format("%.2f KM", userDist)
-            }
-        }else{
-            tvUser.text= "Private"
-        }
+    private fun setDistance(tvHome: TextView, tvOffice: TextView) {
 
         if (cur_lat.value != null && cur_lng.value != null && !member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
             val homeDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.homeLat.toDouble(), member.homeLng.toDouble()) / 1000
@@ -144,26 +164,52 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     }
 
     internal class ViewHolder(view: View) {
+
         var llHome: LinearLayout = view.findViewById(R.id.ll_home)
         var llOffice: LinearLayout = view.findViewById(R.id.ll_office)
         var llUser: LinearLayout = view.findViewById(R.id.ll_user)
         var ivCancel: ImageView = view.findViewById(R.id.iv_cancel)
-        var tvUserDist: TextView = view.findViewById(R.id.tv_user_dist)
+        var tvUserDist: TextView = view.findViewById(R.id.tv_user)
         var tvHomeDist: TextView = view.findViewById(R.id.tv_home_dist)
         var tvOfficeDist: TextView = view.findViewById(R.id.tv_office_dist)
     }
 
     override fun locationCancelled() {
-        TODO("Not yet implemented")
     }
 
     override fun locationOn() {
-        TODO("Not yet implemented")
     }
 
     override fun currentLocation(location: Location?) {
         cur_lat.postValue(location?.latitude)
         cur_lng.postValue(location?.longitude)
+    }
+
+    override fun getMembers(response: SmartFilterResponse) {
+
+        if (response.success) {
+            if (response.membersharing != null && response.membersharing.size > 0) {
+                for (member1 in response.membersharing) {
+                    if (member.id == member1.id) {
+                        if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
+                            val userDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
+                            tvUserDist?.text = String.format("%.2f KM", userDist)
+                        } else {
+                            tvUserDist?.text = "Private"
+                        }
+                        break
+                    }
+                }
+            } else {
+                tvUserDist?.text = "Private"
+            }
+        } else {
+            tvUserDist?.text = "Private"
+        }
+    }
+
+    override suspend fun getFailure(message: String) {
+        tvUserDist?.text = "Private"
     }
 
 }
