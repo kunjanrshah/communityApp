@@ -19,6 +19,9 @@ interface SubCommunityDao {
     @Query("SELECT name FROM SubCommunity WHERE id=:id")
     fun getSubCommunityName(id:String) : String
 
+    @Query("SELECT id FROM SubCommunity WHERE name=:name")
+    fun getSubCommIdByName(name:String) : Int
+
     @Query("SELECT id FROM SubCommunity WHERE id NOT IN (:Ids)")
     fun getRemovedSubCommunityIds(Ids: List<String>) : List<Int>
 

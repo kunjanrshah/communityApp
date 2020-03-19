@@ -116,7 +116,7 @@ public class NotificationUtils {
         }
     }
 
-    public void getBitmapAsyncAndNotification( String message,  Intent intent,  String fullname,  String mobile,  String email,  String photo,  String homeAddress,String userId) {
+    public void getBitmapAsyncAndNotification( String message,  Intent intent,  String fullname,  String mobile,  String email,  String photo,  String homeAddress,String userId,String CityName) {
         final Bitmap[] bitmap = {null};
         if (!TextUtils.isEmpty(photo)) {
             if (photo.length() > 4 && Patterns.WEB_URL.matcher(photo).matches()) {
@@ -127,20 +127,20 @@ public class NotificationUtils {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                 bitmap[0] = resource;
-                                displayImageNotification(bitmap[0], intent,message,fullname,mobile,email,homeAddress,userId);
+                                displayImageNotification(bitmap[0], intent,message,fullname,mobile,email,homeAddress,userId,CityName);
                             }
 
                             @Override
                             public void onLoadCleared(@Nullable Drawable placeholder) {
                                 Bitmap bitmap1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.user_profile);
-                                displayImageNotification(bitmap1,  intent, message, fullname, mobile, email, homeAddress,userId);
+                                displayImageNotification(bitmap1,  intent, message, fullname, mobile, email, homeAddress,userId,CityName);
                             }
                         });
             }
         }
     }
 
-    private void displayImageNotification(Bitmap bitmap, @NonNull Intent intent, String message, String fullname, String mobile, String email, String homeAddress,String userId) {
+    private void displayImageNotification(Bitmap bitmap, @NonNull Intent intent, String message, String fullname, String mobile, String email, String homeAddress,String userId,String CityName) {
 
         /*Intent intentAction = new Intent(mContext,NotificationReceiver.class);
         intentAction.putExtra("action","Call");
@@ -181,6 +181,7 @@ public class NotificationUtils {
         inboxStyle.addLine(email);
         inboxStyle.addLine(mobile);
         inboxStyle.addLine(homeAddress);
+        inboxStyle.addLine(CityName);
         /*NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
         bigPictureStyle.setBigContentTitle(title);
         bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
@@ -199,9 +200,10 @@ public class NotificationUtils {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary))
-                .addAction(R.drawable.ic_code_scanner_flash_on, "Call",pendingIntentCall )
-                .addAction(R.drawable.ic_code_scanner_flash_on, "WhatsApp", pendingIntentWhatsApp)
                 .addAction(R.drawable.ic_code_scanner_flash_on, "Approve", pendingIntentApprove)
+                .addAction(R.drawable.ic_code_scanner_flash_on, "WhatsApp", pendingIntentWhatsApp)
+                .addAction(R.drawable.ic_code_scanner_flash_on, "Call",pendingIntentCall )
+
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setLargeIcon(bitmap).setContentText(message)
                 .setOngoing(true)

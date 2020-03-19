@@ -1300,6 +1300,9 @@
     <string name="cityid" translatable="false">cityId</string>
     <string name="subcommid" translatable="false">subCommId</string>
     <string name="localcommid" translatable="false">localCommId</string>
+    <string name="setRemider">You will get reminder on this day </string>
+    <string name="Rminderset">You Will get Notify on</string>
+    <string name="confPin">ConfPin</string>
 
 
 </resources>

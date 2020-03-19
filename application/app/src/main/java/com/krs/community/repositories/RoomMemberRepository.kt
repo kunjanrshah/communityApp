@@ -17,9 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-class RoomMemberRepository(
-        private val api: ApiServices,
-                    private val db:AppDatabase
+class RoomMemberRepository(private val api: ApiServices, private val db:AppDatabase
 ): SafeApiRequest() {
 
     private val TAG:String=RoomMemberRepository::class.java.simpleName

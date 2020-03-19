@@ -742,6 +742,7 @@ public class Utility {
     private static void Exit(Activity activity) {
         if (doubleBackToExitPressedOnce) {
             activity.finish();
+
             return;
         }
 

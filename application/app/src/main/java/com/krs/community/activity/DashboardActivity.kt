@@ -211,7 +211,18 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         } else {
             requestFineLocationPermission(this)
         }
+
+        val locale = Guru.getString(resources.getString(R.string.locale_sp), resources.getString(R.string._english))
+        Log.e("Lang",""+locale)
+        if (locale.equals(resources.getString(R.string._gujarati), ignoreCase = true)) {
+            changeLang(applicationContext, "ગુજરાતી")
+        } else if (locale.equals(resources.getString(R.string._hindi), ignoreCase = true)) {
+            changeLang(applicationContext, "हिन्दी")
+        } else {
+            changeLang(applicationContext, "English")
+        }
     }
+
 
     override fun onPause() {
         super.onPause()

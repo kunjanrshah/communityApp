@@ -1,5 +1,6 @@
 package com.krs.community.fragments;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
+import com.krs.community.activity.DashboardActivity;
 import com.krs.community.app.AppController;
 import com.krs.community.utils.Utility;
 
@@ -42,6 +44,13 @@ public class ChangeLanguageFragment extends Fragment {
         ImageView iv_lan_cancel = root.findViewById(R.id.iv_lan_cancel);
         iv_lan_cancel.setOnClickListener(v -> {
             Utility.backNavigation(getActivity());
+
+           /* Intent refresh = new Intent(getActivity(), DashboardActivity.class);
+            startActivity(refresh);
+            getActivity().getFragmentManager().popBackStack();*/
+
+
+
         });
 
         changeStatusbarColor(getActivity(), R.color.colorBG, false);
@@ -51,12 +60,9 @@ public class ChangeLanguageFragment extends Fragment {
         ll_gujarati = root.findViewById(R.id.ll_gujarati);
         ll_hindi = root.findViewById(R.id.ll_hindi);
 
-
         rb_hindi = root.findViewById(R.id.rb_hindi);
         rb_gujarati = root.findViewById(R.id.rb_gujarati);
         rb_english = root.findViewById(R.id.rb_english);
-
-
 
         tvChangeLang = root.findViewById(R.id.tvChangeLang);
         tvEng = root.findViewById(R.id.tvEng);
@@ -68,7 +74,6 @@ public class ChangeLanguageFragment extends Fragment {
                 rb_hindi.setChecked(true);
                 rb_gujarati.setChecked(false);
                 rb_english.setChecked(false);
-
 
                 Utility.changeLang(getContext(), "हिन्दी".toString());
 
@@ -107,9 +112,9 @@ public class ChangeLanguageFragment extends Fragment {
                 tvHindi.setText(getResources().getString(R.string._hindi));
                 tvGuj.setText(getResources().getString(R.string._gujarati));
                 tvEng.setText(getResources().getString(R.string._english));
+
             }
         });
-
 
         return root;
     }

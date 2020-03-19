@@ -276,6 +276,12 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
+    suspend fun getSubCommIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getSubCommunityDao().getSubCommIdByName(name)
+        }
+    }
+
     suspend fun getSubCommName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getSubCommunityDao().getSubCommName()

@@ -25,12 +25,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.FacebookSdk
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.github.squti.guru.Guru
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -42,7 +45,9 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
+import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.RoomMemberListener
+import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -67,7 +72,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener,  LocationAdapter.SetLocationListner {
+class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener,  LocationAdapter.SetLocationListner , ILoginListener {
 
     override val kodein by kodein()
     private var lstCalendar= ArrayList<Member>()
@@ -101,7 +106,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private lateinit var txtDate:TextView
     private var setLocationDialog: DialogPlus? = null
     private var filterAdapter: FilterAdapter? = null
-
+    var RemiderType = ""
+    var Date = ""
+    var RemiderName = ""
+    var Msg = ""
+    var Fname = ""
     override fun loadApi() {
         if (!DashboardActivity.stop) {
            AppController.mApplication.start = (lstCalendar.size+1)
@@ -128,6 +137,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         calendarSearchViewModel.mByFilterListener =this
+        calendarSearchViewModel.mByILoginListener =this
         roomMemberViewModel.mRoomMemberListener= this
 
         llRoot = root.findViewById(R.id.ll_root)
@@ -211,6 +221,15 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
     override fun refreshList() {
         adapter.notifyDataSetChanged()
+    }
+
+    override fun userLogin(response: LoginResponse) {
+        Utility.hideSweetProgress()
+        Log.e("message",""+response.message)
+        Log.e("success",""+response.success)
+
+
+
     }
 
     override suspend fun getFailure(message: String) {
@@ -522,6 +541,86 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 e.message
             }
         }
+
+        holder.imgReminder.setOnClickListener { view ->
+
+
+            if(!member.matched.isNullOrEmpty()){
+                if(member.matched.contains("birth_date")){
+                    val birth= Utility.changeDateFormat(member.birthDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                    val age=Utility.getAge(birth,Utility.dd_MM_yyyy)
+
+                    val next = "<font color='#C54464'>BirthDay Reminder ?</font>"
+                    RemiderType = next
+                    Date = member.birthDate
+                    RemiderName = "BirthDay"
+                    Msg = "Happy BirthDay"
+
+                }else if(member.matched.contains("marriage_date")){
+                    val mdate= Utility.changeDateFormat(member.marriageDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                    val age=Utility.getAge(mdate,Utility.dd_MM_yyyy)
+
+                    val next = "<font color='#C54464'>Marriage Anniversary Reminder ?</font>"
+                    RemiderType = next
+                    Date = member.marriageDate
+                    RemiderName = "Marriage Anniversary"
+                    Msg = "Happy Marriage Anniversary"
+
+                }
+                else if(lstCalendar[position].matched.contains("expire_date")){
+                    val edate= Utility.changeDateFormat(member.expireDate,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                    val age=Utility.getAge(edate,Utility.dd_MM_yyyy)
+
+                    val next = "<font color='#C54464'>Death Anniversary Reminder ?</font>"
+                    RemiderType = next
+                    Date = member.expireDate
+                    RemiderName = "Death Anniversary"
+                    Msg = "Death Anniversary"
+
+                }
+            }
+            Fname = member.firstName
+            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(Html.fromHtml(RemiderType).toString())
+                    .setContentText(getString(R.string.setRemider))
+                    .setConfirmText(getString(R.string.yes))
+                    .setCancelText(getString(R.string.no))
+                    .setConfirmClickListener {
+
+                       /* if (it != null) {
+                            holder.imgReminder.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.bell_black))
+                            holder.imgReminder.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
+                        } else {
+                            holder.imgReminder.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.bell_border))
+                            holder.imgReminder.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
+                        }*/
+
+                        Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.pleaseWait))
+
+                        val jsonObject=JSONObject()
+                        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                        jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+                        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                        jsonObject.put("reminder_date", Date)
+                        jsonObject.put("reminder_type", RemiderName)
+                        jsonObject.put("reminder_id", member.id)
+                        jsonObject.put("message", Msg)
+
+                        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+
+                        Log.e("updated---",""+updated);
+                        calendarSearchViewModel.getCalendarreminder(updated)
+
+                        it.dismiss()
+
+                    }
+                    .setCancelClickListener {
+                        it.dismiss()
+                    }
+                    .show()
+
+            true
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -558,6 +657,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
+        var imgReminder: ImageView = v.findViewById(R.id.imgReminder)
     }
 
     internal inner class FilterViewHolder(v: View) : RecyclerView.ViewHolder(v) {

@@ -193,7 +193,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                 val json= Gson().toJson(response.data)
                 Guru.putString(getString(R.string.loginMember), json)
                 Guru.putString(getString(R.string.member_id),response.data.id)
-                Guru.putString(getString(R.string.user_id), response.data.id)
+                Guru.putString(getString(R.string.user_id),response.data.id)
                 val intent = Intent(this, DashboardActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
