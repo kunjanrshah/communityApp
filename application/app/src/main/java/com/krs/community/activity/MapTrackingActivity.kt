@@ -91,6 +91,20 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         transaction.add(R.id.map_fragment, mapFragment!!).commitAllowingStateLoss()
         handler = Handler()
         createLocationRequest()
+
+        mapFragment?.getMapAsync { googleMap ->
+            mMap = googleMap
+            if (locations.size > 0) {
+                val point = CameraUpdateFactory.newLatLngZoom(LatLng(locations[headId]!!.latitude, locations[headId]!!.longitude), 8f)
+                mMap?.moveCamera(point)
+            }
+            mMap?.animateCamera(CameraUpdateFactory.zoomTo(11f))
+            mMap?.setOnMapLoadedCallback {
+                mapLoaded = true
+                mMap!!.uiSettings.setAllGesturesEnabled(true)
+                mMap!!.uiSettings.isZoomControlsEnabled = true
+            }
+        }
     }
 
     private val updateLocations = object : Runnable {
@@ -192,22 +206,6 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         mLocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
-                    if (locations.size == 0) {
-                        locations[headId] = location
-                        mapFragment?.getMapAsync { googleMap ->
-                            mMap = googleMap
-                            if (locations.size > 0) {
-                                val point = CameraUpdateFactory.newLatLngZoom(LatLng(locations[headId]!!.latitude, locations[headId]!!.longitude), 8f)
-                                mMap?.moveCamera(point)
-                            }
-                            mMap?.animateCamera(CameraUpdateFactory.zoomTo(11f))
-                            mMap?.setOnMapLoadedCallback {
-                                mapLoaded = true
-                                mMap!!.uiSettings.setAllGesturesEnabled(true)
-                                mMap!!.uiSettings.isZoomControlsEnabled = true
-                            }
-                        }
-                    }
                     locations[headId] = location
                     updateMarker()
                 }
@@ -262,8 +260,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         if (mMap != null && mapLoaded) {
             for (loc in locations) {
                 if (lstMarkers[loc.key] == null) {
-
-                    Log.e("hii","null");
+                    Log.e("hii", "null")
                     oldLocations[loc.key] = loc.value
                     val markerOptions = MarkerOptions()
                     val car = BitmapDescriptorFactory.fromResource(R.drawable.pintracking)
@@ -282,7 +279,6 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), 16f)
                     handler?.post(moveThread)
                     animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
-
 
                 } else {
                     Log.e("hii"," not null");

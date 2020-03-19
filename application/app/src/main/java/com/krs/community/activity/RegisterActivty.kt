@@ -46,7 +46,6 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
 import com.wessam.library.NetworkChecker
-import com.wooplr.spotlight.utils.SpotlightSequence
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -98,7 +97,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
         mApp.FacebookAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
-
 
     }
 
@@ -301,11 +299,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         val delta = bottom - (scrollY + height)
         smoothScrollBy(0, delta)
     }
-
-    private fun showSequence() = SpotlightSequence.getInstance(this, null)
-            .addSpotlight(txt_how_register, getString(R.string.youtubeVideo), getString(R.string.HowToRegister), getString(R.string.hoeRegister))
-            .addSpotlight(btn_register, getString(R.string.RegisterButton), getString(R.string.FillUpYourDetail) + "\n " + getString(R.string.ClickToRegister), getString(R.string.btnRegister))
-            .startSequence()
 
     override fun getRegisterFailure(message: String?, filed: Int) {
         Utility.hideSweetProgress()

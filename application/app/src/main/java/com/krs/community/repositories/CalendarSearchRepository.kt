@@ -3,18 +3,19 @@ package com.krs.community.repositories
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
-import com.krs.community.entities.City
-import com.krs.community.model.*
-import com.krs.community.responses.ByDistanceResponse
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
-import org.json.JSONObject
 
 class CalendarSearchRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
 
     suspend fun getSearchByDate(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest{
+            api.getSearchByDate(jsonObject)
+        }
+    }
+
+    suspend fun setReminder(jsonObject: JsonObject): SmartFilterResponse {
+        return apiRequest {
             api.getSearchByDate(jsonObject)
         }
     }

@@ -57,6 +57,7 @@ public class AppConstants {
         String GET_CHANGE_PASS = "ChangePassword";
         String INNER_LOGIN = "InnerLogin";
         String INNER_LOGOUT = "InnerLogout";
+        String SET_REMINDER = "setReminder";
         String GET_USER_STATUS = "GetUserActivityStatus";
         String GET_MASTER_UPDATE_COUNTS = "GetMasterUpdateCounts";
     }

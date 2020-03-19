@@ -395,16 +395,16 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 }
             }
 
-            holder.cardViewRecentList.setOnClickListener {
-                moveToProfileDetail()
-            }
+            /* holder.cardViewRecentList.setOnClickListener {
+                 moveToProfileDetail()
+             }*/
 
-            holder.iconContainer.setOnClickListener {
+            /*holder.iconContainer.setOnClickListener {
                 moveToProfileDetail()
-            }
-            holder.imgProfile.setOnClickListener {
+            }*/
+            /*holder.imgProfile.setOnClickListener {
                 moveToProfileDetail()
-            }
+            }*/
         }
 
         override fun getItemCount(): Int {
