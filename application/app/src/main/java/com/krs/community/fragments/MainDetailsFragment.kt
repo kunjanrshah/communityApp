@@ -35,6 +35,7 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import kotlinx.android.synthetic.main.activity_profile_detail.*
 import kotlinx.android.synthetic.main.fragment_main_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -74,6 +75,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             binding.edtMother.isFocusable=true
             binding.edtEmail.isFocusable=true
             binding.edtMobile.isFocusable=true
+            binding.edtPassword.isFocusable=true
+            binding.edtCpassword.isFocusable=true
             binding.edtCode.setText(member.memberCode)
 
             binding.spState.isEnabled=true
@@ -105,6 +108,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             binding.edtPincode.isFocusable=false
             binding.edtCode.isFocusable=false
             binding.edtCode.isClickable=false
+            binding.edtPassword.isFocusable=false
+            binding.edtCpassword.isFocusable=false
 
             binding.spGender.isEnabled=false
             binding.spLastname.isEnabled=false
@@ -267,8 +272,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         }
     }
 
-
     fun getSaveData(jsonObject:JSONObject){
+
         try {
             jsonObject.put(getString(R.string.member_code),binding.edtCode.text.trim())
             jsonObject.put(getString(R.string.first_name),binding.fname.text.trim())
@@ -284,6 +289,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             jsonObject.put(getString(R.string.sub_cast_id),profileDetailViewModel.selectedLastNameId)
             jsonObject.put(getString(R.string.state_id),profileDetailViewModel.selectedStateId)
             jsonObject.put(getString(R.string.city_id),profileDetailViewModel.selectedCityId)
+            jsonObject.put(getString(R.string.profile_password),binding.edtCpassword.text.trim())
+            jsonObject.put(getString(R.string.confPin),binding.edtCpassword.text.trim())
             if(binding.chkRented.isChecked){
                 jsonObject.put(getString(R.string.is_rented),1)
             }else{

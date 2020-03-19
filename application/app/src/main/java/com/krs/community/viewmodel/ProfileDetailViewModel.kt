@@ -58,6 +58,10 @@ class ProfileDetailViewModel(
         return mProfileDetailRepository.getLocalCommunity(id)
     }
 
+    suspend fun getSubCommIdByName(name:String):Int{
+        return mProfileDetailRepository.getSubCommIdByName(name)
+    }
+
     var selectedStateId = 0
     val stateName by lazyDeferred {
         mProfileDetailRepository.getstateNameById(selectedStateId)

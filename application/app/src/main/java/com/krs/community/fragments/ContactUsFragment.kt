@@ -108,7 +108,7 @@ class ContactUsFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == Utility.CALL_PHONE_REQUEST) {
-            val intent = Intent(Intent.ACTION_CALL)
+            val intent = Intent(Intent.ACTION_DIAL)
             intent.data = Uri.parse("tel:" + getString(R.string.contact_number))
             startActivity(intent)
         }

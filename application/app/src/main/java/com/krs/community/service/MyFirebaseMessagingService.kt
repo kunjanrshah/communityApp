@@ -107,13 +107,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Lastname =   mSmartFilterRepository.getLastNameById(subCastId.toInt())
             CityName =   mSmartFilterRepository.getCityName(cityId)
             val Fullname = firstName +" "+Lastname
-            val FullAddress = homeAddress +" "+CityName
 
             Log.e("Fullname--",""+Fullname)
-            Log.e("FullAddress--",""+FullAddress)
             Coroutines.main {
                 val resultIntent = Intent(applicationContext, DashboardActivity::class.java)
-                showNotification(getApplicationContext(),  resultIntent,Fullname,mobile,email,photo,FullAddress);
+                showNotification(getApplicationContext(),  resultIntent,Fullname,mobile,email,photo,homeAddress,CityName);
             }
 
         }
@@ -121,11 +119,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     }
 
-    private fun showNotification(context: Context, intent: Intent, fullname: String, mobile: String, email: String, photo: String, homeAddress: String) {
+    private fun showNotification(context: Context, intent: Intent, fullname: String, mobile: String, email: String, photo: String, homeAddress: String,CityName: String) {
         val notificationUtils = NotificationUtils(context)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        notificationUtils.getBitmapAsyncAndNotification(message, intent,fullname,mobile,email,photo,homeAddress,userId)
+        notificationUtils.getBitmapAsyncAndNotification(message, intent,fullname,mobile,email,photo,homeAddress,userId,CityName)
     }
 
     companion object {

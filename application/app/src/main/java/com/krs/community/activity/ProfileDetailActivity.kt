@@ -240,6 +240,14 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                             .show()
 
                 } else {
+
+
+
+
+
+
+
+
                     if (jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()) {
                         mainDetailsFragment.binding.fname.error = getString(R.string.EnterFirstName)
                         return@setOnClickListener
@@ -252,20 +260,41 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     } else if (jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
                         return@setOnClickListener
+                    }else if(jsonObject.getString(getString(R.string.profile_password)).isNullOrEmpty()){
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.pass))
+
+                        return@setOnClickListener
+                    }else if(jsonObject.getString(getString(R.string.profile_password)).length!! < 6){
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.passsecond))
+
+                        return@setOnClickListener
+                    }else if(jsonObject.getString(getString(R.string.confPin)).isNullOrBlank()){
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.cpass))
+
+                        return@setOnClickListener
+                    }else if(jsonObject.getString(getString(R.string.confPin)).length!! < 6){
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.cpasssecond))
+
+                        return@setOnClickListener
                     }
 
+                    if(!jsonObject.getString(getString(R.string.profile_password)).trim().equals(jsonObject.getString(getString(R.string.confPin)).trim())) {
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.passequals))
+                        return@setOnClickListener
+                    }
+
+                    jsonObject.remove(getString(R.string.confPin))
                     startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
                     val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                     profileDetailViewModel.updateProfile(profile, false)
                 }
+
                 Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
                 hideSweetProgress()
             } else {
                 setNoInternetLayout()
             }
-
         }
-
     }
 
     private fun setNoInternetLayout() {
@@ -283,7 +312,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
         retryButton.setOnClickListener { v: View? -> onBackPressed() }
     }
-
 
     private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)

@@ -176,8 +176,9 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
             binding.spinnerStates.setOnItemClickListener {
                 Coroutines.main {
-                    registerViewModel.stateId = (it + 1)
-                    val lstCity = profileDetailViewModel.getCityNamebyState(it + 1)
+                    val stateId=profileDetailViewModel.getstateIdByName(binding.spinnerStates.text.toString())
+                    val lstCity = profileDetailViewModel.getCityNamebyState(stateId)
+                    registerViewModel.stateId =stateId
                     spinnerCities.clear()
                     registerViewModel.cityId = null
                     spinnerCities.setItems(lstCity.toTypedArray())
@@ -187,8 +188,9 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
             binding.spinnerSub.setOnItemClickListener {
                 Coroutines.main {
-                    registerViewModel.subCommId = (it + 1)
-                    profileDetailViewModel.getLocalCommunity(it + 1).observeForever {
+                  val sub_id=  profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
+                    registerViewModel.subCommId = sub_id
+                    profileDetailViewModel.getLocalCommunity(sub_id).observeForever {
                         spinnerLocal.clear()
                         registerViewModel.localCommId = null
                         spinnerLocal.setItems(it.toTypedArray())

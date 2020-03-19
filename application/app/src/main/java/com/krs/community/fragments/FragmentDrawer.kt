@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -77,6 +78,8 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         familyDetailViewModel.innerLogoutListner = this
     }
 
+
+
     @SuppressLint("Range")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? { // Inflating view layout
         val layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false)
@@ -91,7 +94,9 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         val llChangeLan = layout.findViewById<LinearLayout>(R.id.ll_change_lan)
         llChangeLan.setOnClickListener { v: View? ->
             mDrawerLayout!!.closeDrawers()
+
             Utility.movetoFragment(activity, ChangeLanguageFragment())
+
         }
         val llLogout = layout.findViewById<LinearLayout>(R.id.ll_logout)
         llLogout.setOnClickListener { v: View? ->
@@ -166,6 +171,11 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
             }
         }))
         return layout
+    }
+
+    private fun closefragment() {
+
+
     }
 
     private fun getMemberLogout() {

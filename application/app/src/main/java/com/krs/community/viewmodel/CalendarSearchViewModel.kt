@@ -4,10 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
+import com.krs.community.R
 import com.krs.community.listeners.ByFilterListener
+import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.CalendarSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.krs.community.utils.Utility
 import kotlinx.coroutines.*
 
 class CalendarSearchViewModel(
@@ -17,6 +20,7 @@ class CalendarSearchViewModel(
     private var TAG: String = CalendarSearchViewModel::class.java.simpleName
     private lateinit var completableJob: CompletableJob
     lateinit var mByFilterListener: ByFilterListener
+    lateinit var mByILoginListener: ILoginListener
 
     fun getListCityName():LiveData<List<String>>{
         return mCalendarSearchRepository.getListCityName()
@@ -64,6 +68,39 @@ class CalendarSearchViewModel(
                 } catch (e: Exception) {
                     e.message?.let {
                         mByFilterListener.getFailure(it)
+                    }
+                }
+                thejob.complete()
+            }
+        }
+    }
+
+    fun getCalendarreminder(jsonObject: JsonObject) {
+        completableJob = Job()
+        completableJob.let { thejob ->
+
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    val response = mCalendarSearchRepository.setReminder(jsonObject)
+                    response.let {
+                        withContext(Dispatchers.Main) {
+
+                            mByILoginListener.userLogin(response)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                } catch (e: ApiException) {
+                    e.message?.let {
+                        mByILoginListener.getFailure(it)
+                    }
+                } catch (e: NoInternetException) {
+                    e.message?.let {
+                        mByILoginListener.getFailure(it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        mByILoginListener.getFailure(it)
                     }
                 }
                 thejob.complete()

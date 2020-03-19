@@ -153,7 +153,7 @@ interface ApiServices {
     suspend fun getMasterUpdate(): Response<MasterUpdateResponse>
 
     @POST(AppConstants.UrlPath.SET_REMINDER)
-    suspend fun setReminder(): Response<SmartFilterResponse>
+    suspend fun setReminder(@Body request: JsonObject): Response<LoginResponse>
 
     @POST(AppConstants.UrlPath.GET_USER_PROFILE)
     suspend fun getUserProfile(@Body request: JsonObject): Response<LoginResponse>

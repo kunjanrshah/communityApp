@@ -295,7 +295,7 @@
                     android:paddingRight="10dp"
                     android:nextFocusDown="@+id/spinnerStates"
                     android:imeOptions="actionNext"
-                    android:singleLine="true"                   />
+                    android:singleLine="true"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

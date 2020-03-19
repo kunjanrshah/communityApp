@@ -241,13 +241,14 @@
                         android:layout_weight="1" />
 
                     <ImageView
+                        android:id="@+id/imgReminder"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:background="@drawable/notification"
-                        android:padding="10dp" />
+                        android:background="@drawable/bell_border"
+                        android:padding="10dp"
+                        android:tint="@color/icon_tint_normal"/>
+
                 </LinearLayout>
-
-
             </LinearLayout>
 
             <View

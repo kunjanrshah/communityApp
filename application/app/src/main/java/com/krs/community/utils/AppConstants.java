@@ -44,6 +44,7 @@ public class AppConstants {
         String UPDATE_PROFILE = "EditProfile";
         String GET_SMART_FILTER = "SmartFilter";
         String GET_USERS_BYDATE = "GetUsersByDate";
+
         String GET_EVENTS = "getEvents";
         String GET_SHARED_PROFILE = "GetSharedProfile";
         String GET_SEARCH_NEAR_BY = "GetNearByUsers";
@@ -57,7 +58,7 @@ public class AppConstants {
         String GET_CHANGE_PASS = "ChangePassword";
         String INNER_LOGIN = "InnerLogin";
         String INNER_LOGOUT = "InnerLogout";
-        String SET_REMINDER = "setReminder";
+        String SET_REMINDER = "SetReminder";
         String GET_USER_PROFILE = "GetUserProfile";
         String GET_USER_STATUS = "GetUserActivityStatus";
         String GET_MASTER_UPDATE_COUNTS = "GetMasterUpdateCounts";
