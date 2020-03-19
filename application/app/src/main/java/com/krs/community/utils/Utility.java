@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
@@ -128,6 +129,7 @@ public class Utility {
     public static String dd_MM_yyyy = "dd-MM-yyyy";
     public static String yyyy_MM_dd_TIME = "yyyy-MM-dd HH:mm:ss";
     public static String dd_MM_yyyy_TIME = "dd-MM-yyyy h:mm a";
+    static boolean doubleBackToExitPressedOnce = false;
 
     public static SweetAlertDialog dialog = null;
     public static long INTERVAL = 5 * 60 * 1000;
@@ -718,7 +720,8 @@ public class Utility {
             Fragment smartFilterResult = fragmentManager.findFragmentByTag(SmartFilterResult.class.getSimpleName());
             Fragment expandableFragment = fragmentManager.findFragmentByTag(ExpandableFilterListFragment.class.getSimpleName());
             if (dashboard != null && dashboard.isVisible()) {
-                activity.finish();
+
+                Exit(activity);
                 return;
             } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible()) || expandableFragment != null && expandableFragment.isVisible()) {
                 movetoFragment(activity, new DashboardFragment());
@@ -731,11 +734,39 @@ public class Utility {
             if (FragmentDrawer.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 FragmentDrawer.mDrawerLayout.closeDrawers();
             } else {
-                activity.finish();
+                Exit(activity);
                 fade(activity);
             }
         }
     }
+
+    private static void Exit(Activity activity) {
+        if (doubleBackToExitPressedOnce) {
+            activity.finish();
+            return;
+        }
+
+        doubleBackToExitPressedOnce = true;
+     //   Toast.makeText(activity, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(activity, R.string.pleaseclick, Toast.LENGTH_SHORT);
+        View view = toast.getView();
+        view.setBackgroundColor(Color.TRANSPARENT);
+        TextView text = (TextView) view.findViewById(android.R.id.message);
+        text.setShadowLayer(0, 0, 0, Color.TRANSPARENT);
+        text.setTextSize(16);
+        text.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
+        toast.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
+
+
+
 
     public static void movetoFragment(Activity activity, Fragment fragment) {
 

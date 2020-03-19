@@ -170,7 +170,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             mBinding.recyclerView.adapter = mAdapter
         }else{
             DashboardActivity.stop = true
-            Snackbar.make(mBinding.recyclerView, "No Data Found", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(mBinding.recyclerView, resources.getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
         }
 
     }

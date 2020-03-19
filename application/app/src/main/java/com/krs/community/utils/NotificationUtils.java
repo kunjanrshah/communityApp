@@ -116,68 +116,95 @@ public class NotificationUtils {
         }
     }
 
-    public void getBitmapAsyncAndNotification(String imageUrl, String timeStamp, String title, String message, @NonNull Intent intent, String id) {
+    public void getBitmapAsyncAndNotification( String message,  Intent intent,  String fullname,  String mobile,  String email,  String photo,  String homeAddress,String userId) {
         final Bitmap[] bitmap = {null};
-        if (!TextUtils.isEmpty(imageUrl)) {
-            if (imageUrl.length() > 4 && Patterns.WEB_URL.matcher(imageUrl).matches()) {
+        if (!TextUtils.isEmpty(photo)) {
+            if (photo.length() > 4 && Patterns.WEB_URL.matcher(photo).matches()) {
                 Glide.with(mContext.getApplicationContext())
                         .asBitmap()
-                        .load(imageUrl)
+                        .load(photo)
                         .into(new CustomTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                 bitmap[0] = resource;
-                                displayImageNotification(bitmap[0], timeStamp, title, message, intent, id);
+                                displayImageNotification(bitmap[0], intent,message,fullname,mobile,email,homeAddress,userId);
                             }
 
                             @Override
                             public void onLoadCleared(@Nullable Drawable placeholder) {
                                 Bitmap bitmap1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.user_profile);
-                                displayImageNotification(bitmap1, timeStamp, title, message, intent, id);
+                                displayImageNotification(bitmap1,  intent, message, fullname, mobile, email, homeAddress,userId);
                             }
                         });
             }
         }
     }
 
-    private void displayImageNotification(Bitmap bitmap, String timeStamp, String title, String message, @NonNull Intent intent, String id) {
+    private void displayImageNotification(Bitmap bitmap, @NonNull Intent intent, String message, String fullname, String mobile, String email, String homeAddress,String userId) {
+
+        /*Intent intentAction = new Intent(mContext,NotificationReceiver.class);
+        intentAction.putExtra("action","Call");
+        PendingIntent  pIntentlogin = PendingIntent.getBroadcast(mContext,1,intentAction,PendingIntent.FLAG_UPDATE_CURRENT);*/
+
         String CHANNEL_ID = mContext.getString(R.string.notification_channel_id);
-        final PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Intent broadcastIntent = new Intent(mContext, NotificationReceiver.class);
-        broadcastIntent.putExtra("toastMessage", message);
-        PendingIntent actionIntent = PendingIntent.getBroadcast(mContext, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         final Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + mContext.getPackageName() + "/raw/notification");
 
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
 
+        Intent intentCall = new Intent(mContext, NotificationReceiver.class);
+        intentCall.putExtra("action","Call");
+        intentCall.putExtra("Phone",mobile);
+        intentCall.putExtra("userId",userId);
+        intentCall.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Intent intentWhatsApp = new Intent(mContext, NotificationReceiver.class);
+        intentWhatsApp.putExtra("action","WhatsApp");
+        intentWhatsApp.putExtra("Phone",mobile);
+        intentWhatsApp.putExtra("userId",userId);
+        intentWhatsApp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Intent intentApprove= new Intent(mContext, NotificationReceiver.class);
+        intentApprove.putExtra("action","Approve");
+        intentApprove.putExtra("Phone",mobile);
+        intentApprove.putExtra("userId",userId);
+        intentApprove.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        PendingIntent pendingIntentCall= PendingIntent.getBroadcast(mContext, 0, intentCall, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntentWhatsApp = PendingIntent.getBroadcast(mContext, 1, intentWhatsApp, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntentApprove = PendingIntent.getBroadcast(mContext, 2, intentApprove, PendingIntent.FLAG_CANCEL_CURRENT);
+
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.addLine("9427051418");
-        inboxStyle.addLine("kunjanrshah@gmail.com");
-        inboxStyle.addLine("Home Address");
-        inboxStyle.addLine("Ahmedabad, Gujarat");
+        inboxStyle.addLine(fullname);
+        inboxStyle.addLine(email);
+        inboxStyle.addLine(mobile);
+        inboxStyle.addLine(homeAddress);
         /*NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
         bigPictureStyle.setBigContentTitle(title);
         bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
         bigPictureStyle.bigPicture(bitmap);*/
 
         Notification notification;
-        notification = mBuilder.setSmallIcon(R.drawable.notification_icon).setTicker(title)
-                .setWhen(getTimeMilliSec(timeStamp)).setAutoCancel(true)
-                .setContentTitle(title).setContentIntent(resultPendingIntent)
+        notification = mBuilder.setSmallIcon(R.drawable.icon_ghanchi).setTicker(mContext.getResources().getString(R.string.app_name))
+                //.setWhen(getTimeMilliSec(timeStamp)).setAutoCancel(true)
+                .setContentTitle(message)
                 .setSound(alarmSound)
                 .setStyle(inboxStyle)//bigPictureStyle
-                .setContentIntent(resultPendingIntent)
+               // .setContentIntent(IntentCall())
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary))
-                .addAction(R.drawable.bg_circle, "Call", resultPendingIntent)
-                .addAction(R.drawable.bg_circle, "WhatsApp", actionIntent)
-                .addAction(R.drawable.bg_circle, "Approve", resultPendingIntent)
+                .addAction(R.drawable.ic_code_scanner_flash_on, "Call",pendingIntentCall )
+                .addAction(R.drawable.ic_code_scanner_flash_on, "WhatsApp", pendingIntentWhatsApp)
+                .addAction(R.drawable.ic_code_scanner_flash_on, "Approve", pendingIntentApprove)
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setLargeIcon(bitmap).setContentText(message)
+                .setOngoing(true)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}).setLights(Color.RED, 0, 1).build();
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -187,10 +214,22 @@ public class NotificationUtils {
         }
 
         if (notificationManager != null) {
-            notificationManager.notify(Integer.parseInt(id), notification);
+            notificationManager.notify(Integer.parseInt(userId), notification);
             playNotificationSound();
         }
     }
+
+    private PendingIntent IntentCall(String msg, Intent intent) {
+
+        final PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent broadcastIntent = new Intent(mContext, NotificationReceiver.class);
+        broadcastIntent.putExtra("toastMessage", msg);
+        PendingIntent actionIntent = PendingIntent.getBroadcast(mContext, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        return null;
+    }
+
+
 
 /*
     public void showNotificationMessage(final String title, final String message, final String timeStamp, @NonNull Intent intent, @Nullable String imageUrl, String id) {

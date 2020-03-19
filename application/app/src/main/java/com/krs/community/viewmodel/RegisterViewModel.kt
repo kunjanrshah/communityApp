@@ -61,23 +61,23 @@ class RegisterViewModel(
             if(fname.isNullOrBlank()){
 
                // iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_firstname),1)
-                iRegisterListener?.getRegisterFailure("fname",1)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.fname),1)
 
                 return
             }
 
             if(lastnameId == null){
-                iRegisterListener?.getRegisterFailure("lastnameId",2)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.lastnameId),2)
                 return
             }
 
             if(email.isNullOrBlank() || !Utility.isEmailValid(email)){
-                iRegisterListener?.getRegisterFailure("email",3)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.emailstr),3)
                 return
             }
 
             if(gender.isNullOrBlank()){
-                iRegisterListener?.getRegisterFailure("gender",4)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.genderstr),4)
                 return
             }
 
@@ -87,61 +87,61 @@ class RegisterViewModel(
             }*/
 
             if(mobile.isNullOrBlank() || mobile?.length!=10){
-                iRegisterListener?.getRegisterFailure("mobile",5)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.mobilestr),5)
                 return
             }
             if(pass.isNullOrBlank()){
-                iRegisterListener?.getRegisterFailure("pass",6)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.pass),6)
                 return
             }
 
             if(pass?.length!! < 6){
-                iRegisterListener?.getRegisterFailure("pass?",6)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.passsecond),6)
                 return
             }
         
             if(cpass.isNullOrBlank()){
-                iRegisterListener?.getRegisterFailure("cpass",7)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.cpass),7)
                 return
             }
 
             if(cpass?.length!! < 6){
-                iRegisterListener?.getRegisterFailure("cpass?",7)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.cpasssecond),7)
 
                 return
             }
         
             if(!pass.equals(cpass)) {
-                iRegisterListener?.getRegisterFailure("!pass",7)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.passequals),7)
                 return
             }
 
             if(address.isNullOrBlank()){
-                iRegisterListener?.getRegisterFailure("address",8)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.addressstr),8)
 
                 return
             }
 
             if(stateId==null){
-                iRegisterListener?.getRegisterFailure("stateId",9)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.stateis),9)
 
                 return
             }
 
             if(cityId==null){
-                iRegisterListener?.getRegisterFailure("cityId",10)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.cityid),10)
 
                 return
             }
 
             if(subCommId==null){
-                iRegisterListener?.getRegisterFailure("subCommId",11)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.subcommid),11)
 
                 return
             }
 
             if(localCommId==null){
-                iRegisterListener?.getRegisterFailure(app.getString(R.string.localCommId), 12)
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.localcommid),12)
 
                 return
             }

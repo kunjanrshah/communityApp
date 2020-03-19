@@ -17,7 +17,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="Export Filter"
+            android:text="@string/exportfilter"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
 
@@ -32,7 +32,7 @@
             android:paddingTop="5dp"
             android:paddingRight="20dp"
             android:paddingBottom="5dp"
-            android:text="Done"
+            android:text="@string/done"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
@@ -82,7 +82,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Photo"
+                android:text="@string/photo"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -111,7 +111,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Name"
+                android:text="@string/name"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -140,7 +140,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="FatherName"
+                android:text="@string/fathername"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -169,7 +169,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="MotherName"
+                android:text="@string/mothername"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -198,7 +198,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Mobile"
+                android:text="@string/mobilefilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -227,7 +227,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Email"
+                android:text="@string/email"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -256,7 +256,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Gender"
+                android:text="@string/genderfilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -285,7 +285,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Marital"
+                android:text="@string/marital"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -314,7 +314,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Blood Group"
+                android:text="@string/blood_groupfilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -343,7 +343,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Birth Date"
+                android:text="@string/birth_datefilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -372,7 +372,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Address"
+                android:text="@string/addressfilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -401,7 +401,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="State"
+                android:text="@string/statefilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -430,7 +430,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="City"
+                android:text="@string/cityfilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -459,7 +459,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Area"
+                android:text="@string/areafilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -488,7 +488,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="PinCode"
+                android:text="@string/pincodefilter"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
@@ -518,7 +518,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="All Filters"
+                android:text="@string/all_filtersfilter"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 

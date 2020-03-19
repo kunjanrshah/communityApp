@@ -94,7 +94,7 @@
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:enabled">true</item>
-        <item name="android:hint">Search</item>
+        <item name="android:hint">@string/Search</item>
         <item name="android:background">@drawable/smart_search_bar_bg</item>
         <item name="android:imeOptions">actionSearch</item>
         <item name="android:textSize">18sp</item>

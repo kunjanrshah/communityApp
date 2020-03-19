@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.StrictMode
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
@@ -167,6 +168,8 @@ class AppController : Application(), KodeinAware {
     }
 
     private fun stopRepeatingTask() {
+       // Toast.makeText(this, "turn Off GPS", Toast.LENGTH_SHORT).show()
+
         mHandler.removeCallbacks(mHandlerTask)
     }
 
@@ -242,12 +245,15 @@ class AppController : Application(), KodeinAware {
 
 
     override fun onTerminate() {
+
+
         super.onTerminate()
         stopRepeatingTask()
         if (broadcastRevcevier != null) {
             unregisterReceiver(broadcastRevcevier)
             broadcastRevcevier = null
         }
+
     }
 
     private fun updateUserStatus() {

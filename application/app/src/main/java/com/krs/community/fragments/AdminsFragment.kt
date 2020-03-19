@@ -115,7 +115,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
 
                 if (lstAdmins.size > 0) {
                     tvCount.visibility = View.VISIBLE
-                    tvCount.text = "${lstAdmins.size} Admins found"
+                    tvCount.text = "${lstAdmins.size} "+getString(R.string.adminsfound)
                 } else {
                     tvCount.visibility = View.GONE
                 }
@@ -203,7 +203,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post {
-                                Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.expo)+"${member.firstName}"+getString(R.string.DetailList), getString(R.string.please_wait))
                             }
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -551,9 +551,9 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.you_sure))
-                .setContentText("${selectedItemPositions.size} Profiles Role will be changed to '$role'!")
-                .setConfirmText("Yes,Please!")
-                .setCancelText("No")
+                .setContentText("${selectedItemPositions.size}"+getString(R.string.profilerole)+"'$role'!")
+                .setConfirmText(getString(R.string.YesPleaseCity))
+                .setCancelText(getString(R.string.no))
                 .setConfirmClickListener {
                     it.dismiss()
 

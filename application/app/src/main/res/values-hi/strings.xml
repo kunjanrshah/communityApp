@@ -945,4 +945,36 @@
     <string name="totalrecord">कुल रिकॉर्ड आधार:</string>
     <string name="filenameupload">अपलोड करने के लिए फ़ाइल का नाम</string>
     <string name="pleasename">कृपया नाम दर्ज करें</string>
+
+    <string name="exportfilter">फ़िल्टर निर्यात करें</string>
+    <string name="done">सरगनाओं</string>
+    <string name="photo">फ़ोटो</string>
+    <string name="name">नाम</string>
+    <string name="fathername">पिता का नाम</string>
+    <string name="mothername">मां का नाम</string>
+    <string name="mobilefilter">मोबाइल</string>
+    <string name="genderfilter">लिंग</string>
+    <string name="marital">वैवाहिक</string>
+    <string name="blood_groupfilter">रक्त समूह</string>
+    <string name="birth_datefilter">जन्म दिन</string>
+    <string name="addressfilter">पता</string>
+    <string name="statefilter">राज्य</string>
+    <string name="cityfilter">शहर</string>
+    <string name="areafilter">क्षेत्र</string>
+    <string name="pincodefilter">पिन कोड</string>
+    <string name="all_filtersfilter">सभी फ़िल्टर</string>
+
+    <string name="adminsfound">आदिमानव मिले</string>
+    <string name="profilerole">प्रोफाइल रोल को बदल दिया जाएगा</string>
+
+    <string name="youcanshare">आप पीडीएफ प्रोफाइल को देख, शेयर और प्रिंट कर सकते हैं</string>
+    <string name="print">प्रिंट</string>
+    <string name="share">शेयर</string>
+    <string name="view">देखना</string>
+    <string name="sharing">फ़ाइल साझा कर रहा है</string>
+    <string name="sharedetails">फ़ाइल विवरण साझा करें</string>
+    <string name="install">अपने स्थापित करें</string>
+    <string name="pleaseclick">कृपया बाहर निकलने के लिए फिर से वापस क्लिक करें</string>
+
+
 </resources>

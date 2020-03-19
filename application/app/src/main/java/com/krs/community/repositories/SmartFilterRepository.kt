@@ -3,6 +3,7 @@ package com.krs.community.repositories
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
+import com.krs.community.model.LoginResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
 
@@ -11,6 +12,11 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
     suspend fun searchByName(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest{
             api.getSearchByFilter(jsonObject)
+        }
+    }
+    suspend fun searchByUser(jsonObject: JsonObject): LoginResponse {
+        return apiRequest{
+            api.getUserProfile(jsonObject)
         }
     }
 

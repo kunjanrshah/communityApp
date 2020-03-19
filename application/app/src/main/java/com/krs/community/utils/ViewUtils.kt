@@ -908,11 +908,11 @@ private fun createPdf(mContext: Context, fname: String, test: String) {
 fun displayPDFDialog(context: Context, name: String, filePath: String, content: String) {
 
     SweetAlertDialog(context, SweetAlertDialog.PDF_TYPE)
-            .setTitleText("$name's Profile")
-            .setContentText("You can View, Share and Print the PDF Profile")
+            .setTitleText("$name"+context.getString(R.string.Profile))
+            .setContentText(context.getString(R.string.youcanshare))
             .setCustomImage(R.drawable.app_logo)
             .showCancelButton(true)
-            .setNeutralText("Print")
+            .setNeutralText(context.getString(R.string.print))
             .setNeutralClickListener { sDialog ->
                 CreatePdf(context)
                         .setPdfName(name)
@@ -922,11 +922,11 @@ fun displayPDFDialog(context: Context, name: String, filePath: String, content: 
                         .setContent(content)
                         .setFilePath(Environment.getExternalStorageDirectory().absolutePath + "/" + AppController.mApplication.getString(R.string.folder_name)).create()
             }
-            .setConfirmText("Share")
+            .setConfirmText(context.getString(R.string.share))
             .setConfirmClickListener { sDialog ->
                 shareFile(context, filePath)
             }
-            .setCancelText("View")
+            .setCancelText(context.getString(R.string.view))
             .setCancelClickListener {
                 openPdf(context, filePath)
             }
@@ -956,21 +956,21 @@ fun shareFile(context: Context, filePath: String) {
         val path = Uri.fromFile(file)
         intent.type = "application/pdf"
         intent.putExtra(Intent.EXTRA_STREAM, path)
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Sharing File from " + context.getString(R.string.app_name))
-        intent.putExtra(Intent.EXTRA_TEXT, "Sharing File from " + context.getString(R.string.app_name))
+        intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.sharing) + context.getString(R.string.app_name))
+        intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.sharing) + context.getString(R.string.app_name))
 
-        context.startActivity(Intent.createChooser(intent, "Share File Details"))
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.sharedetails)))
     }
 }
 
 fun shareDetails(activity: FragmentActivity?, name: String, mobile: String, email: String, area: String, address: String) {
     val appName = activity?.getString(R.string.app_name)
-    val text = "Install your " + appName + "\n" + "https://play.google.com/store/apps/details?id=com.krs.community \n \n" +
-            "Name : " + name + "\n" +
-            "Mobile : " + mobile + "\n" +
-            "Email : " + email + "\n" +
-            "Area : " + area + "\n" +
-            "Address : " + address
+    val text = activity?.getString(R.string.install) + appName + "\n" + "https://play.google.com/store/apps/details?id=com.krs.community \n \n" +
+            activity?.getString(R.string.name) +" : " + name + "\n" +
+            activity?.getString(R.string.Mobile)  +" : "  + mobile + "\n" +
+            activity?.getString(R.string.email) +" : "  + email + "\n" +
+            activity?.getString(R.string.areaDetails) +" : "  +area + "\n" +
+            activity?.getString(R.string.addressNon) +" : "  + address
 
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"

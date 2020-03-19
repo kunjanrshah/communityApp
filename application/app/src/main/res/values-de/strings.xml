@@ -88,7 +88,7 @@
     <string name="please_login_to_continue_using_our_app">કૃપા કરીને તમારી એપ્લિકેશન ચાલુ રાખવા માટે લૉગિન કરો</string>
     <string name="login_with">લોગઇન વિથ</string>
     <string name="_mobile">મોબાઈલ</string>
-    <string name="email">ઇમેઇલ</string>
+
     <string name="enter_mobile_no">એન્ટર મોબાઈલ નંબર</string>
     <string name="enter_email_id">એન્ટર ઇમેઇલ આઈડી</string>
     <!--<string name="hashkey">પાસવર્ડ</string>-->
@@ -946,4 +946,34 @@
     <string name="totalrecord">મળી કુલ રેકોર્ડ:</string>
     <string name="filenameupload">અપલોડ કરવા માટે ફાઇલ નામ</string>
     <string name="pleasename">કૃપા કરી નામ દાખલ કરો</string>
+
+    <string name="exportfilter">નિકાસ ફિલ્ટર</string>
+    <string name="done">થઈ ગયું</string>
+    <string name="photo">ફોટો</string>
+    <string name="name">નામ</string>
+    <string name="fathername">પિતાનું નામ</string>
+    <string name="mothername">માતાનું નામ</string>
+    <string name="mobilefilter">મોબાઇલ</string>
+    <string name="email">ઇમેઇલ</string>
+    <string name="genderfilter">લિંગ</string>
+    <string name="marital">વૈવાહિક</string>
+    <string name="blood_groupfilter">રક્ત જૂથ</string>
+    <string name="birth_datefilter">જન્મ તારીખ</string>
+    <string name="addressfilter">સરનામું</string>
+    <string name="statefilter">રાજ્ય</string>
+    <string name="cityfilter">શહેર</string>
+    <string name="areafilter">ક્ષેત્ર</string>
+    <string name="pincodefilter">પિનકોડ</string>
+    <string name="all_filtersfilter">બધા ફિલ્ટર</string>
+    <string name="adminsfound">સંચાલકો મળી</string>
+    <string name="profilerole">રૂપરેખાની ભૂમિકામાં બદલવામાં આવશે</string>
+
+    <string name="youcanshare">તમે પીડીએફ પ્રોફાઇલ જોઈ, શેર કરી અને છાપી શકો છો</string>
+    <string name="print">છાપવું</string>
+    <string name="share">શેર કરો</string>
+    <string name="view">જુઓ</string>
+    <string name="sharing">ફાઇલ શેર કરી રહ્યાં છે</string>
+    <string name="sharedetails">ફાઇલ વિગતો શેર કરો</string>
+    <string name="install">તમારી સ્થાપિત કરો</string>
+    <string name="pleaseclick">બહાર નીકળવા માટે કૃપા કરીને પાછા ક્લિક કરો</string>
 </resources>
