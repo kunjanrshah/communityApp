@@ -3,6 +3,7 @@ package com.krs.community.repositories
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
+import com.krs.community.model.GetRemindersResponse
 import com.krs.community.model.LoginResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
@@ -18,6 +19,12 @@ class CalendarSearchRepository(private val api: ApiServices, private val db:AppD
     suspend fun setReminder(jsonObject: JsonObject): LoginResponse {
         return apiRequest {
             api.setReminder(jsonObject)
+        }
+    }
+
+    suspend fun GetReminder(jsonObject: JsonObject): GetRemindersResponse {
+        return apiRequest {
+            api.GetReminder(jsonObject)
         }
     }
 

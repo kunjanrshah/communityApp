@@ -45,13 +45,16 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
+import com.krs.community.listeners.GetRemindersListener
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.RoomMemberListener
+import com.krs.community.model.GetRemindersResponse
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.responses.UploadedFile
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.CalendarSearchViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -72,7 +75,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener,  LocationAdapter.SetLocationListner , ILoginListener {
+class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener,  LocationAdapter.SetLocationListner , ILoginListener, GetRemindersListener {
 
     override val kodein by kodein()
     private var lstCalendar= ArrayList<Member>()
@@ -106,6 +109,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private lateinit var txtDate:TextView
     private var setLocationDialog: DialogPlus? = null
     private var filterAdapter: FilterAdapter? = null
+    private val listReminders = ArrayList<GetRemindersResponse>()
+
     var RemiderType = ""
     var Date = ""
     var RemiderName = ""
@@ -138,6 +143,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         calendarSearchViewModel.mByFilterListener =this
         calendarSearchViewModel.mByILoginListener =this
+        calendarSearchViewModel.getRemindersListener =this
         roomMemberViewModel.mRoomMemberListener= this
 
         llRoot = root.findViewById(R.id.ll_root)
@@ -180,8 +186,16 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 shimmerFrameLayout.stopShimmerAnimation()
                 shimmerFrameLayout.visibility=View.GONE
 
+                val jsonObjectGetReminders =JSONObject()
+                jsonObjectGetReminders.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+
+                val updatedGetReminders=  JsonParser().parse(jsonObjectGetReminders.toString()) as JsonObject
+
+                Log.e("updated---",""+updatedGetReminders);
+                calendarSearchViewModel.GetReminders(updatedGetReminders)
 
             },4000)
+
             lstCalendar.clear()
             adapter.notifyDataSetChanged()
 
@@ -191,6 +205,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             }
 
             Utility.hideKeyboard(activity)
+
         }
     }
 
@@ -224,11 +239,19 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     }
 
     override fun userLogin(response: LoginResponse) {
+
         Utility.hideSweetProgress()
-        Log.e("message",""+response.message)
-        Log.e("success",""+response.success)
+       /* Log.e("message",""+response.message)
+        Log.e("success",""+response.success)*/
 
+    }
 
+    override fun userReminders(response: GetRemindersResponse) {
+
+        Log.e("userReminders ---",""+response.success)
+        Log.e("Fname ---",""+response.data[0].message)
+
+        listReminders.add(response)
 
     }
 
@@ -427,9 +450,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             }
         }
 
-
-
-
         adapter.setOnClickEvent { v, position ->
             val intent= Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstCalendar[position])
@@ -541,9 +561,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 e.message
             }
         }
-
         holder.imgReminder.setOnClickListener { view ->
-
 
             if(!member.matched.isNullOrEmpty()){
                 if(member.matched.contains("birth_date")){

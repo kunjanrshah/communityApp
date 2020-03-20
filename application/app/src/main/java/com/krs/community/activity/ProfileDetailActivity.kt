@@ -241,13 +241,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
                 } else {
 
-
-
-
-
-
-
-
                     if (jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()) {
                         mainDetailsFragment.binding.fname.error = getString(R.string.EnterFirstName)
                         return@setOnClickListener
@@ -261,25 +254,24 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
                         return@setOnClickListener
                     }else if(jsonObject.getString(getString(R.string.profile_password)).isNullOrEmpty()){
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.pass))
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_password))
 
                         return@setOnClickListener
                     }else if(jsonObject.getString(getString(R.string.profile_password)).length!! < 6){
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.passsecond))
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.make_strong_pass))
 
                         return@setOnClickListener
                     }else if(jsonObject.getString(getString(R.string.confPin)).isNullOrBlank()){
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.cpass))
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.confirm_password))
 
                         return@setOnClickListener
                     }else if(jsonObject.getString(getString(R.string.confPin)).length!! < 6){
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.cpasssecond))
-
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.make_strong_pass))
                         return@setOnClickListener
                     }
 
                     if(!jsonObject.getString(getString(R.string.profile_password)).trim().equals(jsonObject.getString(getString(R.string.confPin)).trim())) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.passequals))
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.password_mismatch))
                         return@setOnClickListener
                     }
 

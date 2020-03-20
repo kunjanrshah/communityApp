@@ -121,6 +121,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
             if(member.memberCode.isNullOrEmpty()){
                 binding.llMcode.visibility=View.GONE
+
             }else{
                 binding.llMcode.visibility=View.VISIBLE
                 binding.edtCode.setText(member.memberCode)

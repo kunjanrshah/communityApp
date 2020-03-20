@@ -155,6 +155,9 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.SET_REMINDER)
     suspend fun setReminder(@Body request: JsonObject): Response<LoginResponse>
 
+    @POST(AppConstants.UrlPath.GET_REMINDER)
+    suspend fun GetReminder(@Body request: JsonObject): Response<GetRemindersResponse>
+
     @POST(AppConstants.UrlPath.GET_USER_PROFILE)
     suspend fun getUserProfile(@Body request: JsonObject): Response<LoginResponse>
 

@@ -4,13 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
-import com.krs.community.R
 import com.krs.community.listeners.ByFilterListener
+import com.krs.community.listeners.GetRemindersListener
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.CalendarSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.krs.community.utils.Utility
 import kotlinx.coroutines.*
 
 class CalendarSearchViewModel(
@@ -21,25 +20,25 @@ class CalendarSearchViewModel(
     private lateinit var completableJob: CompletableJob
     lateinit var mByFilterListener: ByFilterListener
     lateinit var mByILoginListener: ILoginListener
+    lateinit var getRemindersListener:GetRemindersListener
 
-    fun getListCityName():LiveData<List<String>>{
+    fun getListCityName(): LiveData<List<String>> {
         return mCalendarSearchRepository.getListCityName()
     }
 
-     fun getCityIdByName(name:String):Int{
+    fun getCityIdByName(name: String): Int {
         return mCalendarSearchRepository.getCityIdByName(name)
     }
 
-
-    fun getCityNamebyId(id:String):String{
+    fun getCityNamebyId(id: String): String {
         return mCalendarSearchRepository.getCityName(id)
     }
 
-     fun getLastNameById(id:Int):String{
+    fun getLastNameById(id: Int): String {
         return mCalendarSearchRepository.getLastNameById(id)
     }
 
-     fun getIdByLastName(name:String):Int{
+    fun getIdByLastName(name: String): Int {
         return mCalendarSearchRepository.getIdByLastName(name)
     }
 
@@ -108,4 +107,36 @@ class CalendarSearchViewModel(
         }
     }
 
+    fun GetReminders(jsonObject: JsonObject) {
+        completableJob = Job()
+        completableJob.let { thejob ->
+
+            CoroutineScope(Dispatchers.IO + thejob).launch {
+                try {
+                    val response = mCalendarSearchRepository.GetReminder(jsonObject)
+                    response.let {
+                        withContext(Dispatchers.Main) {
+
+                            getRemindersListener.userReminders(response)
+                            thejob.complete()
+                        }
+                        return@launch
+                    }
+                } catch (e: ApiException) {
+                    e.message?.let {
+                        getRemindersListener.getFailure(it)
+                    }
+                } catch (e: NoInternetException) {
+                    e.message?.let {
+                        getRemindersListener.getFailure(it)
+                    }
+                } catch (e: Exception) {
+                    e.message?.let {
+                        getRemindersListener.getFailure(it)
+                    }
+                }
+                thejob.complete()
+            }
+        }
+    }
 }
