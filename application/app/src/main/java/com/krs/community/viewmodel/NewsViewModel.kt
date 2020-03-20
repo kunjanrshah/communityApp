@@ -7,6 +7,7 @@ import com.krs.community.listeners.NewsListener
 import com.krs.community.repositories.NewsRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 
 class NewsViewModel(
@@ -18,35 +19,36 @@ class NewsViewModel(
     lateinit var mNewsListener: NewsListener
 
    fun getNewsSearch(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
+       if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+           completableJob = Job()
+           completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mNewsRepository.getNewsList(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mNewsListener.getNewsList(response)
-                            thejob.complete()
-                        }
-                        return@launch
-                    }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mNewsListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mNewsListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mNewsListener.getFailure(it)
-                    }
-                }
-                thejob.complete()
-            }
-        }
-    }
-
+               CoroutineScope(Dispatchers.IO + thejob).launch {
+                   try {
+                       val response = mNewsRepository.getNewsList(jsonObject)
+                       response.let {
+                           withContext(Dispatchers.Main) {
+                               mNewsListener.getNewsList(response)
+                               thejob.complete()
+                           }
+                           return@launch
+                       }
+                   } catch (e: ApiException) {
+                       e.message?.let {
+                           mNewsListener.getFailure(it)
+                       }
+                   } catch (e: NoInternetException) {
+                       e.message?.let {
+                           mNewsListener.getFailure(it)
+                       }
+                   } catch (e: Exception) {
+                       e.message?.let {
+                           mNewsListener.getFailure(it)
+                       }
+                   }
+                   thejob.complete()
+               }
+           }
+       }
+   }
 }

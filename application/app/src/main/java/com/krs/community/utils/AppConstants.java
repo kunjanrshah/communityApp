@@ -44,7 +44,6 @@ public class AppConstants {
         String UPDATE_PROFILE = "EditProfile";
         String GET_SMART_FILTER = "SmartFilter";
         String GET_USERS_BYDATE = "GetUsersByDate";
-
         String GET_EVENTS = "getEvents";
         String GET_SHARED_PROFILE = "GetSharedProfile";
         String GET_SEARCH_NEAR_BY = "GetNearByUsers";

@@ -38,7 +38,6 @@ import com.krs.community.model.RegisterModel
 import com.krs.community.responses.MasterUpdateResponse
 import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.*
-import com.krs.community.utils.Utility.isOnline
 import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RegisterViewModel
@@ -166,7 +165,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 binding.imgCancel.visibility = View.GONE
             }
 
-            if (isOnline(this)) {
+            if (NetworkChecker.isNetworkConnected(this)) {
                 dashboardViewModel.getMasterUpdate()
             }
 
@@ -385,12 +384,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         Utility.hideSweetProgress()
         Log.d(TAG, "onRegisterButtonClick")
         if(resultUri!=null){
-            try {
-                val uploadImage = File(resultUri?.path.toString())
-                Utility.startSweetProgress(this, getString(R.string.RegisterFamilyPhoto), getString(R.string.loading))
-                profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(),getString(R.string.profile))
-            } catch (e: Exception) {
-                e.printStackTrace()
+            if (NetworkChecker.isNetworkConnected(this)) {
+                try {
+                    val uploadImage = File(resultUri?.path.toString())
+                    Utility.startSweetProgress(this, getString(R.string.RegisterFamilyPhoto), getString(R.string.loading))
+                    profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(), getString(R.string.profile))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }else{
             successResponse(data.message)

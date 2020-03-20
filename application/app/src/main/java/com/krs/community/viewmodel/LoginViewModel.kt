@@ -18,6 +18,7 @@ import com.krs.community.utils.ApiException
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
@@ -154,44 +155,43 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     }
 
     fun getLoginUser(req_login: AppConstants.LoginRequest) {
-        job_login = Job()
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            job_login = Job()
+            job_login.let { thejob ->
+                CoroutineScope(IO + thejob!!).launch {
 
-        job_login.let { thejob ->
-            CoroutineScope(IO + thejob!!).launch {
-
-                try {
-                    val response = loginRepository.getLogin(req_login)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            iLoginListener.userLogin(response)
-                            thejob.complete()
+                    try {
+                        val response = loginRepository.getLogin(req_login)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                iLoginListener.userLogin(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
-                    }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        withContext(Dispatchers.Main) {
-                            iLoginListener.getFailure(it)
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            withContext(Dispatchers.Main) {
+                                iLoginListener.getFailure(it)
+                            }
                         }
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        withContext(Dispatchers.Main) {
-                            iLoginListener.getFailure(it)
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            withContext(Dispatchers.Main) {
+                                iLoginListener.getFailure(it)
+                            }
                         }
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        withContext(Dispatchers.Main) {
-                            iLoginListener.getFailure(it)
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            withContext(Dispatchers.Main) {
+                                iLoginListener.getFailure(it)
+                            }
                         }
                     }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
-
     }
-
 
 }

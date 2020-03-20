@@ -24,6 +24,7 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.StatisticsViewModel
 import com.krs.community.viewmodelfactory.StatisticsViewModelFactory
+import com.wessam.library.NetworkChecker
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -73,15 +74,17 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
     }
 
     private fun getStatisticsResult(cityId:Int){
-        val jsonObject=JSONObject()
-        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-        jsonObject.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        jsonObject.put(getString(R.string.city_id), cityId)
-        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
-        binding.shimmerViewContainer.startShimmerAnimation()
-        binding.shimmerViewContainer.visibility=View.VISIBLE
-        binding.scroll.visibility=View.GONE
-        statisticsViewModel.getStatistics(updated)
+        if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+            val jsonObject = JSONObject()
+            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+            jsonObject.put(getString(R.string.city_id), cityId)
+            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+            binding.shimmerViewContainer.startShimmerAnimation()
+            binding.shimmerViewContainer.visibility = View.VISIBLE
+            binding.scroll.visibility = View.GONE
+            statisticsViewModel.getStatistics(updated)
+        }
     }
 
     override fun getStatistics(response: StatisticResponse) {

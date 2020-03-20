@@ -1,16 +1,13 @@
 package com.krs.community.repositories
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.room.Room
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
-import com.krs.community.entities.RoomMember
-import com.krs.community.model.*
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
 
 class SmartSearchRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
+
     suspend fun searchByKeyword(jsonObject: JsonObject): searchByKeywordsResponse {
         return apiRequest{
             api.getSearchByKeywords(jsonObject)

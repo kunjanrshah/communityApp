@@ -7,6 +7,7 @@ import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.PasswordRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 
 class PasswordViewModel(
@@ -19,69 +20,70 @@ class PasswordViewModel(
     lateinit var mLoginListener: ILoginListener
 
    fun changePassword(jsonObject: JsonObject) {
-        changePasswordJob = Job()
-        changePasswordJob.let { thejob ->
+       if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+           changePasswordJob = Job()
+           changePasswordJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = passwordRepository.changePassword(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mLoginListener.userLogin(response)
-                            thejob.complete()
-                        }
-                        return@launch
-                    }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mLoginListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mLoginListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mLoginListener.getFailure(it)
-                    }
-                }
-                thejob.complete()
-            }
-        }
+               CoroutineScope(Dispatchers.IO + thejob).launch {
+                   try {
+                       val response = passwordRepository.changePassword(jsonObject)
+                       response.let {
+                           withContext(Dispatchers.Main) {
+                               mLoginListener.userLogin(response)
+                               thejob.complete()
+                           }
+                           return@launch
+                       }
+                   } catch (e: ApiException) {
+                       e.message?.let {
+                           mLoginListener.getFailure(it)
+                       }
+                   } catch (e: NoInternetException) {
+                       e.message?.let {
+                           mLoginListener.getFailure(it)
+                       }
+                   } catch (e: Exception) {
+                       e.message?.let {
+                           mLoginListener.getFailure(it)
+                       }
+                   }
+                   thejob.complete()
+               }
+           }
+       }
     }
 
    fun forgotPassword(jsonObject: JsonObject) {
-       forgotPasswordJob = Job()
-       forgotPasswordJob.let { thejob ->
+       if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+           forgotPasswordJob = Job()
+           forgotPasswordJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = passwordRepository.forgotPassword(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mLoginListener.userLogin(response)
-                            thejob.complete()
-                        }
-                        return@launch
-                    }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mLoginListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mLoginListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mLoginListener.getFailure(it)
-                    }
-                }
-                thejob.complete()
-            }
-        }
-    }
-
-
-
+               CoroutineScope(Dispatchers.IO + thejob).launch {
+                   try {
+                       val response = passwordRepository.forgotPassword(jsonObject)
+                       response.let {
+                           withContext(Dispatchers.Main) {
+                               mLoginListener.userLogin(response)
+                               thejob.complete()
+                           }
+                           return@launch
+                       }
+                   } catch (e: ApiException) {
+                       e.message?.let {
+                           mLoginListener.getFailure(it)
+                       }
+                   } catch (e: NoInternetException) {
+                       e.message?.let {
+                           mLoginListener.getFailure(it)
+                       }
+                   } catch (e: Exception) {
+                       e.message?.let {
+                           mLoginListener.getFailure(it)
+                       }
+                   }
+                   thejob.complete()
+               }
+           }
+       }
+   }
 }

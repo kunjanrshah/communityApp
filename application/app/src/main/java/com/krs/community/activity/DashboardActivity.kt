@@ -53,6 +53,7 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
+import com.wessam.library.NetworkChecker
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -65,8 +66,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private var easyWayLocation: EasyWayLocation? = null
     private lateinit var request: LocationRequest
     private var menu: Menu? = null
-    private var poke: Intent? = null
-    private  var  doubleBackToExitPressedOnce : Boolean = false;
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
@@ -174,18 +173,19 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         })
 
-        if (isOnline(this)) {
+        if (NetworkChecker.isNetworkConnected(this)) {
             dashboardViewModel.getMasterUpdate()
         }
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
-
-        /*var JsonObj=JSONObject()
-        JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
-        JsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-        JsonObj.put("version","1")
-        val updated=  JsonParser().parse(JsonObj.toString()) as JsonObject
-        dashboardViewModel.getUpdatedVersion(updated)*/
+        /*if (NetworkChecker.isNetworkConnected(this)) {
+            val JsonObj= JSONObject()
+            JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
+            JsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+            JsonObj.put("version","1")
+            val updated=  JsonParser().parse(JsonObj.toString()) as JsonObject
+            dashboardViewModel.getUpdatedVersion(updated)
+        }*/
     }
 
     override fun onResume() {
@@ -392,7 +392,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 val dbCount = dashboardViewModel.getMasterCounts()
 
                 if (dbCount == null) {
-                    dashboardViewModel.insertMasterCounts(counts)
                     dashboardViewModel.fetchBusinessCategory(counts.business_categories)
                     dashboardViewModel.fetchBusinessSubCategory(counts.business_sub_categories)
                     dashboardViewModel.fetchState(counts.states)
@@ -408,6 +407,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     dashboardViewModel.fetchCommittee(counts.committees)
                     dashboardViewModel.fetchDesignation(counts.designations)
                     dashboardViewModel.fetchGotra(counts.gotra)
+                    dashboardViewModel.insertMasterCounts(counts)
                 } else {
                     if (dbCount.business_categories != counts.business_categories) {
                         dashboardViewModel.fetchBusinessCategory(counts.business_categories)

@@ -60,6 +60,7 @@ import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
+import com.wessam.library.NetworkChecker
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -317,21 +318,23 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     }
 
     private fun setupList() {
-        if (!DashboardActivity.stop) {
-            DashboardActivity.stop = true
-            val data = SearchByCityData()
-            data.start = AppController.mApplication.start.toString()
-            data.length = AppController.mApplication.length.toString()
-            data.alpha = alpha
-            val filterBy = FilterBy()
-            filterBy.cityId = cityId
-            data.filterBy = filterBy
-            if (AppController.mApplication.start == 0) {
-                members.clear()
-                binding.shimmerViewContainer.startShimmerAnimation()
-                binding.shimmerViewContainer.visibility = View.VISIBLE
+        if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+            if (!DashboardActivity.stop) {
+                DashboardActivity.stop = true
+                val data = SearchByCityData()
+                data.start = AppController.mApplication.start.toString()
+                data.length = AppController.mApplication.length.toString()
+                data.alpha = alpha
+                val filterBy = FilterBy()
+                filterBy.cityId = cityId
+                data.filterBy = filterBy
+                if (AppController.mApplication.start == 0) {
+                    members.clear()
+                    binding.shimmerViewContainer.startShimmerAnimation()
+                    binding.shimmerViewContainer.visibility = View.VISIBLE
+                }
+                browseCityViewModel.fetchRecordsByCity(data)
             }
-            browseCityViewModel.fetchRecordsByCity(data)
         }
     }
 

@@ -8,6 +8,8 @@ import com.krs.community.listeners.UpdateListener
 import com.krs.community.repositories.DashboardRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
+import com.wessam.library.NetworkChecker.isNetworkConnected
 import kotlinx.coroutines.*
 
 class DashboardViewModel(
@@ -20,65 +22,69 @@ class DashboardViewModel(
     lateinit var listener: UpdateListener
 
     fun getUpdatedVersion(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mDashboardRepository.getUpdatedVersion(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            listener.getVersionResponse(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mDashboardRepository.getUpdatedVersion(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                listener.getVersionResponse(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            listener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            listener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            listener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        listener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        listener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        listener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
 
     fun getMasterUpdate() {
-        completableJob = Job()
-        completableJob.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mDashboardRepository.getMasterUpdate()
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            listener.getMastersResponse(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mDashboardRepository.getMasterUpdate()
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                listener.getMastersResponse(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            listener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            listener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            listener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        listener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        listener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        listener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
@@ -92,64 +98,92 @@ class DashboardViewModel(
     }
 
     suspend fun fetchCommittee(index: Int) {
-        mDashboardRepository.fetchCommittee(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchCommittee(index)
+        }
     }
 
     suspend fun fetchDesignation(index: Int) {
-        mDashboardRepository.fetchDesignation(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchDesignation(index)
+        }
     }
 
     suspend fun fetchSubCommunities(index: Int) {
-        mDashboardRepository.fetchSubCommunities(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchSubCommunities(index)
+        }
     }
 
     suspend fun fetchLocalCommunities(index: Int) {
-        mDashboardRepository.fetchLocalCommunities(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchLocalCommunities(index)
+        }
     }
 
     suspend fun fetchLastName(index: Int) {
-        mDashboardRepository.fetchLastName(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchLastName(index)
+        }
     }
 
     suspend fun fetchEducation(index: Int) {
-        mDashboardRepository.fetchEducation(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchEducation(index)
+        }
     }
 
     suspend fun fetchGotra(index: Int) {
-        mDashboardRepository.fetchGotra(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchGotra(index)
+        }
     }
 
     suspend fun fetchState(index: Int) {
-        mDashboardRepository.fetchState(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchState(index)
+        }
     }
 
     suspend fun fetchCity(index: Int) {
-        mDashboardRepository.fetchCity(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchCity(index)
+        }
     }
 
     suspend fun fetchBusinessCategory(index: Int) {
-        mDashboardRepository.fetchBusinessCategory(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchBusinessCategory(index)
+        }
     }
 
     suspend fun fetchBusinessSubCategory(index: Int) {
-        mDashboardRepository.fetchBusinessSubCategory(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchBusinessSubCategory(index)
+        }
     }
 
     suspend fun fetchNative(index: Int) {
-        mDashboardRepository.fetchNative(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchNative(index)
+        }
     }
 
     suspend fun fetchOccupation(index: Int) {
-        mDashboardRepository.fetchOccupation(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchOccupation(index)
+        }
     }
 
     suspend fun fetchRelations(index: Int) {
-        mDashboardRepository.fetchRelations(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchRelations(index)
+        }
     }
 
     suspend fun fetchCurrentActivity(index: Int) {
-        mDashboardRepository.fetchCurrentActivity(index)
+        if (isNetworkConnected(app.applicationContext)) {
+            mDashboardRepository.fetchCurrentActivity(index)
+        }
     }
-
-
 }

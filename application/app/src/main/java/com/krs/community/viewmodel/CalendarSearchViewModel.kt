@@ -10,6 +10,7 @@ import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.CalendarSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 
 class CalendarSearchViewModel(
@@ -43,33 +44,35 @@ class CalendarSearchViewModel(
     }
 
     fun getCalendarSearch(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mCalendarSearchRepository.getSearchByDate(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mByFilterListener.getMembers(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mCalendarSearchRepository.getSearchByDate(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mByFilterListener.getMembers(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }

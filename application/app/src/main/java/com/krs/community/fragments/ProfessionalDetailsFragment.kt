@@ -37,6 +37,7 @@ import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.wessam.library.NetworkChecker
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -282,18 +283,15 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                 data?.let {
                     val resultUri = UCrop.getOutput(it)
                     if (resultUri != null) {
-                        try {
-                            Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgLogo)
-                        } catch (e: Exception) {
-                            e.message
-                        }
-                        logger.debug("resultUri: $resultUri")
-                        try {
-                            val uploadImage = File(resultUri.path.toString())
-                            startSweetProgress(activity!!, getString(R.string.imageDetails), getString(R.string.loading))
-                            profileDetailViewModel.uploadImage(uploadImage, member.id.toString(), getString(R.string.company))
-                        } catch (e: Exception) {
-                            e.printStackTrace()
+                        if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+                            try {
+                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgLogo)
+                                val uploadImage = File(resultUri.path.toString())
+                                startSweetProgress(activity!!, getString(R.string.imageDetails), getString(R.string.loading))
+                                profileDetailViewModel.uploadImage(uploadImage, member.id.toString(), getString(R.string.company))
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
                     }
                 }

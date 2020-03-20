@@ -7,6 +7,7 @@ import com.krs.community.listeners.StatisticsListener
 import com.krs.community.repositories.StatisticsRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 
 class StatisticsViewModel(
@@ -26,35 +27,36 @@ class StatisticsViewModel(
     }
 
     fun getStatistics(jsonObject: JsonObject) {
-        job_statistics = Job()
-        job_statistics.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            job_statistics = Job()
+            job_statistics.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob!!).launch {
-                try {
-                    val response = mStatisticsRepository.getStatistics(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mStatisticsListener?.getStatistics(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob!!).launch {
+                    try {
+                        val response = mStatisticsRepository.getStatistics(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mStatisticsListener?.getStatistics(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mStatisticsListener?.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mStatisticsListener?.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mStatisticsListener?.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mStatisticsListener?.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mStatisticsListener?.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mStatisticsListener?.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
-
 }

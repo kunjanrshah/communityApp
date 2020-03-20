@@ -9,6 +9,7 @@ import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.repositories.RoomMemberRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 
 class RoomMemberViewModel(
@@ -37,11 +38,11 @@ class RoomMemberViewModel(
     }
 
     fun getRoomMembers(){
-        jobGetMembers= Job()
-        jobGetMembers.let {thejob ->
+        jobGetMembers = Job()
+        jobGetMembers.let { thejob ->
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
-                    val response=mRoomMemberRepository.getRoomMembers()
+                    val response = mRoomMemberRepository.getRoomMembers()
                     response.let {
                         withContext(Dispatchers.Main) {
                             mRoomMemberListener?.getRoomMembers(response)
@@ -49,7 +50,7 @@ class RoomMemberViewModel(
                         }
                         return@launch
                     }
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     mRoomMemberListener?.getFailure(e.message.toString())
                 }
                 thejob.complete()
@@ -58,8 +59,8 @@ class RoomMemberViewModel(
     }
 
     fun deleteRoomMember(id:Int){
-        jobByDelete=Job()
-        jobByDelete.let {thejob ->
+        jobByDelete = Job()
+        jobByDelete.let { thejob ->
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
                     mRoomMemberRepository.deleteRoomMember(id)
@@ -68,14 +69,13 @@ class RoomMemberViewModel(
                         thejob.complete()
                     }
                     return@launch
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     mRoomMemberListener?.getFailure(e.message.toString())
                 }
                 thejob.complete()
             }
         }
     }
-
 
     fun insertRoomMember(roomMember: RoomMember){
         jobByInsert=Job()
@@ -97,71 +97,70 @@ class RoomMemberViewModel(
     }
 
     fun changeStatus(jsonObject: JsonObject) {
-        jobChangeStatus = Job()
-        jobChangeStatus.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            jobChangeStatus = Job()
+            jobChangeStatus.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob!!).launch {
-                try {
-                    val response = mRoomMemberRepository.changeStatus(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mRoomMemberListener?.getFailure(response.message)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob!!).launch {
+                    try {
+                        val response = mRoomMemberRepository.changeStatus(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mRoomMemberListener?.getFailure(response.message)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mRoomMemberListener?.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mRoomMemberListener?.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mRoomMemberListener?.getFailure(it)
+                        }
                     }
-                    mRoomMemberListener?.getFailure(response.message as String)
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mRoomMemberListener?.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mRoomMemberListener?.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mRoomMemberListener?.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
 
     fun changeRole(jsonObject: JsonObject) {
-        jobBySearch = Job()
-        jobBySearch.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            jobBySearch = Job()
+            jobBySearch.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob!!).launch {
-                try {
-                    val response = mRoomMemberRepository.changeRole(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mRoomMemberListener?.getFailure(response.message)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob!!).launch {
+                    try {
+                        val response = mRoomMemberRepository.changeRole(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mRoomMemberListener?.getFailure(response.message)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mRoomMemberListener?.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mRoomMemberListener?.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mRoomMemberListener?.getFailure(it)
+                        }
                     }
-                    mRoomMemberListener?.getFailure(response.message as String)
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mRoomMemberListener?.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mRoomMemberListener?.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mRoomMemberListener?.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
-
-
-
 }

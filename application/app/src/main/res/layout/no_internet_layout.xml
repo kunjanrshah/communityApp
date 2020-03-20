@@ -7,7 +7,10 @@
     android:orientation="vertical">
 
     <include
+        android:layout_width="match_parent"
         android:id="@+id/toolbar"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         layout="@layout/toolbar"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 

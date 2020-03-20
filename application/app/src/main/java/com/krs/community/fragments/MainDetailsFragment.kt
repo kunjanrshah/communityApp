@@ -35,7 +35,6 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
-import kotlinx.android.synthetic.main.activity_profile_detail.*
 import kotlinx.android.synthetic.main.fragment_main_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -126,6 +125,12 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                 binding.llMcode.visibility=View.VISIBLE
                 binding.edtCode.setText(member.memberCode)
             }
+        }
+
+        if (member.id.isNullOrEmpty()) {
+            binding.llPin.visibility = View.VISIBLE
+        } else {
+            binding.llPin.visibility = View.GONE
         }
 
         binding.fname.setText(member.firstName)
@@ -290,8 +295,11 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             jsonObject.put(getString(R.string.sub_cast_id),profileDetailViewModel.selectedLastNameId)
             jsonObject.put(getString(R.string.state_id),profileDetailViewModel.selectedStateId)
             jsonObject.put(getString(R.string.city_id),profileDetailViewModel.selectedCityId)
-            jsonObject.put(getString(R.string.profile_password),binding.edtCpassword.text.trim())
-            jsonObject.put(getString(R.string.confPin),binding.edtCpassword.text.trim())
+            if (member.id.isNullOrEmpty()) {
+                jsonObject.put(getString(R.string.profile_password), binding.edtPassword.text.trim())
+                jsonObject.put(getString(R.string.confPin), binding.edtCpassword.text.trim())
+            }
+
             if(binding.chkRented.isChecked){
                 jsonObject.put(getString(R.string.is_rented),1)
             }else{

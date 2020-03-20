@@ -12,6 +12,7 @@ import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -202,126 +203,130 @@ class ProfileDetailViewModel(
     }
 
     fun getMemberByFilters(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mProfileDetailRepository.searchFilter(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mEditMemberListener.getScanResult(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mProfileDetailRepository.searchFilter(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mEditMemberListener.getScanResult(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mEditMemberListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mEditMemberListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mEditMemberListener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mEditMemberListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mEditMemberListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mEditMemberListener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
 
     fun uploadImage(file: File, id: String, type: String) {
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            job_by_update = Job()
+            job_by_update.let { thejob ->
 
-        job_by_update = Job()
-        job_by_update.let { thejob ->
-
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val requestFile = RequestBody.create(
-                            "image/*".toMediaTypeOrNull(),
-                            file
-                    )
-                    val body = MultipartBody.Part.createFormData("uploaded_file", file.name, requestFile)
-                    val id = RequestBody.create(
-                            "text/plain".toMediaTypeOrNull(),
-                            id)
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val requestFile = RequestBody.create(
+                                "image/*".toMediaTypeOrNull(),
+                                file
+                        )
+                        val body = MultipartBody.Part.createFormData("uploaded_file", file.name, requestFile)
+                        val id = RequestBody.create(
+                                "text/plain".toMediaTypeOrNull(),
+                                id)
 
 
-                    val _type = RequestBody.create(
-                            "text/plain".toMediaTypeOrNull(),
-                            type)
+                        val _type = RequestBody.create(
+                                "text/plain".toMediaTypeOrNull(),
+                                type)
 
-                    val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, _type)
+                        val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, _type)
 
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            Log.d("Response", response.toString())
-                            if (response.get("success").asString.equals("success")) {
-                                mImageUploadListener.getResult(response.getAsJsonObject("data"))
-                            } else {
-                                mImageUploadListener.onFailure(response.get("message").asString)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                Log.d("Response", response.toString())
+                                if (response.get("success").asString.equals("success")) {
+                                    mImageUploadListener.getResult(response.getAsJsonObject("data"))
+                                } else {
+                                    mImageUploadListener.onFailure(response.get("message").asString)
+                                }
+                                response.get("data")
+                                thejob.complete()
                             }
-                            response.get("data")
-                            thejob.complete()
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mImageUploadListener.onFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mImageUploadListener.onFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mImageUploadListener.onFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mImageUploadListener.onFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mImageUploadListener.onFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mImageUploadListener.onFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
-
     }
 
     fun updateProfile(profile: JsonObject, isEdit: Boolean) {
-        job_by_update = Job()
-        job_by_update.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            job_by_update = Job()
+            job_by_update.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response: UpdateProfileResponse
-                    if (isEdit) {
-                        response = mProfileDetailRepository.updateProfile(profile)
-                    } else {
-                        response = mProfileDetailRepository.addProfile(profile)
-                    }
-
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mEditMemberListener.getUpdateOrAddResult(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response: UpdateProfileResponse
+                        if (isEdit) {
+                            response = mProfileDetailRepository.updateProfile(profile)
+                        } else {
+                            response = mProfileDetailRepository.addProfile(profile)
                         }
-                        return@launch
+
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mEditMemberListener.getUpdateOrAddResult(response)
+                                thejob.complete()
+                            }
+                            return@launch
+                        }
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mEditMemberListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mEditMemberListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mEditMemberListener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mEditMemberListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mEditMemberListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mEditMemberListener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }

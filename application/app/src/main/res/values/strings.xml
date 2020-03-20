@@ -182,7 +182,7 @@
     <string name="invalid_username">Invalid username</string>
     <string name="error_msg_get_data_social_site">Not able to get your details from Social account</string>
     <string name="update_profile_photo">Do you want to update Profile Photo?</string>
-    <string name="yes">Yes</string>
+    <string name="yes">Ok</string>
     <string name="invalid_username_password">Invalid username or hashkey</string>
     <string name="loading">Working...</string>
     <string name="incorrect" translatable="false">incorrect</string>
@@ -556,7 +556,7 @@
     <string name="locationOff">\'s location is off</string>
     <string name="updateprofile">Update Profile</string>
     <string name="update">Update</string>
-    <string name="no">No</string>
+    <string name="no">Cancel</string>
     <string name="updatingProfile">Updating your profile</string>
     <string name="pleaseWait">Please wait...</string>
     <string name="EnterFirstName">Enter FirstName</string>
@@ -1129,7 +1129,7 @@
     <string name="OtpVerification">OTP Verification</string>
     <string name="enterOtp">Enter the OTP you have received to</string>
     <string name="ResendOtp">Resend OTP?</string>
-    <string name="fmilyList">Family Member List</string>
+    <string name="fmilyList">Family Members</string>
     <string name="sdetails">\'s Details</string>
     <string name="exitDetails">Exit</string>
     <string name="EnterDetails">Enter</string>

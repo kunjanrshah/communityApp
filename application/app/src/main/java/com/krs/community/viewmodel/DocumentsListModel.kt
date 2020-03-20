@@ -7,6 +7,7 @@ import com.krs.community.listeners.ByDocumentListener
 import com.krs.community.repositories.DocumentListRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 
 class DocumentsListModel(
@@ -18,33 +19,35 @@ class DocumentsListModel(
     lateinit var byDocumentListener: ByDocumentListener
 
     fun getUploadedFiles(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = documentListRepository.getDocumentList(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            byDocumentListener.getDocuments(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = documentListRepository.getDocumentList(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                byDocumentListener.getDocuments(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            byDocumentListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            byDocumentListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            byDocumentListener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        byDocumentListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        byDocumentListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        byDocumentListener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }

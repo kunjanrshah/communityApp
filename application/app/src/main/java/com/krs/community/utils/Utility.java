@@ -29,8 +29,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -235,7 +233,7 @@ public class Utility {
         params.setMargins(params.leftMargin + 15,
                 params.topMargin,
                 params.rightMargin + 15,
-                params.bottomMargin + 150);
+                params.bottomMargin + 120);
         snackBarView.setLayoutParams(params);
         snackbar.show();
     }
@@ -720,7 +718,12 @@ public class Utility {
             Fragment smartFilterResult = fragmentManager.findFragmentByTag(SmartFilterResult.class.getSimpleName());
             Fragment expandableFragment = fragmentManager.findFragmentByTag(ExpandableFilterListFragment.class.getSimpleName());
             if (dashboard != null && dashboard.isVisible()) {
-                Exit(activity);
+                if (FragmentDrawer.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    FragmentDrawer.mDrawerLayout.closeDrawers();
+                } else {
+                    Exit(activity);
+                    fade(activity);
+                }
                 return;
             } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible()) || expandableFragment != null && expandableFragment.isVisible()) {
                 movetoFragment(activity, new DashboardFragment());
@@ -1102,27 +1105,6 @@ public class Utility {
         }
         return null;
     }
-
-
-    public static boolean isOnline(Context mContext) {
-        try {
-            ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
-            if (netInfo != null) {
-                if (netInfo.isConnected()) {
-                    return true;
-                } else {
-                    Toast.makeText(mContext, "Network is not connected!", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            }
-            Toast.makeText(mContext, "Network is not connected!", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
     public static Bitmap scaleImage(Context context, @NonNull Uri photoUri) throws IOException {
         InputStream is = context.getContentResolver().openInputStream(photoUri);

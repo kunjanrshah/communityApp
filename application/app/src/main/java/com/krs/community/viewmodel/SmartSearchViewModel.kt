@@ -8,6 +8,7 @@ import com.krs.community.listeners.ByKeywordListener
 import com.krs.community.repositories.SmartSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 
 class SmartSearchViewModel(
@@ -27,41 +28,37 @@ class SmartSearchViewModel(
         return mSmartSearchRepository.getCityName(id)
     }
 
-    fun getRelationName(id:String):String{
-        return mSmartSearchRepository.getRelationName(id)
-    }
-
-
-
     fun getMemberByKeywords(jsonObject: JsonObject) {
-        jobBySearch = Job()
-        jobBySearch.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            jobBySearch = Job()
+            jobBySearch.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mSmartSearchRepository.searchByKeyword(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mByKeywordListener.getMembers(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mSmartSearchRepository.searchByKeyword(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mByKeywordListener.getMembers(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                        mByKeywordListener.getFailure(response.message as String)
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mByKeywordListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mByKeywordListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mByKeywordListener.getFailure(it)
+                        }
                     }
-                    mByKeywordListener.getFailure(response.message as String)
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mByKeywordListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mByKeywordListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mByKeywordListener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }

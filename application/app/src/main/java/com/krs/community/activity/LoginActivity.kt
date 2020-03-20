@@ -25,7 +25,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -313,7 +312,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                         edt_mobile.requestFocus()
                         return@setOnClickListener
                     }
-                    if (isOnline(this)) {
+
+                    if (isNetworkConnected(this)) {
                         startSweetProgress(this, getString(R.string.otp_send), getString(R.string.loading))
                         loginViewModel?.loginWithOTP()
                     }

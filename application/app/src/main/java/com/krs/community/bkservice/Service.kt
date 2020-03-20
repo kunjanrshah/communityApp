@@ -25,6 +25,7 @@ import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
+import com.wessam.library.NetworkChecker.isNetworkConnected
 import kotlinx.coroutines.*
 import org.json.JSONObject
 
@@ -133,49 +134,49 @@ class Service : android.app.Service(), Listener, AddressCallBack {
     override fun currentLocation(location: Location) {
         Log.e("Location Service: ", "latitude: " + location.latitude + " longitude: " + location.longitude)
         getLocationDetail?.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
+        if (isNetworkConnected(this)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
+                CoroutineScope(Dispatchers.IO + thejob!!).launch {
+                    try {
+                        val userId = Guru.getString(getString(R.string.user_id), "")
+                        val id = Guru.getString(getString(R.string.member_id), "")
+                        if (!userId.isNullOrEmpty() && !id.isNullOrEmpty()) {
+                            val jsonObject = JSONObject()
+                            jsonObject.put(getString(R.string.user_id), userId)
+                            jsonObject.put(getString(R.string.id), id)
+                            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                            jsonObject.put(getString(R.string.user_lat), location.latitude)
+                            jsonObject.put(getString(R.string.user_lng), location.longitude)
+                            jsonObject.put(getString(R.string.is_location_enable), "1")
 
-        completableJob = Job()
-        completableJob.let { thejob ->
-
-            CoroutineScope(Dispatchers.IO + thejob!!).launch {
-                try {
-                    val userId = Guru.getString(getString(R.string.user_id), "")
-                    val id = Guru.getString(getString(R.string.member_id), "")
-                    if (!userId.isNullOrEmpty() && !id.isNullOrEmpty()) {
-                        val jsonObject = JSONObject()
-                        jsonObject.put(getString(R.string.user_id), userId)
-                        jsonObject.put(getString(R.string.id), id)
-                        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-                        jsonObject.put(getString(R.string.user_lat), location.latitude)
-                        jsonObject.put(getString(R.string.user_lng), location.longitude)
-                        jsonObject.put(getString(R.string.is_location_enable), "1")
-
-                        val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                        val mProfileDetailRepository = ProfileDetailRepository(ApiServices(), AppDatabase.invoke(AppController.mApplication))
-                        val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
-                        response.let {
-                            withContext(Dispatchers.Main) {
-                                Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
-                                Log.d("Location Service: ", response.message)
-                                thejob?.complete()
+                            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                            val mProfileDetailRepository = ProfileDetailRepository(ApiServices(), AppDatabase.invoke(AppController.mApplication))
+                            val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
+                            response.let {
+                                withContext(Dispatchers.Main) {
+                                    Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
+                                    Log.d("Location Service: ", response.message)
+                                    thejob.complete()
+                                }
+                                return@launch
                             }
-                            return@launch
+                        }
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            Log.d("Location Service: ", it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            Log.d("Location Service: ", it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            Log.d("Location Service: ", it)
                         }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        Log.d("Location Service: ", it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        Log.d("Location Service: ", it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        Log.d("Location Service: ", it)
-                    }
+                    thejob.complete()
                 }
-                thejob?.complete()
             }
         }
     }

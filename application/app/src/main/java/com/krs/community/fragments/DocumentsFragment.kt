@@ -39,6 +39,7 @@ import com.krs.community.utils.AppConstants.UPLOAD_DOCUMENT
 import com.krs.community.viewmodel.DocumentsListModel
 import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
+import com.wessam.library.NetworkChecker
 import lumenghz.com.pullrefresh.PullToRefreshView
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest
 import org.json.JSONObject
@@ -223,18 +224,19 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                 .setConfirmText(getString(R.string.uploadnow))
                 .setConfirmClickListener {
                     it.dismissWithAnimation()
-                    MultipartUploadRequest(activity!!, serverUrl = UPLOAD_DOCUMENT)
-                            .setMethod("POST")
-                            .addFileToUpload(
-                                    filePath = filePath,
-                                    parameterName = getString(R.string.uploaded_file)
-                            )
-                            .addParameter(getString(R.string.filename), uploadedFileName)
-                            .addParameter(getString(R.string.id), Guru.getString(getString(R.string.user_id), "").toString())
-                            .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
-                            .startUpload()
-                    rvDocuments.snackbar(getString(R.string.uploadingstart), Snackbar.LENGTH_INDEFINITE)
-
+                    if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+                        MultipartUploadRequest(activity!!, serverUrl = UPLOAD_DOCUMENT)
+                                .setMethod("POST")
+                                .addFileToUpload(
+                                        filePath = filePath,
+                                        parameterName = getString(R.string.uploaded_file)
+                                )
+                                .addParameter(getString(R.string.filename), uploadedFileName)
+                                .addParameter(getString(R.string.id), Guru.getString(getString(R.string.user_id), "").toString())
+                                .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
+                                .startUpload()
+                        rvDocuments.snackbar(getString(R.string.uploadingstart), Snackbar.LENGTH_INDEFINITE)
+                    }
                 }
                 .setCancelText("Later")
                 .setCancelClickListener {

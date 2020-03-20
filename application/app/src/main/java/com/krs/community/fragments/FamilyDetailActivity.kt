@@ -1,7 +1,11 @@
 package com.krs.community.fragments
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -12,8 +16,12 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -46,6 +54,7 @@ import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
+import com.wessam.library.NetworkChecker
 import kotlinx.android.synthetic.main.header_detail.view.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -73,11 +82,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private var isShimmer:Boolean=true
     private var memberId:String?=null
     private var textMsg:String?=null
+    private var mNetworkReceiver: BroadcastReceiver? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_family_detail)
-
+        mNetworkReceiver = NetworkChangeReceiver()
+        registerNetworkBroadcastForNougat()
         val mApp = applicationContext as AppController
         mApp.FirebaseAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
         mApp.FacebookAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
@@ -90,6 +101,53 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
+
+        if (NetworkChecker.isNetworkConnected(this)) {
+            setScreenLayout()
+        } else {
+            setNoInternetLayout()
+        }
+    }
+
+    inner class NetworkChangeReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                if (NetworkChecker.isNetworkConnected(context)) {
+                    setScreenLayout()
+                } else {
+                    setNoInternetLayout()
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        }
+    }
+
+    private fun unregisterNetworkBroadcastForNougat() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                unregisterReceiver(mNetworkReceiver)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                unregisterReceiver(mNetworkReceiver)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun setScreenLayout() {
+        setContentView(R.layout.activity_family_detail)
+        supportActionBar?.hide()
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container1)
         rvDetail=findViewById(R.id.rv_detail)
         llRoot=findViewById(R.id.ll_root)
@@ -113,6 +171,28 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             mainHandler.postDelayed(this, 1000*60*3)
         }
     }
+
+    private fun setNoInternetLayout() {
+        setContentView(R.layout.no_internet_layout)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        setSupportActionBar(toolbar)
+        supportActionBar?.show()
+        supportActionBar?.title = resources.getString(R.string.app_name)
+        val anim = AlphaAnimation(0f, 1f)
+        anim.duration = 6000
+        anim.repeatMode = AlphaAnimation.RESTART
+        anim.repeatCount = Animation.INFINITE
+        val imageView = findViewById<ImageView>(R.id.no_internet_image)
+        imageView.animation = anim
+        val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
+        retryButton.setOnClickListener { v: View? ->
+            if (NetworkChecker.isNetworkConnected(this)) {
+                setScreenLayout()
+            }
+        }
+    }
+
 
     private fun getFamilyDetails(){
         if(isShimmer){
@@ -247,10 +327,15 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                 if (textMsg!!.contains("Exit")) {
                                     gif = R.drawable.exit_gif
                                 }
-
+                                var title = ""
+                                if (textMsg == getString(R.string.exitDetails)) {
+                                    title = "Hey " + member.firstName + ", Good Bye"
+                                } else {
+                                    title = "Hey " + member.firstName + ", Welcome"
+                                }
                                 TTFancyGifDialog.Builder(this@FamilyDetailActivity)
-                                        .setTitle(getString(R.string.you_sure))
-                                        .setMessage(textMsg + " the " + getString(R.string.app_name) + " App")
+                                        .setTitle(title)
+                                        .setMessage("To $textMsg please type your PIN")
                                         .setPositiveBtnText( getString(R.string.yes))
                                         .setPositiveBtnBackground("#22b573")
                                         .setNegativeBtnText(getString(R.string.no))
@@ -274,27 +359,27 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         }
                     }
                     viewHolder.llDelete.setOnClickListener {
-
-                        TTFancyGifDialog.Builder(this@FamilyDetailActivity)
-                                .setTitle(getString(R.string.you_sure))
-                                .setMessage(getString(R.string.wontbeRecover))
-                                .setPositiveBtnText(getString(R.string.yesdelete))
-                                .setPositiveBtnBackground("#22b573")
-                                .setNegativeBtnText(getString(R.string.no))
-                                .setNegativeBtnBackground("#c1272d")
-                                .setGifResource(R.drawable.gif_delete)
-                                .isCancellable(false)
-                                .OnPositiveClicked {
-                                    if (!memberId.isNullOrEmpty()) {
+                        if (!memberId.isNullOrEmpty()) {
+                            TTFancyGifDialog.Builder(this@FamilyDetailActivity)
+                                    .setTitle(getString(R.string.you_sure))
+                                    .setMessage(getString(R.string.wontbeRecover))
+                                    .setPositiveBtnText(getString(R.string.yesdelete))
+                                    .setPositiveBtnBackground("#22b573")
+                                    .setNegativeBtnText(getString(R.string.no))
+                                    .setNegativeBtnBackground("#c1272d")
+                                    .setGifResource(R.drawable.gif_delete)
+                                    .isCancellable(false)
+                                    .OnPositiveClicked {
                                         deleteFamilyMember(member.id)
-                                    } else {
-                                        llRoot.snackbar(getString(R.string.enter_pin), Snackbar.LENGTH_LONG)
                                     }
-                                }
-                                .OnNegativeClicked {
+                                    .OnNegativeClicked {
 
-                                }
-                                .build()
+                                    }
+                                    .build()
+                        } else {
+                            llRoot.snackbar(getString(R.string.enter_pin), Snackbar.LENGTH_LONG)
+                        }
+
                     }
                     viewHolder.boomMenuButton.clearBuilders()
                     for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
@@ -392,10 +477,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             startActivity(intent)  */
             /* Utility.displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
              return@setOnClickListener*/
-            val intent = Intent(this, MapTrackingActivity::class.java)
+            /*val intent = Intent(this, MapTrackingActivity::class.java)
             intent.putExtra("head_id", headId)
             startActivity(intent)
-            fade(this)
+            fade(this)*/
         }
 
         login.setOnClickListener {
@@ -486,7 +571,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
 
         val tvLabel: TextView = header.findViewById(R.id.tv_label)
-        tvLabel.text=getString(R.string.fmilyList)+" (${members.size})"
+        tvLabel.text = getString(R.string.fmilyList)
+
+        val tvTitle: TextView = header.findViewById(R.id.tv_title)
+        tvTitle.text = getString(R.string.FamilyDetail) + " (${members.size})"
 
         header.bmb.clearBuilders()
         for (i in 0 until header.bmb.piecePlaceEnum.pieceNumber()) {
@@ -560,9 +648,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     if (textMsg!!.contains(getString(R.string.exitDetails))) {
                         gif = R.drawable.exit_gif
                     }
+                    var title = ""
+                    if (textMsg == getString(R.string.exitDetails)) {
+                        title = "Hey " + member.firstName + ", Good Bye"
+                    } else {
+                        title = "Hey " + member.firstName + ", Welcome"
+                    }
+
                     TTFancyGifDialog.Builder(this)
-                            .setTitle(getString(R.string.you_sure))
-                            .setMessage(textMsg + " the " + getString(R.string.app_name) + " App")
+                            .setTitle(title)
+                            .setMessage("To $textMsg please type your PIN")
                             .setPositiveBtnText(getString(R.string.yes))
                             .setPositiveBtnBackground("#22b573")
                             .setNegativeBtnText(getString(R.string.no))
@@ -584,7 +679,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             }
         }
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
-        if(!memberId.isNullOrEmpty()){
+        if (!memberId.isNullOrEmpty() && member.id == memberId) {
             tvAdd.visibility=View.VISIBLE
         }else{
             tvAdd.visibility=View.GONE
@@ -684,12 +779,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
     override fun onResume() {
         super.onResume()
-        supportActionBar?.hide()
+        if (NetworkChecker.isNetworkConnected(this)) {
+            supportActionBar?.hide()
+        }
+
         Handler().postDelayed({
             hideKeyboard(this)
         }, 1000)
-
-        mainHandler.post(updateAdapter)
+        if (NetworkChecker.isNetworkConnected(this)) {
+            mainHandler.post(updateAdapter)
+        }
     }
 
     override fun onStop() {
@@ -703,6 +802,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterNetworkBroadcastForNougat()
         familyDetailViewModel.cancelAllJobs()
     }
 

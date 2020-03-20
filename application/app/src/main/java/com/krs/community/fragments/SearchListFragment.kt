@@ -59,6 +59,7 @@ import com.krs.community.viewmodelfactory.SmartSearchViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
+import com.wessam.library.NetworkChecker
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -390,21 +391,23 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     }
 
     private fun getMembersByKeyword() {
-        if (!DashboardActivity.stop) {
-            lstMembers.clear()
-            tvRecords.visibility = View.GONE
-            llLabel.visibility = View.GONE
-            ivExport.visibility = View.VISIBLE
-            rvAdapter.notifyDataSetChanged()
-            DashboardActivity.stop = true
-            val mJSONObject = JSONObject()
-            mJSONObject.put(getString(R.string.start), AppController.mApplication.start)
-            mJSONObject.put(getString(R.string.length), AppController.mApplication.length)
-            mJSONObject.put(getString(R.string.filter_by), searchWord)
-            val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-            mShimmerViewContainer.startShimmerAnimation()
-            mShimmerViewContainer.visibility = View.VISIBLE
-            smartSearchViewModel.getMemberByKeywords(updated)
+        if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+            if (!DashboardActivity.stop) {
+                lstMembers.clear()
+                tvRecords.visibility = View.GONE
+                llLabel.visibility = View.GONE
+                ivExport.visibility = View.VISIBLE
+                rvAdapter.notifyDataSetChanged()
+                DashboardActivity.stop = true
+                val mJSONObject = JSONObject()
+                mJSONObject.put(getString(R.string.start), AppController.mApplication.start)
+                mJSONObject.put(getString(R.string.length), AppController.mApplication.length)
+                mJSONObject.put(getString(R.string.filter_by), searchWord)
+                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
+                mShimmerViewContainer.startShimmerAnimation()
+                mShimmerViewContainer.visibility = View.VISIBLE
+                smartSearchViewModel.getMemberByKeywords(updated)
+            }
         }
     }
 

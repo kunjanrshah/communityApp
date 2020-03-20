@@ -15,8 +15,6 @@ import okhttp3.RequestBody
 class ProfileDetailRepository (private val api: ApiServices,private val db:AppDatabase
 ): SafeApiRequest()  {
 
-
-
     suspend fun updateProfile(profile: JsonObject): UpdateProfileResponse {
         return apiRequest{
             api.updateProfile(profile)
@@ -32,6 +30,18 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
     suspend fun addProfile(profile: JsonObject): UpdateProfileResponse {
         return apiRequest{
             api.addMember(profile)
+        }
+    }
+
+    suspend fun searchFilter(jsonObject: JsonObject): SmartFilterResponse {
+        return apiRequest {
+            api.getSearchByFilter(jsonObject)
+        }
+    }
+
+    suspend fun getListCityName(): LiveData<List<String>> {
+        return withContext(Dispatchers.IO) {
+            db.getCityDao().getcityNames()
         }
     }
 
@@ -222,27 +232,9 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    /* suspend fun getcityName(id: Int): String {
-         return withContext(Dispatchers.IO) {
-             db.getCityDao().getcityName(id)
-         }
-     }*/
-
     suspend fun getCityIdByName(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getcityIdByName(name)
-        }
-    }
-
-    suspend fun getListCityName(): LiveData<List<String>> {
-        return withContext(Dispatchers.IO) {
-            db.getCityDao().getcityNames()
-        }
-    }
-
-    suspend fun searchFilter(jsonObject: JsonObject): SmartFilterResponse {
-        return apiRequest{
-            api.getSearchByFilter(jsonObject)
         }
     }
 

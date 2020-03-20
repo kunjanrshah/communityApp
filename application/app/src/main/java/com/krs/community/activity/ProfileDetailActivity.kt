@@ -127,15 +127,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
 
         if (!scanId.isNullOrEmpty()) {
-            startSweetProgress(this, getString(R.string.app_name), getString(R.string.loading))
-            val jsonObject = JSONObject()
-            jsonObject.put("" + mApplication.start, "0")
-            jsonObject.put("" + mApplication.length, "1")
-            val jsonObj = JSONObject()
-            jsonObj.put(getString(R.string.id), scanId)
-            jsonObject.put(getString(R.string.filter_by), jsonObj)
-            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-            profileDetailViewModel.getMemberByFilters(updated)
+            if (NetworkChecker.isNetworkConnected(this)) {
+                startSweetProgress(this, getString(R.string.app_name), getString(R.string.loading))
+                val jsonObject = JSONObject()
+                jsonObject.put("" + mApplication.start, "0")
+                jsonObject.put("" + mApplication.length, "1")
+                val jsonObj = JSONObject()
+                jsonObj.put(getString(R.string.id), scanId)
+                jsonObject.put(getString(R.string.filter_by), jsonObj)
+                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                profileDetailViewModel.getMemberByFilters(updated)
+            }
         }
 
         if (member?.isLocationEnable == "1") {
@@ -253,24 +255,19 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     } else if (jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
                         return@setOnClickListener
-                    }else if(jsonObject.getString(getString(R.string.profile_password)).isNullOrEmpty()){
+                    } else if (jsonObject.getString(getString(R.string.profile_password)).isNullOrEmpty()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_password))
-
                         return@setOnClickListener
-                    }else if(jsonObject.getString(getString(R.string.profile_password)).length!! < 6){
+                    } else if (jsonObject.getString(getString(R.string.profile_password)).length < 6) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.make_strong_pass))
-
                         return@setOnClickListener
-                    }else if(jsonObject.getString(getString(R.string.confPin)).isNullOrBlank()){
+                    } else if (jsonObject.getString(getString(R.string.confPin)).isNullOrBlank()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.confirm_password))
-
                         return@setOnClickListener
-                    }else if(jsonObject.getString(getString(R.string.confPin)).length!! < 6){
+                    } else if (jsonObject.getString(getString(R.string.confPin)).length < 6) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.make_strong_pass))
                         return@setOnClickListener
-                    }
-
-                    if(!jsonObject.getString(getString(R.string.profile_password)).trim().equals(jsonObject.getString(getString(R.string.confPin)).trim())) {
+                    } else if (!jsonObject.getString(getString(R.string.profile_password)).trim().equals(jsonObject.getString(getString(R.string.confPin)).trim())) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.password_mismatch))
                         return@setOnClickListener
                     }
@@ -313,6 +310,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             intent.putExtra(getString(R.string.id), member?.headId)
         }
         startActivity(intent)
+        finish()
         fade(this)
     }
 
@@ -546,26 +544,21 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     isProfileImage = false
                     data?.let {
                         val resultUri = UCrop.getOutput(it)
-                        com.krs.community.utils.logger.debug("resultUri: $resultUri")
                         if (resultUri != null) {
-                            try {
-                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
-
-                                Log.e("resultUri---", "" + resultUri)
-                                val uploadImage = File(resultUri.path.toString())
-
-                                Log.e("uploadImage---", "" + uploadImage)
-
-                                startSweetProgress(this, "Image", getString(R.string.loading))
-                                profileDetailViewModel.uploadImage(uploadImage, member?.id.toString(), getString(R.string.profile))
-                            } catch (e: Exception) {
-                                e.message
+                            if (NetworkChecker.isNetworkConnected(this)) {
+                                try {
+                                    Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                                    val uploadImage = File(resultUri.path.toString())
+                                    startSweetProgress(this, "Uploading your photo", getString(R.string.loading))
+                                    profileDetailViewModel.uploadImage(uploadImage, member?.id.toString(), getString(R.string.profile))
+                                } catch (e: Exception) {
+                                    e.message
+                                }
                             }
                         } else {
                             binding.llParent.snackbar("Requested crop image not found!", Snackbar.LENGTH_LONG)
                         }
                     }
-
                 } else {
                     professionalDetailsFragment.onActivityResult(requestCode, resultCode, data)
                 }

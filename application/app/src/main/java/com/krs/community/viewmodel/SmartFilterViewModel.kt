@@ -9,6 +9,7 @@ import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.SmartFilterRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.wessam.library.NetworkChecker
 import kotlinx.coroutines.*
 
 class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterRepository, var app: Application) : AndroidViewModel(app) {
@@ -49,99 +50,104 @@ class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterReposi
     }
 
     fun getSharedProfiles(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mSmartFilterRepository.getSharedProfile(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mByFilterListener.getMembers(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mSmartFilterRepository.getSharedProfile(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mByFilterListener.getMembers(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
 
     fun smartFilterSearch(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mSmartFilterRepository.searchByName(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mByFilterListener.getMembers(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mSmartFilterRepository.searchByName(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mByFilterListener.getMembers(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
 
     fun getInActiveRecords(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
+        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mSmartFilterRepository.getInActiveRecords(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            mByFilterListener.getMembers(response)
-                            thejob.complete()
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mSmartFilterRepository.getInActiveRecords(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                mByFilterListener.getMembers(response)
+                                thejob.complete()
+                            }
+                            return@launch
                         }
-                        return@launch
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            mByFilterListener.getFailure(it)
+                        }
                     }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        mByFilterListener.getFailure(it)
-                    }
+                    thejob.complete()
                 }
-                thejob.complete()
             }
         }
     }
-
 }

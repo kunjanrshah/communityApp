@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +33,7 @@ import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
+import com.wessam.library.NetworkChecker
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -79,8 +79,6 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         familyDetailViewModel.innerLogoutListner = this
     }
 
-
-
     @SuppressLint("Range")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? { // Inflating view layout
         val layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false)
@@ -111,7 +109,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
                     .setGifResource(R.drawable.gif_logout)
                     .isCancellable(false)
                     .OnPositiveClicked {
-                        if (Utility.isOnline(context)) {
+                        if (NetworkChecker.isNetworkConnected(context as AppCompatActivity)) {
                             getMemberLogout()
                         }
                     }
@@ -267,9 +265,11 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         if (response.success) {
 
             val intent = Intent(activity, FamilyDetailActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             val memberString = Guru.getString(getString(R.string.loginMember), "")
             val member = Gson().fromJson(memberString, Member::class.java)
             Guru.putString(getString(R.string.member_id), "")
+            Guru.putString(getString(R.string.loginMember), "")
             var id = ""
             if (member.headId == "0") {
                 id = member.id

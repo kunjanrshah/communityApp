@@ -15,7 +15,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.StrictMode
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
@@ -43,8 +42,8 @@ import com.krs.community.utils.AppConstants
 import com.krs.community.utils.ConnectivityReceiver
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
-import com.krs.community.viewmodel.ContactListViewModelFactory
 import com.krs.community.viewmodelfactory.*
+import com.wessam.library.NetworkChecker
 import io.fabric.sdk.android.Fabric
 import net.gotev.uploadservice.UploadServiceConfig
 import org.json.JSONObject
@@ -158,7 +157,9 @@ class AppController : Application(), KodeinAware {
 
     private val mHandlerTask = object : Runnable {
         override fun run() {
-            updateUserStatus()
+            if (NetworkChecker.isNetworkConnected(this@AppController)) {
+                updateUserStatus()
+            }
             mHandler.postDelayed(this, INTERVAL.toLong())
         }
     }

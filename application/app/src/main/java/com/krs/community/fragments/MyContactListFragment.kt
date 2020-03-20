@@ -42,8 +42,8 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.ContactListViewModel
-import com.krs.community.viewmodel.ContactListViewModelFactory
 import com.krs.community.viewmodel.ProfileDetailViewModel
+import com.krs.community.viewmodelfactory.ContactListViewModelFactory
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
