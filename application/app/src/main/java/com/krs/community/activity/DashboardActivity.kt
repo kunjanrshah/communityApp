@@ -175,7 +175,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         })
 
         if (isOnline(this)) {
-            //getMasterList()
             dashboardViewModel.getMasterUpdate()
         }
 
@@ -189,24 +188,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         dashboardViewModel.getUpdatedVersion(updated)*/
     }
 
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.e("Lang","onRestart")
-
-    }
-
     override fun onResume() {
         super.onResume()
-
-        Log.e("Lang","OnResume")
-
         loadProfile()
-
         NotificationUtils.clearNotifications(applicationContext)
-
         hideSweetProgress()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(this)
         }
@@ -220,7 +206,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
                 easyWayLocation = EasyWayLocation(this, request, true, this)
             }
-
             easyWayLocation?.startLocation() //calculateDistance()
 
         } else {
@@ -228,25 +213,16 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
 
         val locale = Guru.getString(resources.getString(R.string.locale_sp), resources.getString(R.string._english))
-
         Log.e("Lang",""+locale)
-
         if (locale.equals(resources.getString(R.string._gujarati), ignoreCase = true)) {
-
-                changeLang(applicationContext, "ગુજરાતી")
-
+            changeLang(applicationContext, "ગુજરાતી")
         } else if (locale.equals(resources.getString(R.string._hindi), ignoreCase = true)) {
-
-                changeLang(applicationContext, "हिन्दी")
-
+            changeLang(applicationContext, "हिन्दी")
         } else {
-
-                changeLang(applicationContext, "English")
-
+            changeLang(applicationContext, "English")
         }
-
-
     }
+
 
     override fun onPause() {
         super.onPause()
@@ -258,7 +234,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     override fun onBackPressed() {
-
         backNavigation(this)
     }
 
@@ -432,6 +407,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     dashboardViewModel.fetchOccupation(counts.occupation)
                     dashboardViewModel.fetchCommittee(counts.committees)
                     dashboardViewModel.fetchDesignation(counts.designations)
+                    dashboardViewModel.fetchGotra(counts.gotra)
                 } else {
                     if (dbCount.business_categories != counts.business_categories) {
                         dashboardViewModel.fetchBusinessCategory(counts.business_categories)
@@ -475,9 +451,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     if (dbCount.designations != counts.designations) {
                         dashboardViewModel.fetchDesignation(counts.designations)
                     }
-                    //dashboardViewModel.fetchGotra(counts.gotra)
+                    if (dbCount.gotra != counts.gotra) {
+                        dashboardViewModel.fetchGotra(counts.gotra)
+                    }
                 }
-
             }
         }
     }

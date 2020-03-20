@@ -20,14 +20,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.github.squti.guru.Guru
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
-import com.krs.community.activity.SplashActivity
 import com.krs.community.adapter.NavigationDrawerAdapter
 import com.krs.community.app.AppController
 import com.krs.community.listeners.InnerLogoutListner
+import com.krs.community.model.Member
 import com.krs.community.model.NavDrawerItem
 import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.Utility
@@ -102,7 +103,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         llLogout.setOnClickListener { v: View? ->
             TTFancyGifDialog.Builder(activity)
                     .setTitle(getString(R.string.you_sure))
-                    .setMessage("Logout the " + getString(R.string.app_name))
+                    .setMessage("Exit the " + getString(R.string.app_name))
                     .setPositiveBtnText("Yes")
                     .setPositiveBtnBackground("#22b573")
                     .setNegativeBtnText("No")
@@ -264,10 +265,20 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
     override fun userLogout(response: UserInnerLogoutResponse) {
         Utility.hideSweetProgress()
         if (response.success) {
-            Guru.clear()
-            val intent = Intent(activity, SplashActivity::class.java)
+
+            val intent = Intent(activity, FamilyDetailActivity::class.java)
+            val memberString = Guru.getString(getString(R.string.loginMember), "")
+            val member = Gson().fromJson(memberString, Member::class.java)
+            Guru.putString(getString(R.string.member_id), "")
+            var id = ""
+            if (member.headId == "0") {
+                id = member.id
+            } else {
+                id = member.headId
+            }
+            intent.putExtra(getString(R.string.id), id)
             startActivity(intent)
-            activity!!.finish()
+            activity?.finish()
             Utility.fade(activity)
         } else {
             Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()

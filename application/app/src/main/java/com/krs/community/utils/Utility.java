@@ -720,7 +720,6 @@ public class Utility {
             Fragment smartFilterResult = fragmentManager.findFragmentByTag(SmartFilterResult.class.getSimpleName());
             Fragment expandableFragment = fragmentManager.findFragmentByTag(ExpandableFilterListFragment.class.getSimpleName());
             if (dashboard != null && dashboard.isVisible()) {
-
                 Exit(activity);
                 return;
             } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible()) || expandableFragment != null && expandableFragment.isVisible()) {
@@ -748,26 +747,10 @@ public class Utility {
         }
 
         doubleBackToExitPressedOnce = true;
-     //   Toast.makeText(activity, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-        Toast toast = Toast.makeText(activity, R.string.pleaseclick, Toast.LENGTH_SHORT);
-        View view = toast.getView();
-        view.setBackgroundColor(Color.TRANSPARENT);
-        TextView text = (TextView) view.findViewById(android.R.id.message);
-        text.setShadowLayer(0, 0, 0, Color.TRANSPARENT);
-        text.setTextSize(16);
-        text.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
-        toast.show();
+        Utility.displaySnackBarWithBottomMargin(activity.findViewById(android.R.id.content), activity.getString(R.string.pleaseclick));
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
-
-
-
 
     public static void movetoFragment(Activity activity, Fragment fragment) {
 
