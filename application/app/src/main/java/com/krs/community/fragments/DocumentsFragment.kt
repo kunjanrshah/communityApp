@@ -109,7 +109,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                 documentsListModel.getUploadedFiles(updated)
             }
         }
-        adapter = object : ParallaxRecyclerAdapter<UploadedFile>(listUpload) {
+        adapter = object : ParallaxRecyclerAdapter<UploadedFile>(listUpload as MutableList<UploadedFile>?) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder?, adapter: ParallaxRecyclerAdapter<UploadedFile>?, i: Int) {
                 val uploadfile = listUpload[i]
                 val holder = viewHolder as MyViewHolder
