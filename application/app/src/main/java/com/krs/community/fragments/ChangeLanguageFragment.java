@@ -1,6 +1,5 @@
 package com.krs.community.fragments;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import androidx.fragment.app.Fragment;
 
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
-import com.krs.community.activity.DashboardActivity;
 import com.krs.community.app.AppController;
 import com.krs.community.utils.Utility;
 
@@ -28,8 +26,8 @@ import static com.krs.community.utils.Utility.changeStatusbarColor;
 
 public class ChangeLanguageFragment extends Fragment {
 
-    AppCompatRadioButton rb_hindi, rb_gujarati, rb_english;
-    TextView tvChangeLang,tvEng,tvGuj,tvHindi;
+    private AppCompatRadioButton rb_hindi, rb_gujarati, rb_english;
+    private TextView tvChangeLang, tvEng, tvGuj, tvHindi;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
@@ -44,13 +42,6 @@ public class ChangeLanguageFragment extends Fragment {
         ImageView iv_lan_cancel = root.findViewById(R.id.iv_lan_cancel);
         iv_lan_cancel.setOnClickListener(v -> {
             Utility.backNavigation(getActivity());
-
-           /* Intent refresh = new Intent(getActivity(), DashboardActivity.class);
-            startActivity(refresh);
-            getActivity().getFragmentManager().popBackStack();*/
-
-
-
         });
 
         changeStatusbarColor(getActivity(), R.color.colorBG, false);

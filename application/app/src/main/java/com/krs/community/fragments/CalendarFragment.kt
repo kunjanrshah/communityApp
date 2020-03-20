@@ -33,7 +33,6 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -599,11 +598,11 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
                         val jsonObject=JSONObject()
                         jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                        jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+                        jsonObject.put(getString(R.string.id), member.id)
                         jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                         jsonObject.put("reminder_date", Date)
                         jsonObject.put("reminder_type", RemiderName)
-                        jsonObject.put("reminder_id", member.id)
+                        jsonObject.put("reminder_id", "0")
                         jsonObject.put("message", Msg)
 
                         val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
