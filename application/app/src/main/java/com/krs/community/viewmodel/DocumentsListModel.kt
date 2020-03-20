@@ -2,6 +2,7 @@ package com.krs.community.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import com.google.gson.JsonObject
 import com.krs.community.listeners.ByDocumentListener
 import com.krs.community.repositories.DocumentListRepository
 import com.krs.community.utils.ApiException
@@ -16,13 +17,13 @@ class DocumentsListModel(
     private lateinit var completableJob: CompletableJob
     lateinit var byDocumentListener: ByDocumentListener
 
-    fun getUploadedFiles() {
+    fun getUploadedFiles(jsonObject: JsonObject) {
         completableJob = Job()
         completableJob.let { thejob ->
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
-                    val response = documentListRepository.getDocumentList()
+                    val response = documentListRepository.getDocumentList(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
                             byDocumentListener.getDocuments(response)

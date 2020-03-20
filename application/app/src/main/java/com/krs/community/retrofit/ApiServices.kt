@@ -114,7 +114,7 @@ interface ApiServices {
     suspend fun getInActiveUsers(@Body request:JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_DOCUMENT)
-    suspend fun getDocumentList(): Response<UploadedFilesResponse>
+    suspend fun getDocumentList(@Body request:JsonObject): Response<UploadedFilesResponse>
 
     @POST(AppConstants.UrlPath.GET_CONTACT_LIST)
     suspend fun getUserByMobile(@Body request: JsonObject): Response<SmartFilterResponse>

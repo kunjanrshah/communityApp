@@ -24,6 +24,8 @@ import com.downloader.PRDownloader
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.adapter.UploadDialogAdapter
 import com.krs.community.app.AppController
@@ -39,6 +41,7 @@ import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
 import lumenghz.com.pullrefresh.PullToRefreshView
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest
+import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -99,7 +102,11 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                 Coroutines.main {
                     Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchinguploadedfiles))
                 }
-                documentsListModel.getUploadedFiles()
+                val jsonObject= JSONObject()
+                jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+
+                val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+                documentsListModel.getUploadedFiles(updated)
             }
         }
         adapter = object : ParallaxRecyclerAdapter<UploadedFile>(listUpload) {
@@ -158,7 +165,11 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
             Coroutines.main {
                 Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchingfiles))
             }
-            documentsListModel.getUploadedFiles()
+            val jsonObject= JSONObject()
+            jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
+
+            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+            documentsListModel.getUploadedFiles(updated)
         }
 
         if (!Utility.checkExternalStoragePermission(activity)) {
@@ -219,6 +230,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                                     parameterName = getString(R.string.uploaded_file)
                             )
                             .addParameter(getString(R.string.filename), uploadedFileName)
+                            .addParameter(getString(R.string.id), Guru.getString(getString(R.string.user_id), "").toString())
                             .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
                             .startUpload()
                     rvDocuments.snackbar(getString(R.string.uploadingstart), Snackbar.LENGTH_INDEFINITE)
