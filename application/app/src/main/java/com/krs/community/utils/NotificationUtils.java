@@ -188,7 +188,7 @@ public class NotificationUtils {
         bigPictureStyle.bigPicture(bitmap);*/
 
         Notification notification;
-        notification = mBuilder.setSmallIcon(R.drawable.icon_ghanchi).setTicker(mContext.getResources().getString(R.string.app_name))
+        notification = mBuilder.setSmallIcon(R.drawable.ic_medk).setTicker(mContext.getResources().getString(R.string.app_name))
                 //.setWhen(getTimeMilliSec(timeStamp)).setAutoCancel(true)
                 .setContentTitle(message)
                 .setSound(alarmSound)

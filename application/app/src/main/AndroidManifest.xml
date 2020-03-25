@@ -35,7 +35,7 @@
 
     <application
         android:name=".app.AppController"
-        android:icon="@drawable/icon_ghanchi"
+        android:icon="@drawable/ic_medk"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/MyMaterialTheme"

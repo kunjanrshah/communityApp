@@ -166,7 +166,7 @@ fun promptReadPermission(context: Context) {
             .setContentText(context.getString(R.string.gallrypermission))
             .setConfirmText(context.getString(R.string.YesPleaseCity))
             .setCancelText(context.getString(R.string.no))
-            .setCustomImage(R.drawable.icon_ghanchi)
+            .setCustomImage(R.drawable.ic_medk)
             .showCancelButton(true)
             .setConfirmClickListener { sDialog ->
                 sDialog.dismiss()

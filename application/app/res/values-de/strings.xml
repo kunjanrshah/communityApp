@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ઘાંચી</string>
+    <string name="app_name">વસ્તીપત્રક</string>
 
     <string name="action_delete">કાઢી નાંખવું</string>
     <string name="action_disable">અક્ષમ કરો</string>

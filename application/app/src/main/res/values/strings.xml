@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="MissingTranslation">Muslim Ghanchi Samaj</string>
+    <string name="app_name" tools:ignore="MissingTranslation">Vastipatrak</string>
     <string name="folder_name" translatable="false">community</string>
     <string name="action_disable" translatable="false">Disable</string>
     <string name="action_location" translatable="false">Location</string>

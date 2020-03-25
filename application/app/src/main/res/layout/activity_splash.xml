@@ -9,7 +9,7 @@
         android:id="@+id/fragmentloginKenBurnsView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/muslim_people2" />
+        android:src="@drawable/img_splash" />
 
     <View
         android:id="@+id/fragmentloginView1"
@@ -26,7 +26,7 @@
         android:layout_marginTop="40dp"
         android:alpha="0"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/splash_logo_ghanchi" />
+        android:src="@drawable/splash_logo_medk" />
 
     <LinearLayout
         android:id="@+id/ll_spinner"

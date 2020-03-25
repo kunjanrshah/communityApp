@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">"मुस्लिम घांची समाज "</string>
+    <string name="app_name">वास्तिपत्रक</string>
 
     <string name="action_disable">अक्षम</string>
     <string name="action_location">स्थान</string>

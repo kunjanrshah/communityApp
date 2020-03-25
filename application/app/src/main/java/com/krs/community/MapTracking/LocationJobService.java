@@ -221,7 +221,7 @@ public class LocationJobService extends JobService implements GoogleApiClient.Co
                     .setOngoing(true)
                     .build();
         }else{
-            notification = mBuilder.setSmallIcon((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ? R.drawable.placeholder : R.drawable.icon_ghanchi).setTicker("Tracking").setWhen(0)
+            notification = mBuilder.setSmallIcon((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ? R.drawable.placeholder : R.drawable.ic_medk).setTicker("Tracking").setWhen(0)
                     .setAutoCancel(false)
                     .setCategory(Notification.EXTRA_BIG_TEXT)
                     .setContentTitle("Tracking")
