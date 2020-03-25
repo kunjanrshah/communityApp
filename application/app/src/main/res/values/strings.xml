@@ -1,7 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="MissingTranslation">Muslim Ghanchi Samaj</string>
     <string name="folder_name" translatable="false">community</string>
-    <string name="action_delete" translatable="false">Delete</string>
     <string name="action_disable" translatable="false">Disable</string>
     <string name="action_location" translatable="false">Location</string>
     <string name="action_active" translatable="false">Active</string>
@@ -16,7 +15,6 @@
 
     <string name="label_add_fact" translatable="false">Add Fact</string>
     <string name="label_add_photos" translatable="false">Add Photos</string>
-    <string name="label_scan_photos" translatable="false">Scan Photos</string>
     <string name="label_add_audio" translatable="false">Add Audio</string>
     <string name="label_add_relative" translatable="false">Add Relative</string>
 
@@ -137,8 +135,6 @@
     <string name="fragment_title_3" translatable="false">Facts</string>
 
 
-    <string name="app_create" translatable="false">app_create</string>
-
     <string name="facebook_app_id" translatable="false">2264814596961704</string>//1749295805152367
     <string name="fb_login_protocol_scheme" translatable="false">fb2264814596961704</string>
 
@@ -147,11 +143,7 @@
     <string name="map_api_key" translatable="false">AIzaSyDci3uC0jldqqy0I4g4D1QpEauiVONXa1Y</string>
 
     <!--Splash screen -->
-    <string name="CityList_SP" translatable="false">CityList_SP</string>
 
-
-    <string name="allow_get_data_value" translatable="false">1</string>
-    <string name="all_cities_list" translatable="false">all_cities</string>
 
     <!--Choose Language screen -->
     <string name="choose_language" translatable="false">Change Language</string>
@@ -159,33 +151,11 @@
     <string name="register" translatable="false">Register</string>
 
     <!-- Login Screen -->
-    <string name="login_now">Login Now</string>
-    <string name="please_login_to_continue_using_our_app">Please login to continue using our app</string>
-    <string name="login_with">Login with</string>
-    <string name="_mobile">Mobile</string>
     <string name="email">Email</string>
-    <string name="enter_mobile_no">Enter Mobile no</string>
-    <string name="password" translatable="false">PIN</string>
-    <string name="_forgot_password">Forgot PIN?</string>
     <string name="or_login_with">Or Login with</string>
-    <string name="enter_email_id">Enter Email ID</string>
-    <string name="send_sms" translatable="false">Send SMS</string>
-    <string name="resend_otp" translatable="false">Resend OTP</string>
-    <string name="send_email">send email</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
-    <string name="err_msg_blank">Please enter missing details</string>
-    <string name="nav_item_change_password">Change PIN</string>
-    <string name="err_msg_invalid_mobile">Invalid Mobile Number</string>
-    <string name="invalid_mobile" translatable="false">Invalid Mobile Number</string>
-    <string name="type_otp">Type OTP</string>
-    <string name="registraion_request_pending">Registration request is pending. Please contact to Admin !!</string>
-    <string name="invalid_username">Invalid username</string>
-    <string name="error_msg_get_data_social_site">Not able to get your details from Social account</string>
-    <string name="update_profile_photo">Do you want to update Profile Photo?</string>
-    <string name="yes">Ok</string>
-    <string name="invalid_username_password">Invalid username or hashkey</string>
-    <string name="loading">Working...</string>
-    <string name="incorrect" translatable="false">incorrect</string>
+    <string name="yes">OK</string>
+    <string name="loading">Working…</string>
 
     <string name="username" translatable="false">username</string>
     <string name="reset_type" translatable="false">reset_type</string>
@@ -200,22 +170,9 @@
     <string name="hint_conform_password">Confirm PIN</string>
     <string name="how_to_register">How to Register?</string>
     <string name="already_have_a_account_sign_in">Already have a account?</string>
-    <string name="hint_surname">Last Name</string>
-    <string name="hint_city">City</string>
-    <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
-    <string name="invalid_email">Invalid Email Address!</string>
-    <string name="err_invalid_email" translatable="false">Invalid Email Address!</string>
-    <string name="err_msg_repeat_password">PIN and Repeat hashkey not match</string>
-    <string name="user_not" translatable="false">User not</string>
-    <string name="user_not_found">User not found!</string>
 
     <!-- Common Screen -->
-    <string name="can_not_connect_to_internet">Cannot connect to Internet...Please check your connection!</string>
-    <string name="server_could_not_found">The server could not be found. Please try again after some time!!</string>
-    <string name="parsing_error">Parsing error! Please try again after some time!!</string>
-    <string name="connection_timeout">Connection TimeOut! Please check your internet connection.</string>
     <string name="locale_sp" translatable="false">Locale_sp</string>
-    <string name="verify_otp">Verify</string>
 
     <!-- Smart Screen -->
     <string name="main">Main Details</string>
@@ -278,9 +235,7 @@
     <string name="ss_samaj" translatable="false">Samaj</string>
     <string name="ss_city" translatable="false">City</string>
     <string name="ss_marital" translatable="false">Marital</string>
-    <string name="ss_area" translatable="false">Area</string>
     <string name="ss_state" translatable="false">State</string>
-    <string name="ss_mosad" translatable="false">Mosad</string>
     <string name="ss_education" translatable="false">Education</string>
     <string name="ss_gotra" translatable="false">Gotra</string>
     <string name="ss_bg" translatable="false">BG</string>
@@ -288,10 +243,8 @@
     <string name="ss_sub_cat" translatable="false">Sub_Cat</string>
     <string name="ss_Occupation" translatable="false">Occupation</string>
     <string name="ss_activity" translatable="false">Activity</string>
-    <string name="ss_bplace" translatable="false">BPlace</string>
 
     <string name="dateFormat" translatable="false">EE, dd MMM</string>
-    <string name="dateFormat_first" translatable="false">dd/MM/yyyy</string>
     <string name="period" translatable="false">%1$s – %2$s</string>
     <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>
 
@@ -304,17 +257,12 @@
     <string name="apikey" translatable="false">apikey</string>
     <string name="devicetoken" translatable="false">devicetoken</string>
     <string name="intudid" translatable="false">intudid</string>
-    <string name="register_new_family">નવો પરિવાર રેજીસ્ટર કરો.</string>
-    <string name="click_on_register">બધી જ અગત્ય ની ફેમિલી હેડ ની વીગતો ભરી નવી ફેમિલી બનાવા માટે રેજીસ્ટર બટન પર ક્લિક કરો.</string>
-    <string name="upload_photo">તમારો પ્રોફાઈલ ફોટો અપલોડ કરો.</string>
-    <string name="select_photo">મોબાઈલ ગેલેરી માંથી તમારો મનપસંદ ફોટો સિલેક્ટ કરો અને મનપસંદ ઈફેક્ટ આપી ને સેવ કરો.</string>
     <string name="headanimation">headanimation</string>
     <string name="enter_firstname">Please enter your First Name</string>
     <string name="enter_lastname">Please enter your LastName</string>
     <string name="enter_email">Please enter your Email</string>
     <string name="enter_gender">Please select gender</string>
     <string name="enter_mobile">Please enter your Mobile</string>
-    <string name="select_country_code">Please select your Country</string>
     <string name="enter_password">Please enter your PIN</string>
     <string name="confirm_password">Please enter to confirm PIN</string>
     <string name="password_mismatch">PIN is mismatch</string>
@@ -328,7 +276,6 @@
     <string name="hash_key">hash_key</string>
     <string name="otp_send">Sending OTP Please wait!!</string>
     <string name="seat_back_relax">Seat back &amp; Relax!</string>
-    <string name="fetching_states">Fetching States</string>
     <string name="you_sure">Are you sure?</string>
     <string name="restrict_space" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
     <string name="only_chars" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</string>
@@ -368,7 +315,6 @@
     <string name="business_sub_category_id" translatable="false">business_sub_category_id</string>
     <string name="business_category_id" translatable="false">business_category_id</string>
     <string name="company_name" translatable="false">company_name</string>
-    <string name="business_logo" translatable="false">business_logo</string>
     <string name="about_me" translatable="false">about_me</string>
     <string name="facebook_profile" translatable="false">facebook_profile</string>
     <string name="birth_time" translatable="false">birth_time</string>
@@ -383,8 +329,6 @@
     <string name="is_shani" translatable="false">is_shani</string>
     <string name="updated_dt" translatable="false">updated_dt</string>
     <string name="user_id" translatable="false">user_id</string>
-    <string name="user_mobile" translatable="false">user_mobile</string>
-    <string name="user_email" translatable="false">user_email</string>
     <string name="access_token" translatable="false">access_token</string>
     <string name="date" translatable="false">date</string>
     <string name="state" translatable="false">state</string>
@@ -431,13 +375,6 @@
     <string name="liveo_search_view_close">Delete query text</string>
     <string name="liveo_not_supported">Not Supported</string>
 
-    <string name="location_permissions_denied_feedback">location permission is needed for calculate distance</string>
-    <string name="all_permissions_denied_feedback">All those permissions are needed for doing some magic</string>
-    <string name="permission_rationale_settings_button_text">SETTINGS</string>
-    <string name="permission_rationale_title">We need this permission</string>
-    <string name="permission_rationale_message">This permission is needed for doing some fancy stuff so please, allow it!</string>
-    <string name="camera_permission_denied_dialog_title">Camera permission request</string>
-    <string name="camera_permission_denied_dialog_feedback">QRCode sharing and profile image will not be available until you accept the permission request</string>
     <string name="Local_Admin" translatable="false">Local Admin</string>
     <string name="LOCAL_ADMIN" translatable="false">LOCAL_ADMIN</string>
     <string name="Sub_Admin" translatable="false">Sub Admin</string>
@@ -466,7 +403,6 @@
     <string name="edit_filter" translatable="false">edit_filter</string>
     <string name="head_id" translatable="false">head_id</string>
 
-    <string name="type" translatable="false">type</string>
     <string name="profile" translatable="false">profile</string>
     <string name="company" translatable="false">company</string>
     <string name="enter_pin">Please enter your PIN</string>
@@ -491,16 +427,8 @@
     <string name="select_local_community">Select Local Community</string>
     <string name="RegisterFamily">Registering your family details</string>
     <string name="RegisterFamilyPhoto">Uploading your photo</string>
-    <string name="FetchingCity">Fetching City</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="youtubeVideo">Youtube Video</string>
-    <string name="HowToRegister">How to Register?</string>
-    <string name="hoeRegister">how_register</string>
-    <string name="RegisterButton">Register Button</string>
-    <string name="ClickToRegister">Click here to Register</string>
-    <string name="FillUpYourDetail">Fill up your details</string>
-    <string name="btnRegister">btn_register</string>
     <string name="Register">Register</string>
     <string name="RequestAdmin">Request sent to your admin</string>
     <string name="CannotImage">Cannot retrieve selected image</string>
@@ -553,7 +481,6 @@
     <!-- ProfileDetail Sccren -->
     <string name="Finding">Finding</string>
     <string name="user">User</string>
-    <string name="locationOff">\'s location is off</string>
     <string name="updateprofile">Update Profile</string>
     <string name="update">Update</string>
     <string name="no">Cancel</string>
@@ -563,7 +490,6 @@
     <string name="selectYourLastName">Select LastName</string>
     <string name="SelectYourGender">Select Gender</string>
     <string name="SelectRelation">Select Relation</string>
-    <string name="Distance">Distance</string>
     <string name="Profile">\'s Profile</string>
 
     <string name="add">Add</string>
@@ -571,10 +497,6 @@
 
     <string name="Success">Success</string>
     <string name="profileUpdate">Profile updated!</string>
-    <string name="locationUpdate">Your Location is private now.</string>
-
-    <string name="selectedImage">Cannot retrieve selected image</string>
-    <string name="image">Image</string>
 
     <string name="my_profile">My Profile</string>
 
@@ -654,7 +576,6 @@
     <string name="SelectedAll">Selected \'ALL\'</string>
 
     <!-- Location Adapter -->
-    <string name="Private">Private</string>
     <string name="location">Location</string>
 
 
@@ -675,10 +596,7 @@
     <string name="icon_to_search_members">Icon to Search Members</string>
 
     <!-- SmartPopUp Adapter -->
-    <string name="filterNotsaved">Filter not saved!</string>
-    <string name="noFilterFound">No Filter found!</string>
     <string name="filter_name">Filter Name</string>
-    <string name="filter_1">Filter 1</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>
     <string name="head">Head :</string>
@@ -781,8 +699,6 @@
 
     <!-- ChangePassword Fragment -->
     <string name="forgotPin">Forgot PIN</string>
-    <string name="letMeCheck">Let me check</string>
-    <string name="Cancel">Cancel</string>
     <string name="pinWillsend">PIN will be sent to</string>
     <string name="change_pin">Change PIN</string>
     <string name="current_pin">Current PIN</string>
@@ -802,7 +718,6 @@
 
     <!-- DashBoard Fragment -->
     <string name="DevicDont">Your Device Don\'t Support Speech Input</string>
-    <string name="ThisIsSlider">This is slider</string>
     <string name="search_here">Search Here...</string>
     <string name="news_amp_events"><![CDATA[News & Events]]></string>
     <string name="view_all">View All</string>
@@ -811,17 +726,11 @@
     <string name="clear">Clear</string>
 
     <!-- FamilyDetail Fragment -->
-    <string name="updateDtail">updated</string>
-    <string name="ExitDetail">Exit</string>
-    <string name="EnterDetail">Enter</string>
     <string name="pinFoundDetail">PIN not found!</string>
-    <string name="RecoverProfileDetail">Won\'t be able to recover this Profile!</string>
-    <string name="YesDeleteDetail">Yes,delete it!</string>
     <string name="delete">Delete</string>
     <string name="download">Download</string>
     <!-- Fragment Drawer Fragment -->
     <string name="Version">Version</string>
-    <string name="vastipatrak">Vastipatrak</string>
 
     <string name="logout">Logout</string>
     <string name="version_1_2">Version 1.2</string>
@@ -908,8 +817,6 @@
     <string name="kmPDetail">%.2f KM</string>
     <string name="OfficeLocation">Office Location</string>
     <string name="WithGoogle">With Google Map</string>
-    <string name="SetDetail">Set</string>
-    <string name="ViewDetails">View</string>
     <string name="updatingLocationDetail">Updating your office location</string>
     <string name="PleasWaitDetails">Please wait...</string>
     <string name="headDetails">Only Family Head Set the Office Location</string>
@@ -942,7 +849,6 @@
     <string name="ShareCity">Share your location to</string>
     <string name="ProfileCity">Profiles!</string>
     <string name="YesCity">Share it!</string>
-    <string name="YesExport">Export it!</string>
     <string name="ProfileRoleCity">Profiles Role will be changed to</string>
     <string name="YesPleaseCity">Yes,Please!</string>
 
@@ -959,29 +865,10 @@
     <string name="YesPlList">Yes,Please!</string>
 
     <!-- ShareEvent Fragment -->
-    <string name="EventRequired">Event title is required</string>
-    <string name="EventAddress">Event address is required</string>
-    <string name="EnetDescription">Event description is required</string>
-    <string name="StartDate">Start date is required</string>
-    <string name="EndDate">End date is required</string>
-    <string name="StartTime">Start time is required</string>
-    <string name="EndTime">End time is required</string>
-    <string name="Creating">Creating an event</string>
 
-    <string name="SelectTime">Select Time</string>
-    <string name="share_event">Share Event</string>
-    <string name="event_title">Event Title</string>
-    <string name="event_address">Event Address</string>
     <string name="event_description">Event Description</string>
-    <string name="event_date_amp_time"><![CDATA[Event Date & Time]]></string>
     <string name="startEvent">Start</string>
-    <string name="timeEvent">Time</string>
     <string name="endEvent">End</string>
-
-    <string name="upload_imagesEvent">Upload Images</string>
-    <string name="add_youtube_urlsEvent">Add Youtube URLs</string>
-    <string name="create_eventEvent">Create Event</string>
-    <string name="share_nowEvent">Share Now</string>
 
     <!-- SmartFilter Fragment -->
     <string name="endrecord">End of Records</string>
@@ -1019,47 +906,15 @@
     <string name="rentedDetails">Rented</string>
 
 
-    <string name="EmailContact">Email Address</string>
-    <string name="MobileContact">Mobile Number</string>
-    <string name="LocalDetails">Local Address</string>
-    <string name="PermanetDetails">Permanent Address</string>
-    <string name="PinDetails">PinCode</string>
-    <string name="AreaContact">Area</string>
-    <string name="StateContact">Select State</string>
     <string name="MemberCodeDetails">Member Code</string>
-    <string name="HeadDetails">Head Name</string>
     <string name="MemberNameDetails">Member Name</string>
     <string name="LastNameDetails">Last Name</string>
     <string name="LocalComDetails">Local Community</string>
-    <string name="MaritalDetails">Marital Status</string>
-    <string name="SelectNDetails">Select Native</string>
-    <string name="SelectCDetails">Select City</string>
-    <string name="EductionDetails">Education</string>
-    <string name="SelectGDetails">Select Gotra</string>
-    <string name="SelectBDetails">Select BloodGroup</string>
-    <string name="BirthDetails">Birth Date</string>
-    <string name="MarriageDetails">Marriage Date</string>
-    <string name="WifeDetails">Wife\'s Native</string>
-    <string name="IsDonorDetails">is Doner?</string>
-    <string name="isRentedDetails">is Rented?</string>
-    <string name="isExpiredDetails">is Expired?</string>
-    <string name="OfficeDetails">Office Address</string>
-    <string name="CategoryDetails">Category</string>
-    <string name="SubCategoryDetails">Sub Category</string>
     <string name="OccupationDetails">Occupation</string>
-    <string name="CurrentActivtyDetails">Current Activity</string>
-    <string name="isSpectaDetails">is Spectacles?</string>
-    <string name="isShaniDetails">is Shani?</string>
-    <string name="isMangalDetails">is Mangal?</string>
     <string name="HeightDetails">Height</string>
-    <string name="MeterDetails">Meter</string>
     <string name="WeghtDetails">Weight</string>
     <string name="kg">Kg</string>
-    <string name="ProfileDetails">Profile Created Date</string>
-    <string name="UpdateDetails">Profile Updated Date</string>
-    <string name="ProfilePDetails">Profile updatation Percentage</string>
     <string name="WelcomeSmart">Welcome to  Smart Filter</string>
-    <string name="youDetails">You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)</string>
     <string name="MainDetails">Main Details</string>
 
 
@@ -1067,7 +922,6 @@
     <string name="AddDetails">Address</string>
     <string name="FamilyMemberDetail">Family Member List (0)</string>
     <string name="AddMemberDetails">Add Member</string>
-    <string name="Unlock">Scan your finger to unlock application</string>
     <string name="SearchNearby">Search by Distance</string>
     <string name="EnterNewrby">Enter Distance(Km)</string>
     <string name="SearchNearBy">Search Now</string>
@@ -1086,28 +940,20 @@
 
 
     <string name="backmatrimony">Back to Matrimony</string>
-    <string name="SearchName">Search Name</string>
-    <string name="Find">Find Records</string>
     <string name="AllNotification">All Notifications</string>
     <string name="AllFilter">All Filters</string>
     <string name="youFilte">You can see list of offline filters and edit, delete or apply it.</string>
-    <string name="LocalCommnunity">Local Community</string>
     <string name="Community">COMMITTEE</string>
     <string name="Designation">DESIGNATION</string>
     <string name="Duration">DURATION</string>
     <string name="SarchKeyword">SEARCH KEYWORD</string>
     <string name="Commi">Committee</string>
-    <string name="RegionName">Region name</string>
-    <string name="DurationCommitee">Duration</string>
-    <string name="CommiteeName">Committee name</string>
-    <string name="DesignCommi">Designation</string>
 
     // 22-02-2020
 
     <string name="no_internet">No internet connection!</string>
     <string name="check_network">Please check your internet connection and try again</string>
     <string name="retry">Retry</string>
-    <string name="fetching_local_community">Fetching Local Community</string>
     <string name="coming_soon">Working on it</string>
     <string name="admin_only">For Admin only</string>
     <string name="contact_number">9427051418</string>
@@ -1126,9 +972,6 @@
     <string name="cityList">City List</string>
     <string name="sCommunity">Sub Community</string>
     <string name="localCom">Local Community</string>
-    <string name="OtpVerification">OTP Verification</string>
-    <string name="enterOtp">Enter the OTP you have received to</string>
-    <string name="ResendOtp">Resend OTP?</string>
     <string name="fmilyList">Family Members</string>
     <string name="sdetails">\'s Details</string>
     <string name="exitDetails">Exit</string>
@@ -1171,11 +1014,6 @@
     <string name="mobile_not_found">Mobile not found!</string>
     <string name="filter_values" translatable="false">filter_values</string>
     <string name="no_selection">No Selection</string>
-    <string name="membercode">Member Code</string>
-    <string name="RelationDetails">Relation</string>
-    <string name="sLatsname">Select LastName</string>
-    <string name="stateSelected">State</string>
-    <string name="rented">Rented</string>
 
     <string name="email_addressdetails">Email Address</string>
     <string name="mobile_numberdetails">Mobile Number</string>
@@ -1206,15 +1044,12 @@
     <string name="select_native">Select Native</string>
     <string name="select_citydetails">Select City</string>
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)</string>
-    <string name="export_search_result">Export search result!</string>
     <string name="select_filter">Please select filter!</string>
     <string name="default_filter_name">name</string>
     <string name="enter_filter_value">Please enter filters for search</string>
     <string name="smart_filter">Smart Filter</string>
     <string name="isdialogshow">isDialogShow</string>
-    <string name="uploaded_file">uploaded_file</string>
     <string name="filename">filename</string>
-    <string name="asa" translatable="false">adad</string>
     <string name="is_logged_in">isLogin</string>
     <string name="notification_channel_id" translatable="false">101</string>
     <string name="mycontacts">My Contacts</string>
@@ -1254,7 +1089,6 @@
     <string name="totalrecord">"Total Record Founds: "</string>
     <string name="filenameupload">File Name to upload</string>
     <string name="pleasename">Please enter name</string>
-    <string name="localCommId" translatable="false">localCommId</string>
 
     <string name="exportfilter">Export Filter</string>
     <string name="done">Done</string>
@@ -1301,8 +1135,7 @@
     <string name="subcommid" translatable="false">subCommId</string>
     <string name="localcommid" translatable="false">localCommId</string>
     <string name="setRemider">You will get reminder on this day </string>
-    <string name="Rminderset">You Will get Notify on</string>
     <string name="confPin">ConfPin</string>
-
-
+    <string name="not_updated">Not updated</string>
+    <string name="zero_date">0000-00-00</string>
 </resources>

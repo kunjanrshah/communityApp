@@ -238,6 +238,19 @@ public class Utility {
         snackbar.show();
     }
 
+    public static Snackbar getSnackBarWithBottomMargin(View main, String message) {
+        Snackbar snackbar = Snackbar.make(main, message, Snackbar.LENGTH_INDEFINITE);
+        final FrameLayout snackBarView = (FrameLayout) snackbar.getView();
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView.getLayoutParams();
+        params.setMargins(params.leftMargin + 15,
+                params.topMargin,
+                params.rightMargin + 15,
+                params.bottomMargin + 120);
+        snackBarView.setLayoutParams(params);
+        return snackbar;
+    }
+
     public static int calculatePercentage(Member member) {
         int percentage = 0;
         int empty = 0;

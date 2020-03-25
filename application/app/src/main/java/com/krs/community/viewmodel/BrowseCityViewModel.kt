@@ -3,6 +3,7 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.entities.City
 import com.krs.community.entities.States
 import com.krs.community.listeners.IbrowseCityRecordsListener
@@ -10,7 +11,7 @@ import com.krs.community.model.SearchByCityData
 import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class BrowseCityViewModel(
@@ -34,7 +35,7 @@ class BrowseCityViewModel(
     }
 
     fun fetchRecordsByCity(data: SearchByCityData) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             job_users = Job()
             job_users.let { thejob ->
                 CoroutineScope(Dispatchers.IO + thejob!!).launch {

@@ -3,11 +3,12 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.NewsListener
 import com.krs.community.repositories.NewsRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class NewsViewModel(
@@ -19,7 +20,7 @@ class NewsViewModel(
     lateinit var mNewsListener: NewsListener
 
    fun getNewsSearch(jsonObject: JsonObject) {
-       if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+       if (isNetworkConnected(app.applicationContext)) {
            completableJob = Job()
            completableJob.let { thejob ->
 

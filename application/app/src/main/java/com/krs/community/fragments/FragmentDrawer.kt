@@ -26,6 +26,7 @@ import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.adapter.NavigationDrawerAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.InnerLogoutListner
 import com.krs.community.model.Member
 import com.krs.community.model.NavDrawerItem
@@ -33,7 +34,7 @@ import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
-import com.wessam.library.NetworkChecker
+
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -84,8 +85,8 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         val layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false)
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, FragmentDrawer::class.simpleName)
-        mApp.FacebookAnalytics(context, FragmentDrawer::class.simpleName)
+        mApp.firebaseAnalytics(context, FragmentDrawer::class.simpleName)
+        mApp.facebookAnalytics(context, FragmentDrawer::class.simpleName)
 
         val recyclerView: RecyclerView = layout.findViewById(R.id.drawerList)
         val tvSettings = layout.findViewById<TextView>(R.id.tv_settings)
@@ -109,7 +110,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
                     .setGifResource(R.drawable.gif_logout)
                     .isCancellable(false)
                     .OnPositiveClicked {
-                        if (NetworkChecker.isNetworkConnected(context as AppCompatActivity)) {
+                        if (isNetworkConnected(context as AppCompatActivity)) {
                             getMemberLogout()
                         }
                     }

@@ -11,11 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.*
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.FragmentStatisticsBinding
 import com.krs.community.listeners.StatisticsListener
 import com.krs.community.responses.StatisticResponse
@@ -24,7 +26,6 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.StatisticsViewModel
 import com.krs.community.viewmodelfactory.StatisticsViewModelFactory
-import com.wessam.library.NetworkChecker
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -35,14 +36,13 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
     private lateinit var statisticsViewModel: StatisticsViewModel
     private val factory: StatisticsViewModelFactory by instance()
     private lateinit var binding: FragmentStatisticsBinding
+    private lateinit var snackbar: Snackbar
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding= DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
-
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, StatisticFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, StatisticFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, StatisticFragment::class.simpleName)
+        mApp.facebookAnalytics(context, StatisticFragment::class.simpleName)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.bg_gray, false)
@@ -50,13 +50,38 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
 
         statisticsViewModel = ViewModelProvider(this, factory).get(StatisticsViewModel::class.java)
         statisticsViewModel.mStatisticsListener=this
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
+
+        setScreenLayout()
+
+        AppController.mApplication.connectionLiveData.observeForever {
+            it?.let {
+                if (it) {
+                    if (snackbar.isShown) {
+                        snackbar.dismiss()
+                        getStatisticsResult(0)
+                    }
+                } else {
+                    binding.shimmerViewContainer.stopShimmerAnimation()
+                    binding.shimmerViewContainer.visibility = View.GONE
+                    binding.scroll.visibility = View.VISIBLE
+                    snackbar.show()
+                }
+            }
+        }
+        return binding.root
+    }
+
+    private fun setScreenLayout() {
+
         binding.spCity.setOnItemClickListener {
             Coroutines.main {
                 val id = statisticsViewModel.getCityIdByName(binding.spCity.text.toString().trim())
                 if (id != 0) {
                     getStatisticsResult(id)
                 } else {
-                    binding.llVillages.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
+                    binding.llVillages.snackbar(getString(R.string.went_wrong), LENGTH_LONG)
                 }
             }
         }
@@ -68,13 +93,12 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
             binding.spCity.setExpandTint(R.color.black)
         }
 
-        getStatisticsResult(0)
+        snackbar = make(binding.flRoot, getString(R.string.check_network), LENGTH_INDEFINITE)
         binding.ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
-        return binding.root
     }
 
     private fun getStatisticsResult(cityId:Int){
-        if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+        if (isNetworkConnected(activity as AppCompatActivity)) {
             val jsonObject = JSONObject()
             jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
             jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))

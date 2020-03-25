@@ -18,6 +18,7 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.bkservice.utilities.Notification
 import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
@@ -25,7 +26,6 @@ import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-import com.wessam.library.NetworkChecker.isNetworkConnected
 import kotlinx.coroutines.*
 import org.json.JSONObject
 
@@ -89,7 +89,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
             Log.i(TAG, "restarting foreground")
             try {
                 val notification = Notification()
-                startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.icon_ghanchi))
+                startForeground(NOTIFICATION_ID, notification.setNotification(this, "You are sharing your location", "Remove your shared users to stop sharing", R.drawable.icon_ghanchi))
                 Log.i(TAG, "restarting foreground successful")
                 easyWayLocation?.startLocation()
                 // serviceIntent = Intent(this, CallReceiver::class.java)
@@ -190,12 +190,5 @@ class Service : android.app.Service(), Listener, AddressCallBack {
         protected const val NOTIFICATION_ID = 1337
         private const val TAG = "Service"
         private var mCurrentService: Service? = null
-        fun getmCurrentService(): Service? {
-            return mCurrentService
-        }
-
-        fun setmCurrentService(mCurrentService: Service?) {
-            Companion.mCurrentService = mCurrentService
-        }
     }
 }

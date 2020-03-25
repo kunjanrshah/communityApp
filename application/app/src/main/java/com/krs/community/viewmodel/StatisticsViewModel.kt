@@ -3,11 +3,12 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.StatisticsListener
 import com.krs.community.repositories.StatisticsRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class StatisticsViewModel(
@@ -27,7 +28,7 @@ class StatisticsViewModel(
     }
 
     fun getStatistics(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             job_statistics = Job()
             job_statistics.let { thejob ->
 

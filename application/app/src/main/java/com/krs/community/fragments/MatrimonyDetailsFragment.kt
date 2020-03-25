@@ -41,8 +41,8 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony_details, container, false)
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
+        mApp.facebookAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
         member = arguments?.getSerializable(getString(R.string.member)) as Member

@@ -72,8 +72,8 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
         roomMemberViewModel.mRoomMemberListener = this
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@FavoriteProfileActivity, FavoriteProfileActivity.javaClass.simpleName)
-        mApp.FacebookAnalytics(this@FavoriteProfileActivity, FavoriteProfileActivity.javaClass.simpleName)
+        mApp.firebaseAnalytics(this@FavoriteProfileActivity, FavoriteProfileActivity.javaClass.simpleName)
+        mApp.facebookAnalytics(this@FavoriteProfileActivity, FavoriteProfileActivity.javaClass.simpleName)
 
         onInitView()
     }
@@ -105,7 +105,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             Utility.fade(this)
         } else if (id == R.id.action_export) {
             if (Utility.checkExternalStoragePermission(this)) {
-                val adapter: ExportAdapter = ExportAdapter(this@FavoriteProfileActivity)
+                val adapter = ExportAdapter(this@FavoriteProfileActivity)
                 adapter.setExportListner(this@FavoriteProfileActivity)
                 exportDialog = DialogPlus.newDialog(this@FavoriteProfileActivity)
                         .setAdapter(adapter)
@@ -136,7 +136,6 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
     private fun onInitView(){
         mBinding=  DataBindingUtil.setContentView(this,R.layout.activity_favorite)
         this.onInitToolbar(mBinding.toolbar,getString(R.string.Search),R.drawable.ic_arrow_back_white_24dp)
-
         mBinding.searchLiveo.with(this).removeMinToSearch().removeSearchDelay().build()
         mBinding.recyclerView.setHasFixedSize(true)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -165,14 +164,14 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
     override fun getRoomMembers(response: List<RoomMember>) {
         if (response.isNotEmpty()) {
             lstMember.addAll(response)
-
             mAdapter = FavoriteAdapter(lstMember as MutableList<RoomMember>)
             mBinding.recyclerView.adapter = mAdapter
+            mBinding.ivNotFound.visibility = View.GONE
         }else{
+            mBinding.ivNotFound.visibility = View.VISIBLE
             DashboardActivity.stop = true
             Snackbar.make(mBinding.recyclerView, resources.getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
         }
-
     }
 
     override suspend fun getFailure(message: String) {
@@ -195,11 +194,15 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
         }
     }
 
-
     inner class FavoriteAdapter(private val mMembers: MutableList<RoomMember>) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
         private val mSearchMembers: ArrayList<RoomMember> = ArrayList()
         init {
-            mSearchMembers.addAll(mMembers)
+            if (mMembers.size > 0) {
+                mSearchMembers.addAll(mMembers)
+                mBinding.ivNotFound.visibility = View.GONE
+            } else {
+                mBinding.ivNotFound.visibility = View.VISIBLE
+            }
         }
 
        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -283,7 +286,11 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                 viewHolder.tvRole.text = resources.getString(R.string.Member)
             }
             if (!member.updatedDt.isNullOrEmpty()) {
-                viewHolder.tvUpdate.text = getString(R.string.Updated) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                    viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                } else {
+                    viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                }
             }
 
             viewHolder.boomMenuButton.clearBuilders()

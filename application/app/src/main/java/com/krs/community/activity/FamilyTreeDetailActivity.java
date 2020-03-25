@@ -42,6 +42,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
+import com.krs.community.app.ConnectionLiveData;
 import com.krs.community.awareviewpager.FactsFragment;
 import com.krs.community.awareviewpager.PhotosFragment;
 import com.krs.community.awareviewpager.RelativesFragment;
@@ -49,9 +50,10 @@ import com.krs.community.awareviewpager.SlidingTabLayout;
 import com.krs.community.awareviewpager.ViewPagerFragmentBase;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
-import com.wessam.library.NetworkChecker;
 
 import java.lang.reflect.Method;
+
+;
 
 public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewPagerFragmentBase.FragmentListener {
 
@@ -116,11 +118,11 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(FamilyTreeDetailActivity.this,FamilyTreeDetailActivity.class.getSimpleName());
-        mApp.FacebookAnalytics(FamilyTreeDetailActivity.this,FamilyTreeDetailActivity.class.getSimpleName());
+        mApp.firebaseAnalytics(FamilyTreeDetailActivity.this, FamilyTreeDetailActivity.class.getSimpleName());
+        mApp.facebookAnalytics(FamilyTreeDetailActivity.this, FamilyTreeDetailActivity.class.getSimpleName());
 
 
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setScreenLayout();
         }else{
             setNoInternetLayout();
@@ -129,7 +131,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
     }
     private void setScreenLayout(){
 
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setContentView(R.layout.activity_tree_detailview);
 
             mHandler = new Handler();
@@ -259,7 +261,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
                 setScreenLayout();
             }
 
@@ -295,7 +297,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         @Override
         public void onReceive(Context context, Intent intent) {
             try{
-                if (NetworkChecker.isNetworkConnected(context)) {
+                if (ConnectionLiveData.Companion.isNetworkConnected(context)) {
                     setScreenLayout();
                 }else{
                     setNoInternetLayout();

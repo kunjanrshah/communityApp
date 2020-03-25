@@ -1,11 +1,9 @@
 package com.krs.community.activity
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Location
-import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -35,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.krs.community.R
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.entities.MasterCounts
 import com.krs.community.fragments.*
@@ -53,7 +52,7 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
-import com.wessam.library.NetworkChecker
+
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -63,13 +62,13 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
     private val factory: DashboardViewModelFactory by instance()
-    private var easyWayLocation: EasyWayLocation? = null
-    private lateinit var request: LocationRequest
     private var menu: Menu? = null
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
-        lateinit var getLocationDetail: GetLocationDetail
+        var getLocationDetail: GetLocationDetail? = null
+        var request: LocationRequest? = null
+        var easyWayLocation: EasyWayLocation? = null
         var cur_lat = MutableLiveData<Double>()
         var cur_lng = MutableLiveData<Double>()
         var cur_addr = MutableLiveData<String>()
@@ -87,8 +86,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         dashboardViewModel.listener = this
 
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
-        mApp.FacebookAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
+        mApp.firebaseAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
+        mApp.facebookAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
 
         if (Guru.getString(getString(R.string.user_id), "")!!.isEmpty()) {
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
@@ -173,12 +172,12 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         })
 
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             dashboardViewModel.getMasterUpdate()
         }
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
-        /*if (NetworkChecker.isNetworkConnected(this)) {
+        /*if (isNetworkConnected(this)) {
             val JsonObj= JSONObject()
             JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
             JsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
@@ -198,14 +197,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
 
         if (checkFineLocationPermission(this)) {
-            val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                getLocationDetail = GetLocationDetail(this, this)
-                request = LocationRequest()
-                request.interval = INTERVAL
-                request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-                easyWayLocation = EasyWayLocation(this, request, true, this)
-            }
+            getLocationDetail = GetLocationDetail(this, this)
+            request = LocationRequest()
+            request?.interval = INTERVAL
+            request?.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            easyWayLocation = EasyWayLocation(this, request, true, this)
             easyWayLocation?.startLocation() //calculateDistance()
 
         } else {
@@ -222,7 +218,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             changeLang(applicationContext, "English")
         }
     }
-
 
     override fun onPause() {
         super.onPause()
@@ -355,7 +350,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun currentLocation(location: Location) {
         cur_lat.postValue(location.latitude)
         cur_lng.postValue(location.longitude)
-        getLocationDetail.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
+        getLocationDetail?.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
     }
 
     override fun locationData(locationData: LocationData) {

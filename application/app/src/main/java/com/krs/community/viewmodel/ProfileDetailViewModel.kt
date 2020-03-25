@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.lazyDeferred
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.ImageUploadListener
@@ -12,7 +13,7 @@ import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -203,7 +204,7 @@ class ProfileDetailViewModel(
     }
 
     fun getMemberByFilters(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()
             completableJob.let { thejob ->
 
@@ -237,7 +238,7 @@ class ProfileDetailViewModel(
     }
 
     fun uploadImage(file: File, id: String, type: String) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             job_by_update = Job()
             job_by_update.let { thejob ->
 
@@ -292,7 +293,7 @@ class ProfileDetailViewModel(
     }
 
     fun updateProfile(profile: JsonObject, isEdit: Boolean) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             job_by_update = Job()
             job_by_update.let { thejob ->
 

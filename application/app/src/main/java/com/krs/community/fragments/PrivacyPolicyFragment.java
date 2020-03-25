@@ -26,8 +26,8 @@ public class PrivacyPolicyFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragmnet_privacy_policy, container, false);
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(getContext(),PrivacyPolicyFragment.class.getSimpleName());
-        mApp.FacebookAnalytics(getContext(),PrivacyPolicyFragment.class.getSimpleName());
+        mApp.firebaseAnalytics(getContext(), PrivacyPolicyFragment.class.getSimpleName());
+        mApp.facebookAnalytics(getContext(), PrivacyPolicyFragment.class.getSimpleName());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);

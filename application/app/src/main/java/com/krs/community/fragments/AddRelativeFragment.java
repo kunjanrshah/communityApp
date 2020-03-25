@@ -38,8 +38,8 @@ public class AddRelativeFragment extends Fragment {
         titles = Objects.requireNonNull(getActivity()).getResources().getStringArray(R.array.add_relative_labels);
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(getContext(),"Add Relative Activity");
-        mApp.FacebookAnalytics(getContext(),"Add Relative Activity");
+        mApp.firebaseAnalytics(getContext(), "Add Relative Activity");
+        mApp.facebookAnalytics(getContext(), "Add Relative Activity");
 
         RecyclerView rv_relation = root.findViewById(R.id.rv_relation);
 

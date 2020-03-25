@@ -22,7 +22,6 @@
     android:minHeight="?attr/actionBarSize">
 
     <LinearLayout
-        android:id="@+id/linear_layout_search"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"

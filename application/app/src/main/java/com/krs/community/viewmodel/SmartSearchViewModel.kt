@@ -4,11 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByKeywordListener
 import com.krs.community.repositories.SmartSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class SmartSearchViewModel(
@@ -29,7 +30,7 @@ class SmartSearchViewModel(
     }
 
     fun getMemberByKeywords(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             jobBySearch = Job()
             jobBySearch.let { thejob ->
 

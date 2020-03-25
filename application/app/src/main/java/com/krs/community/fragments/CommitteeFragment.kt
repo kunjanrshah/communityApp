@@ -31,6 +31,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
@@ -98,17 +99,19 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     private var startDate: String? = null
     private var strEnd: String? = null
     private var strStart: String? = null
-
+    private lateinit var snackbar: Snackbar
     private lateinit var frameRoot: FrameLayout
+    private lateinit var ivNotFound: ImageView
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_committee, container, false)
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
-        mApp.FirebaseAnalytics(context, CommitteeFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, CommitteeFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, CommitteeFragment::class.simpleName)
+        mApp.facebookAnalytics(context, CommitteeFragment::class.simpleName)
 
-        frameRoot = root.findViewById(R.id.shimmer_view_container)
+        frameRoot = root.findViewById(R.id.frameRoot)
+        ivNotFound = root.findViewById(R.id.iv_not_found)
         shimmerFrameLayout=root.findViewById(R.id.shimmer_view_container)
         committeeViewModel = ViewModelProvider(this, commiteeViewModelFactory).get(CommitteeViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
@@ -121,6 +124,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         monthSelected = calendar[Calendar.MONTH]
         createDialog()
         lstMember.clear()
+
         adapter= object : ParallaxRecyclerAdapter<Member>(lstMember) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
                 val holder = viewHolder as ListViewHolder
@@ -195,7 +199,11 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     }
                 }
 
-                holder.tvUpdate.text = "updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                    viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                } else {
+                    viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                }
 
                 holder.boomMenuButton.clearBuilders()
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
@@ -265,6 +273,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         listCommittee.layoutManager = layoutManager
         listCommittee.itemAnimator = DefaultItemAnimator()
         listCommittee.setHasFixedSize(true)
+        snackbar = Snackbar.make(frameRoot, getString(R.string.check_network), Snackbar.LENGTH_INDEFINITE)
         val header = LayoutInflater.from(activity).inflate(R.layout.header_committees, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
@@ -321,7 +330,23 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         month = DateFormatSymbols().months[11]
         strEnd = String.format("%s  %s", month, year)
         txtDuration.text = "$strStart - $strEnd"
-        getUsersInCommittee()
+
+        AppController.mApplication.connectionLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if (it) {
+                if (snackbar.isShown) {
+                    snackbar.dismiss()
+                }
+                DashboardActivity.binding.space.visibility = View.VISIBLE
+                ivNotFound.visibility = View.GONE
+                getUsersInCommittee()
+            } else {
+                shimmerFrameLayout.stopShimmerAnimation()
+                shimmerFrameLayout.visibility = View.GONE
+                DashboardActivity.binding.space.visibility = View.GONE
+                snackbar.show()
+            }
+        })
+
         return root
     }
 
@@ -382,8 +407,14 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
             startActivity(intent)
             Utility.fade(activity)
         }
-    }
 
+        holder.llData.setOnClickListener {
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), lstMember[position])
+            startActivity(intent)
+            Utility.fade(activity)
+        }
+    }
 
     private fun applyProfilePicture(holder: ListViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
@@ -563,6 +594,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 lstMember.clear()
                 Coroutines.main {
                     adapter.notifyDataSetChanged()
+                    ivNotFound.visibility = View.VISIBLE
                     frameRoot.snackbar(getString(R.string.select_filter), Snackbar.LENGTH_SHORT)
                 }
             }
@@ -578,11 +610,16 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
             lstMember.clear()
             lstMember.addAll(response.members)
             adapter.notifyDataSetChanged()
+            if (lstMember.size > 0) {
+                ivNotFound.visibility = View.GONE
+            } else {
+                ivNotFound.visibility = View.VISIBLE
+            }
         } else {
+            ivNotFound.visibility = View.VISIBLE
             frameRoot.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
         }
     }
-
 
     inner class ListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var tvName: TextView = v.findViewById(R.id.tv_name)
@@ -610,6 +647,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
+        var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
 
     }
 

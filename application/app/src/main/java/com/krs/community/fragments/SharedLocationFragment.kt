@@ -20,18 +20,18 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.activity.FamilyTreeListActivity
-import com.krs.community.activity.MapTrackingActivity
-import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.activity.QRCodeActivity
+import com.krs.community.activity.*
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
+import com.krs.community.bkservice.ProcessMainClass
+import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.FragmnetSharedLocationBinding
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
@@ -86,8 +86,8 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         binding = DataBindingUtil.inflate(inflater, R.layout.fragmnet_shared_location, container, false)
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
-        mApp.FirebaseAnalytics(context, SharedLocationFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, SharedLocationFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, SharedLocationFragment::class.simpleName)
+        mApp.facebookAnalytics(context, SharedLocationFragment::class.simpleName)
 
         roomMemberViewModel = ViewModelProvider(this, roomMemberViewModelFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
@@ -129,13 +129,17 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
                 holder.imgLocation.visibility = View.GONE
-                holder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                    viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                } else {
+                    holder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                }
 
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
@@ -585,12 +589,42 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         private var currentSelectedIndex = -1
     }
 
+    private fun startLocationService() {
+        try {
+            if (DashboardActivity.easyWayLocation?.hasLocationEnabled()!!) {
+                if (Utility.checkFineLocationPermission(activity)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        RestartServiceBroadcastReceiver.scheduleJob(activity)
+                    } else {
+                        val bck = ProcessMainClass()
+                        bck.launchService(activity)
+                    }
+                } else {
+                    if (Utility.checkFineLocationPermission(activity)) {
+                        DashboardActivity.easyWayLocation?.startLocation() //calculateDistance()
+                    } else {
+                        Utility.requestFineLocationPermission(activity as AppCompatActivity)
+                    }
+                }
+            } else {
+                DashboardActivity.easyWayLocation = EasyWayLocation(activity, DashboardActivity.request, true, activity as DashboardActivity)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun getMembers(response: SmartFilterResponse) {
         if (response.success) {
-                    members.clear()
-                    duplicateIds.clear()
+            members.clear()
+            duplicateIds.clear()
             if (response.members != null && response.members.size > 0) {
                 members.addAll(response.members)
+                startLocationService()
+            } else {
+                if (ProcessMainClass.serviceIntent != null) {
+                    activity?.stopService(ProcessMainClass.serviceIntent)
+                }
             }
             if (response.membersharing != null && response.membersharing.size > 0) {
                 for (member1 in response.membersharing) {
@@ -606,9 +640,16 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     } else {
                         duplicateIds.add(member1.id)
                     }
-                        }
-                    }
-                    adapter.notifyDataSetChanged()
+                }
+            }
+            if (members.size > 0) {
+                binding.llNotFound.visibility = View.GONE
+            } else {
+                binding.llNotFound.visibility = View.VISIBLE
+            }
+            adapter.notifyDataSetChanged()
+        } else {
+            binding.llNotFound.visibility = View.VISIBLE
         }
 
         binding.rvLocation.snackbar(response.message.toString(), Snackbar.LENGTH_LONG)

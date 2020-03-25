@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -39,8 +38,8 @@ public class NotificationListFragment extends Fragment {
         lstNotifications = new ArrayList<JSONObject>();
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(getContext(),NotificationListFragment.class.getSimpleName());
-        mApp.FacebookAnalytics(getContext(),NotificationListFragment.class.getSimpleName());
+        mApp.firebaseAnalytics(getContext(), NotificationListFragment.class.getSimpleName());
+        mApp.facebookAnalytics(getContext(), NotificationListFragment.class.getSimpleName());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(), R.color.bg_gray, false);

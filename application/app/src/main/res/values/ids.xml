@@ -18,7 +18,6 @@
 <resources>
     <item name="fab_add_relative" type="id" />
     <item name="fab_add_photo" type="id" />
-    <item name="fab_scan_photo" type="id" />
     <item name="fab_add_fact" type="id" />
     <item name="fab_add_audio" type="id" />
 

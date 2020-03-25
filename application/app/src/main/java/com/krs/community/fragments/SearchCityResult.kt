@@ -37,6 +37,7 @@ import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.NotificationBadge
 import com.krs.community.databinding.FragmentFilterResultBinding
 import com.krs.community.entities.RoomMember
@@ -60,7 +61,7 @@ import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import com.wessam.library.NetworkChecker
+
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -108,8 +109,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
-        mApp.FirebaseAnalytics(context, SearchCityResult::class.simpleName)
-        mApp.FacebookAnalytics(context, SearchCityResult::class.simpleName)
+        mApp.firebaseAnalytics(context, SearchCityResult::class.simpleName)
+        mApp.facebookAnalytics(context, SearchCityResult::class.simpleName)
 
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         loginMem = Gson().fromJson(loginMember, Member::class.java)
@@ -196,7 +197,11 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     }
                 }
 
-                holder.tvUpdate.text = getString(R.string.UpdateCity) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                    viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                } else {
+                    viewHolder.tvUpdate.text = getString(R.string.UpdateCity) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                }
 
                 holder.boomMenuButton.clearBuilders()
 
@@ -271,12 +276,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         }
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_filter, container, false)
-        Log.d(TAG, "City Name: " + cityName)
+        Log.d(TAG, "City Name: $cityName")
         val tvTitle = header.findViewById<TextView>(R.id.tvTitle)
         tvTitle.text = cityName
-
-        val edtFilterName = header.findViewById<EditText>(R.id.edt_filter_name)
-        edtFilterName.visibility = View.GONE
 
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v -> Utility.backNavigation(activity) }
@@ -307,6 +309,20 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         }
         tvCount = header.findViewById(R.id.tv_count)
 
+        val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
+        ivAtoz.setOnClickListener { v ->
+            val adapter = AtoZBottomAdapter(context)
+            adapter.setmISortingRecords(this)
+            dialog = DialogPlus.newDialog(context!!)
+                    .setAdapter(adapter)
+                    .setGravity(Gravity.BOTTOM)
+                    .setCancelable(true)
+                    .setExpanded(true, 1200)
+                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                    .create()
+            dialog?.show()
+        }
+
         adapter.setParallaxHeader(header, binding.lstFilter)
         binding.lstFilter.layoutManager = LinearLayoutManager(activity)
         binding.lstFilter.adapter = adapter
@@ -318,7 +334,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     }
 
     private fun setupList() {
-        if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+        if (isNetworkConnected(activity as AppCompatActivity)) {
             if (!DashboardActivity.stop) {
                 DashboardActivity.stop = true
                 val data = SearchByCityData()
@@ -365,6 +381,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         if (data.success) {
             if (data.members.size > 0) {
+                tvCount.visibility = View.VISIBLE
                 val count = data.totalHead + data.totalMem
                 tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " $count"
                 ivExport.visibility = View.VISIBLE
@@ -379,17 +396,23 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 if (data.totalHead <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
-                    Snackbar.make(binding.llParent, getString(R.string.EndCity) + "$alpha" + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(binding.llParent, getString(R.string.EndCity) + " " + "$alpha" + " " + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
                 }
-
             } else {
                 DashboardActivity.stop = true
+                tvCount.visibility = View.GONE
                 ivExport.visibility = View.GONE
+                if (members.isEmpty()) {
+                    Snackbar.make(binding.llParent, getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
+                }
                 //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                Snackbar.make(binding.llParent, getString(R.string.EndCity) + "$alpha" + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.llParent, getString(R.string.EndCity) + " " + "$alpha" + " " + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
             }
         } else {
-            DashboardActivity.stop = false
+            if (members.isEmpty()) {
+                Snackbar.make(binding.llParent, getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
+            }
+            DashboardActivity.stop = true
         }
 
         binding.shimmerViewContainer.stopShimmerAnimation()

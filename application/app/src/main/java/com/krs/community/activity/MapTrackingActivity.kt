@@ -78,7 +78,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         setContentView(R.layout.activity_map_tracking)
         headId = intent.getStringExtra("head_id")
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@MapTrackingActivity, MapTrackingActivity::class.java.simpleName)
+        mApp.firebaseAnalytics(this@MapTrackingActivity, MapTrackingActivity::class.java.simpleName)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
 

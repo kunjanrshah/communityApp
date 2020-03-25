@@ -14,6 +14,9 @@ interface LocalCommunityDao {
     @Query("SELECT * FROM LocalCommunity WHERE parent_id=:id")
     fun getLocalCommunity(id: Int) : LiveData<List<LocalCommunity>>
 
+    @Query("SELECT COUNT(id) FROM LocalCommunity")
+    fun getLocalCommunityCount(): Int
+
     @Query("SELECT name FROM LocalCommunity ORDER BY name ASC")
     fun getLocalCommName() : LiveData<List<String>>
 

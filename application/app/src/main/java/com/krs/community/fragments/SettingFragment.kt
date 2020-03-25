@@ -32,8 +32,8 @@ class SettingFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragmnet_settings, container, false)
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, SettingFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, SettingFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, SettingFragment::class.simpleName)
+        mApp.facebookAnalytics(context, SettingFragment::class.simpleName)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.colorBG, false)

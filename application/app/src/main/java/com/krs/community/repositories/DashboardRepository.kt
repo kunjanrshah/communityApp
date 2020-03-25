@@ -357,6 +357,26 @@ class DashboardRepository(
         return db.getMasterUpdateDao().getMasterCounts()
     }
 
+    suspend fun getLastNameCount(): Int {
+        return db.getLastNameDao().getLastNameCount()
+    }
+
+    suspend fun getSubCommCount(): Int {
+        return db.getSubCommunityDao().getSubCommunityCount()
+    }
+
+    suspend fun getLocalCommCount(): Int {
+        return db.getLocalCommunityDao().getLocalCommunityCount()
+    }
+
+    suspend fun getStatesCount(): Int {
+        return db.getStatesDao().getStatesCount()
+    }
+
+    suspend fun getCitiesCount(): Int {
+        return db.getCityDao().getCityCount()
+    }
+
     suspend fun getUpdatedVersion(jsonObject: JsonObject): UserStatusResponse {
         return apiRequest {
             api.getUpdatedVersion(jsonObject)

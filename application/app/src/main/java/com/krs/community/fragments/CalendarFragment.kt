@@ -44,16 +44,12 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
-import com.krs.community.listeners.GetRemindersListener
-import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.GetRemindersResponse
-import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.responses.UploadedFile
 import com.krs.community.utils.*
 import com.krs.community.viewmodel.CalendarSearchViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -74,7 +70,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener,  LocationAdapter.SetLocationListner , ILoginListener, GetRemindersListener {
+class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener, LocationAdapter.SetLocationListner {
 
     override val kodein by kodein()
     private var lstCalendar= ArrayList<Member>()
@@ -106,6 +102,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private var toDate:String=""
     private lateinit var tvCount:TextView
     private lateinit var txtDate:TextView
+    private lateinit var ivNoFound: ImageView
     private var setLocationDialog: DialogPlus? = null
     private var filterAdapter: FilterAdapter? = null
     private val listReminders = ArrayList<GetRemindersResponse>()
@@ -133,19 +130,21 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
-        mApp.FirebaseAnalytics(context, CalendarFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, CalendarFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, CalendarFragment::class.simpleName)
+        mApp.facebookAnalytics(context, CalendarFragment::class.simpleName)
 
 
         calendarSearchViewModel = ViewModelProvider(this, calendarSearchViewModelFactory).get(CalendarSearchViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         calendarSearchViewModel.mByFilterListener =this
-        calendarSearchViewModel.mByILoginListener =this
-        calendarSearchViewModel.getRemindersListener =this
+        /* calendarSearchViewModel.mByILoginListener =this
+         calendarSearchViewModel.getRemindersListener =this*/
         roomMemberViewModel.mRoomMemberListener= this
 
         llRoot = root.findViewById(R.id.ll_root)
+        ivNoFound = root.findViewById(R.id.iv_not_found)
+
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
         recyclerView = root.findViewById(R.id.recycler_view)
         recyclerView.setHasFixedSize(true)
@@ -164,6 +163,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
     private fun searchCalendarList(filter:String) {
         if (!DashboardActivity.stop) {
+            ivNoFound.visibility = View.GONE
             DashboardActivity.stop = true
             val jsonObject=JSONObject()
             jsonObject.put("start",AppController.mApplication.start)
@@ -181,7 +181,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
             val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
             calendarSearchViewModel.getCalendarSearch(updated)
-            Handler().postDelayed({
+            /*Handler().postDelayed({
                 shimmerFrameLayout.stopShimmerAnimation()
                 shimmerFrameLayout.visibility=View.GONE
 
@@ -193,7 +193,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 Log.e("updated---",""+updatedGetReminders);
                 calendarSearchViewModel.GetReminders(updatedGetReminders)
 
-            },4000)
+            },4000)*/
 
             lstCalendar.clear()
             adapter.notifyDataSetChanged()
@@ -223,12 +223,15 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
                 }
+                ivNoFound.visibility = View.GONE
             }else{
                 DashboardActivity.stop = true
                 Snackbar.make(llRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
             }
+
         }else {
             DashboardActivity.stop = false
+            ivNoFound.visibility = View.VISIBLE
             Snackbar.make(recyclerView, getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
         }
     }
@@ -237,22 +240,22 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         adapter.notifyDataSetChanged()
     }
 
-    override fun userLogin(response: LoginResponse) {
+    /*  override fun userLogin(response: LoginResponse) {
 
-        Utility.hideSweetProgress()
-       /* Log.e("message",""+response.message)
-        Log.e("success",""+response.success)*/
+          Utility.hideSweetProgress()
+         *//* Log.e("message",""+response.message)
+        Log.e("success",""+response.success)*//*
 
-    }
+    }*/
 
-    override fun userReminders(response: GetRemindersResponse) {
+    /* override fun userReminders(response: GetRemindersResponse) {
 
-        Log.e("userReminders ---",""+response.success)
-        Log.e("Fname ---",""+response.data[0].message)
+         Log.e("userReminders ---",""+response.success)
+         Log.e("Fname ---",""+response.data[0].message)
 
-        listReminders.add(response)
+         listReminders.add(response)
 
-    }
+     }*/
 
     override suspend fun getFailure(message: String) {
         Coroutines.main {
@@ -626,7 +629,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
 
                         Log.e("updated---",""+updated);
-                        calendarSearchViewModel.getCalendarreminder(updated)
+                        //  calendarSearchViewModel.getCalendarreminder(updated)
 
                         it.dismiss()
 
@@ -701,69 +704,69 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 when (holder.txtName.text) {
                     lblAll -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_fill_tithi)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
                     }
                     lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                 }
             }else if(death){
                 when (holder.txtName.text) {
                     lblAll -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_fill_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
                     }
                     "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                 }
             }else if(birthday){
                 when (holder.txtName.text) {
                     lblAll -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_fill_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
                     }
                     lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                 }
             }else if(anniversay){
@@ -771,23 +774,23 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 when (holder.txtName.text) {
                     lblAll -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblBirthday -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     lblMarriage -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_fill_ann)
-                        holder.txtName.setTextColor(resources.getColor(R.color.white))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
                     }
                     lblDeath -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                     "Reminder" -> {
                         holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(resources.getColor(R.color.black2))
+                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
                     }
                 }
             }

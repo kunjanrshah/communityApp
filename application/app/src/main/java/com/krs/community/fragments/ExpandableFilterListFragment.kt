@@ -51,8 +51,8 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
             Handler().postDelayed({ adapter?.openBottomSheetDailog() }, 250)
         }
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
-        mApp.FirebaseAnalytics(context, ExpandableFilterListFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, ExpandableFilterListFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, ExpandableFilterListFragment::class.simpleName)
+        mApp.facebookAnalytics(context, ExpandableFilterListFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
 

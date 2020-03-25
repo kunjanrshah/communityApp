@@ -186,7 +186,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     }
 
     override fun getMembers(response: SmartFilterResponse) {
-
+        var isShared = false
         if (response.success) {
             if (response.membersharing != null && response.membersharing.size > 0) {
                 for (member1 in response.membersharing) {
@@ -194,16 +194,14 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
                         if (cur_lat.value != null && cur_lng.value != null && !member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
                             val userDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.userLat.toDouble(), member.userLng.toDouble()) / 1000
                             tvUserDist?.text = String.format("%.2f KM", userDist)
-                        } else {
-                            tvUserDist?.text = "Private"
+                            isShared = true
+                            break
                         }
-                        break
                     }
                 }
-            } else {
-                tvUserDist?.text = "Private"
             }
-        } else {
+        }
+        if (!isShared) {
             tvUserDist?.text = "Private"
         }
     }
@@ -211,5 +209,4 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     override suspend fun getFailure(message: String) {
         tvUserDist?.text = "Private"
     }
-
 }

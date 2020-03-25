@@ -57,8 +57,8 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
        member = arguments?.getSerializable(getString(R.string.member)) as Member
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, PersonalDetailsFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, PersonalDetailsFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, PersonalDetailsFragment::class.simpleName)
+        mApp.facebookAnalytics(context, PersonalDetailsFragment::class.simpleName)
 
         val loginMember= Guru.getString(getString(R.string.loginMember),"")
 

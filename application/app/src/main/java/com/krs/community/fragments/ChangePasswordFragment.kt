@@ -54,8 +54,8 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
         passBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_change_pass, container, false)
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
-        mApp.FirebaseAnalytics(context, ChangePasswordFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, ChangePasswordFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, ChangePasswordFragment::class.simpleName)
+        mApp.facebookAnalytics(context, ChangePasswordFragment::class.simpleName)
 
         passBinding.imgCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         Utility.changeStatusbarColor(activity, R.color.colorPrivacyPolictyBG, false)

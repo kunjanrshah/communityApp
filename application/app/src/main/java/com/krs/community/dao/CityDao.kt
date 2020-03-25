@@ -13,6 +13,9 @@ interface CityDao {
     @Query("SELECT * FROM City")
     fun getCity() : LiveData<List<City>>
 
+    @Query("SELECT COUNT(id) FROM City")
+    fun getCityCount(): Int
+
     @Query("SELECT name FROM City WHERE parent_id == :stateId")
     fun getCityNameByState(stateId:Int) : List<String>
 

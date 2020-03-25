@@ -25,11 +25,13 @@ import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
+import com.krs.community.app.ConnectionLiveData;
 import com.krs.community.fragments.FamilyDetailActivity;
 import com.krs.community.utils.Utility;
-import com.wessam.library.NetworkChecker;
 
 import static com.krs.community.utils.Utility.getHashKey;
+
+;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -47,15 +49,16 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getHashKey(this);
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setScreenLayout();
         }else{
             setNoInternetLayout();
         }
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(SplashActivity.this,SplashActivity.class.getSimpleName());
-        mApp.FacebookAnalytics(SplashActivity.this,SplashActivity.class.getSimpleName());
+        mApp.firebaseAnalytics(SplashActivity.this, SplashActivity.class.getSimpleName());
+        mApp.facebookAnalytics(SplashActivity.this, SplashActivity.class.getSimpleName());
+
     }
 
     private void setNoInternetLayout(){
@@ -72,7 +75,7 @@ public class SplashActivity extends AppCompatActivity {
         imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
                 setScreenLayout();
             }
         });
@@ -81,7 +84,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void setScreenLayout(){
 
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setContentView(R.layout.activity_splash);
             MemoryAllocation();
             setAnimation();

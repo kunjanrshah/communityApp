@@ -4,12 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.repositories.RoomMemberRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class RoomMemberViewModel(
@@ -97,7 +98,7 @@ class RoomMemberViewModel(
     }
 
     fun changeStatus(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             jobChangeStatus = Job()
             jobChangeStatus.let { thejob ->
 
@@ -131,7 +132,7 @@ class RoomMemberViewModel(
     }
 
     fun changeRole(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             jobBySearch = Job()
             jobBySearch.let { thejob ->
 

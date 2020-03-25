@@ -3,12 +3,13 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByDistanceListener
 import com.krs.community.model.ByDistanceModel
 import com.krs.community.repositories.ByDistanceRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class ByDistanceViewModel(
@@ -29,7 +30,7 @@ class ByDistanceViewModel(
     }
 
     fun getUserByDistance(distance: ByDistanceModel) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             job_by_distance = Job()
             job_by_distance.let { thejob ->
 

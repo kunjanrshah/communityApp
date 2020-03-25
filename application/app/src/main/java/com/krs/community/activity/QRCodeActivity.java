@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
@@ -25,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
+import com.github.squti.guru.Guru;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
@@ -37,11 +39,11 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.krs.community.BuildConfig;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
+import com.krs.community.app.ConnectionLiveData;
 import com.krs.community.databinding.FragmentByQrcodeBinding;
 import com.krs.community.model.Member;
 import com.krs.community.utils.AESUtils;
 import com.krs.community.utils.Utility;
-import com.wessam.library.NetworkChecker;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -53,6 +55,8 @@ import java.util.Calendar;
 import me.ydcool.lib.qrmodule.encoding.QrGenerator;
 
 import static com.facebook.AccessTokenManager.TAG;
+
+;
 
 public class QRCodeActivity extends AppCompatActivity {
 
@@ -71,15 +75,15 @@ public class QRCodeActivity extends AppCompatActivity {
 
         registerNetworkBroadcastForNougat();
 
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setScreenLayout();
         } else {
             setNoInternetLayout();
         }
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
-        mApp.FacebookAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
+        mApp.firebaseAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
+        mApp.facebookAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
     }
 
     private void setNoInternetLayout() {
@@ -96,7 +100,7 @@ public class QRCodeActivity extends AppCompatActivity {
         imageView.setAnimation(anim);
         AppCompatButton retryButton = findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
                 setScreenLayout();
             }
         });
@@ -143,6 +147,15 @@ public class QRCodeActivity extends AppCompatActivity {
         binding.ivCode.setImageBitmap(qrCode);
         binding.tvName.setText(member.getFirstName());
         binding.tvMobile.setText(member.getMobile());
+
+        String loginUser = Guru.getString(getString(R.string.loginMember), "");
+        if (loginUser != null && !loginUser.isEmpty()) {
+            binding.llGallery.setVisibility(View.VISIBLE);
+            binding.llscan.setVisibility(View.VISIBLE);
+        } else {
+            binding.llGallery.setVisibility(View.GONE);
+            binding.llscan.setVisibility(View.GONE);
+        }
 
         binding.llGallery.setOnClickListener(v -> {
 
@@ -333,7 +346,7 @@ public class QRCodeActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                if (NetworkChecker.isNetworkConnected(context)) {
+                if (ConnectionLiveData.Companion.isNetworkConnected(context)) {
                     setScreenLayout();
                 } else {
                     setNoInternetLayout();

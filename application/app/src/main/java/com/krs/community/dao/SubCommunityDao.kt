@@ -13,6 +13,9 @@ interface SubCommunityDao {
     @Query("SELECT * FROM SubCommunity")
     fun getSubCommunity() : LiveData<List<SubCommunity>>
 
+    @Query("SELECT COUNT(id) FROM SubCommunity")
+    fun getSubCommunityCount(): Int
+
     @Query("SELECT name FROM SubCommunity ORDER BY name ASC")
     fun getSubCommName(): LiveData<List<String>>
 

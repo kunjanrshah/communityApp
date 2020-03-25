@@ -1,13 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/item_rel"
-        android:title="Timeline" />
+    <item android:title="Timeline" />
 
-    <item
-        android:id="@+id/item_first_name"
-        android:title="View in tree" />
+    <item android:title="View in tree" />
 
-    <item
-        android:id="@+id/item_last_added"
-        android:title="Profile Detail" />
+    <item android:title="Profile Detail" />
 </menu>

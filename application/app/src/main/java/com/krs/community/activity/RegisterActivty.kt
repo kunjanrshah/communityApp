@@ -1,11 +1,7 @@
 package com.krs.community.activity
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -25,10 +21,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
+import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import com.krs.community.R
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.ActivityRegisterBinding
 import com.krs.community.entities.MasterCounts
 import com.krs.community.listeners.IRegisterListener
@@ -44,7 +43,6 @@ import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
-import com.wessam.library.NetworkChecker
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -67,7 +65,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     private lateinit var dashboardViewModel: DashboardViewModel
 
     private var resultUri: Uri? = null
-    private var mNetworkReceiver: BroadcastReceiver? = null
     private var isLogin: Boolean = true
 
     companion object {
@@ -83,20 +80,26 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         super.onCreate(savedInstanceState)
 
         isLogin = intent.getBooleanExtra(getString(R.string.is_logged_in), true)
-        mNetworkReceiver = NetworkChangeReceiver()
-
-        registerNetworkBroadcastForNougat()
-
-        if (NetworkChecker.isNetworkConnected(this)) {
-            setScreenLayout()
-        } else {
-            setNoInternetLayout()
-        }
 
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
-        mApp.FacebookAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
+        mApp.firebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
+        mApp.facebookAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
 
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
+            val newToken = instanceIdResult.token
+            Log.e("newToken", newToken)
+            Guru.putString(AppConstants.DEVICE_TOKEN, newToken)
+        }
+
+        AppController.mApplication.connectionLiveData.observeForever {
+            it?.let {
+                if (it) {
+                    setScreenLayout()
+                } else {
+                    setNoInternetLayout()
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -117,7 +120,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         imageView.animation = anim
         val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
         retryButton.setOnClickListener { v: View? ->
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 setScreenLayout()
             }
         }
@@ -125,7 +128,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     @SuppressLint("NewApi", "ClickableViewAccessibility")
     fun setScreenLayout() {
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             logger = Logger(TAG)
 
             registerViewModel = ViewModelProvider(this, registerViewModelFactory).get(RegisterViewModel::class.java)
@@ -165,7 +168,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 binding.imgCancel.visibility = View.GONE
             }
 
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 dashboardViewModel.getMasterUpdate()
             }
 
@@ -178,22 +181,22 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     val stateId=profileDetailViewModel.getstateIdByName(binding.spinnerStates.text.toString())
                     val lstCity = profileDetailViewModel.getCityNamebyState(stateId)
                     registerViewModel.stateId =stateId
-                    spinnerCities.clear()
+                    binding.spinnerCities.clear()
                     registerViewModel.cityId = null
-                    spinnerCities.setItems(lstCity.toTypedArray())
-                    spinnerCities.setExpandTint(R.color.black)
+                    binding.spinnerCities.setItems(lstCity.toTypedArray())
+                    binding.spinnerCities.setExpandTint(R.color.black)
                 }
             }
 
             binding.spinnerSub.setOnItemClickListener {
                 Coroutines.main {
-                  val sub_id=  profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
-                    registerViewModel.subCommId = sub_id
-                    profileDetailViewModel.getLocalCommunity(sub_id).observeForever {
-                        spinnerLocal.clear()
+                    val subId = profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
+                    registerViewModel.subCommId = subId
+                    profileDetailViewModel.getLocalCommunity(subId).observeForever {
+                        binding.spinnerLocal.clear()
                         registerViewModel.localCommId = null
-                        spinnerLocal.setItems(it.toTypedArray())
-                        spinnerLocal.setExpandTint(R.color.black)
+                        binding.spinnerLocal.setItems(it.toTypedArray())
+                        binding.spinnerLocal.setExpandTint(R.color.black)
                     }
                 }
             }
@@ -224,66 +227,34 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             binding.spinnerGender.setExpandTint(R.color.black)
 
             binding.spinnerGender.setOnItemClickListener { position ->
-
                 registerViewModel.gender = lstGender[position]
-                Log.e("spinnerGender--", "" + lstGender[position]);
-
             }
             binding.imgProfile.setOnClickListener { v ->
                 pickFromGallery(this)
             }
-
-            Coroutines.main {
-                profileDetailViewModel.lstLastName.await().observe(this, Observer {
-                    spinnerLname.setItems(it.toTypedArray())
-                    spinnerLname.setExpandTint(R.color.black)
-                })
-
-                profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
-                    spinnerSub.setItems(it.toTypedArray())
-                    spinnerSub.setExpandTint(R.color.black)
-                })
-
-                profileDetailViewModel.lstStateName.await().observe(this, Observer {
-                    spinnerStates.setItems(it.toTypedArray())
-                    spinnerStates.setExpandTint(R.color.black)
-                })
-
-            }
-        }
-    }
-    inner class NetworkChangeReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            try {
-                if (!NetworkChecker.isNetworkConnected(context)) {
-                    setNoInternetLayout()
-                }
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-    private fun registerNetworkBroadcastForNougat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver,  IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+            setDropDownList()
         }
     }
 
-    private fun unregisterNetworkBroadcastForNougat() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
+    private fun setDropDownList() {
+        Coroutines.main {
+            profileDetailViewModel.lstLastName.await().observe(this, Observer {
+                binding.spinnerLname.setItems(it.toTypedArray())
+                binding.spinnerLname.setExpandTint(R.color.black)
+            })
+
+            profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
+                binding.spinnerSub.setItems(it.toTypedArray())
+                binding.spinnerSub.setExpandTint(R.color.black)
+            })
+
+            profileDetailViewModel.lstStateName.await().observe(this, Observer {
+                binding.spinnerStates.setItems(it.toTypedArray())
+                binding.spinnerStates.setExpandTint(R.color.black)
+            })
         }
     }
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -362,7 +333,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             return
         }
 
-      //  root_layout.snackbar(getString(R.string.lastname), Snackbar.LENGTH_LONG)
         when(filed){
             1 -> binding.edtHeadName.requestFocus()
             2 -> binding.spinnerLname.requestFocus()
@@ -384,7 +354,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         Utility.hideSweetProgress()
         Log.d(TAG, "onRegisterButtonClick")
         if(resultUri!=null){
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 try {
                     val uploadImage = File(resultUri?.path.toString())
                     Utility.startSweetProgress(this, getString(R.string.RegisterFamilyPhoto), getString(R.string.loading))
@@ -440,7 +410,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     override fun onDestroy() {
         super.onDestroy()
         registerViewModel.cancelAllJobs()
-        unregisterNetworkBroadcastForNougat()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -483,11 +452,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         showVersionDialog(this)
     }
 
-
     override fun getMastersResponse(response: MasterUpdateResponse) {
+        Log.v(TAG, "getMastersResponse")
         if (response.success) {
             Coroutines.io {
-
                 val counts = MasterCounts()
                 counts.business_categories = -1
                 counts.business_sub_categories = -1
@@ -514,60 +482,33 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     dashboardViewModel.fetchSubCommunities(counts.sub_community)
                     dashboardViewModel.fetchLocalCommunities(counts.local_community)
                     dashboardViewModel.fetchLastName(counts.sub_casts)
-
-                    Coroutines.main {
-                        profileDetailViewModel.lstLastName.await().observe(this, Observer {
-                            spinnerLname.setItems(it.toTypedArray())
-                            spinnerLname.setExpandTint(R.color.black)
-                        })
-
-                        profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
-                            spinnerSub.setItems(it.toTypedArray())
-                            spinnerSub.setExpandTint(R.color.black)
-                        })
-
-                        profileDetailViewModel.lstStateName.await().observe(this, Observer {
-                            spinnerStates.setItems(it.toTypedArray())
-                            spinnerStates.setExpandTint(R.color.black)
-                        })
-
-                    }
-
                 } else {
-                    if (dbCount.states != counts.states) {
+                    val statesCount = dashboardViewModel.getStatesCount()
+                    if (dbCount.states != counts.states || statesCount == 0) {
                         dashboardViewModel.fetchState(counts.states)
-                        Coroutines.main {
-                            profileDetailViewModel.lstStateName.await().observe(this, Observer {
-                                spinnerStates.setItems(it.toTypedArray())
-                                spinnerStates.setExpandTint(R.color.black)
-                            })
-                        }
                     }
-                    if (dbCount.cities != counts.cities) {
+
+                    val citiesCount = dashboardViewModel.getCitiesCount()
+                    if (dbCount.cities != counts.cities || citiesCount == 0) {
                         dashboardViewModel.fetchCity(counts.cities)
                     }
-                    if (dbCount.sub_community != counts.sub_community) {
+
+                    val subCommCount = dashboardViewModel.getSubCommCount()
+                    if (dbCount.sub_community != counts.sub_community || subCommCount == 0) {
                         dashboardViewModel.fetchSubCommunities(counts.sub_community)
-                        Coroutines.main {
-                            profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
-                                spinnerSub.setItems(it.toTypedArray())
-                                spinnerSub.setExpandTint(R.color.black)
-                            })
-                        }
                     }
-                    if (dbCount.local_community != counts.local_community) {
+
+                    val localCommCount = dashboardViewModel.getLocalCommCount()
+                    if (dbCount.local_community != counts.local_community || localCommCount == 0) {
                         dashboardViewModel.fetchLocalCommunities(counts.local_community)
                     }
-                    if (dbCount.sub_casts != counts.sub_casts) {
+
+                    val lnameCount = dashboardViewModel.getLastNameCount()
+                    if (dbCount.sub_casts != counts.sub_casts || lnameCount == 0) {
                         dashboardViewModel.fetchLastName(counts.sub_casts)
-                        Coroutines.main {
-                            profileDetailViewModel.lstLastName.await().observe(this, Observer {
-                                spinnerLname.setItems(it.toTypedArray())
-                                spinnerLname.setExpandTint(R.color.black)
-                            })
-                        }
                     }
                 }
+                setDropDownList()
             }
         }
     }

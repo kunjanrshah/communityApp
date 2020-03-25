@@ -6,13 +6,14 @@ import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import com.krs.community.R
 import com.krs.community.activity.LoginActivity
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.repositories.RegisterRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -155,7 +156,7 @@ class RegisterViewModel(
         register.city_id = cityId.toString()
         register.sub_community_id = subCommId.toString()
         register.local_community_id = localCommId.toString()
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             jobRegistration = Job()
             jobRegistration.let { thejob ->
                 CoroutineScope(IO + thejob!!).launch {

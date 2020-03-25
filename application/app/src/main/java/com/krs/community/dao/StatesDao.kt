@@ -13,6 +13,9 @@ interface StatesDao {
     @Query("SELECT * FROM States")
     fun getStates() : LiveData<List<States>>
 
+    @Query("SELECT COUNT(id) FROM States")
+    fun getStatesCount(): Int
+
     @Query("SELECT name FROM States")
     fun getStateNames() : LiveData<List<String>>
 

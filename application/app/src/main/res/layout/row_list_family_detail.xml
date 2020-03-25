@@ -2,7 +2,6 @@
 
 <com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="14dp"
@@ -18,68 +17,34 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/ll_delete"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:background="@drawable/border_color"
+            android:gravity="center">
 
             <LinearLayout
-                android:id="@+id/ll_delete"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/border_color"
-                android:gravity="center">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/delete" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:gravity="center"
-                        android:text="@string/delete"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_login"
-                android:visibility="gone"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="@drawable/right_corner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/img_login"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_gravity="center"  />
+                    android:layout_gravity="center"
+                    android:background="@drawable/delete" />
 
                 <TextView
-                    android:id="@+id/tv_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:gravity="center"
-                    android:text="@string/login"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:text="@string/delete"
+                    android:textSize="12sp" />
 
+            </LinearLayout>
 
         </LinearLayout>
     </FrameLayout>

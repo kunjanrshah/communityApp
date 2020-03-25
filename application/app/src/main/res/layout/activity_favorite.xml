@@ -33,17 +33,28 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="20dp"
-            android:background="@android:color/white"
-            android:scrollbars="none" />
+            android:layout_height="match_parent">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/white"
+                android:scrollbars="none" />
 
+            <ImageView
+                android:id="@+id/iv_not_found"
+                android:layout_width="@dimen/no_records"
+                android:layout_height="@dimen/no_records"
+                android:layout_gravity="center"
+                android:background="@drawable/no_record_found"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 </layout>

@@ -3,7 +3,6 @@
 
     <string name="app_name">"मुस्लिम घांची समाज "</string>
 
-    <string name="action_delete">हटाएं</string>
     <string name="action_disable">अक्षम</string>
     <string name="action_location">स्थान</string>
     <string name="action_active">सक्रिय</string>
@@ -12,9 +11,6 @@
 
 
     <!--Splash screen -->
-    <string name="CityList_SP" translatable="false">CityList_SP</string>
-    <string name="allow_get_data_value" translatable="false">1</string>
-    <string name="all_cities_list" translatable="false">all_cities</string>
 
     <!--Choose Language screen -->
 
@@ -23,32 +19,13 @@
 
     <!--Login page-->
     <string name="login">लॉग इन करें</string>
-    <string name="login_now">अब लॉगिन करें</string>
-    <string name="please_login_to_continue_using_our_app">कृप्या एप्लिकेशन जारी रखने के लिए लॉगिन करे</string>
-    <string name="login_with">के साथ लॉगिन करें</string>
-    <string name="_mobile">मोबाइल</string>
     <string name="email">ई-मेल</string>
-    <string name="enter_email_id">ईमेल आईडी दर्ज करें</string>
-    <string name="enter_mobile_no">मोबाइल नंबर दर्ज करें</string>
-    <string name="hashkey">पासवर्ड</string>
-    <string name="_forgot_password">पासवर्ड भूल गए ?</string>
 
     <string name="do_you_have_an_account_register_now">क्या आपका अकाउंट है??</string>
     <string name="send_otp">OTP भेजें</string>
-    <string name="send_email">ईमेल भेजें</string>
-    <string name="err_msg_blank">कृपया खाली विवरण दर्ज करें</string>
-    <string name="nav_item_change_password">पासवर्ड बदलें</string>
-    <string name="err_msg_invalid_mobile">अमान्य मोबाइल नंबर</string>
-    <string name="type_otp">ओटीपी टाइप करें</string>
-    <string name="registraion_request_pending">रजिस्ट्रेशन रिक्वेस्ट पेंडिंग हे. कृपया व्यवस्थापक से संपर्क करें।</string>
-    <string name="invalid_username">इनवैलिड यूजर</string>
-    <string name="error_msg_get_data_social_site">सोसिअल अकाउंट से डिटेल्स नहीं ले सकते</string>
-    <string name="update_profile_photo">क्या आप फ़ोटो अपडेट करना चाहते हैं?</string>
     <string name="yes">यस </string>
     <string name="no">नहीं</string>
-    <string name="invalid_username_password">उपयोगकर्ता नाम या पासवर्ड गलत है</string>
     <string name="loading">काम चालू है...</string>
-    <string name="user_not_found" >यूजर नॉट फाउंड!</string>
 
     <!--Registraion page-->
     <string name="register_now">रजिस्टर करें</string>
@@ -60,17 +37,8 @@
     <string name="hint_conform_password">पासवर्ड की पुष्टि कीजिये</string>
     <string name="hint_address">पता</string>
     <string name="how_to_register">कैसे करें रजिस्टर?</string>
-    <string name="hint_surname">लास्ट नाम</string>
-    <string name="hint_city">शहर</string>
-    <string name="invalid_mobile_range">मोबाइल नंबर 10 अंकों का होना चाहिए</string>
-    <string name="invalid_email">अमान्य ईमेल!</string>
-    <string name="err_msg_repeat_password">पासवर्ड और रिपीट पासवर्ड मेल नहीं खाते</string>
 
     <!-- Common Screen -->
-    <string name="can_not_connect_to_internet">इंटरनेट से कनेक्ट नहीं किया जा सकता ... कृपया अपना कनेक्शन जांचें!</string>
-    <string name="server_could_not_found">सर्वर नहीं मिल सका। कृपया कुछ समय बाद फिर से प्रयास करें !!</string>
-    <string name="parsing_error">पार्सिंग की त्रुटि! कृपया कुछ समय बाद फिर से प्रयास करें !!</string>
-    <string name="connection_timeout">कनेक्शन का समय समाप्त! कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>
 
     <string-array name="bloodGroup">
         <item>O+Ve</item>
@@ -108,17 +76,12 @@
     <string name="_location">स्थान</string>
     <string name="_whatsapp">WhatsApp</string>
     <string name="_family_tree">वंश वृक्ष</string>
-    <string name="register_new_family">एक नया परिवार पंजीकृत करें।</string>
-    <string name="click_on_register">सबसे महत्वपूर्ण परिवार प्रमुखों से भरा एक नया परिवार बनाने के लिए रजिस्टर बटन पर क्लिक करें।</string>
-    <string name="upload_photo">अपना प्रोफ़ाइल फ़ोटो अपलोड करें</string>
-    <string name="select_photo">मोबाइल गैलरी से अपनी पसंदीदा फोटो का चयन करें और अपने पसंदीदा प्रभाव को सहेजें और सहेजें।</string>
     <string name="headanimation">हेडएनीमेशन</string>
     <string name="enter_firstname">कृपया अपना प्रथम नाम प्रविष्ट करें</string>
     <string name="enter_lastname">कृपया अपना अंतिम नाम दर्ज करें</string>
     <string name="enter_email">अपना ईमेल दर्ज करें</string>
     <string name="enter_gender">कृपया लिंग चुनें</string>
     <string name="enter_mobile">कृपया अपना मोबाइल दर्ज करें</string>
-    <string name="select_country_code">कृपया अपना देश चुनें</string>
     <string name="enter_password">कृपया अपना पिन दर्ज करें</string>
     <string name="confirm_password">कृपया पिन की पुष्टि करने के लिए दर्ज करें</string>
     <string name="password_mismatch">पिन बेमेल है</string>
@@ -132,7 +95,6 @@
     <string name="hash_key">हैश कुंजी</string>
     <string name="otp_send">अपने नंबर पर मैसेजिंग ओटीपी कोड!</string>
     <string name="seat_back_relax">सीट वापस &amp;  आराम करें!</string>
-    <string name="fetching_states">राज्यों का निर्माण</string>
     <string name="you_sure" >क्या आपको यकीन है?</string>
 
     <!-- Login Sccren -->
@@ -152,15 +114,8 @@
     <string name="select_sub_community">उप समुदाय का चयन करें</string>
     <string name="select_local_community">स्थानीय समुदाय का चयन करें</string>
     <string name="RegisterFamily">अपने परिवार को पंजीकृत करना</string>
-    <string name="FetchingCity">लाते शहर</string>
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
-    <string name="youtubeVideo">यूट्यूब वीडियो</string>
-    <string name="HowToRegister">कैसे पंजीकृत करें?</string>
-    <string name="hoeRegister">कैसे पंजीकरण करें</string>
-    <string name="RegisterButton">रजिस्टर बटन</string>
-    <string name="ClickToRegister">पंजीकरण करने के लिए यहां क्लिक करें</string>
-    <string name="FillUpYourDetail">अपना विवरण भरें</string>
 
 
     <!-- DashBoard Sccren -->
@@ -207,7 +162,6 @@
     <!-- ProfileDetail Sccren -->
     <string name="Finding">खोज</string>
     <string name="user">उपयोगकर्ता</string>
-    <string name="locationOff">स्थान बंद है</string>
     <string name="updateprofile">प्रोफ़ाइल अपडेट करें</string>
     <string name="update">अपडेट करें</string>
 
@@ -226,12 +180,6 @@
 
     <string name="Success">सफलता</string>
     <string name="profileUpdate">प्रोफ़ाइल अपडेट!</string>
-    <string name="locationUpdate">स्थान अपडेट किया गया</string>
-
-    <string name="km">%.2f किमी</string>
-    <string name="Distance">दूरी</string>
-    <string name="selectedImage">चयनित छवि पुनः प्राप्त नहीं कर सकता</string>
-    <string name="image">छवि</string>
 
 
     <string name="my_profile">मेरी प्रोफाइल</string>
@@ -239,7 +187,6 @@
     <string name="view_family">परिवार देखें</string>
     <string name="on">पर</string>
     <string name="off">बंद</string>
-    <string name="distance">दूरी</string>
     <string name="save">सहेजें</string>
     <string name="save_amp_next"><![CDATA[Save & Next]]></string>
 
@@ -310,7 +257,6 @@
     <string name="SelectedAll">चयनित \'सब\'</string>
 
     <!-- Location Adapter -->
-    <string name="Private">निजी</string>
     <string name="location">स्थान</string>
 
 
@@ -334,10 +280,7 @@
     <string name="icon_to_search_members">सदस्यों को खोजने के लिए आइकन</string>
 
     <!-- SmartPopUp Adapter -->
-    <string name="filterNotsaved">फ़िल्टर नहीं सहेजा गया!</string>
-    <string name="noFilterFound">कोई फ़िल्टर नहीं मिला!</string>
     <string name="filter_name">फ़िल्टर का नाम</string>
-    <string name="filter_1">फ़िल्टर 1</string>
 
     <string name="apply">लागू</string>
     <string name="head">सिर :</string>
@@ -440,8 +383,6 @@
 
     <!-- ChangePassword Fragment -->
     <string name="forgotPin">पिन भूल गए</string>
-    <string name="letMeCheck">मुझे जाँचने दो</string>
-    <string name="Cancel">रद्द करना</string>
     <string name="pinWillsend">पिन के लिए भेजा जाएगा</string>
     <string name="change_pin">पिन बदलिए</string>
     <string name="current_pin">वर्तमान पिन</string>
@@ -461,7 +402,6 @@
 
     <!-- DashBoard Fragment -->
     <string name="DevicDont">आपका उपकरण डॉन \'टी समर्थन भाषण इनपुट</string>
-    <string name="ThisIsSlider">यह स्लाइडर है</string>
     <string name="search_here">यहाँ ढूँढे...</string>
     <string name="news_amp_events"><![CDATA[News & Events]]></string>
     <string name="view_all">सभी देखें</string>
@@ -470,17 +410,11 @@
     <string name="clear">स्पष्ट</string>
 
     <!-- FamilyDetail Fragment -->
-    <string name="updateDtail">अद्यतन</string>
-    <string name="ExitDetail">बाहर जाएं</string>
-    <string name="EnterDetail">दर्ज</string>
     <string name="pinFoundDetail">पिन नहीं मिला!</string>
-    <string name="RecoverProfileDetail">जीते गए इस प्रोफ़ाइल को पुनर्प्राप्त करने में सक्षम हो!</string>
-    <string name="YesDeleteDetail">हाँ, इसे हटा दें!</string>
     <string name="delete">हटाएं</string>
 
     <!-- Fragment Drawer Fragment -->
     <string name="Version">संस्करण</string>
-    <string name="vastipatrak">वास्तिपत्रक</string>
 
 
     <string name="logout">लॉग आउट</string>
@@ -566,8 +500,6 @@
     <string name="kmPDetail">%.2f के.एम.</string>
     <string name="OfficeLocation">कार्यालय स्थान</string>
     <string name="WithGoogle">Google मानचित्र के साथ</string>
-    <string name="SetDetail">सेट</string>
-    <string name="ViewDetails">राय</string>
     <string name="updatingLocationDetail">अपने कार्यालय के स्थान को अद्यतन करना</string>
     <string name="PleasWaitDetails">कृपया प्रतीक्षा करें...</string>
     <string name="headDetails">कृपया प्रतीक्षा करें...</string>
@@ -616,29 +548,10 @@
     <string name="YesPlList">जी कहिये!</string>
 
     <!-- ShareEvent Fragment -->
-    <string name="EventRequired">घटना शीर्षक आवश्यक है</string>
-    <string name="EventAddress">घटना का पता आवश्यक है</string>
-    <string name="EnetDescription">घटना का विवरण आवश्यक है</string>
-    <string name="StartDate">प्रारंभ तिथि आवश्यक है</string>
-    <string name="EndDate">अंतिम तिथि आवश्यक है</string>
-    <string name="StartTime">प्रारंभ समय की आवश्यकता है</string>
-    <string name="EndTime">अंत समय की आवश्यकता है</string>
-    <string name="Creating">एक घटना बनाना</string>
 
-    <string name="SelectTime">समय का चयन करें</string>
-    <string name="share_event">घटना साझा करें</string>
-    <string name="event_title">कार्यक्रम का शीर्षक</string>
-    <string name="event_address">घटना का पता </string>
     <string name="event_description">घटना विवरण</string>
-    <string name="event_date_amp_time"><![CDATA[Event Date & Time]]></string>
     <string name="startEvent">शुरू</string>
-    <string name="timeEvent">समय</string>
     <string name="endEvent">समाप्त</string>
-
-    <string name="upload_imagesEvent">तश्वीरें अपलोड करो</string>
-    <string name="add_youtube_urlsEvent">ट्यूब यूआरएल जोड़ें</string>
-    <string name="create_eventEvent">कार्यक्रम बनाएँ</string>
-    <string name="share_nowEvent">अब साझा करें</string>
 
     <!-- SmartFilter Fragment -->
     <string name="endrecord">रिकॉर्ड्स का अंत</string>
@@ -675,47 +588,15 @@
     <string name="homeDetails">घर</string>
     <string name="rentedDetails">किराए पर लिया</string>
 
-    <string name="EmailContact">ईमेल पता</string>
-    <string name="MobileContact">मोबाइल नंबर</string>
-    <string name="LocalDetails">स्थानीय पता</string>
-    <string name="PermanetDetails">स्थाई पता</string>
-    <string name="PinDetails">पिन कोड</string>
-    <string name="AreaContact">क्षेत्र</string>
-    <string name="StateContact">राज्य चुनें</string>
     <string name="MemberCodeDetails">सदस्य कोड</string>
-    <string name="HeadDetails">सिर का नाम</string>
     <string name="MemberNameDetails">सदस्य का नाम</string>
     <string name="LastNameDetails">उपनाम</string>
     <string name="LocalComDetails">स्थानीय समुदाय</string>
-    <string name="MaritalDetails">वैवाहिक स्थिति</string>
-    <string name="SelectNDetails">देशी का चयन करें</string>
-    <string name="SelectCDetails">शहर चुनें</string>
-    <string name="EductionDetails">शिक्षा</string>
-    <string name="SelectGDetails">गोत्र का चयन करें</string>
-    <string name="SelectBDetails">रक्त समूह का चयन करें</string>
-    <string name="BirthDetails">जन्म दिन</string>
-    <string name="MarriageDetails">शादी की तारीख</string>
-    <string name="WifeDetails">पत्नी का मूल निवासी</string>
-    <string name="IsDonorDetails">डोनर है</string>
-    <string name="isRentedDetails">रेंटेड है</string>
-    <string name="isExpiredDetails">समाप्त हो चुका है?</string>
-    <string name="OfficeDetails">कार्यालय का पता</string>
-    <string name="CategoryDetails">वर्ग</string>
-    <string name="SubCategoryDetails">उप श्रेणी</string>
     <string name="OccupationDetails">व्यवसाय</string>
-    <string name="CurrentActivtyDetails">वर्तमान कार्य</string>
-    <string name="isSpectaDetails">स्पेक्ट्रम क्या है?</string>
-    <string name="isShaniDetails">शनि है?</string>
-    <string name="isMangalDetails">मंगल है?</string>
     <string name="HeightDetails">ऊंचाई</string>
-    <string name="MeterDetails">मीटर</string>
     <string name="WeghtDetails">वजन</string>
     <string name="kg">किलोग्राम</string>
-    <string name="ProfileDetails">प्रोफ़ाइल बनाया गया दिनांक</string>
-    <string name="UpdateDetails">प्रोफ़ाइल अद्यतन तिथि</string>
-    <string name="ProfilePDetails">प्रोफ़ाइल अपडेशन प्रतिशत</string>
     <string name="WelcomeSmart">स्मार्ट फ़िल्टर में आपका स्वागत है</string>
-    <string name="youDetails">आप कई फ़िल्टर विकल्पों (जैसे परिवार के मुखिया, परिवार के सदस्य, मोबाइल नंबर, ईमेल आईडी आदि) का उपयोग करके यहां खोज सकते हैं ...</string>
     <string name="MainDetails">मुख्य विवरण</string>
 
 
@@ -723,7 +604,6 @@
     <string name="AddDetails">पता</string>
     <string name="FamilyMemberDetail">परिवार के सदस्य सूची (0)</string>
     <string name="AddMemberDetails">सदस्य जोड़ें</string>
-    <string name="Unlock">एप्लिकेशन को अनलॉक करने के लिए अपनी उंगली को स्कैन करें</string>
     <string name="SearchNearby">दूरी द्वारा खोजें</string>
     <string name="EnterNewrby">दूरी दर्ज करें (किमी)</string>
     <string name="SearchNearBy">अभी खोजो</string>
@@ -741,28 +621,20 @@
     <string name="FindRecord">रिकॉर्ड खोजें</string>
 
     <string name="backmatrimony">वापस मैट्रीमोनी</string>
-    <string name="SearchName">खोज नाम</string>
-    <string name="Find">रिकॉर्ड खोजें</string>
     <string name="AllNotification">सभी अधिसूचनाएं</string>
     <string name="AllFilter">सभी फ़िल्टर</string>
     <string name="youFilte">आप ऑफ़लाइन फ़िल्टर की सूची देख सकते हैं और इसे संपादित, हटा या लागू कर सकते हैं।</string>
-    <string name="LocalCommnunity">स्थानीय समुदाय</string>
     <string name="Community">समिति</string>
     <string name="Designation">पदनाम</string>
     <string name="Duration">अवधि</string>
     <string name="SarchKeyword">मुख्य शब्द ढूंडो</string>
     <string name="Commi">समिति</string>
-    <string name="RegionName">क्षेत्र का नाम</string>
-    <string name="DurationCommitee">अवधि</string>
-    <string name="CommiteeName">समिति का नाम</string>
-    <string name="DesignCommi">पद</string>
 
     // 22-02-2020
     <string name="no_internet">कोई इंटरनेट कनेक्शन नहीं!</string>
 
     <string name="check_network">अपने इंटरनेट कनेक्शन की जाँच करें और पुन: प्रयास करें</string>
     <string name="retry">पुन: प्रयास करें</string>
-    <string name="fetching_local_community">लोकल कम्युनिटी ला रहा है</string>
     <string name="coming_soon">जल्द आ रहा है</string>
     <string name="contact_number">+919427051418</string>
     <string name="mobile_not_available">मोबाइल उपलब्ध नहीं है</string>
@@ -778,14 +650,10 @@
     <string name="cityList">शहर की सूची</string>
     <string name="sCommunity">उप समुदाय</string>
     <string name="localCom">स्थानीय समुदाय</string>
-    <string name="OtpVerification">ओटीपी सत्यापन</string>
-    <string name="enterOtp">आपके द्वारा प्राप्त ओटीपी दर्ज करें</string>
-    <string name="ResendOtp">ओटीपी पुनः भेजें?</string>
     <string name="fmilyList">परिवार के सदस्य सूची</string>
     <string name="sdetails">\'विवरण</string>
     <string name="exitDetails">बाहर जाएं </string>
     <string name="EnterDetails">दर्ज</string>
-    <string name="Communityapp">सामुदायिक अनुप्रयोग</string>
     <string name="LogoutComApp">लॉगआउट सामुदायिक अनुप्रयोग</string>
     <string name="wontbeRecover">जीते गए इस प्रोफ़ाइल को पुनर्प्राप्त करने में सक्षम हो!</string>
     <string name="yesdelete">हाँ, इसे हटा दें!</string>
@@ -830,11 +698,6 @@
     <string name="mobile_not_found">मोबाइल नहीं मिला!</string>
     <string name="filter_values" translatable="false">filter_values</string>
     <string name="no_selection">कोई चयन नहीं</string>
-    <string name="membercode">सदस्य कोड</string>
-    <string name="RelationDetails">रिश्ता</string>
-    <string name="sLatsname">अंतिम नाम चुनें</string>
-    <string name="stateSelected">राज्य</string>
-    <string name="rented">किराए पर</string>
 
     <string name="email_addressdetails">ईमेल पता</string>
     <string name="mobile_numberdetails">मोबाइल नंबर</string>
@@ -872,9 +735,7 @@
     <string name="_matrimony">वैवाहिक विवरण</string>
     <string name="some_more">कुछ और</string>
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">आप कई फ़िल्टर विकल्पों (जैसे परिवार के मुखिया, परिवार के सदस्य, मोबाइल नंबर, ईमेल आईडी आदि) का उपयोग करके यहां खोज सकते हैं ...</string>
-    <string name="export_search_result">Export search result!</string>
     <string name="select_filter">Please select filter!</string>
-    <string name="btnRegister">रजिस्टर</string>
     <string name="Register">रजिस्टर करें</string>
     <string name="RequestAdmin">आपके व्यवस्थापक को अनुरोध भेजा गया</string>
     <string name="CannotImage">चयनित छवि पुनः प्राप्त नहीं कर सकता</string>
@@ -885,25 +746,16 @@
     <string name="liveo_search_view_voice">आवाज खोज</string>
     <string name="liveo_search_view_close">क्वेरी टेक्स्ट हटाएं</string>
     <string name="liveo_not_supported">समर्थित नहीं</string>
-    <string name="location_permissions_denied_feedback">दूरी की गणना के लिए स्थान की अनुमति की आवश्यकता होती है</string>
-    <string name="all_permissions_denied_feedback">कुछ जादू करने के लिए उन सभी अनुमतियों की आवश्यकता होती है</string>
-    <string name="permission_rationale_settings_button_text">समायोजन</string>
-    <string name="permission_rationale_title">हमें इसकी अनुमति चाहिए</string>
-    <string name="permission_rationale_message">कुछ फैंसी सामान करने के लिए इस अनुमति की आवश्यकता है इसलिए कृपया, इसे अनुमति दें!</string>
-    <string name="camera_permission_denied_dialog_title">कैमरा अनुमति का अनुरोध</string>
-    <string name="camera_permission_denied_dialog_feedback">जब तक आप अनुमति के अनुरोध को स्वीकार नहीं करते तब तक QRCode साझाकरण और प्रोफ़ाइल छवि उपलब्ध नहीं होगी</string>
     <string name="enter_pin">कृपया अपना पिन दर्ज करें</string>
     <string name="went_wrong">कुछ गलत हो गया!</string>
     <string name="RegisterFamilyPhoto">अपनी फोटो अपलोड करना</string>
     <string name="download">डाउनलोड</string>
     <string name="birth_timeDetail">जन्म समय</string>
-    <string name="YesExport">इसे निर्यात करें!</string>
     <string name="admin_only">केवल व्यवस्थापक के लिए</string>
     <string name="default_filter_name">नाम</string>
     <string name="enter_filter_value">कृपया खोज के लिए फ़िल्टर दर्ज करें</string>
     <string name="smart_filter">स्मार्ट फ़िल्टर</string>
     <string name="isdialogshow">डायलॉगशॉ है</string>
-    <string name="uploaded_file">अपलोड की गई फ़ाइल</string>
     <string name="filename">फ़ाइल का नाम</string>
     <string name="is_logged_in">लॉगिन है</string>
     <string name="mycontacts">मेरे संपर्क</string>
@@ -913,7 +765,6 @@
     <string name="members">सदस्य</string>
     <string name="fetchinguploadedfiles">अपलोड की गई फ़ाइलें प्राप्त कर रहा है</string>
     <string name="or_login_with">आपका लॉगिन</string>
-    <string name="verify_otp">सत्यापित करें</string>
     <string name="liveo_search_view_search">खोज</string>
     <string name="ok">ठीक है</string>
     <string name="newupdate">नई सूचना उपलब्ध है</string>

@@ -4,13 +4,14 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.GetRemindersListener
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.CalendarSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class CalendarSearchViewModel(
@@ -44,7 +45,7 @@ class CalendarSearchViewModel(
     }
 
     fun getCalendarSearch(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()
             completableJob.let { thejob ->
 

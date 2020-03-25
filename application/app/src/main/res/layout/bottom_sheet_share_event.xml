@@ -50,7 +50,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/rl_state"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="5dp"
@@ -59,7 +58,6 @@
             android:textAlignment="center">
 
             <Spinner
-                android:id="@+id/spstate"
                 style="@style/Widget.AppCompat.DropDownItem.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -78,7 +76,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/rl_city"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="5dp"
@@ -87,7 +84,6 @@
             android:textAlignment="center">
 
             <Spinner
-                android:id="@+id/spcity"
                 style="@style/Widget.AppCompat.DropDownItem.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -96,7 +92,6 @@
 
 
         <TextView
-            android:id="@+id/btnShare"
             android:layout_weight="1"
             android:layout_width="150dp"
             android:layout_height="45dp"

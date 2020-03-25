@@ -79,8 +79,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         val root = inflater.inflate(R.layout.fragment_nonactives, container, false)
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, NonActivesFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, NonActivesFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, NonActivesFragment::class.simpleName)
+        mApp.facebookAnalytics(context, NonActivesFragment::class.simpleName)
 
 
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
@@ -110,12 +110,20 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 if (member.status == "2") {
                     holder.ivVerify.visibility = View.VISIBLE
                     if (member.updatedDt.isNotEmpty()) {
-                        holder.tvCreated.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                            viewHolder.tvCreated.text = getString(R.string.not_updated)
+                        } else {
+                            viewHolder.tvCreated.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        }
                     }
                 } else {
                     holder.ivVerify.visibility = View.GONE
                     if (member.createdDt.isNotEmpty()) {
-                        holder.tvCreated.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                            viewHolder.tvCreated.text = getString(R.string.not_updated)
+                        } else {
+                            viewHolder.tvCreated.text = "Created " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        }
                     }
                 }
 

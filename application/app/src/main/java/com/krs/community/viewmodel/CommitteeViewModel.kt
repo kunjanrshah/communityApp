@@ -4,11 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.repositories.CommitteeRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class CommitteeViewModel(
@@ -20,7 +21,7 @@ class CommitteeViewModel(
    lateinit var filterListener: ByFilterListener
 
    fun getUsersInCommittee(jsonObject: JsonObject) {
-       if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+       if (isNetworkConnected(app.applicationContext)) {
            completableJob = Job()
            completableJob.let { thejob ->
 

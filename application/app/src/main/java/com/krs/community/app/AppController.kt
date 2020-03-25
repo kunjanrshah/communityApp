@@ -6,15 +6,11 @@ import android.app.Activity
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.IntentFilter
 import android.graphics.Typeface
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Handler
 import android.os.StrictMode
-import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
@@ -33,17 +29,15 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.TranslateApi.Language
 import com.krs.community.TranslateApi.TranslateAPI
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
-import com.krs.community.utils.ConnectivityReceiver
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
 import com.krs.community.viewmodelfactory.*
-import com.wessam.library.NetworkChecker
 import io.fabric.sdk.android.Fabric
 import net.gotev.uploadservice.UploadServiceConfig
 import org.json.JSONObject
@@ -58,7 +52,6 @@ import org.kodein.di.generic.singleton
 
 class AppController : Application(), KodeinAware {
 
-    internal var broadcastRevcevier: ConnectivityReceiver? = null
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var typeface: Typeface
     lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -66,7 +59,7 @@ class AppController : Application(), KodeinAware {
     lateinit var translateAPI: TranslateAPI
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
-    private var mNetworkReceiver: BroadcastReceiver? = null
+    lateinit var connectionLiveData: ConnectionLiveData
     var start: Int = 0
     val length: Int = 30
     val mHandler: Handler = Handler()
@@ -76,7 +69,6 @@ class AppController : Application(), KodeinAware {
         val TAG = AppController::class.java.simpleName
         lateinit var mApplication: AppController
         const val notificationChannelID = "TestChannel"
-
         val INTERVAL = 1000 * 60 * 3 //3 minutes
     }
 
@@ -127,37 +119,37 @@ class AppController : Application(), KodeinAware {
 
     }
 
-    fun FirebaseAnalytics(getContext: Context?, Name: String?) {
+    fun firebaseAnalytics(getContext: Context?, Name: String?) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(getContext!!)
         firebaseAnalytics.setCurrentScreen((getContext as Activity?)!!, "Screen", Name)
     }
 
-    fun FacebookAnalytics(getContext: Context?, Name: String?) {
+    fun facebookAnalytics(getContext: Context?, Name: String?) {
         logger = AppEventsLogger.newLogger(getContext);
         logger.logEvent(Name);
     }
 
-    fun StringTranslateAPI(Name: String?):String {
-        translateAPI = TranslateAPI(Language.AUTO_DETECT, Language.TAMIL, Name);
+    /*  fun stringTranslateAPI(Name: String?):String {
+          translateAPI = TranslateAPI(Language.AUTO_DETECT, Language.TAMIL, Name);
 
-        translateAPI.setTranslateListener(object :TranslateAPI.TranslateListener{
-            override fun onSuccess(translatedText: String?) : String? {
-                Log.d(TAG, "onSuccess: " + translatedText);
-                return translatedText
-            }
+          translateAPI.setTranslateListener(object :TranslateAPI.TranslateListener{
+              override fun onSuccess(translatedText: String?) : String? {
+                  Log.d(TAG, "onSuccess: " + translatedText);
+                  return translatedText
+              }
 
-            override fun onFailure(ErrorText: String?): String? {
-                Log.d(TAG, "onSuccess: " + ErrorText);
-                return ErrorText
-            }
+              override fun onFailure(ErrorText: String?): String? {
+                  Log.d(TAG, "onSuccess: " + ErrorText);
+                  return ErrorText
+              }
 
-        })
-        return ""
-    }
+          })
+          return ""
+      }*/
 
     private val mHandlerTask = object : Runnable {
         override fun run() {
-            if (NetworkChecker.isNetworkConnected(this@AppController)) {
+            if (isNetworkConnected(this@AppController)) {
                 updateUserStatus()
             }
             mHandler.postDelayed(this, INTERVAL.toLong())
@@ -169,8 +161,6 @@ class AppController : Application(), KodeinAware {
     }
 
     private fun stopRepeatingTask() {
-       // Toast.makeText(this, "turn Off GPS", Toast.LENGTH_SHORT).show()
-
         mHandler.removeCallbacks(mHandlerTask)
     }
 
@@ -187,7 +177,7 @@ class AppController : Application(), KodeinAware {
         super.onCreate()
 
         mApplication = this
-
+        connectionLiveData = ConnectionLiveData(this)
         FacebookSdk.sdkInitialize(applicationContext)
         createNotificationChannel()
 
@@ -201,7 +191,6 @@ class AppController : Application(), KodeinAware {
         typeface_bold = ResourcesCompat.getFont(applicationContext, R.font.montserrat_semibold)!!
 
         retrofitBase = RetrofitBase(this, false)
-
         Fresco.initialize(applicationContext)
 
         val fabric = Fabric.Builder(this).kits(Crashlytics()).debuggable(true).build()
@@ -218,8 +207,6 @@ class AppController : Application(), KodeinAware {
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
 
-        broadcastRevcevier = ConnectivityReceiver()
-        registerReceiver(broadcastRevcevier, IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_id))
@@ -233,28 +220,13 @@ class AppController : Application(), KodeinAware {
                 .build()
         PRDownloader.initialize(getApplicationContext(), config)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-
         startRepeatingTask()
-
     }
 
 
     override fun onTerminate() {
-
-
         super.onTerminate()
         stopRepeatingTask()
-        if (broadcastRevcevier != null) {
-            unregisterReceiver(broadcastRevcevier)
-            broadcastRevcevier = null
-        }
-
     }
 
     private fun updateUserStatus() {

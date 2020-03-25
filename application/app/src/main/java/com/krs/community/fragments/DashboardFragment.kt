@@ -20,7 +20,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -34,17 +33,19 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.activity.FavoriteProfileActivity
-import com.krs.community.activity.ProfileDetailActivity
-import com.krs.community.activity.QRCodeActivity
-import com.krs.community.activity.RegisterActivty
+import com.krs.community.activity.*
+import com.krs.community.activity.DashboardActivity.Companion.easyWayLocation
+import com.krs.community.activity.DashboardActivity.Companion.request
 import com.krs.community.app.AppController
+import com.krs.community.bkservice.ProcessMainClass
+import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.FragmentDashboardBinding
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
@@ -79,7 +80,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     private val duration = 10L
     private val pixelsToMove = 30
     private val mHandler = Handler(Looper.getMainLooper())
-    private lateinit var member: Member
+    private lateinit var loginMember: Member
     var SCROLLING_RUNNABLE: Runnable = object : Runnable {
         override fun run() {
             binding.lstSharedProfile.smoothScrollBy(pixelsToMove, 0)
@@ -100,8 +101,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
-        mApp.FirebaseAnalytics(context, DashboardFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, DashboardFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, DashboardFragment::class.simpleName)
+        mApp.facebookAnalytics(context, DashboardFragment::class.simpleName)
 
         filterViewModel = ViewModelProvider(this, filterViewModelFactory).get(SmartFilterViewModel::class.java)
         filterViewModel.mByFilterListener = this
@@ -161,8 +162,34 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         //setRecyclerViewScrollListener()
 
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
-        member = Gson().fromJson(loginMember, Member::class.java)
+        this.loginMember = Gson().fromJson(loginMember, Member::class.java)
         return binding.root
+    }
+
+
+    private fun startLocationService() {
+        try {
+            if (easyWayLocation?.hasLocationEnabled()!!) {
+                if (Utility.checkFineLocationPermission(activity)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        RestartServiceBroadcastReceiver.scheduleJob(activity)
+                    } else {
+                        val bck = ProcessMainClass()
+                        bck.launchService(activity)
+                    }
+                } else {
+                    if (Utility.checkFineLocationPermission(activity)) {
+                        easyWayLocation?.startLocation() //calculateDistance()
+                    } else {
+                        Utility.requestFineLocationPermission(activity as AppCompatActivity)
+                    }
+                }
+            } else {
+                easyWayLocation = EasyWayLocation(activity, request, true, activity as DashboardActivity)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun getSpeechInput() {
@@ -282,7 +309,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     0 -> Utility.movetoFragment(activity, BrowseByCityFragment())
                     1 -> {
                         val mBundle = Bundle()
-                        mBundle.putSerializable(getString(R.string.member), member)
+                        mBundle.putSerializable(getString(R.string.member), loginMember)
                         val intent1 = Intent(activity, QRCodeActivity::class.java)
                         intent1.putExtras(mBundle)
                         startActivity(intent1)
@@ -299,11 +326,11 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     5 -> {
                         val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
                         startActivity(mIntent)
-                        Utility.fade(activity)
+                        fade(activity)
                     }
                     6 -> Utility.movetoFragment(activity, AdminsFragment())
                     7 -> {
-                        if (member.role != getString(R.string.User)) {
+                        if (loginMember.role != getString(R.string.User)) {
                             Utility.movetoFragment(activity, NonActivesFragment())
                         } else {
                             binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
@@ -317,7 +344,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     9 -> {
                         // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         //startActivity(Intent(activity, ActivityDebugTools::class.java))
-                        Utility.movetoFragment(activity, DocumentsFragment())
+                        Utility.movetoFragment(activity, UploadFragment())
                     }
 
                     10 -> {
@@ -327,7 +354,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
 
                     11 -> {
-                        if (member.role != getString(R.string.User)) {
+                        if (loginMember.role != getString(R.string.User)) {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
                             bundle.putBoolean(getString(R.string.is_logged_in), false)
@@ -356,7 +383,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         var tvName: TextView = v.findViewById(R.id.tv_name)
         var iconText: TextView = v.findViewById(R.id.icon_text)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile)
-        var iconContainer: RelativeLayout = v.findViewById(R.id.icon_container)
         var cardViewRecentList: CardView = v.findViewById(R.id.card_view_recent_list)
     }
 
@@ -395,16 +421,9 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 }
             }
 
-            /* holder.cardViewRecentList.setOnClickListener {
-                 moveToProfileDetail()
-             }*/
-
-            /*holder.iconContainer.setOnClickListener {
+            holder.imgProfile.setOnClickListener {
                 moveToProfileDetail()
-            }*/
-            /*holder.imgProfile.setOnClickListener {
-                moveToProfileDetail()
-            }*/
+            }
         }
 
         override fun getItemCount(): Int {
@@ -439,7 +458,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     private fun moveToProfileDetail() {
         Utility.startSweetProgress(activity, getString(R.string.MoveProfile), getString(R.string.loading))
         val intent = Intent(activity, ProfileDetailActivity::class.java)
-        intent.putExtra(getString(R.string.member), member)
+        intent.putExtra(getString(R.string.member), loginMember)
         startActivity(intent)
         fade(activity)
     }
@@ -456,8 +475,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     override fun getMembers(response: SmartFilterResponse) {
         if (response.success) {
             if (response.members != null && response.members.size > 0) {
+
                 sharedProfiles.clear()
                 duplicateIds.clear()
+                startLocationService()
                 sharedProfiles.addAll(response.members)
 
                 for (member1 in response.membersharing) {
@@ -474,14 +495,18 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         duplicateIds.add(member1.id)
                     }
                 }
+                if (sharedProfiles.size > 0) {
+                    binding.lblShared.alpha = 1.0f
+                    binding.tvAllShared.isClickable = true
+                } else {
+                    binding.lblShared.alpha = 0.25f
+                    binding.tvAllShared.isClickable = false
+                }
 
                 sharedAdapter = SharedProfileAdapter(sharedProfiles)
                 binding.lstSharedProfile.adapter = sharedAdapter
-                binding.lblShared.visibility = View.VISIBLE
-                binding.lblShared.alpha = 1.0f
                 binding.lstSharedProfile.alpha = 1.0f
                 binding.lblPrivate.visibility = View.GONE
-                binding.tvAllShared.isClickable = true
             } else {
                 setDefaultProfileList()
             }
@@ -497,16 +522,19 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     }
 
     private fun setDefaultProfileList() {
-        binding.lblShared.alpha = 0.25f
+
         binding.lstSharedProfile.alpha = 0.25f
-        binding.tvAllShared.isClickable = false
         binding.lblPrivate.visibility = View.VISIBLE
-        binding.lblShared.visibility = View.VISIBLE
         try {
             sharedAdapter = SharedProfileAdapter(defaultProfiles)
             binding.lstSharedProfile.adapter = sharedAdapter
+            if (ProcessMainClass.serviceIntent != null) {
+                activity?.stopService(ProcessMainClass.serviceIntent)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
+
 }

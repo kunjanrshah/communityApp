@@ -4,12 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.SmartFilterRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterRepository, var app: Application) : AndroidViewModel(app) {
@@ -50,7 +51,7 @@ class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterReposi
     }
 
     fun getSharedProfiles(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()
             completableJob.let { thejob ->
 
@@ -84,7 +85,7 @@ class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterReposi
     }
 
     fun smartFilterSearch(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()
             completableJob.let { thejob ->
 
@@ -118,7 +119,7 @@ class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterReposi
     }
 
     fun getInActiveRecords(jsonObject: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()
             completableJob.let { thejob ->
 

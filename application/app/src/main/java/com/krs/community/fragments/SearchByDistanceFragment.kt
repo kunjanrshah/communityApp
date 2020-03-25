@@ -81,8 +81,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     private lateinit var img_map:ImageView
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var getLocationDetail: GetLocationDetail
-    private var curr_lat = MutableLiveData<Double>()
-    private var curr_lng = MutableLiveData<Double>()
+    private var currLat = MutableLiveData<Double>()
+    private var currLng = MutableLiveData<Double>()
     private var isCallAPI=false
     private var selectedPosition = 0
     private lateinit var distance:ByDistanceModel
@@ -107,8 +107,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         }
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, SearchByDistanceFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, SearchByDistanceFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, SearchByDistanceFragment::class.simpleName)
+        mApp.facebookAnalytics(context, SearchByDistanceFragment::class.simpleName)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         mByDistanceViewModel = ViewModelProvider(this, byDistanceViewModelFactory).get(ByDistanceViewModel::class.java)
@@ -136,8 +136,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         DashboardActivity.stop=false
         isCallAPI=true
         callDistanceAPI()
-        curr_lat.postValue(DashboardActivity.cur_lat.value)
-        curr_lng.postValue(DashboardActivity.cur_lng.value)
+        currLat.postValue(DashboardActivity.cur_lat.value)
+        currLng.postValue(DashboardActivity.cur_lng.value)
         memberId = Guru.getString(getString(R.string.member_id), "")
 
         return root
@@ -304,9 +304,9 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                             Handler().post {
                                 Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
                             }
-                            Handler().postDelayed({
-                                Utility.hideSweetProgress()
-                            }, 5000)
+                            /* Handler().postDelayed({
+                                 Utility.hideSweetProgress()
+                             }, 5000)*/
                         }else if(it == 1) {
                             Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
@@ -321,7 +321,6 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                             }
 
                         } else if (it == 3) {
-
                             val mBundle = Bundle()
                             mBundle.putSerializable(getString(R.string.member), member)
                             val intent: Intent = Intent(activity as AppCompatActivity, QRCodeActivity::class.java)
@@ -331,7 +330,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                         } else if (it == 4) {
                             shareDetails(activity as AppCompatActivity,viewHolder.tvName.text.toString(), member.mobile.toString(),member.emailAddress.toString(),viewHolder.tvArea.text.toString(), member.address.toString())
                         } else if (it == 5) {
-                            val adapter: LocationAdapter = LocationAdapter(activity as AppCompatActivity, member)
+                            val adapter = LocationAdapter(activity as AppCompatActivity, member)
                             val setLocationDialog = DialogPlus.newDialog(activity as AppCompatActivity)
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
@@ -367,12 +366,15 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     viewHolder.tvOffice.visibility=View.VISIBLE
                     viewHolder.tvOffice.text=getString(R.string.Officedistance)
                     viewHolder.tvOfficeDist.text=getDistance(member.distance)
-                }else if(nearBy.equals("User")){
+                    val params = viewHolder.llOffice.layoutParams as LinearLayout.LayoutParams
+                    params.setMargins(0, 50, 0, 0)
+                    viewHolder.llOffice.layoutParams = params
+                }/*else if(nearBy.equals("User")){
                     viewHolder.llUser.visibility=View.VISIBLE
                     viewHolder.tvUser.visibility=View.VISIBLE
                     viewHolder.tvUser.text=getString(R.string.userDetails)
                     viewHolder.tvUserDist.text=getDistance(member.distance)
-                }else if(nearBy.equals("All")){
+                }*/ else if (nearBy.equals("All")) {
                     try {
                         val nearBy: List<String> = member.nearBy.split(",")
                         val elements: List<String> = member.distance.split(",")
@@ -387,20 +389,26 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                                 viewHolder.tvOffice.visibility = View.VISIBLE
                                 viewHolder.tvOffice.text = "Office"
                                 viewHolder.tvOfficeDist.text = getDistance(elements[count].trim())
-                            } else if (nearBy[count].contains("user")) {
+                                val params = viewHolder.llOffice.layoutParams as LinearLayout.LayoutParams
+                                params.setMargins(0, 10, 0, 0)
+                                viewHolder.llOffice.layoutParams = params
+                            } /*else if (nearBy[count].contains("user")) {
                                 viewHolder.llUser.visibility = View.VISIBLE
                                 viewHolder.tvUser.visibility = View.VISIBLE
                                 viewHolder.tvUser.text = "User"
                                 viewHolder.tvUserDist.text = getDistance(elements[count].trim())
-                            }
+                            }*/
                         }
                     } catch (e: java.lang.Exception) {
                         e.printStackTrace()
                     }
 
                 }
-
-                viewHolder.tvUpdate.text=Utility.changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd_TIME,Utility.dd_MM_yyyy_TIME)
+                if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                    viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                } else {
+                    viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd_TIME, Utility.dd_MM_yyyy_TIME)
+                }
                 applyImportant(viewHolder, member)
                 applyProfilePicture(viewHolder, member)
                 applyClickEvents(viewHolder, i,member)
@@ -580,25 +588,25 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 distance.nearBy = nearBy
                 distance.userId = Guru.getString(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
                 distance.accessToken = Guru.getString(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-                distance.lat = curr_lat.toString()
-                distance.lng = curr_lng.toString()
+                distance.lat = currLat.toString()
+                distance.lng = currLng.toString()
 
                 mShimmerViewContainer.startShimmerAnimation()
                 mShimmerViewContainer.visibility = View.VISIBLE
                 imgMap.visibility = View.GONE
 
-                Handler().postDelayed({
+                /*Handler().postDelayed({
                     if (lstMembers.size == 0) {
                         mShimmerViewContainer.stopShimmerAnimation()
                         mShimmerViewContainer.visibility = View.GONE
                         imgMap.visibility = View.VISIBLE
                     }
-                }, 5000)
+                }, 5000)*/
 
-                curr_lng.observe(activity as AppCompatActivity, Observer {
-                    distance.lat = curr_lat.value.toString()
-                    distance.lng = curr_lng.value.toString()
-                    if (curr_lat.value != null && curr_lat.value != 0.0 && curr_lng.value != null && curr_lng.value != 0.0 && isCallAPI) {
+                currLng.observe(activity as AppCompatActivity, Observer {
+                    distance.lat = currLat.value.toString()
+                    distance.lng = currLng.value.toString()
+                    if (currLat.value != null && currLat.value != 0.0 && currLng.value != null && currLng.value != 0.0 && isCallAPI) {
                         isCallAPI = false
                         mByDistanceViewModel.getUserByDistance(distance)
                     }
@@ -689,8 +697,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     }
 
     override fun currentLocation(location: Location) {
-        curr_lat.value=location.latitude
-        curr_lng.value=location.longitude
+        currLat.value = location.latitude
+        currLng.value = location.longitude
         isCallAPI=true
     }
 

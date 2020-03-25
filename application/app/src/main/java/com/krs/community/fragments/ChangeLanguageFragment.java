@@ -36,8 +36,8 @@ public class ChangeLanguageFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_change_lan, container, false);
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(getContext(),ChangeLanguageFragment.class.getSimpleName());
-        mApp.FacebookAnalytics(getContext(),ChangeLanguageFragment.class.getSimpleName());
+        mApp.firebaseAnalytics(getContext(), ChangeLanguageFragment.class.getSimpleName());
+        mApp.facebookAnalytics(getContext(), ChangeLanguageFragment.class.getSimpleName());
 
         ImageView iv_lan_cancel = root.findViewById(R.id.iv_lan_cancel);
         iv_lan_cancel.setOnClickListener(v -> {

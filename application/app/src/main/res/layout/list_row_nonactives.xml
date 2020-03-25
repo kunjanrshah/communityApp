@@ -22,7 +22,6 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/icon_container"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:orientation="vertical">

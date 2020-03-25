@@ -1,12 +1,9 @@
 package com.krs.community.activity
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.telephony.SubscriptionInfo
@@ -44,6 +41,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppSignatureHashHelper
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.SMSReceiver
 import com.krs.community.databinding.ActivityLoginwithBinding
 import com.krs.community.fragments.FamilyDetailActivity
@@ -56,7 +54,6 @@ import com.krs.community.utils.Utility.*
 import com.krs.community.utils.toast
 import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodelfactory.LoginViewModelFactory
-import com.wessam.library.NetworkChecker.isNetworkConnected
 import kotlinx.android.synthetic.main.activity_loginwith.*
 import org.json.JSONException
 import org.kodein.di.KodeinAware
@@ -71,7 +68,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     override val kodein by kodein()
     private val factory: LoginViewModelFactory by instance()
     private var smsReceiver: SMSReceiver? = null
-    private var mNetworkReceiver: BroadcastReceiver? = null
     private val TAG = LoginActivity::class.java.simpleName
     private var mCallbackManager: CallbackManager? = null
     private var loginViewModel: LoginViewModel? = null
@@ -86,12 +82,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mNetworkReceiver = NetworkChangeReceiver()
-
-        registerNetworkBroadcastForNougat()
-
         if (isNetworkConnected(this)) {
-
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
@@ -102,16 +93,27 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             var hashkey: String = appSignatureHashHelper.appSignatures.get(0)
             hashkey = hashkey.replace("+", "%2B")
             Guru.putString(getString(R.string.hash_key), hashkey)
-            Log.e(TAG, "hashcode: " + hashkey)
+            Log.e(TAG, "hashcode: $hashkey")
             setScreenLayout()
         } else {
             setNoInternetLayout()
         }
 
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
-        mApp.FacebookAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
+        mApp.firebaseAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
+        mApp.facebookAnalytics(this@LoginActivity, LoginActivity.javaClass.simpleName)
         requestPermissions(this@LoginActivity)
+
+
+        AppController.mApplication.connectionLiveData.observeForever {
+            it?.let {
+                if (it) {
+                    setScreenLayout()
+                } else {
+                    setNoInternetLayout()
+                }
+            }
+        }
     }
 
     private fun setNoInternetLayout() {
@@ -134,7 +136,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         }
     }
 
-    fun setScreenLayout() {
+    private fun setScreenLayout() {
         if (isNetworkConnected(this)) {
             val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.activity_loginwith)
             binding.lifecycleOwner = this
@@ -339,42 +341,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         }
     }
 
-    inner class NetworkChangeReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            try {
-                if (isNetworkConnected(context)) {
-                    setScreenLayout()
-                } else {
-                    setNoInternetLayout()
-                }
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    private fun registerNetworkBroadcastForNougat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-    }
-
-    private fun unregisterNetworkBroadcastForNougat() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
     private fun startSMSListener() {
         try {
             smsReceiver = SMSReceiver()
@@ -485,7 +451,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     override fun onResume() {
         super.onResume()
-        // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(applicationContext)
     }
 
@@ -500,8 +465,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterNetworkBroadcastForNougat()
-
         if (smsReceiver != null) {
             unregisterReceiver(smsReceiver)
         }
@@ -522,4 +485,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             mCallbackManager?.onActivityResult(requestCode, resultCode, data)
         }
     }
+
+
 }

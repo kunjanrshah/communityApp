@@ -1,11 +1,7 @@
 package com.krs.community.fragments
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -39,6 +35,7 @@ import com.krs.community.R
 import com.krs.community.activity.*
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.IFamilyMembersListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
@@ -54,7 +51,6 @@ import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import com.wessam.library.NetworkChecker
 import kotlinx.android.synthetic.main.header_detail.view.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -82,16 +78,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private var isShimmer:Boolean=true
     private var memberId:String?=null
     private var textMsg:String?=null
-    private var mNetworkReceiver: BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mNetworkReceiver = NetworkChangeReceiver()
-        registerNetworkBroadcastForNougat()
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
-        mApp.FacebookAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
+        mApp.firebaseAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
+        mApp.facebookAnalytics(this@FamilyDetailActivity, FamilyDetailActivity::class.simpleName)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             changeStatusbarColor(this, R.color.colorPrimary, true)
@@ -102,46 +95,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
 
-        if (NetworkChecker.isNetworkConnected(this)) {
-            setScreenLayout()
-        } else {
-            setNoInternetLayout()
-        }
-    }
-
-    inner class NetworkChangeReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            try {
-                if (NetworkChecker.isNetworkConnected(context)) {
+        AppController.mApplication.connectionLiveData.observeForever {
+            it?.let {
+                if (it) {
                     setScreenLayout()
                 } else {
                     setNoInternetLayout()
                 }
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
             }
-        }
-    }
-
-    private fun registerNetworkBroadcastForNougat() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerReceiver(mNetworkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        }
-    }
-
-    private fun unregisterNetworkBroadcastForNougat() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                unregisterReceiver(mNetworkReceiver)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
         }
     }
 
@@ -187,12 +148,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         imageView.animation = anim
         val retryButton = findViewById<AppCompatButton>(R.id.retry_button)
         retryButton.setOnClickListener { v: View? ->
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 setScreenLayout()
             }
         }
     }
-
 
     private fun getFamilyDetails(){
         if(isShimmer){
@@ -219,7 +179,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         deletedId = id
         val records = JsonParser().parse(mJSONObject.toString()) as JsonObject
         familyDetailViewModel.deleteMember(records)
-
 
         Handler().postDelayed({
             mShimmerViewContainer?.stopShimmerAnimation()
@@ -271,22 +230,18 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         viewHolder.ivEmail.visibility = View.VISIBLE
                         viewHolder.tvEmail.text = member.emailAddress
                     }
-
-                    viewHolder.tvUpdate.text = "updated "+changeDateFormat(member.updatedDt,Utility.yyyy_MM_dd,Utility.dd_MM_yyyy)
+                    if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                    } else {
+                        viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
-                    val imgLogin: Int
-                    if(member.loginStatus==1){
-                        imgLogin=R.drawable.ic_logout
+
+                    /*if(member.loginStatus==1){
                         viewHolder.tvLogin.text = "See you again!"
                     }else{
-                        imgLogin=R.drawable.ic_login
                         viewHolder.tvLogin.text = "Happy to see you"
-                    }
-                    try {
-                        Glide.with(AppController.mApplication).load(imgLogin).thumbnail(0.5f).into(viewHolder.imgLogin)
-                    } catch (e: Exception) {
-                        e.message
-                    }
+                    }*/
 
                     var imgStatus=R.drawable.ico_red
                     if(memberId==member.id){
@@ -507,12 +462,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         val tvName: TextView = header.findViewById(R.id.tv_name1)
         tvName.text = member.firstName+" "+member.lastName
-        val mApp = applicationContext as AppController
-        Log.e("firstName---",""+member.firstName);
-
-        val strDemo =  mApp.StringTranslateAPI(member.firstName);
-
-        Log.e("strDemo---",""+strDemo);
+        //  val mApp = applicationContext as AppController
+        // val strDemo =  mApp.stringTranslateAPI(member.firstName);
         val iconText: TextView = header.findViewById(R.id.icon_text1)
         iconText.text = tvName.text.substring(0, 1)
         val tvMobile: TextView = header.findViewById(R.id.tv_mobile)
@@ -744,8 +695,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         val imgState: ImageView = v.findViewById(R.id.img_state)
-        val imgLogin: ImageView = v.findViewById(R.id.img_login)
-        val tvLogin: TextView = v.findViewById(R.id.tv_login)
+
+        // val tvLogin: TextView = v.findViewById(R.id.tv_login)
         var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
@@ -779,14 +730,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
     override fun onResume() {
         super.onResume()
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             supportActionBar?.hide()
         }
 
         Handler().postDelayed({
             hideKeyboard(this)
         }, 1000)
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             mainHandler.post(updateAdapter)
         }
     }
@@ -802,7 +753,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterNetworkBroadcastForNougat()
+        //unregisterNetworkBroadcastForNougat()
         familyDetailViewModel.cancelAllJobs()
     }
 

@@ -12,13 +12,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.krs.community.R
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.repositories.LoginRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
@@ -155,7 +156,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     }
 
     fun getLoginUser(req_login: AppConstants.LoginRequest) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             job_login = Job()
             job_login.let { thejob ->
                 CoroutineScope(IO + thejob!!).launch {

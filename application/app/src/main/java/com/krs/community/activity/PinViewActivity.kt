@@ -28,6 +28,7 @@ import com.kevalpatel.passcodeview.keys.KeyNamesBuilder
 import com.kevalpatel.passcodeview.keys.RoundKey
 import com.krs.community.R
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.InnerLogoutListner
@@ -38,7 +39,6 @@ import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
-import com.wessam.library.NetworkChecker.isNetworkConnected
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -70,8 +70,8 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
         }
 
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@PinViewActivity, PinViewActivity.javaClass.simpleName)
-        mApp.FacebookAnalytics(this@PinViewActivity, PinViewActivity.javaClass.simpleName)
+        mApp.firebaseAnalytics(this@PinViewActivity, PinViewActivity.javaClass.simpleName)
+        mApp.facebookAnalytics(this@PinViewActivity, PinViewActivity.javaClass.simpleName)
     }
 
     private fun setNoInternetLayout() {

@@ -46,7 +46,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/rl_spinner"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center"
@@ -57,7 +56,6 @@
             android:textAlignment="center">
 
             <Spinner
-                android:id="@+id/sp_members"
                 style="@style/Widget.AppCompat.DropDownItem.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

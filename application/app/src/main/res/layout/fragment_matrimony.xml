@@ -35,11 +35,11 @@
 
 
      <ImageView
-         android:layout_width="150dp"
-         android:layout_height="200dp"
+         android:layout_width="180dp"
+         android:layout_height="250dp"
          android:layout_gravity="center"
          android:layout_marginTop="30dp"
-         android:background="@drawable/couple" />
+         android:background="@drawable/muslim_wedding" />
 
 
     <EditText
@@ -48,7 +48,7 @@
         android:layout_height="45dp"
         android:layout_gravity="center"
         android:singleLine="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:digits="@string/restrict_space"
         android:background="@drawable/border_color_primary"
         android:drawableEnd="@drawable/controls"
@@ -63,7 +63,7 @@
         android:layout_width="250dp"
         android:layout_height="45dp"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/round_corner_primary"
         android:fontFamily="@font/montserrat_semibold"
         android:gravity="center"

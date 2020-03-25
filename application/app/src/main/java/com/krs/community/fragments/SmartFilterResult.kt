@@ -96,8 +96,8 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         val rootView = inflater.inflate(R.layout.fragment_filter_result, container, false)
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, SmartFilterResult::class.simpleName)
-        mApp.FacebookAnalytics(context, SmartFilterResult::class.simpleName)
+        mApp.firebaseAnalytics(context, SmartFilterResult::class.simpleName)
+        mApp.facebookAnalytics(context, SmartFilterResult::class.simpleName)
 
         llRoot = rootView.findViewById(R.id.ll_parent)
         selectedItems = SparseBooleanArray()
@@ -187,7 +187,11 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
                 if (member.updatedDt.isNotEmpty()) {
-                    holder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                    } else {
+                        viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
                 }
 
 
@@ -347,37 +351,39 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     Snackbar.make(llRoot, getString(R.string.endrecord), Snackbar.LENGTH_LONG).show()
                 }
             } else {
-                DashboardActivity.stop = true
-                var gif: Int = R.drawable.gif_no_record
-
-                TTFancyGifDialog.Builder(activity)
-                        .setMessage("No Record Found")
-                        .setPositiveBtnText("OK")
-                        .setPositiveBtnBackground("#843f52")
-                        .setGifResource(gif)
-                        .isCancellable(false)
-                        .OnPositiveClicked {
-                            try {
-                                val jsonObject = JSONObject()
-                                jsonObject.put(activity?.getString(R.string.name_filter), getString(R.string.default_filter_name))
-                                jsonObject.put(activity?.getString(R.string.value_filter), argus)
-                                val listFragment = ExpandableFilterListFragment()
-                                val mBundle = Bundle()
-                                mBundle.putString(activity?.getString(R.string.edit_filter), jsonObject.toString())
-                                listFragment.arguments = mBundle
-                                Utility.movetoFragment(activity, listFragment)
-
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-                        .build()
-                true
-                ivExport.visibility = View.GONE
+                noRecordsFound()
             }
         } else {
-            DashboardActivity.stop = false
+            noRecordsFound()
         }
+    }
+
+    private fun noRecordsFound() {
+        ivExport.visibility = View.GONE
+        DashboardActivity.stop = true
+        val gif: Int = R.drawable.gif_no_record
+        TTFancyGifDialog.Builder(activity)
+                .setMessage("No Record Found")
+                .setPositiveBtnText("OK")
+                .setPositiveBtnBackground("#843f52")
+                .setGifResource(gif)
+                .isCancellable(false)
+                .OnPositiveClicked {
+                    try {
+                        val jsonObject = JSONObject()
+                        jsonObject.put(activity?.getString(R.string.name_filter), getString(R.string.default_filter_name))
+                        jsonObject.put(activity?.getString(R.string.value_filter), argus)
+                        val listFragment = ExpandableFilterListFragment()
+                        val mBundle = Bundle()
+                        mBundle.putString(activity?.getString(R.string.edit_filter), jsonObject.toString())
+                        listFragment.arguments = mBundle
+                        Utility.movetoFragment(activity, listFragment)
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                .build()
     }
 
     override fun refreshList() {

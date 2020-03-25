@@ -41,6 +41,7 @@ import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByKeywordListener
@@ -59,7 +60,7 @@ import com.krs.community.viewmodelfactory.SmartSearchViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import com.wessam.library.NetworkChecker
+
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -109,8 +110,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         }
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
-        mApp.FirebaseAnalytics(context, SearchListFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, SearchListFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, SearchListFragment::class.simpleName)
+        mApp.facebookAnalytics(context, SearchListFragment::class.simpleName)
 
         smartSearchViewModel = ViewModelProvider(this, smartSearchViewModelFactory).get(SmartSearchViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
@@ -220,7 +221,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 }
 
                 if (member.updatedDt.isNotEmpty()) {
-                    viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                    } else {
+                        viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
                 }
 
                 viewHolder.boomMenuButton.clearBuilders()
@@ -391,7 +396,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     }
 
     private fun getMembersByKeyword() {
-        if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+        if (isNetworkConnected(activity as AppCompatActivity)) {
             if (!DashboardActivity.stop) {
                 lstMembers.clear()
                 tvRecords.visibility = View.GONE

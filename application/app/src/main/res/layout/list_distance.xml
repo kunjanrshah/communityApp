@@ -317,8 +317,8 @@
                             android:id="@+id/ll_home"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="20dp"
                             android:orientation="horizontal"
                             android:visibility="gone">
 
@@ -332,7 +332,7 @@
                                 android:id="@+id/tv_home_dist"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginStart="5dp"
                                 android:fontFamily="@font/montserrat_semibold"
                                 android:text="12.3KM"
                                 android:textSize="14sp" />
@@ -343,8 +343,8 @@
                             android:id="@+id/ll_office"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:visibility="gone">
@@ -359,7 +359,7 @@
                                 android:id="@+id/tv_office_dist"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
+                                android:layout_marginStart="3dp"
                                 android:fontFamily="@font/montserrat_semibold"
                                 android:text="12.3KM"
                                 android:textSize="14sp" />

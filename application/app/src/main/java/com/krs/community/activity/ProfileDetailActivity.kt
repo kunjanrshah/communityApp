@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
@@ -39,8 +38,7 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
-import com.krs.community.bkservice.ProcessMainClass
-import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.ActivityProfileDetailBinding
 import com.krs.community.fragments.*
 import com.krs.community.listeners.EditMemberListener
@@ -52,7 +50,7 @@ import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
-import com.wessam.library.NetworkChecker
+
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -76,7 +74,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var request: LocationRequest
     private var scanId: String? = null
-    private var isStopService = false
 
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
@@ -84,8 +81,8 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         super.onCreate(savedInstanceState)
 
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@ProfileDetailActivity, ProfileDetailActivity.javaClass.simpleName)
-        mApp.FacebookAnalytics(this@ProfileDetailActivity, ProfileDetailActivity.javaClass.simpleName)
+        mApp.firebaseAnalytics(this@ProfileDetailActivity, ProfileDetailActivity.javaClass.simpleName)
+        mApp.facebookAnalytics(this@ProfileDetailActivity, ProfileDetailActivity.javaClass.simpleName)
 
         getLocationDetail = GetLocationDetail(this, this)
         request = LocationRequest()
@@ -127,7 +124,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
 
         if (!scanId.isNullOrEmpty()) {
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 startSweetProgress(this, getString(R.string.app_name), getString(R.string.loading))
                 val jsonObject = JSONObject()
                 jsonObject.put("" + mApplication.start, "0")
@@ -140,20 +137,20 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             }
         }
 
-        if (member?.isLocationEnable == "1") {
-            binding.switchLocation.isOn = true
-            binding.switchLocation.labelOn = "ON"
-            binding.tvDistance.text = getString(R.string.Finding)
-            val mem_id = Guru.getString(getString(R.string.member_id), "")
-            if (member?.id == mem_id) {
-                startLocationService()
-                Utility.displaySnackBarWithBottomMargin(binding.viewpager, "You are sharing your location")
-            }
-        } else {
-            binding.switchLocation.isOn = false
-            binding.switchLocation.labelOff = "OFF"
-            binding.tvDistance.text = getString(R.string.user)
-        }
+        /* if (member?.isLocationEnable == "1") {
+             binding.switchLocation.isOn = true
+             binding.switchLocation.labelOn = "ON"
+             binding.tvDistance.text = getString(R.string.Finding)
+             val mem_id = Guru.getString(getString(R.string.member_id), "")
+             if (member?.id == mem_id) {
+                 startLocationService()
+                 Utility.displaySnackBarWithBottomMargin(binding.viewpager, "You are sharing your location")
+             }
+         } else {
+             binding.switchLocation.isOn = false
+             binding.switchLocation.labelOff = "OFF"
+             binding.tvDistance.text = getString(R.string.user)
+         }*/
 
         if (checkFineLocationPermission(this)) {
             easyWayLocation.startLocation()
@@ -161,35 +158,27 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             requestFineLocationPermission(this)
         }
 
-        cur_lat.observe(this, Observer {
-            setDistance()
-        })
+        /*  binding.switchLocation.setOnClickListener {
+              if (!binding.switchLocation.isOn) {
+                  member?.isLocationEnable = "1"
+                  startLocationService()
+              } else {
+                  stopLocationServiceAndUpdateProfile()
+              }
+          }*/
 
-        cur_lng.observe(this, Observer {
-            setDistance()
-        })
+        /*   binding.tvDistance.setOnClickListener {
+               if (binding.switchLocation.isOn) {
+                   // val address= Utility.getAddress(this,member.userLat.toDouble(),member.userLng.toDouble())
+                   Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
+               } else {
+                   if (!member?.id.isNullOrEmpty()) {
+                       Toast.makeText(this, "${member?.firstName}" + getString(R.string.locationOff), Toast.LENGTH_LONG).show()
+                   }
+               }
+           }*/
 
-        binding.switchLocation.setOnClickListener {
-            if (!binding.switchLocation.isOn) {
-                member?.isLocationEnable = "1"
-                startLocationService()
-            } else {
-                stopLocationServiceAndUpdateProfile()
-            }
-        }
-
-        binding.tvDistance.setOnClickListener {
-            if (binding.switchLocation.isOn) {
-                // val address= Utility.getAddress(this,member.userLat.toDouble(),member.userLng.toDouble())
-                Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
-            } else {
-                if (!member?.id.isNullOrEmpty()) {
-                    Toast.makeText(this, "${member?.firstName}" + getString(R.string.locationOff), Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-
-        binding.llViewFamily.setOnClickListener {
+        binding.ivFamily.setOnClickListener {
             goToFamilyDetailActivity()
         }
 
@@ -206,7 +195,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         binding.tvSave.setOnClickListener {
 
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (isNetworkConnected(this)) {
                 val jsonObject = JSONObject()
                 mainDetailsFragment.getSaveData(jsonObject)
                 personalDetailsFragment.getSaveData(jsonObject)
@@ -314,54 +303,12 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         fade(this)
     }
 
-    private fun startLocationService() {
-        member?.isLocationEnable = "1"
-        try {
-            if (easyWayLocation.hasLocationEnabled()) {
-                if (checkFineLocationPermission(this)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        RestartServiceBroadcastReceiver.scheduleJob(applicationContext)
-                    } else {
-                        val bck = ProcessMainClass()
-                        bck.launchService(applicationContext)
-                    }
-                    setDistance()
-                } else {
-                    if (checkFineLocationPermission(this)) {
-                        easyWayLocation.startLocation() //calculateDistance()
-                    } else {
-                        requestFineLocationPermission(this)
-                    }
-                }
-            } else {
-                easyWayLocation = EasyWayLocation(this, request, true, this)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun stopLocationServiceAndUpdateProfile() {
-        isStopService = true
-        member?.isLocationEnable = "0"
-        binding.tvDistance.text = getString(R.string.Distance)
-        stopService(ProcessMainClass.serviceIntent)
-        val jsonObject = JSONObject()
-        jsonObject.put(getString(R.string.is_location_enable), "0")
-        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-        jsonObject.put(getString(R.string.id), member?.id)
-        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-        val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-        profileDetailViewModel.updateProfile(profile, true)
-    }
-
     private fun setMemberValues() {
 
         binding.txtTitle.text = "${member?.firstName}" + getString(R.string.Profile)
 
         val memberId = Guru.getString(getString(R.string.member_id), "")
-        binding.switchLocation.isEnabled = memberId.equals(member?.id)
+        // binding.switchLocation.isEnabled = memberId.equals(member?.id)
         if (member?.id == memberId) {
             binding.tvSave.visibility = View.VISIBLE
             binding.tvSave.text = getString(R.string.save)
@@ -375,12 +322,12 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             binding.tvSave.visibility = View.GONE
         }
 
-        if (!member?.isLocationEnable.isNullOrEmpty() && member?.isLocationEnable.equals("1")) {
-            binding.switchLocation.isOn = true
-        } else {
-            binding.tvDistance.text = getString(R.string.Distance)
-            binding.switchLocation.isOn = false
-        }
+        /*  if (!member?.isLocationEnable.isNullOrEmpty() && member?.isLocationEnable.equals("1")) {
+              binding.switchLocation.isOn = true
+          } else {
+              binding.tvDistance.text = getString(R.string.Distance)
+              binding.switchLocation.isOn = false
+          }*/
 
         if (member?.status == "2") {
             binding.ivVerify.visibility = View.VISIBLE
@@ -432,27 +379,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             goToFamilyDetailActivity()
         } else if (response.message.toString().toLowerCase().contains("updated")) {
             val member = response.member
-
             val memberString = Guru.getString(getString(R.string.loginMember), "")
             val loginMember = Gson().fromJson(memberString, Member::class.java)
-
             if (loginMember.id == member.id) {
                 Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
             }
 
-            var str = ""
-            if (!isStopService) {
-                val percentage = Utility.calculatePercentage(member)
-                setPercentage(percentage)
-                str = getString(R.string.profileUpdate)
-                binding.ivVerify.visibility = View.VISIBLE
-            } else {
-                str = getString(R.string.locationUpdate)
-            }
+            val percentage = calculatePercentage(member)
+            setPercentage(percentage)
+            binding.ivVerify.visibility = View.VISIBLE
+            startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Success), getString(R.string.profileUpdate))
 
-            startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Success), str)
-
-            isStopService = false
         } else {
             val member = response.member
             if (!member.mobile.isNullOrEmpty()) {
@@ -484,19 +421,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         hideSweetProgress()
         binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
-    }
-
-
-    @SuppressLint("SetTextI18n")
-    private fun setDistance() {
-        if (member?.isLocationEnable == "1") {
-            if (cur_lat.value != null && cur_lng.value != null && !member?.userLat.isNullOrEmpty() && !member?.userLng.isNullOrEmpty()) {
-                val dist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member!!.userLat.toDouble(), member!!.userLng.toDouble()) / 1000
-                binding.tvDistance.text = "km"
-            } else {
-                binding.tvDistance.text = getString(R.string.Distance)
-            }
-        }
     }
 
     override fun onResume() {
@@ -545,7 +469,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     data?.let {
                         val resultUri = UCrop.getOutput(it)
                         if (resultUri != null) {
-                            if (NetworkChecker.isNetworkConnected(this)) {
+                            if (isNetworkConnected(this)) {
                                 try {
                                     Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
                                     val uploadImage = File(resultUri.path.toString())
@@ -607,7 +531,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
     override fun currentLocation(location: Location) {
-        setDistance()
         cur_lat.postValue(location.latitude)
         cur_lng.postValue(location.longitude)
         getLocationDetail.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))

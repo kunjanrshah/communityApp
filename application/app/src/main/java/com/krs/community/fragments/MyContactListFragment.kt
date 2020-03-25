@@ -60,6 +60,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     override val kodein by kodein()
 
     private var rvSearch: RecyclerView? = null
+    private var ivNotFound: ImageView? = null
     var StoreContacts = ArrayList<String?>()
     var cursor: Cursor? = null
     var name: String? = null
@@ -77,13 +78,14 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_mycontactlist, container, false)
         val mApp = FacebookSdk.getApplicationContext() as AppController
-        mApp.FirebaseAnalytics(context, MyContactListFragment::class.java.simpleName)
-        mApp.FacebookAnalytics(context, MyContactListFragment::class.java.simpleName)
+        mApp.firebaseAnalytics(context, MyContactListFragment::class.java.simpleName)
+        mApp.facebookAnalytics(context, MyContactListFragment::class.java.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         contactListViewModel = ViewModelProvider(this, contactListViewModelFactory).get(ContactListViewModel::class.java)
         contactListViewModel.filterListener = this
         rvSearch = root.findViewById<View>(R.id.rv_search) as RecyclerView
+        ivNotFound = root.findViewById(R.id.iv_not_found) as ImageView
         AppController.mApplication.start = 0
 
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
@@ -160,7 +162,11 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
                 if (member.updatedDt.isNotEmpty()) {
-                    holder.tvUpdate.text = getString(R.string.updated) + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    if (member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                    } else {
+                        viewHolder.tvUpdate.text = getString(R.string.updated) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
                 }
 
                 holder.boomMenuButton.clearBuilders()
@@ -285,10 +291,13 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 lstMembers.clear()
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
+                ivNotFound?.visibility = View.GONE
             } else {
+                ivNotFound?.visibility = View.VISIBLE
                 rvSearch?.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
             }
         } else {
+            ivNotFound?.visibility = View.VISIBLE
             rvSearch?.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
         }
     }

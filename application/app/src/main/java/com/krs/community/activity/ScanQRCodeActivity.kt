@@ -27,8 +27,8 @@ class ScanQRCodeActivity : AppCompatActivity() {
         setScreenLayout()
 
         val mApp = applicationContext as AppController
-        mApp.FirebaseAnalytics(this@ScanQRCodeActivity, "ScanQRCode Activity")
-        mApp.FacebookAnalytics(this@ScanQRCodeActivity, "ScanQRCode Activity")
+        mApp.firebaseAnalytics(this@ScanQRCodeActivity, "ScanQRCode Activity")
+        mApp.facebookAnalytics(this@ScanQRCodeActivity, "ScanQRCode Activity")
 
     }
 

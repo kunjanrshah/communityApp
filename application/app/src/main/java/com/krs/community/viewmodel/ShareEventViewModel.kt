@@ -4,11 +4,12 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.CreateEventListener
 import com.krs.community.repositories.ShareEventRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -25,7 +26,7 @@ class ShareEventViewModel(
 
 
     fun createEvent(images: List<String>, id : String, user_id : String, access_token: String, params: String, yourtube:List<String>) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             job_by_update = Job()
             job_by_update.let { thejob ->
 

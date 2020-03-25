@@ -27,6 +27,7 @@ import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.FragmentProfessionalDetailsBinding
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.ImageUploadListener
@@ -37,7 +38,7 @@ import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
-import com.wessam.library.NetworkChecker
+
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -61,8 +62,8 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_professional_details, container, false)
 
         val mApp =(activity as AppCompatActivity). applicationContext as AppController
-        mApp.FirebaseAnalytics(context, ProfessionalDetailsFragment::class.simpleName)
-        mApp.FacebookAnalytics(context, ProfessionalDetailsFragment::class.simpleName)
+        mApp.firebaseAnalytics(context, ProfessionalDetailsFragment::class.simpleName)
+        mApp.facebookAnalytics(context, ProfessionalDetailsFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this
@@ -283,7 +284,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                 data?.let {
                     val resultUri = UCrop.getOutput(it)
                     if (resultUri != null) {
-                        if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+                        if (isNetworkConnected(activity as AppCompatActivity)) {
                             try {
                                 Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgLogo)
                                 val uploadImage = File(resultUri.path.toString())

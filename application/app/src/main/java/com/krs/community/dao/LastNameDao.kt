@@ -13,6 +13,9 @@ interface LastNameDao {
     @Query("SELECT name FROM LastName ORDER BY name ASC")
     fun getLastName() : LiveData<List<String>>
 
+    @Query("SELECT COUNT(id) FROM LastName")
+    fun getLastNameCount(): Int
+
     @Query("SELECT id FROM LastName ORDER BY name ASC")
     fun getLastNameIds() : LiveData<List<Int>>
 

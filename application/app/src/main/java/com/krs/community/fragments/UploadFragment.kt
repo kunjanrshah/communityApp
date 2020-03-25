@@ -29,6 +29,7 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.adapter.UploadDialogAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByDocumentListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -39,7 +40,7 @@ import com.krs.community.utils.AppConstants.UPLOAD_DOCUMENT
 import com.krs.community.viewmodel.DocumentsListModel
 import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
-import com.wessam.library.NetworkChecker
+
 import lumenghz.com.pullrefresh.PullToRefreshView
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest
 import org.json.JSONObject
@@ -47,7 +48,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner {
+class UploadFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner {
     override val kodein by kodein()
 
     private lateinit var btnupload: MovableFloatingActionButton
@@ -59,6 +60,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
     private var uploadDialog: DialogPlus? = null
     private var uploadedFileName = ""
     private lateinit var tvCount: TextView
+    private lateinit var ivNotFound: ImageView
     private lateinit var pullToRefreshView: PullToRefreshView
 
     @SuppressLint("RestrictedApi")
@@ -70,6 +72,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
         btnupload = root.findViewById<View>(R.id.btnupload) as MovableFloatingActionButton
         pullToRefreshView = root.findViewById(R.id.pull_to_refresh)
         rvDocuments = root.findViewById(R.id.rv_documents)
+        ivNotFound = root.findViewById(R.id.iv_not_found)
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
         val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
         if (loginMember?.role.equals(getString(R.string.User))) {
@@ -79,8 +82,8 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
         }
         btnupload.setOnClickListener {
 
-            val adapter: UploadDialogAdapter = UploadDialogAdapter(context)
-            adapter.setListener(this@DocumentsFragment)
+            val adapter = UploadDialogAdapter(context)
+            adapter.setListener(this@UploadFragment)
             uploadDialog = DialogPlus.newDialog(context)
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
@@ -115,6 +118,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                 val uploadfile = listUpload[i]
                 val holder = viewHolder as MyViewHolder
                 holder.tvFile.text = uploadfile.name
+                holder.tvName.text = uploadfile.first_name + " " + uploadfile.last_name
                 holder.tvDate.text = Utility.changeDateFormat(uploadfile.createdAt, Utility.yyyy_MM_dd_TIME, Utility.dd_MM_yyyy_TIME)
                 holder.llDownload.setOnClickListener {
                     if (Utility.checkExternalStoragePermission(activity)) {
@@ -135,9 +139,6 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                     } else {
                         Utility.requestStoragePermission(activity as AppCompatActivity)
                     }
-
-
-
                     rvDocuments.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_SHORT)
                 }
             }
@@ -158,6 +159,7 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
         val tvTitle = header.findViewById<TextView>(R.id.tv_title)
         tvTitle.text = getString(R.string.uploads)
         tvCount = header.findViewById(R.id.tv_count)
+
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         adapter.setParallaxHeader(header, rvDocuments)
@@ -224,15 +226,15 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
                 .setConfirmText(getString(R.string.uploadnow))
                 .setConfirmClickListener {
                     it.dismissWithAnimation()
-                    if (NetworkChecker.isNetworkConnected(activity as AppCompatActivity)) {
+                    if (isNetworkConnected(activity as AppCompatActivity)) {
                         MultipartUploadRequest(activity!!, serverUrl = UPLOAD_DOCUMENT)
                                 .setMethod("POST")
                                 .addFileToUpload(
                                         filePath = filePath,
-                                        parameterName = getString(R.string.uploaded_file)
+                                        parameterName = "uploaded_file"
                                 )
                                 .addParameter(getString(R.string.filename), uploadedFileName)
-                                .addParameter(getString(R.string.id), Guru.getString(getString(R.string.user_id), "").toString())
+                                .addParameter(getString(R.string.id), Guru.getString(getString(R.string.member_id), "").toString())
                                 .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
                                 .startUpload()
                         rvDocuments.snackbar(getString(R.string.uploadingstart), Snackbar.LENGTH_INDEFINITE)
@@ -246,19 +248,24 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
     }
 
     override fun getDocuments(response: UploadedFilesResponse) {
-        pullToRefreshView.setRefreshing(false);
+        pullToRefreshView.setRefreshing(false)
+        Utility.hideSweetProgress()
         if (response.success) {
             listUpload.clear()
             tvCount.text = getString(R.string.totalrecord) + response.data.size
             listUpload.addAll(response.data)
             adapter.notifyDataSetChanged()
+            ivNotFound.visibility = View.GONE
+        } else {
+            Coroutines.main {
+                ivNotFound.visibility = View.VISIBLE
+            }
         }
-        Utility.hideSweetProgress()
     }
 
     override suspend fun getFailure(message: String) {
         Coroutines.main {
-            Utility.displaySnackBarWithBottomMargin(rvDocuments, message)
+            ivNotFound.visibility = View.VISIBLE
             Utility.hideSweetProgress()
         }
     }
@@ -267,5 +274,6 @@ class DocumentsFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadD
         var llDownload: LinearLayout = view.findViewById(R.id.ll_download)
         var tvFile: TextView = view.findViewById(R.id.tv_file)
         var tvDate: TextView = view.findViewById(R.id.tv_date)
+        var tvName: TextView = view.findViewById(R.id.tv_name)
     }
 }

@@ -3,13 +3,14 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
+import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.IFamilyMembersListener
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.listeners.InnerLogoutListner
 import com.krs.community.repositories.FamilyDetailRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import com.wessam.library.NetworkChecker
+
 import kotlinx.coroutines.*
 
 class FamilyDetailViewModel(
@@ -36,7 +37,7 @@ class FamilyDetailViewModel(
     }
 
     fun getFamilyDetails(data: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             jobFamilyDetails = Job()
             jobFamilyDetails.let { thejob ->
                 CoroutineScope(Dispatchers.IO + thejob!!).launch {
@@ -63,7 +64,7 @@ class FamilyDetailViewModel(
     }
 
     fun deleteMember(data: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             jobDeletMember = Job()
             jobDeletMember.let { thejob ->
                 CoroutineScope(Dispatchers.IO + thejob!!).launch {
@@ -90,7 +91,7 @@ class FamilyDetailViewModel(
     }
 
     fun getInnerLogout(data: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             jobInnerLogout = Job()
             jobInnerLogout.let { thejob ->
                 CoroutineScope(Dispatchers.IO + thejob!!).launch {
@@ -117,7 +118,7 @@ class FamilyDetailViewModel(
     }
 
     fun innerLogin(data: JsonObject) {
-        if (NetworkChecker.isNetworkConnected(app.applicationContext)) {
+        if (isNetworkConnected(app.applicationContext)) {
             jobInnerLogin = Job()
             jobInnerLogin.let { thejob ->
                 CoroutineScope(Dispatchers.IO + thejob!!).launch {

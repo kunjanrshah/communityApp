@@ -27,10 +27,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.krs.community.R;
 import com.krs.community.app.AppController;
+import com.krs.community.app.ConnectionLiveData;
 import com.krs.community.utils.Utility;
-import com.wessam.library.NetworkChecker;
 
 import java.lang.reflect.Method;
+
+;
 
 
 public class FamilyTreeListActivity extends AppCompatActivity {
@@ -48,7 +50,7 @@ public class FamilyTreeListActivity extends AppCompatActivity {
         registerNetworkBroadcastForNougat();
 
 
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setScreenLayout();
         }else{
             setNoInternetLayout();
@@ -56,8 +58,8 @@ public class FamilyTreeListActivity extends AppCompatActivity {
 
 
         AppController mApp = (AppController) getApplicationContext();
-        mApp.FirebaseAnalytics(FamilyTreeListActivity.this,FamilyTreeListActivity.class.getSimpleName());
-        mApp.FacebookAnalytics(FamilyTreeListActivity.this,FamilyTreeListActivity.class.getSimpleName());
+        mApp.firebaseAnalytics(FamilyTreeListActivity.this, FamilyTreeListActivity.class.getSimpleName());
+        mApp.facebookAnalytics(FamilyTreeListActivity.this, FamilyTreeListActivity.class.getSimpleName());
 
 
     }
@@ -92,14 +94,14 @@ public class FamilyTreeListActivity extends AppCompatActivity {
         imageView.setAnimation(anim);
         AppCompatButton retryButton=findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
-            if (NetworkChecker.isNetworkConnected(this)) {
+            if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
                 setScreenLayout();
             }
         });
     }
     private void setScreenLayout(){
 
-        if (NetworkChecker.isNetworkConnected(this)) {
+        if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
 
             setContentView(R.layout.activity_tree_listview);
 
@@ -211,7 +213,7 @@ public class FamilyTreeListActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             try{
-                if (NetworkChecker.isNetworkConnected(context)) {
+                if (ConnectionLiveData.Companion.isNetworkConnected(context)) {
                     setScreenLayout();
                 }else{
                     setNoInternetLayout();
