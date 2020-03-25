@@ -317,7 +317,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                             if(!member.mobile.isNullOrEmpty()){
                                 val toNumber = "+91" + member.mobile
                                 val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity,toNumber,text)
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, toNumber, text)
                             }
 
                         } else if (it == 3) {

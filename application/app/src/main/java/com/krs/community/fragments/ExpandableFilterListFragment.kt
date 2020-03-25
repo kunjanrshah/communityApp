@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.adapter.SmartFilterAdapter
@@ -71,8 +72,20 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
         val tvClear= rootView.findViewById<TextView>(R.id.tv_clear)
         tvClear.setOnClickListener {
-            Utility.hideKeyboard(activity)
-            adapter?.clearAll()
+
+            SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText(context?.getString(R.string.smart_filter))
+                    .setContentText("Do you want to clear all values?")
+                    .setConfirmText(context?.getString(R.string.YesPleaseCity))
+                    .setCancelText(context?.getString(R.string.no))
+                    .setCustomImage(R.drawable.icon_ghanchi)
+                    .showCancelButton(true)
+                    .setConfirmClickListener { sDialog ->
+                        sDialog.dismiss()
+                        Utility.hideKeyboard(activity)
+                        adapter?.clearAll()
+                    }
+                    .show()
         }
 
         expandableListView.setOnScrollListener(object : OnScrollObserver() {

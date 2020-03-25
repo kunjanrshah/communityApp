@@ -182,186 +182,276 @@ class SmartFilterAdapter(private val _context: Context,
     fun getFiledValues() {
         if (edtHeadName != null) {
             val familyCode = edtFamilyCode?.text.toString().trim { it <= ' ' }
-            if (!familyCode.isEmpty()) {
+            if (familyCode.isNotEmpty()) {
                 mapChildValues[_context.resources.getString(R.string.ss_family_code)] = familyCode
+            } else {
+                mapChildValues[_context.resources.getString(R.string.ss_family_code)] = ""
             }
             val headName = edtHeadName?.text.toString().trim { it <= ' ' }
-            if (!headName.isEmpty()) {
+            if (headName.isNotEmpty()) {
                 mapChildValues[_context.resources.getString(R.string.ss_head_name)] = headName
+            } else {
+                mapChildValues[_context.resources.getString(R.string.ss_head_name)] = ""
             }
             val mem_name = edtMemberName?.text.toString().trim { it <= ' ' }
-            if (!mem_name.isEmpty()) {
+            if (mem_name.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_mem_name)] = mem_name
+            } else {
+                mapChildValues[_context.getString(R.string.ss_mem_name)] = ""
             }
             val surname = spSurname.text.toString().trim { it <= ' ' }
-            if (!surname.isEmpty() && !surname.equals("Surname", ignoreCase = true)) {
+            if (surname.isNotEmpty() && !surname.equals("Surname", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_surname)] = surname
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_surname)] = ""
             }
             val samaj = spLocalComm.text.toString().trim { it <= ' ' }
-            if (!samaj.isEmpty() && !samaj.equals("samaj", ignoreCase = true)) {
+            if (!samaj.isNotEmpty() && !samaj.equals("samaj", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_samaj)] = samaj
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_samaj)] = ""
             }
             val marital = spMarital.text.toString().trim { it <= ' ' }
-            if (!marital.isEmpty() && !marital.equals("Marital", ignoreCase = true)) {
+            if (marital.isNotEmpty() && !marital.equals("Marital", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_marital)] = marital
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_marital)] = ""
             }
             val city = spCity.text.toString().trim { it <= ' ' }
-            if (!city.isEmpty() && !city.equals("City", ignoreCase = true)) {
+            if (city.isNotEmpty() && !city.equals("City", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_city)] = city
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_city)] = ""
             }
             val gender = spGender.text.toString().trim { it <= ' ' }
-            if (!gender.isEmpty() && !gender.equals("gender", ignoreCase = true)) {
+            if (gender.isNotEmpty() && !gender.equals("gender", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_gender)] = gender
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_gender)] = ""
             }
 
             val _native = spNative.text.toString().trim { it <= ' ' }
-            if (!_native.isEmpty() && !_native.equals("Native", ignoreCase = true)) {
+            if (_native.isNotEmpty() && !_native.equals("Native", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_native)] = _native
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_native)] = ""
             }
 
             val min = rangeAgeBar?.selectedMinValue.toString()
             val max = rangeAgeBar?.selectedMaxValue.toString()
-            if (!min.isEmpty() && !min.equals("0", ignoreCase = true)) {
+            if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_minage)] = min
+            } else {
+                mapChildValues[_context.getString(R.string.ss_minage)] = "0"
             }
-            if (!max.isEmpty() && !max.equals("100", ignoreCase = true)) {
+            if (max.isNotEmpty() && !max.equals("100", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_maxage)] = max
+            } else {
+                mapChildValues[_context.getString(R.string.ss_maxage)] = "100"
             }
         }
         if (edtEmail != null) {
             val email = edtEmail?.text.toString().trim { it <= ' ' }
-            if (!email.isEmpty()) {
+            if (email.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_email)] = email
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_email)] = ""
             }
             val mobile = edtMobile?.text.toString().trim { it <= ' ' }
-            if (!mobile.isEmpty()) {
+            if (mobile.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_mobile)] = mobile
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_mobile)] = ""
             }
             val local_add = edtLocalAdd?.text.toString().trim { it <= ' ' }
-            if (!local_add.isEmpty()) {
+            if (local_add.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_local_add)] = local_add
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_local_add)] = ""
             }
+
             val permanent = edtPermanentAdd?.text.toString().trim { it <= ' ' }
-            if (!permanent.isEmpty()) {
+            if (permanent.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_permanent_add)] = permanent
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_permanent_add)] = ""
             }
+
             val pincode = edtPinCode?.text.toString().trim { it <= ' ' }
-            if (!pincode.isEmpty()) {
+            if (pincode.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_pin_code)] = pincode
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_pin_code)] = ""
             }
+
             val area = edtArea?.text.toString().trim { it <= ' ' }
-            if (!area.isEmpty() && !area.equals("area", ignoreCase = true)) {
+            if (area.isNotEmpty() && !area.equals("area", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_edt_area)] = area
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_area)] = ""
             }
+
             val state = spState.text.toString().trim { it <= ' ' }
-            if (!state.isEmpty() && !state.equals("State", ignoreCase = true)) {
+            if (state.isNotEmpty() && !state.equals("State", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_state)] = state
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_state)] = ""
             }
         }
         if (tvBdate != null) {
             val bdate = tvBdate?.text.toString().trim { it <= ' ' }
-            if (!bdate.isEmpty()) {
+            if (bdate.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_bdate)] = bdate
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_bdate)] = ""
             }
             val mdate = tvMdate?.text.toString().trim { it <= ' ' }
-            if (!mdate.isEmpty()) {
+            if (mdate.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_mdate)] = mdate
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_mdate)] = ""
             }
             val mosad = edtMosaad?.text.toString().trim { it <= ' ' }
-            if (!mosad.isEmpty() && !mosad.equals("Mosad", ignoreCase = true)) {
+            if (mosad.isNotEmpty() && !mosad.equals("Mosad", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_edt_mosad)] = mosad
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_mosad)] = ""
             }
             val educaiton = spEducation.text.toString().trim { it <= ' ' }
-            if (!educaiton.isEmpty() && !educaiton.equals("Education", ignoreCase = true)) {
+            if (educaiton.isNotEmpty() && !educaiton.equals("Education", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_education)] = educaiton
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_education)] = ""
             }
             val gotra = spGotra.text.toString().trim { it <= ' ' }
-            if (!gotra.isEmpty() && !gotra.equals("Gotra", ignoreCase = true)) {
+            if (gotra.isNotEmpty() && !gotra.equals("Gotra", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_gotra)] = gotra
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_gotra)] = ""
             }
             val bg = spBg.text.toString().trim { it <= ' ' }
-            if (!bg.isEmpty() && !bg.equals("BG", ignoreCase = true)) {
+            if (bg.isNotEmpty() && !bg.equals("BG", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_bg)] = bg
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_bg)] = ""
             }
+
             val donor = chkIsDonor?.isChecked.toString()
-            if (!donor.isEmpty() && !donor.equals("false", ignoreCase = true)) {
+            if (donor.isNotEmpty() && !donor.equals("false", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_chk_is_donor)] = donor
+            } else {
+                mapChildValues[_context.getString(R.string.ss_chk_is_donor)] = "false"
             }
-            val is_rented = chkIsRented?.isChecked.toString()
-            if (!is_rented.isEmpty() && !is_rented.equals("false", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_chk_is_rented)] = is_rented
+
+            val isRented = chkIsRented?.isChecked.toString()
+            if (isRented.isNotEmpty() && !isRented.equals("false", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_chk_is_rented)] = isRented
+            } else {
+                mapChildValues[_context.getString(R.string.ss_chk_is_rented)] = "false"
             }
+
             val expired = chkIsExpired?.isChecked.toString()
-            if (!expired.isEmpty() && !expired.equals("false", ignoreCase = true)) {
+            if (expired.isNotEmpty() && !expired.equals("false", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_chk_is_expired)] = expired
+            } else {
+                mapChildValues[_context.getString(R.string.ss_chk_is_expired)] = "false"
             }
         }
         if (edtOffice != null) {
             val office = edtOffice?.text.toString().trim { it <= ' ' }
-            if (!office.isEmpty()) {
+            if (office.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_office)] = office
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_office)] = ""
             }
             val main_cat = spMainCat.text.toString().trim { it <= ' ' }
-            if (!main_cat.isEmpty() && !main_cat.equals("Category", ignoreCase = true)) {
+            if (main_cat.isNotEmpty() && !main_cat.equals("Category", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_main_cat)] = main_cat
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_main_cat)] = ""
             }
             val sub_cat = spSubCat.text.toString().trim { it <= ' ' }
-            if (!sub_cat.isEmpty() && !sub_cat.equals("Sub_Cat", ignoreCase = true)) {
+            if (sub_cat.isNotEmpty() && !sub_cat.equals("Sub_Cat", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_sub_cat)] = sub_cat
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_sub_cat)] = ""
             }
             val occupatation = spOccupation.text.toString().trim { it <= ' ' }
-            if (!occupatation.isEmpty() && !occupatation.equals("Occupation", ignoreCase = true)) {
+            if (occupatation.isNotEmpty() && !occupatation.equals("Occupation", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_occupation)] = occupatation
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_occupation)] = ""
             }
             val activity = spActivity.text.toString().trim { it <= ' ' }
-            if (!activity.isEmpty() && !activity.equals("Activity", ignoreCase = true)) {
+            if (activity.isNotEmpty() && !activity.equals("Activity", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_activity)] = activity
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_activity)] = ""
             }
         }
         if (tvBirthTime != null) {
             val btime = tvBirthTime?.text.toString().trim { it <= ' ' }
-            if (!btime.isEmpty()) {
+            if (btime.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_birth_time)] = btime
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_birth_time)] = ""
             }
             val meter = edtHeightMeter?.text.toString().trim { it <= ' ' }
-            if (!meter.isEmpty()) {
+            if (meter.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_height_meter)] = meter
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_height_meter)] = ""
             }
             val weight = edtWeightKg?.text.toString().trim { it <= ' ' }
-            if (!weight.isEmpty()) {
+            if (weight.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_weight_kg)] = weight
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_weight_kg)] = ""
             }
             val bplace = edtBirthPlace?.text.toString().trim { it <= ' ' }
-            if (!bplace.isEmpty() && !bplace.equals("bplace", ignoreCase = true)) {
+            if (bplace.isNotEmpty() && !bplace.equals("bplace", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_bplace)] = bplace
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_bplace)] = ""
             }
             val is_spect = chkIsSpect?.isChecked.toString()
-            if (!is_spect.isEmpty() && !is_spect.equals("false", ignoreCase = true)) {
+            if (is_spect.isNotEmpty() && !is_spect.equals("false", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_chk_is_spect)] = is_spect
+            } else {
+                mapChildValues[_context.getString(R.string.ss_chk_is_spect)] = "false"
             }
             val is_shani = chkIsShani?.isChecked.toString()
-            if (!is_shani.isEmpty() && !is_shani.equals("false", ignoreCase = true)) {
+            if (is_shani.isNotEmpty() && !is_shani.equals("false", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_chk_is_shani)] = is_shani
+            } else {
+                mapChildValues[_context.getString(R.string.ss_chk_is_shani)] = "false"
             }
             val is_mangal = chkIsMangal?.isChecked.toString()
-            if (!is_mangal.isEmpty() && !is_mangal.equals("false", ignoreCase = true)) {
+            if (is_mangal.isNotEmpty() && !is_mangal.equals("false", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_chk_is_mangal)] = is_mangal
+            } else {
+                mapChildValues[_context.getString(R.string.ss_chk_is_mangal)] = "false"
             }
         }
         if (tvCreated != null) {
             val created = tvCreated?.text.toString().trim { it <= ' ' }
-            if (!created.isEmpty()) {
+            if (created.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_created)] = created
             }
             val updated = tvUpdated?.text.toString().trim { it <= ' ' }
-            if (!updated.isEmpty()) {
+            if (updated.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_edt_updated)] = updated
+            } else {
+                mapChildValues[_context.getString(R.string.ss_edt_updated)] = ""
             }
             val min = rangeUpdationBar?.selectedMinValue.toString()
             val max = rangeUpdationBar?.selectedMaxValue.toString()
-            if (!min.isEmpty() && !max.isEmpty() && !max.equals("100", ignoreCase = true) && !min.equals("0", ignoreCase = true)) {
+            if (min.isNotEmpty() && max.isNotEmpty() && !max.equals("100", ignoreCase = true) && !min.equals("0", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_minUpdate)] = min
                 mapChildValues[_context.resources.getString(R.string.ss_maxUpdate)] = max
+            } else {
+                mapChildValues[_context.getString(R.string.ss_minUpdate)] = "0"
+                mapChildValues[_context.resources.getString(R.string.ss_maxUpdate)] = "100"
             }
         }
     }
@@ -370,84 +460,84 @@ class SmartFilterAdapter(private val _context: Context,
         if (mapChildValues.size > 0) {
             if (edtHeadName != null) {
                 val familyCode = mapChildValues[_context.resources.getString(R.string.ss_family_code)]
-                if (familyCode != null && !familyCode.isEmpty()) {
+                if (familyCode != null && familyCode.isNotEmpty()) {
                     edtFamilyCode?.setText(familyCode)
                 }
                 val headName = mapChildValues[_context.resources.getString(R.string.ss_head_name)]
-                if (headName != null && !headName.isEmpty()) {
+                if (headName != null && headName.isNotEmpty()) {
                     edtHeadName?.setText(headName)
                 }
                 val memName = mapChildValues[_context.resources.getString(R.string.ss_mem_name)]
-                if (memName != null && !memName.isEmpty()) {
+                if (memName != null && memName.isNotEmpty()) {
                     edtMemberName?.setText(memName)
                 }
                 val surname = mapChildValues[_context.resources.getString(R.string.ss_sp_surname)]
-                if ((surname != null) && !surname.isEmpty() && !surname.equals("Surname", ignoreCase = true)) {
+                if ((surname != null) && surname.isNotEmpty() && !surname.equals("Surname", ignoreCase = true)) {
                     spSurname.setText(surname)
                 }
                 val samaj = mapChildValues[_context.resources.getString(R.string.ss_sp_samaj)]
-                if (samaj != null && !samaj.isEmpty()) {
+                if (samaj != null && samaj.isNotEmpty()) {
                     spLocalComm.setText(samaj)
                 }
                 val marital = mapChildValues[_context.resources.getString(R.string.ss_sp_marital)]
-                if ((marital != null) && !marital.isEmpty() && !marital.equals("Marital", ignoreCase = true)) {
+                if ((marital != null) && marital.isNotEmpty() && !marital.equals("Marital", ignoreCase = true)) {
                     spMarital.setText(marital)
                 }
                 val city = mapChildValues[_context.resources.getString(R.string.ss_sp_city)]
-                if (city != null && !city.isEmpty()) {
+                if (city != null && city.isNotEmpty()) {
                     spCity.setText(city)
                 }
                 val gender = mapChildValues[_context.resources.getString(R.string.ss_sp_gender)]
-                if ((gender != null) && !gender.isEmpty() && !gender.equals("gender", ignoreCase = true)) {
+                if ((gender != null) && gender.isNotEmpty() && !gender.equals("gender", ignoreCase = true)) {
                     spGender.setText(gender)
                 }
                 val native1 = mapChildValues[_context.resources.getString(R.string.ss_sp_native)]
-                if (native1 != null && !native1.isEmpty()) {
+                if (native1 != null && native1.isNotEmpty()) {
                     spNative.setText(native1)
                 }
                 val maxAge = mapChildValues[_context.getString(R.string.ss_maxAge)]
                 val minAge = mapChildValues[_context.getString(R.string.ss_minAge)]
-                if ((maxAge != null) && !maxAge.isEmpty() && !maxAge.equals("100", ignoreCase = true)) {
+                if ((maxAge != null) && maxAge.isNotEmpty() && !maxAge.equals("100", ignoreCase = true)) {
                     rangeAgeBar?.setMaxStartValue(mapChildValues[_context.getString(R.string.ss_maxAge)]!!.toInt().toFloat())?.apply()
                 }
-                if ((minAge != null) && !minAge.isEmpty() && !minAge.equals("0", ignoreCase = true)) {
+                if ((minAge != null) && minAge.isNotEmpty() && !minAge.equals("0", ignoreCase = true)) {
                     rangeAgeBar?.setMinStartValue(mapChildValues[_context.getString(R.string.ss_minAge)]!!.toInt().toFloat())?.apply()
                 }
             }
             if (edtEmail != null) {
                 val email = mapChildValues[_context.getString(R.string.ss_edt_email)]
-                if (email != null && !email.isEmpty()) {
+                if (email != null && email.isNotEmpty()) {
                     edtEmail?.setText(email)
                 }
                 val mobile = mapChildValues[_context.getString(R.string.ss_edt_mobile)]
-                if (mobile != null && !mobile.isEmpty()) {
+                if (mobile != null && mobile.isNotEmpty()) {
                     edtMobile?.setText(mobile)
                 }
                 val local_add = mapChildValues[_context.getString(R.string.ss_edt_local_add)]
-                if (local_add != null && !local_add.isEmpty()) {
+                if (local_add != null && local_add.isNotEmpty()) {
                     edtLocalAdd?.setText(local_add)
                 }
                 val permanent_add = mapChildValues[_context.getString(R.string.ss_edt_permanent_add)]
-                if (permanent_add != null && !permanent_add.isEmpty()) {
+                if (permanent_add != null && permanent_add.isNotEmpty()) {
                     edtPermanentAdd?.setText(permanent_add)
                 }
                 val pin_code = mapChildValues[_context.getString(R.string.ss_edt_pin_code)]
-                if (pin_code != null && !pin_code.isEmpty()) {
+                if (pin_code != null && pin_code.isNotEmpty()) {
                     edtPinCode?.setText(pin_code)
                 }
                 val area = mapChildValues[_context.getString(R.string.ss_edt_area)]
-                if (area != null && !area.isEmpty()) {
+                if (area != null && area.isNotEmpty()) {
                     edtArea?.setText(area)
                 }
                 val state = mapChildValues[_context.getString(R.string.ss_sp_state)]
-                if (state != null && !state.isEmpty()) {
+                if (state != null && state.isNotEmpty()) {
                     spState.setText(state)
                 }
             }
 
             if (tvBdate != null) {
                 val bdate = mapChildValues[_context.getString(R.string.ss_edt_bdate)]
-                if (bdate != null && !bdate.isEmpty()) {
+                if (bdate != null && bdate.isNotEmpty()) {
                     if (Utility.isValidFormat(bdate, Utility.yyyy_MM_dd)) {
                         tvBdate?.text = Utility.changeDateFormat(bdate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     } else {
@@ -455,7 +545,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
                 }
                 val mdate = mapChildValues[_context.getString(R.string.ss_edt_mdate)]
-                if (mdate != null && !mdate.isEmpty()) {
+                if (mdate != null && mdate.isNotEmpty()) {
                     if (Utility.isValidFormat(mdate, Utility.yyyy_MM_dd)) {
                         tvMdate?.text = Utility.changeDateFormat(mdate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     } else {
@@ -463,19 +553,19 @@ class SmartFilterAdapter(private val _context: Context,
                     }
                 }
                 val mosad = mapChildValues[_context.getString(R.string.ss_edt_mosad)]
-                if (mosad != null && !mosad.isEmpty()) {
+                if (mosad != null && mosad.isNotEmpty()) {
                     edtMosaad?.setText(mosad)
                 }
                 val education = mapChildValues[_context.getString(R.string.ss_sp_education)]
-                if (education != null && !education.isEmpty()) {
+                if (education != null && education.isNotEmpty()) {
                     spEducation.setText(education)
                 }
                 val gotra = mapChildValues[_context.getString(R.string.ss_sp_gotra)]
-                if (gotra != null && !gotra.isEmpty()) {
+                if (gotra != null && gotra.isNotEmpty()) {
                     spGotra.setText(gotra)
                 }
                 val bg = mapChildValues[_context.getString(R.string.ss_sp_bg)]
-                if (gotra != null && !gotra.isEmpty()) {
+                if (gotra != null && gotra.isNotEmpty()) {
                     spBg.setText(bg)
                 }
                 val isDoner = mapChildValues[_context.getString(R.string.ss_chk_is_donor)]
@@ -487,41 +577,41 @@ class SmartFilterAdapter(private val _context: Context,
             }
             if (edtOffice != null) {
                 val office = mapChildValues[_context.getString(R.string.ss_edt_office)]
-                if (office != null && !office.isEmpty()) {
+                if (office != null && office.isNotEmpty()) {
                     edtOffice?.setText(office)
                 }
                 val main_cat = mapChildValues[_context.getString(R.string.ss_sp_main_cat)]
-                if (main_cat != null && !main_cat.isEmpty()) {
+                if (main_cat != null && main_cat.isNotEmpty()) {
                     spMainCat.setText(main_cat)
                 }
                 val sub_cat = mapChildValues[_context.getString(R.string.ss_sp_sub_cat)]
-                if (sub_cat != null && !sub_cat.isEmpty()) {
+                if (sub_cat != null && sub_cat.isNotEmpty()) {
                     spSubCat.setText(sub_cat)
                 }
                 val occupation = mapChildValues[_context.getString(R.string.ss_sp_occupation)]
-                if (occupation != null && !occupation.isEmpty()) {
+                if (occupation != null && occupation.isNotEmpty()) {
                     spOccupation.setText(occupation)
                 }
                 val activity = mapChildValues[_context.getString(R.string.ss_sp_activity)]
-                if (activity != null && !activity.isEmpty()) {
+                if (activity != null && activity.isNotEmpty()) {
                     spActivity.setText(activity)
                 }
             }
             if (tvBirthTime != null) {
                 val birth_time = mapChildValues[_context.getString(R.string.ss_edt_birth_time)]
-                if (birth_time != null && !birth_time.isEmpty()) {
+                if (birth_time != null && birth_time.isNotEmpty()) {
                     tvBirthTime?.text = birth_time
                 }
                 val height_meter = mapChildValues[_context.getString(R.string.ss_edt_height_meter)]
-                if (height_meter != null && !height_meter.isEmpty()) {
+                if (height_meter != null && height_meter.isNotEmpty()) {
                     edtHeightMeter?.setText(height_meter)
                 }
                 val weight_kg = mapChildValues[_context.getString(R.string.ss_edt_weight_kg)]
-                if (weight_kg != null && !weight_kg.isEmpty()) {
+                if (weight_kg != null && weight_kg.isNotEmpty()) {
                     edtWeightKg?.setText(weight_kg)
                 }
                 val bplace = mapChildValues[_context.getString(R.string.ss_sp_bplace)]
-                if (bplace != null && !bplace.isEmpty()) {
+                if (bplace != null && bplace.isNotEmpty()) {
                     edtBirthPlace?.setText(bplace)
                 }
                 val isSpect = mapChildValues[_context.getString(R.string.ss_chk_is_spect)]
@@ -533,7 +623,7 @@ class SmartFilterAdapter(private val _context: Context,
             }
             if (tvCreated != null) {
                 val created = mapChildValues[_context.getString(R.string.ss_edt_created)]
-                if (created != null && !created.isEmpty()) {
+                if (created != null && created.isNotEmpty()) {
                     if (Utility.isValidFormat(created, Utility.yyyy_MM_dd)) {
                         tvCreated?.text = Utility.changeDateFormat(created, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     } else {
@@ -541,7 +631,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
                 }
                 val updated = mapChildValues[_context.getString(R.string.ss_edt_updated)]
-                if (updated != null && !updated.isEmpty()) {
+                if (updated != null && updated.isNotEmpty()) {
                     if (Utility.isValidFormat(updated, Utility.yyyy_MM_dd)) {
                         tvUpdated?.text = Utility.changeDateFormat(updated, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     } else {
@@ -550,10 +640,10 @@ class SmartFilterAdapter(private val _context: Context,
                 }
                 val maxUpdate = mapChildValues[_context.getString(R.string.ss_maxUpdate)]
                 val minUpdate = mapChildValues[_context.getString(R.string.ss_minUpdate)]
-                if (maxUpdate != null && !maxUpdate.isEmpty()) {
+                if (maxUpdate != null && maxUpdate.isNotEmpty()) {
                     rangeUpdationBar?.setMaxStartValue(maxUpdate.toInt().toFloat())?.apply()
                 }
-                if (minUpdate != null && !minUpdate.isEmpty()) {
+                if (minUpdate != null && minUpdate.isNotEmpty()) {
                     rangeUpdationBar?.setMinStartValue(minUpdate.toInt().toFloat())?.apply()
                 }
             }
@@ -993,6 +1083,7 @@ class SmartFilterAdapter(private val _context: Context,
         }
         mapChildValues.clear()
         getFiledValues()
+        Utility.displaySnackBarWithBottomMargin((_context as AppCompatActivity).findViewById(android.R.id.content), "Smart Filter values reset successfully")
     }
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
@@ -1014,7 +1105,7 @@ class SmartFilterAdapter(private val _context: Context,
                     .setAdapter(popUpAdapter)
                     .setExpanded(true)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
-                    .setOnItemClickListener({ dialog12: DialogPlus?, item: Any?, view: View?, position: Int -> Toast.makeText(_context, "Clicked " + position, Toast.LENGTH_SHORT).show() })
+                    .setOnItemClickListener { _: DialogPlus?, _: Any?, view: View?, position: Int -> Toast.makeText(_context, "Clicked $position", Toast.LENGTH_SHORT).show() }
                     .setCancelable(true)
                     .setGravity(Gravity.BOTTOM)
                     .create()

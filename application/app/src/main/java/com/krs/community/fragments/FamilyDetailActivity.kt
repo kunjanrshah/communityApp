@@ -359,7 +359,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                  startActivity(intent)*/
                             } else if (it == 2) {
                                 if (!member.mobile.isNullOrEmpty()) {
-                                    sendWhatsappMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
+                                    sendWhatsAppMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
                                 } else {
                                     Toast.makeText(this@FamilyDetailActivity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                                 }
@@ -546,7 +546,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                      startActivity(intent)*/
                 } else if (it == 2) {
                     if (!member.mobile.isNullOrEmpty()) {
-                        sendWhatsappMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
+                        sendWhatsAppMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
                     } else {
                         Toast.makeText(this@FamilyDetailActivity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                     }

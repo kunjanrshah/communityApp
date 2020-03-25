@@ -106,7 +106,6 @@ public class QRCodeActivity extends AppCompatActivity {
         });
     }
 
-
     private void setScreenLayout() {
         binding = DataBindingUtil.setContentView(this, R.layout.fragment_by_qrcode);
 

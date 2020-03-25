@@ -67,9 +67,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:fontFamily="@font/montserrat_semibold"
+                        android:fontFamily="@font/montserrat_light"
                         android:text="@string/forgot_pin"
-                        android:textColor="@color/colorGray"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="10sp"
                          />
 

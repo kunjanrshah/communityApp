@@ -2,8 +2,9 @@ package com.krs.community.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -64,15 +65,16 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         member = arguments?.getSerializable(getString(R.string.member)) as Member
         val loginMember=Guru.getString(getString(R.string.loginMember),"")
         val loginMem= Gson().fromJson(loginMember,Member::class.java)
+
         if(member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id){
 
             binding.fname.isFocusable=true
             binding.edtArea.isFocusable=true
             binding.edtAddr.isFocusable=true
+            binding.edtEmail.isFocusable = true
             binding.edtPincode.isFocusable=true
             binding.edtFather.isFocusable=true
             binding.edtMother.isFocusable=true
-            binding.edtEmail.isFocusable=true
             binding.edtMobile.isFocusable=true
             binding.edtPassword.isFocusable=true
             binding.edtCpassword.isFocusable=true
@@ -80,7 +82,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
             binding.spState.isEnabled=true
             binding.spCity.isEnabled=true
-            binding.spRelation.isEnabled=true
+            binding.spRelation.isEnabled = member.headId != "0"
+
             binding.spLastname.isEnabled=true
             binding.spGender.isEnabled=true
 
@@ -99,6 +102,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         }else{
             binding.fname.isFocusable=false
             binding.edtEmail.isFocusable=false
+            binding.edtEmail.movementMethod = LinkMovementMethod.getInstance();
             binding.edtMobile.isFocusable=false
             binding.edtMother.isFocusable=false
             binding.edtFather.isFocusable=false
@@ -132,13 +136,20 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         } else {
             binding.llPin.visibility = View.GONE
         }
+        if (!member.emailAddress.isNullOrEmpty()) {
+            val spannable: Spannable = SpannableString(member.emailAddress)
+            Linkify.addLinks(spannable, Linkify.WEB_URLS)
+            val text: CharSequence = TextUtils.concat(spannable, "\u200B")
+            binding.edtEmail.setText(text)
+        } else {
+            binding.edtEmail.setText(member.emailAddress)
+        }
 
+        binding.edtEmail.filters = arrayOf(Utility.filter)
         binding.fname.setText(member.firstName)
         binding.edtFather.setText(member.fatherName)
         binding.edtMother.setText(member.motherName)
         binding.edtMobile.setText(member.mobile)
-        binding.edtEmail.setText(member.emailAddress)
-        binding.edtEmail.filters = arrayOf(Utility.filter)
         binding.edtAddr.setText(member.address)
         binding.spGender.setText(member.gender)
         binding.edtArea.setText(member.area)

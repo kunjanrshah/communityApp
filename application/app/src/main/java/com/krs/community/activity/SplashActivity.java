@@ -31,8 +31,6 @@ import com.krs.community.utils.Utility;
 
 import static com.krs.community.utils.Utility.getHashKey;
 
-;
-
 public class SplashActivity extends AppCompatActivity {
 
     private KenBurnsView kbv;

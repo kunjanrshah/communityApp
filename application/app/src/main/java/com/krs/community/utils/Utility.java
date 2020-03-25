@@ -238,19 +238,6 @@ public class Utility {
         snackbar.show();
     }
 
-    public static Snackbar getSnackBarWithBottomMargin(View main, String message) {
-        Snackbar snackbar = Snackbar.make(main, message, Snackbar.LENGTH_INDEFINITE);
-        final FrameLayout snackBarView = (FrameLayout) snackbar.getView();
-
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView.getLayoutParams();
-        params.setMargins(params.leftMargin + 15,
-                params.topMargin,
-                params.rightMargin + 15,
-                params.bottomMargin + 120);
-        snackBarView.setLayoutParams(params);
-        return snackbar;
-    }
-
     public static int calculatePercentage(Member member) {
         int percentage = 0;
         int empty = 0;
@@ -1564,7 +1551,7 @@ public class Utility {
         int y = (bitmap.getHeight() + bounds.height()) - 40;
 
         canvas.drawText(gText, x, y, paint);
-        canvas.drawText(context.getString(R.string.app_name), x + 50, 25, paint);
+        canvas.drawText(context.getString(R.string.app_name) + " App", x + 50, 25, paint);
         return bitmap;
     }
 
@@ -1584,7 +1571,7 @@ public class Utility {
         return image;
     }
 
-    public static void sendWhatsappMessage(@NonNull Context mActivity, String mob_num, String message) {
+    public static void sendWhatsAppMessage(@NonNull Context mActivity, String mob_num, String message) {
         // String digits = "\\d+";
         //if (mob_num.matches(digits)) {
         try {

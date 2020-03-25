@@ -137,7 +137,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         layoutManager = LinearLayoutManager(AppController.mApplication.applicationContext)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
-
         binding.lstSharedProfile.adapter = sharedAdapter
         binding.lstSharedProfile.layoutManager = layoutManager
         defaultProfiles.clear()
@@ -257,7 +256,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 3 -> sliderView.imageUrl = "https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
             }
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-            sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
+            // sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
+            sliderView.description = "Advertise with us"
             sliderView.setOnSliderClickListener { sliderView1: SliderView? ->
                 binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                 return@setOnSliderClickListener

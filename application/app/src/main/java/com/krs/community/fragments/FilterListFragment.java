@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog;
 import com.github.squti.guru.Guru;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
@@ -33,17 +35,20 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FilterListFragment extends Fragment {
 
     ArrayList<JSONObject> lstFilters;
     JSONArray mJsonArray;
-
+    LinearLayout llNotFound;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_filters, container, false);
+        llNotFound = root.findViewById(R.id.ll_not_found);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
@@ -54,7 +59,6 @@ public class FilterListFragment extends Fragment {
         mApp.facebookAnalytics(getContext(), FilterListFragment.class.getSimpleName());
 
         lstFilters = new ArrayList<>();
-
         String listFilter = Guru.getString(getActivity().getString(R.string.list_filter), "");
 
         try {
@@ -65,6 +69,11 @@ public class FilterListFragment extends Fragment {
             }
             for (int i = 0; i < mJsonArray.length(); i++) {
                 lstFilters.add((JSONObject) mJsonArray.get(i));
+            }
+            if (lstFilters.size() > 0) {
+                llNotFound.setVisibility(View.GONE);
+            } else {
+                llNotFound.setVisibility(View.VISIBLE);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -119,7 +128,7 @@ public class FilterListFragment extends Fragment {
                         Utility.movetoFragment(getActivity(),listFragment);
                 });
 
-                holder.flexboxLayout.setOnClickListener(v -> {
+                holder.llFilter.setOnClickListener(v -> {
                     try {
                         SmartFilterResult filterResult = new SmartFilterResult();
                         Bundle mBundle = new Bundle();
@@ -144,7 +153,6 @@ public class FilterListFragment extends Fragment {
             }
         };
 
-
         RecyclerView rv_filters = root.findViewById(R.id.rv_filters);
         View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_filters, container, false);
         ImageView iv_cancel = header.findViewById(R.id.iv_cancel);
@@ -153,9 +161,26 @@ public class FilterListFragment extends Fragment {
         });
         TextView tvClear = header.findViewById(R.id.tv_clear);
         tvClear.setOnClickListener(v -> {
-            Guru.putString(getActivity().getString(R.string.list_filter), "");
-            lstFilters.clear();
-            adapter.notifyDataSetChanged();
+            if (lstFilters.size() > 0) {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                        .setTitleText(getActivity().getString(R.string.smart_filter))
+                        .setContentText("Do you want to clear all Filters?")
+                        .setConfirmText(getActivity().getString(R.string.YesPleaseCity))
+                        .setCancelText(getActivity().getString(R.string.no))
+                        .setCustomImage(R.drawable.icon_ghanchi)
+                        .showCancelButton(true)
+                        .setConfirmClickListener(sweetAlertDialog -> {
+                            sweetAlertDialog.dismissWithAnimation();
+                            Guru.putString(getActivity().getString(R.string.list_filter), "");
+                            lstFilters.clear();
+                            llNotFound.setVisibility(View.VISIBLE);
+                            adapter.notifyDataSetChanged();
+                            noRecordDialog("Filters clear successfully!");
+                        })
+                        .show();
+            } else {
+                noRecordDialog("No filter found!");
+            }
         });
 
         adapter.setParallaxHeader(header, rv_filters);
@@ -167,6 +192,20 @@ public class FilterListFragment extends Fragment {
         rv_filters.setHasFixedSize(true);
 
         return root;
+    }
+
+    private void noRecordDialog(String message) {
+        int gif = R.drawable.gif_no_record;
+        new TTFancyGifDialog.Builder(getActivity())
+                .setMessage(message)
+                .setPositiveBtnText(getString(R.string.ok))
+                .setPositiveBtnBackground("#843f52")
+                .setGifResource(gif)
+                .isCancellable(false)
+                .OnPositiveClicked(() -> {
+
+                })
+                .build();
     }
 
     @Override
@@ -181,20 +220,20 @@ public class FilterListFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
-    class ListViewHolder extends RecyclerView.ViewHolder {
+    static class ListViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvName;
+        LinearLayout llFilter;
         FlexboxLayout flexboxLayout;
         ImageView imgEdit, imgDelete;
-      //  ViewStub stub;
         ListViewHolder(View v) {
             super(v);
             tvName = v.findViewById(R.id.tv_name);
+            llFilter = v.findViewById(R.id.ll_filter);
             flexboxLayout = v.findViewById(R.id.flexbox_layout);
             flexboxLayout.setFlexDirection(FlexDirection.ROW);
             imgEdit = v.findViewById(R.id.img_edit);
             imgDelete = v.findViewById(R.id.img_delete);
-           // stub = v.findViewById(R.id.layout_stub);
         }
     }
 }

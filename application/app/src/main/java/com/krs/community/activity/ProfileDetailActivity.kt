@@ -309,7 +309,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         val memberId = Guru.getString(getString(R.string.member_id), "")
         // binding.switchLocation.isEnabled = memberId.equals(member?.id)
-        if (member?.id == memberId) {
+        if (member?.id == memberId || member?.headId == memberId) {
             binding.tvSave.visibility = View.VISIBLE
             binding.tvSave.text = getString(R.string.save)
             binding.imgProfile.isEnabled = true

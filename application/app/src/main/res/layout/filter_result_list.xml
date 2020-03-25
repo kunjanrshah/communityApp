@@ -151,7 +151,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
                             android:singleLine="true"
-                            android:text="Kunjan Patel"
+                            android:hint="Member Name"
                             android:textSize="14sp" />
 
                         <TextView
@@ -160,7 +160,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
                             android:singleLine="true"
-                            android:text="Maninagar, Ahmedabad"
+                            android:hint="Area, City"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -179,7 +179,7 @@
                             android:gravity="center"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:text="Member"
+                            android:hint="Member"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -244,7 +244,7 @@
                                 android:autoLink="email"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:singleLine="true"
-                                android:text="kunjanshah@gmail.com"
+                                android:hint="email address"
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -296,7 +296,7 @@
                                 android:layout_marginLeft="5dp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:singleLine="true"
-                                android:text="9825450261"
+                                android:hint="Mobile number"
                                 android:textColor="@color/com_facebook_blue"
                                 android:textSize="16sp" />
 
@@ -309,7 +309,7 @@
                             android:layout_marginTop="5dp"
                             android:fontFamily="@font/montserrat_light"
                             android:gravity="right"
-                            android:text="12-12-2019"
+                            android:hint="updated date"
                             android:textSize="12sp" />
 
                     </LinearLayout>

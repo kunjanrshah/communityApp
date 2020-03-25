@@ -217,7 +217,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
                             } else {
                                 Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                             }

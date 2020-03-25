@@ -2,8 +2,9 @@ package com.krs.community.fragments
 
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -68,6 +69,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
             binding.chkIsShani.isClickable=false
             binding.edtAbout.isFocusable=false
             binding.edtFbUrl.isFocusable=false
+            binding.edtFbUrl.movementMethod = LinkMovementMethod.getInstance();
             binding.edtBplace.isFocusable=false
             binding.edtHobby.isFocusable=false
             binding.edtExpectation.isFocusable=false
@@ -76,7 +78,15 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         }
 
         binding.edtAbout.setText(member.aboutMe)
-        binding.edtFbUrl.setText(member.facebookProfile)
+        if (!member.facebookProfile.isNullOrEmpty()) {
+            val spannable: Spannable = SpannableString(member.facebookProfile)
+            Linkify.addLinks(spannable, Linkify.WEB_URLS)
+            val text: CharSequence = TextUtils.concat(spannable, "\u200B")
+            binding.edtFbUrl.setText(text)
+        } else {
+            binding.edtFbUrl.setText(member.facebookProfile)
+        }
+
         binding.txtBtime.text = member.birthTime
         binding.edtBplace.setText(member.birthPlace)
         binding.edtHobby.setText(member.hobby)

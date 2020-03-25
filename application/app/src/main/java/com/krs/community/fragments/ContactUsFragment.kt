@@ -67,7 +67,7 @@ class ContactUsFragment : Fragment() {
 
         val imgWhatsapp = layout.findViewById<ImageView>(R.id.img_whatsapp)
         imgWhatsapp.setOnClickListener {
-            Utility.sendWhatsappMessage(activity!!,getString(R.string.contact_number),"Hi Kunjan")
+            Utility.sendWhatsAppMessage(activity!!, getString(R.string.contact_number), "Hi Kunjan")
         }
 
         val imgSkype = layout.findViewById<ImageView>(R.id.img_skype)
@@ -90,7 +90,7 @@ class ContactUsFragment : Fragment() {
         val edtMessage = layout.findViewById<EditText>(R.id.edt_message)
         val btnSend = layout.findViewById<Button>(R.id.btn_send)
         btnSend.setOnClickListener {
-            Utility.sendWhatsappMessage(activity!!, getString(R.string.contact_number), edtMessage.text.toString())
+            Utility.sendWhatsAppMessage(activity!!, getString(R.string.contact_number), edtMessage.text.toString())
         }
         val tvName = layout.findViewById<TextView>(R.id.tv_name)
         val tvLink = layout.findViewById<TextView>(R.id.tv_link)

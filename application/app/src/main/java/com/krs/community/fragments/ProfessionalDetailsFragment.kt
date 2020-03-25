@@ -2,8 +2,9 @@ package com.krs.community.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -87,6 +88,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
             binding.spSubCat.isClickable = false
             binding.spOccupation.isClickable = false
             binding.edtUrl.isFocusable = false
+            binding.edtUrl.movementMethod = LinkMovementMethod.getInstance();
             binding.edtDetail.isFocusable = false
             binding.edtAddr.isFocusable = false
         }
@@ -226,7 +228,15 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         }
 
         binding.edtComName.setText(member.companyName)
-        binding.edtUrl.setText(member.website)
+        if (!member.website.isNullOrEmpty()) {
+            val spannable: Spannable = SpannableString(member.website)
+            Linkify.addLinks(spannable, Linkify.WEB_URLS)
+            val text: CharSequence = TextUtils.concat(spannable, "\u200B")
+            binding.edtUrl.setText(text)
+        } else {
+            binding.edtUrl.setText(member.website)
+        }
+
         binding.edtAddr.setText(member.businessAddress)
         binding.edtAddr.addTextChangedListener(object : TextWatcher {
             private var text: String? = null
@@ -286,9 +296,9 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                     if (resultUri != null) {
                         if (isNetworkConnected(activity as AppCompatActivity)) {
                             try {
-                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgLogo)
+                                Glide.with(mApplication).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgLogo)
                                 val uploadImage = File(resultUri.path.toString())
-                                startSweetProgress(activity!!, getString(R.string.imageDetails), getString(R.string.loading))
+                                startSweetProgress(activity!!, "Logo uploading", getString(R.string.loading))
                                 profileDetailViewModel.uploadImage(uploadImage, member.id.toString(), getString(R.string.company))
                             } catch (e: Exception) {
                                 e.printStackTrace()

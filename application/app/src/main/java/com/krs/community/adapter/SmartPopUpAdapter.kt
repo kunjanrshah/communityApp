@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.github.squti.guru.Guru
@@ -467,9 +468,34 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         val item = jsonArray.getJSONObject(i)
                         val name= item.getString(_context.getString(R.string.name_filter))
                         if (name.toString() == filterName) {
-                            Toast.makeText(_context, "Filter name already exist.", Toast.LENGTH_SHORT).show()
+
+                            SweetAlertDialog(_context as AppCompatActivity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                                    .setTitleText(_context.getString(R.string.smart_filter))
+                                    .setContentText("Filter already exist. Do you want to overwrite?")
+                                    .setConfirmText(_context.getString(R.string.YesPleaseCity))
+                                    .setCancelText(_context.getString(R.string.no))
+                                    .setCustomImage(R.drawable.icon_ghanchi)
+                                    .showCancelButton(true)
+                                    .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                                        sweetAlertDialog.dismissWithAnimation()
+                                        //jsonArray.remove(i)
+                                        val jsonObject = JSONObject()
+                                        jsonObject.put(_context.getString(R.string.name_filter), filterName)
+                                        jsonObject.put(_context.getString(R.string.value_filter), filter)
+                                        jsonArray.put(jsonObject)
+                                        Guru.putString(_context.getString(R.string.list_filter), jsonArray.toString())
+
+                                        mICloseDialog.PopupClose()
+                                        val filterResult = SmartFilterResult()
+                                        val mBundle = Bundle()
+                                        mBundle.putString(_context.getString(R.string.filter_values), filter.toString())
+                                        filterResult.arguments = mBundle
+                                        Utility.movetoFragment(_context as Activity, filterResult)
+                                    }
+                                    .show()
+
                             return@setOnClickListener
-                            //jsonArray.remove(i)
+
                             break
                         }
                     }
