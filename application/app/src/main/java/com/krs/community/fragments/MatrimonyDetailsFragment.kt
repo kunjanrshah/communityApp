@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
 import com.krs.community.R
@@ -97,7 +98,24 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         binding.chkIsShani.isChecked = member.isShani.equals("1")
         binding.chkGlass.isChecked = member.isSpect.equals("1")
         binding.chkInterested.isChecked = member.matrimony.toString().toLowerCase().equals("yes")
+        binding.chkInterested.setOnClickListener {
 
+            SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText("Matrimony")
+                    .setContentText("Are you interested for Matrimony?")
+                    .setConfirmText("Interested")
+                    .setCancelText("No,Please")
+                    .setCustomImage(R.drawable.icon_ghanchi)
+                    .showCancelButton(true)
+                    .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                        sweetAlertDialog.dismissWithAnimation()
+                        binding.chkInterested.isChecked = true
+                    }.setCancelClickListener {
+                        it.dismissWithAnimation()
+                        binding.chkInterested.isChecked = false
+                    }
+                    .show()
+        }
         binding.txtBtime.setOnClickListener {
             if(member.id == loginMem.id || member.headId == loginMem.id){
                 NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.supportFragmentManager, getString(R.string.bottomSheet))

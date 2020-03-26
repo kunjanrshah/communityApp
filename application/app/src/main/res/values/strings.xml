@@ -185,7 +185,7 @@
 
     <string name="ss_head_name" translatable="false">@string/head_name</string>
     <string name="ss_family_code" translatable="false">@string/member_code</string>
-    <string name="ss_mem_name" translatable="false">@string/first_name</string>
+    <string name="ss_mem_name" translatable="false">@string/member_name</string>
     <string name="ss_sp_surname" translatable="false">@string/sub_cast_id</string>
     <string name="ss_sp_samaj" translatable="false">@string/local_community_id</string>
     <string name="ss_sp_marital" translatable="false">@string/marital_status</string>
@@ -282,6 +282,7 @@
     <string name="only_numbers" translatable="false">0123456789</string>
     <string name="member_code" translatable="false">member_code</string>
     <string name="first_name" translatable="false">first_name</string>
+    <string name="member_name" translatable="false">member_name</string>
     <string name="father_name" translatable="false">father_name</string>
     <string name="mother_name" translatable="false">mother_name</string>
     <string name="mobile" translatable="false">mobile</string>
@@ -1046,7 +1047,7 @@
     <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)</string>
     <string name="select_filter">Please select filter!</string>
     <string name="default_filter_name">name</string>
-    <string name="enter_filter_value">Please enter filters for search</string>
+    <string name="enter_filter_value">Please enter filter values for smart search</string>
     <string name="smart_filter">Smart Filter</string>
     <string name="isdialogshow">isDialogShow</string>
     <string name="filename">filename</string>

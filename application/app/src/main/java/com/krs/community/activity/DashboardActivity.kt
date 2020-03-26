@@ -31,6 +31,9 @@ import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -52,6 +55,7 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
+import org.json.JSONObject
 
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -177,14 +181,15 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
-        /*if (isNetworkConnected(this)) {
+        if (isNetworkConnected(this)) {
             val JsonObj= JSONObject()
             JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
             JsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-            JsonObj.put("version","1")
+            JsonObj.put("insert", "")
+            JsonObj.put("version", BuildConfig.VERSION_NAME)
             val updated=  JsonParser().parse(JsonObj.toString()) as JsonObject
             dashboardViewModel.getUpdatedVersion(updated)
-        }*/
+        }
     }
 
     override fun onResume() {

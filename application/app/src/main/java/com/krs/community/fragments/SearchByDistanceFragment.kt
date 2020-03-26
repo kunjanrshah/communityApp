@@ -646,7 +646,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             }
 
             if(lstMembers.size>0){
-                tvRecords.text=getString(R.string.RecordDistance)+response.totalRecords
+                tvRecords.text = getString(R.string.RecordDistance) + " " + response.totalRecords
                 imgMap.visibility=View.GONE
                 tvRecords.visibility=View.VISIBLE
             }else{

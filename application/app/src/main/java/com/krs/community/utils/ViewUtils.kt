@@ -401,21 +401,22 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
 
 fun showVersionDialog(activity: FragmentActivity) {
 
-    SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+    SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
             .setTitleText(activity.getString(R.string.newupdate))
             .setContentText(activity.getString(R.string.thereversion))
-            .setNeutralText(activity.getString(R.string.updatenow))
-            .setNeutralClickListener {
-                it.dismissWithAnimation()
+            .setConfirmText(activity.getString(R.string.updatenow))
+            .setCancelText("Later")
+            .setCustomImage(R.drawable.icon_ghanchi)
+            .showCancelButton(true)
+            .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                sweetAlertDialog.dismissWithAnimation()
                 val appPackageName = activity.packageName
                 try {
-                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
-                } catch (e: android.content.ActivityNotFoundException) {
-                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+                } catch (e: ActivityNotFoundException) {
+                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
                 }
-            }
-            .setCancelText("Later")
-            .setCancelClickListener {
+            }.setCancelClickListener {
                 it.dismissWithAnimation()
             }
             .show()

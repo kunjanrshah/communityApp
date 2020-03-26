@@ -67,7 +67,7 @@
                 android:layout_gravity="top|end"
                 android:layout_marginRight="10dp"
                 android:backgroundTint="@android:color/white"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="45dp"
                 android:src="@drawable/rocket"
                 app:borderWidth="0dp"
                 app:elevation="6dp"

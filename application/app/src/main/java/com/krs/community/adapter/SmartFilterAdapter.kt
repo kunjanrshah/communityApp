@@ -1105,7 +1105,6 @@ class SmartFilterAdapter(private val _context: Context,
                     .setAdapter(popUpAdapter)
                     .setExpanded(true)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
-                    .setOnItemClickListener { _: DialogPlus?, _: Any?, view: View?, position: Int -> Toast.makeText(_context, "Clicked $position", Toast.LENGTH_SHORT).show() }
                     .setCancelable(true)
                     .setGravity(Gravity.BOTTOM)
                     .create()

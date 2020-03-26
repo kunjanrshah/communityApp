@@ -478,7 +478,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                                     .showCancelButton(true)
                                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                                         sweetAlertDialog.dismissWithAnimation()
-                                        //jsonArray.remove(i)
+                                        jsonArray.remove(i)
                                         val jsonObject = JSONObject()
                                         jsonObject.put(_context.getString(R.string.name_filter), filterName)
                                         jsonObject.put(_context.getString(R.string.value_filter), filter)

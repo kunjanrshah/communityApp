@@ -9,6 +9,7 @@ public class AppConstants {
     public static final String INSERT = "insert";
     public static final String VERSION = "version";
     public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
+    //public static final String APPLICATION_BASE_URL = "https://www.muslimghanchi.org/API/";
     public static final String UPLOAD_DOCUMENT = APPLICATION_BASE_URL + "UploadFiles";
 
     public interface UrlPath {
