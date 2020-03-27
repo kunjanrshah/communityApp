@@ -44,10 +44,11 @@ class SmartFilterAdapter(private val _context: Context,
     private var edtPermanentAdd: EditText?=null
     private var edtPinCode: EditText?=null
     private var edtOffice: EditText?=null
-    private var edtHeightMeter: EditText?=null
-    private var edtWeightKg: EditText?=null
+
+    // private var edtHeightMeter: EditText?=null
+    //private var edtWeightKg: EditText?=null
     private var edtArea: EditText?=null
-    private var edtMosaad: EditText?=null
+    private var tvExpired: TextView? = null
     private var edtBirthPlace: EditText?=null
 
     private var tvBdate: TextView?=null
@@ -55,9 +56,14 @@ class SmartFilterAdapter(private val _context: Context,
     private var tvCreated: TextView?=null
     private var tvUpdated: TextView?=null
     private var tvBirthTime: TextView?=null
+    private var tvMinWeight: TextView? = null
+    private var tvMaxWeight: TextView? = null
+    private var tvMinHeight: TextView? = null
+    private var tvMaxHeight: TextView? = null
 
     private var imgBdateClose: ImageView?=null
     private var imgMdateClose: ImageView?=null
+    private var imgEdateClose: ImageView? = null
     private var imgUpdatedClose: ImageView?=null
     private var imgCreatedClose: ImageView?=null
 
@@ -78,6 +84,8 @@ class SmartFilterAdapter(private val _context: Context,
 
     private var rangeAgeBar: CrystalRangeSeekbar?=null
     private var rangeUpdationBar: CrystalRangeSeekbar?=null
+    private var rangeHeightBar1: CrystalRangeSeekbar? = null
+    private var rangeWeightBar: CrystalRangeSeekbar? = null
 
     private var chkIsDonor: CheckBox?=null
     private var chkIsRented: CheckBox?=null
@@ -311,11 +319,11 @@ class SmartFilterAdapter(private val _context: Context,
             } else {
                 mapChildValues[_context.getString(R.string.ss_edt_mdate)] = ""
             }
-            val mosad = edtMosaad?.text.toString().trim { it <= ' ' }
-            if (mosad.isNotEmpty() && !mosad.equals("Mosad", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_edt_mosad)] = mosad
+            val expireDate = tvExpired?.text.toString().trim { it <= ' ' }
+            if (expireDate.isNotEmpty()) {
+                mapChildValues[_context.getString(R.string.expire_date)] = expireDate
             } else {
-                mapChildValues[_context.getString(R.string.ss_edt_mosad)] = ""
+                mapChildValues[_context.getString(R.string.expire_date)] = ""
             }
             val educaiton = spEducation.text.toString().trim { it <= ' ' }
             if (educaiton.isNotEmpty() && !educaiton.equals("Education", ignoreCase = true)) {
@@ -396,18 +404,33 @@ class SmartFilterAdapter(private val _context: Context,
             } else {
                 mapChildValues[_context.getString(R.string.ss_edt_birth_time)] = ""
             }
-            val meter = edtHeightMeter?.text.toString().trim { it <= ' ' }
-            if (meter.isNotEmpty()) {
-                mapChildValues[_context.getString(R.string.ss_edt_height_meter)] = meter
+
+            var min = rangeHeightBar1?.selectedMinValue.toString()
+            var max = rangeHeightBar1?.selectedMaxValue.toString()
+            if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_min_height)] = min
             } else {
-                mapChildValues[_context.getString(R.string.ss_edt_height_meter)] = ""
+                mapChildValues[_context.getString(R.string.ss_min_height)] = "0"
             }
-            val weight = edtWeightKg?.text.toString().trim { it <= ' ' }
-            if (weight.isNotEmpty()) {
-                mapChildValues[_context.getString(R.string.ss_edt_weight_kg)] = weight
+            if (max.isNotEmpty() && !max.equals("200", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_max_height)] = max
             } else {
-                mapChildValues[_context.getString(R.string.ss_edt_weight_kg)] = ""
+                mapChildValues[_context.getString(R.string.ss_max_height)] = "200"
             }
+
+            min = rangeWeightBar?.selectedMinValue.toString()
+            max = rangeWeightBar?.selectedMaxValue.toString()
+            if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_min_weight)] = min
+            } else {
+                mapChildValues[_context.getString(R.string.ss_min_weight)] = "0"
+            }
+            if (max.isNotEmpty() && !max.equals("200", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_max_weight)] = max
+            } else {
+                mapChildValues[_context.getString(R.string.ss_max_weight)] = "200"
+            }
+
             val bplace = edtBirthPlace?.text.toString().trim { it <= ' ' }
             if (bplace.isNotEmpty() && !bplace.equals("bplace", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_bplace)] = bplace
@@ -446,7 +469,7 @@ class SmartFilterAdapter(private val _context: Context,
             }
             val min = rangeUpdationBar?.selectedMinValue.toString()
             val max = rangeUpdationBar?.selectedMaxValue.toString()
-            if (min.isNotEmpty() && max.isNotEmpty() && !max.equals("100", ignoreCase = true) && !min.equals("0", ignoreCase = true)) {
+            if ((min.isNotEmpty() && max.isNotEmpty()) || !(max.equals("100", ignoreCase = true) && min.equals("0", ignoreCase = true))) {
                 mapChildValues[_context.getString(R.string.ss_minUpdate)] = min
                 mapChildValues[_context.resources.getString(R.string.ss_maxUpdate)] = max
             } else {
@@ -552,9 +575,13 @@ class SmartFilterAdapter(private val _context: Context,
                         tvMdate?.text = mdate
                     }
                 }
-                val mosad = mapChildValues[_context.getString(R.string.ss_edt_mosad)]
-                if (mosad != null && mosad.isNotEmpty()) {
-                    edtMosaad?.setText(mosad)
+                val expireDate = mapChildValues[_context.getString(R.string.expire_date)]
+                if (expireDate != null && expireDate.isNotEmpty()) {
+                    if (Utility.isValidFormat(expireDate, Utility.yyyy_MM_dd)) {
+                        tvExpired?.text = Utility.changeDateFormat(expireDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    } else {
+                        tvExpired?.text = expireDate
+                    }
                 }
                 val education = mapChildValues[_context.getString(R.string.ss_sp_education)]
                 if (education != null && education.isNotEmpty()) {
@@ -602,14 +629,26 @@ class SmartFilterAdapter(private val _context: Context,
                 if (birth_time != null && birth_time.isNotEmpty()) {
                     tvBirthTime?.text = birth_time
                 }
-                val height_meter = mapChildValues[_context.getString(R.string.ss_edt_height_meter)]
-                if (height_meter != null && height_meter.isNotEmpty()) {
-                    edtHeightMeter?.setText(height_meter)
+
+                val maxHeight = mapChildValues[_context.getString(R.string.ss_max_height)]
+                val minHeight = mapChildValues[_context.getString(R.string.ss_min_height)]
+                if (maxHeight != null && maxHeight.isNotEmpty()) {
+                    rangeHeightBar1?.setMaxStartValue(maxHeight.toInt().toFloat())?.apply()
                 }
-                val weight_kg = mapChildValues[_context.getString(R.string.ss_edt_weight_kg)]
-                if (weight_kg != null && weight_kg.isNotEmpty()) {
-                    edtWeightKg?.setText(weight_kg)
+                if (minHeight != null && minHeight.isNotEmpty()) {
+                    rangeHeightBar1?.setMinStartValue(minHeight.toInt().toFloat())?.apply()
                 }
+
+                val maxWeight = mapChildValues[_context.getString(R.string.ss_max_weight)]
+                val minWeight = mapChildValues[_context.getString(R.string.ss_min_weight)]
+                if (maxWeight != null && maxWeight.isNotEmpty()) {
+                    rangeWeightBar?.setMaxStartValue(maxWeight.toInt().toFloat())?.apply()
+                }
+                if (minWeight != null && minWeight.isNotEmpty()) {
+                    rangeWeightBar?.setMinStartValue(minWeight.toInt().toFloat())?.apply()
+                }
+
+
                 val bplace = mapChildValues[_context.getString(R.string.ss_sp_bplace)]
                 if (bplace != null && bplace.isNotEmpty()) {
                     edtBirthPlace?.setText(bplace)
@@ -800,8 +839,10 @@ class SmartFilterAdapter(private val _context: Context,
                 tvBdate = convertView!!.findViewById(R.id.tv_bdate)
                 imgBdateClose = convertView.findViewById(R.id.img_bdate_close)
                 imgMdateClose = convertView.findViewById(R.id.img_mdate_close)
+                imgEdateClose = convertView.findViewById(R.id.img_edate_close)
+
                 tvMdate = convertView.findViewById(R.id.tv_mdate)
-                edtMosaad = convertView.findViewById(R.id.edt_mosaad)
+                tvExpired = convertView.findViewById(R.id.tv_edate)
                 spEducation = convertView.findViewById(R.id.sp_education)
                 spGotra = convertView.findViewById(R.id.sp_gotra)
                 spBg = convertView.findViewById(R.id.sp_bg)
@@ -813,8 +854,17 @@ class SmartFilterAdapter(private val _context: Context,
                     tvBdate?.text = ""
                 }
 
+                imgEdateClose?.setOnClickListener {
+                    tvExpired?.text = ""
+                }
                 imgMdateClose?.setOnClickListener {
                     tvMdate?.text = ""
+                }
+
+                tvExpired?.setOnClickListener {
+                    which = 5
+                    val memDate = tvExpired?.text.toString().trim()
+                    setDatePicker(memDate)
                 }
 
                 tvBdate?.setOnClickListener {
@@ -952,15 +1002,29 @@ class SmartFilterAdapter(private val _context: Context,
                 }
 
                 tvBirthTime = convertView!!.findViewById(R.id.tv_birth_time)
-                edtHeightMeter = convertView.findViewById(R.id.edt_height_meter)
-                edtWeightKg = convertView.findViewById(R.id.edt_weight_kg)
+                rangeHeightBar1 = convertView.findViewById(R.id.rangeHeight1)
+                rangeWeightBar = convertView.findViewById(R.id.rangeWeight)
                 edtBirthPlace = convertView.findViewById(R.id.edt_birth_place)
                 chkIsSpect = convertView.findViewById(R.id.chk_is_spect)
                 chkIsShani = convertView.findViewById(R.id.chk_is_shani)
                 chkIsMangal = convertView.findViewById(R.id.chk_is_mangal)
+                tvMinWeight = convertView.findViewById(R.id.tv_min_weight)
+                tvMaxWeight = convertView.findViewById(R.id.tv_max_weight)
+                tvMinHeight = convertView.findViewById(R.id.tv_min_height)
+                tvMaxHeight = convertView.findViewById(R.id.tv_max_height)
 
                 tvBirthTime?.setOnClickListener {
                     NumberPadTimePickerDialogFragment.newInstance(mListener).show((_context as AppCompatActivity).supportFragmentManager, "birth_time")
+                }
+
+                rangeHeightBar1?.setOnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
+                    tvMinHeight?.text = "$minValue"
+                    tvMaxHeight?.text = "$maxValue"
+                }
+
+                rangeWeightBar?.setOnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
+                    tvMinWeight?.text = "$minValue"
+                    tvMaxWeight?.text = "$maxValue"
                 }
 
                 setFieldValues()
@@ -998,8 +1062,8 @@ class SmartFilterAdapter(private val _context: Context,
                     tvMin1.text = "$minValue%"
                     tvMax1.text = "$maxValue%"
                 }
-
                 rangeUpdationBar?.setOnRangeSeekbarFinalValueListener({ minValue, maxValue -> Log.d("CRS=>", "$minValue : $maxValue") })
+
                 setFieldValues()
             }
             else -> {
@@ -1048,7 +1112,7 @@ class SmartFilterAdapter(private val _context: Context,
             spBg.text?.clear()
             tvBdate?.text=""
             tvMdate?.text=""
-            edtMosaad?.text?.clear()
+            tvExpired?.text = ""
             chkIsDonor?.isChecked=false
             chkIsRented?.isChecked=false
             chkIsExpired?.isChecked=false
@@ -1066,8 +1130,14 @@ class SmartFilterAdapter(private val _context: Context,
             chkIsSpect?.isChecked=false
             chkIsShani?.isChecked=false
             chkIsMangal?.isChecked=false
-            edtHeightMeter?.text?.clear()
-            edtWeightKg?.text?.clear()
+
+            rangeHeightBar1?.setMinStartValue(0f)
+            rangeHeightBar1?.setMaxStartValue(200f)
+            rangeHeightBar1?.apply()
+
+            rangeWeightBar?.setMinStartValue(0f)
+            rangeWeightBar?.setMaxStartValue(200f)
+            rangeWeightBar?.apply()
         }
         if(tvCreated!=null){
             tvCreated?.text=""
@@ -1178,6 +1248,9 @@ class SmartFilterAdapter(private val _context: Context,
             tvCreated?.text=date
         }else if(which==4){
             tvUpdated?.text=date
+        } else if (which == 5) {
+            tvExpired?.text = date
         }
+
     }
 }

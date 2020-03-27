@@ -203,7 +203,7 @@
     <string name="ss_sp_state" translatable="false">@string/state_id</string>
     <string name="ss_edt_bdate" translatable="false">@string/birth_date</string>
     <string name="ss_edt_mdate" translatable="false">@string/marriage_date</string>
-    <string name="ss_edt_mosad" translatable="false">mosaad_id</string>
+    <!--<string name="ss_edt_mosad" translatable="false">mosaad_id</string>-->
     <string name="ss_sp_education" translatable="false">@string/education_id</string>
     <string name="ss_sp_gotra" translatable="false">@string/gotra_id</string>
     <string name="ss_sp_bg" translatable="false">@string/blood_group</string>
@@ -216,8 +216,10 @@
     <string name="ss_sp_occupation" translatable="false">@string/occupation_id</string>
     <string name="ss_sp_activity" translatable="false">@string/current_activity_id</string>
     <string name="ss_edt_birth_time" translatable="false">@string/birth_time</string>
-    <string name="ss_edt_height_meter" translatable="false">@string/height</string>
-    <string name="ss_edt_weight_kg" translatable="false">@string/weight</string>
+    <string name="ss_min_height" translatable="false">@string/min_height</string>
+    <string name="ss_max_height" translatable="false">@string/max_height</string>
+    <string name="ss_min_weight" translatable="false">@string/min_weight</string>
+    <string name="ss_max_weight" translatable="false">@string/max_weight</string>
     <string name="ss_sp_bplace" translatable="false">@string/birth_place</string>
     <string name="ss_chk_is_spect" translatable="false">@string/is_spect</string>
     <string name="ss_chk_is_shani" translatable="false">@string/is_shani</string>
@@ -322,6 +324,10 @@
     <string name="birth_place" translatable="false">birth_place</string>
     <string name="hobby" translatable="false">hobby</string>
     <string name="expectation" translatable="false">expectation</string>
+    <string name="min_weight" translatable="false">min_weight</string>
+    <string name="max_weight" translatable="false">max_weight</string>
+    <string name="min_height" translatable="false">min_height</string>
+    <string name="max_height" translatable="false">max_height</string>
     <string name="weight" translatable="false">weight</string>
     <string name="height" translatable="false">height</string>
     <string name="matrimony" translatable="false">matrimony</string>
@@ -647,7 +653,7 @@
     <string name="heightPopup">Height :</string>
     <string name="meterPopup">Meter</string>
     <string name="weightPopup">Weight :</string>
-    <string name="kgPopup">Kg</string>
+    <string name="kgPopup">(kg)</string>
     <string name="created_datePopup">Created Date :</string>
     <string name="updated_datePopup">Updated Date :</string>
     <string name="is_donorPopup">is Donor?</string>
@@ -659,7 +665,8 @@
     <string name="percentagePopup">Percentage :</string>
     <string name="_0Popup">0%</string>
     <string name="_100Popup">100%</string>
-
+    <string name="_0" translatable="false">0</string>
+    <string name="_200Popup" translatable="false">200</string>
 
     <!-- ViewPager Fragment -->
 
@@ -712,7 +719,7 @@
     <string name="update_pin">Update PIN</string>
 
     <!-- ContactUs Fragment -->
-    <string name="contact_us">Contact Us</string>
+    <string name="contact_us">Let us know</string>
     <string name="you_can_contact_us_on_various_platform_and_also_send_your_feedback_with_us">You can contact us on various platform and also send your feedback with us</string>
     <string name="type_your_message">Type Your Message...</string>
     <string name="send_now">Send Now</string>
@@ -756,7 +763,7 @@
     <string name="birthtime">BirthTime</string>
     <string name="birthplace">BirthPlace</string>
     <string name="hh_mm_with_24_hours">HH:MM with 24 Hours</string>
-    <string name="meter">Meter</string>
+    <string name="meter">(cm)</string>
     <string name="spectacles">Spectacles</string>
     <string name="mangal">Mangal</string>
     <string name="shani">Shani</string>
@@ -957,9 +964,9 @@
     <string name="retry">Retry</string>
     <string name="coming_soon">Working on it</string>
     <string name="admin_only">For Admin only</string>
-    <string name="contact_number">9427051418</string>
-    <string name="fb_url" translatable="false">https://www.facebook.com/kunjanrshah87</string>
-    <string name="linkedin_url" translatable="false">https://www.linkedin.com/in/kunjan-shah-76901b6a/</string>
+    <string name="contact_number">9377133222</string> <!--9427051418-->
+    <string name="fb_url" translatable="false">https://www.facebook.com/MEHBOOBGHANCHI</string> <!--https://www.facebook.com/kunjanrshah87-->
+    <string name="linkedin_url" translatable="false">""</string> <!--https://www.linkedin.com/in/kunjan-shah-76901b6a/-->
 
     <string name="mobile_not_available">Mobile not available</string>
     <string name="email_not_available">Email not available</string>
@@ -1000,11 +1007,11 @@
     <string name="selectstatus">Select Status</string>
     <string name="selectsurname">Select your Surname</string>
 
-    <string name="kunjanrshah">kunjanrshah</string>
-    <string name="dev_email">kunjanrshah@gmail.com</string>
-    <string name="dev_gmail_subject">Mobile App development</string>
-    <string name="dev_content">Hi Kunjan</string>
-    <string name="dev_link">http://www.google.com</string>
+    <string name="kunjanrshah">9377133222</string> <!-- kunjanrshah-->
+    <string name="dev_email">saraoffsetprinters@gmail.com</string>
+    <string name="dev_gmail_subject">@string/app_name</string>
+    <string name="dev_content">Hello</string>
+    <string name="dev_link">https://muslimghanchi.org</string>
     <string name="expo">Exporting</string>
     <string name="families">Families:</string>
     <string name="mem">Members:</string>
@@ -1038,7 +1045,7 @@
     <string name="is_mangalDetails">is Mangal?</string>
     <string name="profile_created_date">Profile Created Date</string>
     <string name="profile_updated_date">Profile Updated Date</string>
-    <string name="profile_updatation_percentage">Profile updatation Percentage</string>
+    <string name="profile_updatation_percentage">Profile update</string>
 
     <string name="headn">Head Name</string>
     <string name="local_communitydetails">Local Community</string>

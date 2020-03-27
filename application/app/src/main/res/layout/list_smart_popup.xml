@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
         android:orientation="horizontal">
 
         <EditText
@@ -24,7 +24,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:hint="@string/filter_name"
             android:paddingStart="10dp"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:singleLine="true"
             android:textAlignment="center"
             android:textSize="14sp"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:fontFamily="@font/montserrat_regular"
             android:gravity="center"
             android:text="@string/save"
@@ -47,7 +47,7 @@
             android:id="@+id/btnApply"
             android:layout_width="70dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:background="@drawable/round_corner_primary"
             android:textColor="@color/white"
             android:fontFamily="@font/montserrat_semibold"
@@ -60,9 +60,9 @@
         android:id="@+id/flexbox_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_weight="1"
         app:alignContent="stretch"
         app:alignItems="stretch"
@@ -219,7 +219,7 @@
                 android:id="@+id/sp_surname"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -267,7 +267,7 @@
                 android:id="@+id/sp_samaj"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -316,7 +316,7 @@
                 android:id="@+id/sp_gender"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -364,7 +364,7 @@
                 android:id="@+id/sp_marital"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -412,7 +412,7 @@
                 android:id="@+id/sp_native"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -460,7 +460,7 @@
                 android:id="@+id/sp_city"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -508,7 +508,7 @@
                 android:id="@+id/sp_state"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -556,7 +556,7 @@
                 android:id="@+id/sp_education"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -604,7 +604,7 @@
                 android:id="@+id/sp_gotra"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -652,7 +652,7 @@
                 android:id="@+id/sp_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -700,7 +700,7 @@
                 android:id="@+id/sp_main_cat"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -748,7 +748,7 @@
                 android:id="@+id/sp_sub_cat"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -796,7 +796,7 @@
                 android:id="@+id/sp_occupation"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -844,7 +844,7 @@
                 android:id="@+id/sp_activity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
@@ -873,6 +873,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:padding="5dp"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
@@ -881,7 +882,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-
                 android:orientation="vertical">
 
                 <TextView
@@ -921,7 +921,7 @@
                         android:id="@+id/textMin1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:textSize="14sp"
                         android:fontFamily="@font/montserrat_medium"
@@ -933,7 +933,7 @@
                         android:textSize="14sp"
                         android:fontFamily="@font/montserrat_medium"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="15dp"
+                        android:layout_marginEnd="15dp"
                         android:gravity="right"
                         android:text="@string/age_100" />
 
@@ -975,6 +975,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1015,6 +1016,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1055,6 +1057,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1095,6 +1098,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1135,6 +1139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1177,6 +1182,7 @@
                 android:background="@null"
                 android:inputType="number"
                 android:maxLength="6"
+                android:layout_marginStart="5dp"
                 android:digits="0123456789"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -1219,7 +1225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:layout_marginLeft="3dp"
+                android:layout_marginStart="3dp"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -1261,7 +1267,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:layout_marginLeft="3dp"
+                android:layout_marginStart="3dp"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -1279,9 +1285,8 @@
 
         </LinearLayout>
 
-
         <LinearLayout
-            android:id="@+id/ll_mosad"
+            android:id="@+id/ll_expire"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
@@ -1295,12 +1300,13 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="@string/wife_nativePopup"
+                android:text="Expire on: "
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/edt_mosad"
+            <TextView
+                android:id="@+id/tv_expire"
+                android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
@@ -1344,6 +1350,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1384,6 +1391,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1424,6 +1432,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1442,100 +1451,163 @@
 
         <LinearLayout
             android:id="@+id/ll_height"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:layout_marginStart="5dp"
+            android:padding="5dp"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="@string/heightPopup"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edt_height_meter"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@null"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="center"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="25dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Height (cm)"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="@string/meterPopup"
-                android:textSize="14sp" />
+                <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                    android:id="@+id/rangeHeightBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    app:bar_color="#C0C0C0"
+                    app:bar_highlight_color="#A9A9A9"
+                    app:corner_radius="10"
+                    app:data_type="_integer"
+                    app:gap="10"
+                    app:left_thumb_color="#808080"
+                    app:left_thumb_color_pressed="#696969"
+                    app:max_start_value="200"
+                    app:max_value="200"
+                    app:min_start_value="0"
+                    app:min_value="0"
+                    app:right_thumb_color="#808080"
+                    app:right_thumb_color_pressed="#696969" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_min_height"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_weight="1"
+                        android:text="@string/_0" />
+
+                    <TextView
+                        android:id="@+id/txt_max_height"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="@string/_200Popup" />
+
+                </LinearLayout>
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/img_height_close"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="right|center_vertical"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_weight"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:layout_marginStart="10dp"
+            android:padding="5dp"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="@string/weightPopup"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edt_weight_kg"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@null"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="center"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="25dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Weight (kg)"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="@string/kgPopup"
-                android:textSize="14sp" />
+                <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                    android:id="@+id/rangeWeightBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bar_color="#C0C0C0"
+                    app:bar_highlight_color="#A9A9A9"
+                    app:corner_radius="10"
+                    app:data_type="_integer"
+                    app:gap="10"
+                    app:left_thumb_color="#808080"
+                    app:left_thumb_color_pressed="#696969"
+                    app:max_value="200"
+                    app:min_value="0"
+                    app:right_thumb_color="#808080"
+                    app:right_thumb_color_pressed="#696969" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_min_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_weight="1"
+                        android:text="@string/_0" />
+
+                    <TextView
+                        android:id="@+id/txt_max_weight"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="@string/_200Popup" />
+
+                </LinearLayout>
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/img_weight_close"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="right|center_vertical"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_pop_item"
                 android:padding="5dp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -1562,7 +1634,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:layout_marginLeft="3dp"
+                android:layout_marginStart="3dp"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -1601,10 +1673,10 @@
 
             <TextView
                 android:id="@+id/tv_updated"
-                android:layout_marginLeft="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:layout_marginStart="5dp"
                 android:gravity="center_vertical"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -1801,6 +1873,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:padding="5dp"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
             android:visibility="gone">

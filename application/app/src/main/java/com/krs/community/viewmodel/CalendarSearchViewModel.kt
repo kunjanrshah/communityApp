@@ -6,12 +6,10 @@ import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByFilterListener
-import com.krs.community.listeners.GetRemindersListener
-import com.krs.community.listeners.ILoginListener
+import com.krs.community.listeners.ReminderListener
 import com.krs.community.repositories.CalendarSearchRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-
 import kotlinx.coroutines.*
 
 class CalendarSearchViewModel(
@@ -21,8 +19,7 @@ class CalendarSearchViewModel(
     private var TAG: String = CalendarSearchViewModel::class.java.simpleName
     private lateinit var completableJob: CompletableJob
     lateinit var mByFilterListener: ByFilterListener
-    lateinit var mByILoginListener: ILoginListener
-    lateinit var getRemindersListener:GetRemindersListener
+    lateinit var mReminderListener: ReminderListener
 
     fun getListCityName(): LiveData<List<String>> {
         return mCalendarSearchRepository.getListCityName()
@@ -78,7 +75,7 @@ class CalendarSearchViewModel(
         }
     }
 
-    fun getCalendarreminder(jsonObject: JsonObject) {
+    fun setReminder(jsonObject: JsonObject) {
         completableJob = Job()
         completableJob.let { thejob ->
 
@@ -87,23 +84,22 @@ class CalendarSearchViewModel(
                     val response = mCalendarSearchRepository.setReminder(jsonObject)
                     response.let {
                         withContext(Dispatchers.Main) {
-
-                            mByILoginListener.userLogin(response)
+                            mReminderListener.reminderResponse(response)
                             thejob.complete()
                         }
                         return@launch
                     }
                 } catch (e: ApiException) {
                     e.message?.let {
-                        mByILoginListener.getFailure(it)
+                        mReminderListener.getFailure(it)
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
-                        mByILoginListener.getFailure(it)
+                        mReminderListener.getFailure(it)
                     }
                 } catch (e: Exception) {
                     e.message?.let {
-                        mByILoginListener.getFailure(it)
+                        mReminderListener.getFailure(it)
                     }
                 }
                 thejob.complete()
@@ -111,36 +107,4 @@ class CalendarSearchViewModel(
         }
     }
 
-    fun GetReminders(jsonObject: JsonObject) {
-        completableJob = Job()
-        completableJob.let { thejob ->
-
-            CoroutineScope(Dispatchers.IO + thejob).launch {
-                try {
-                    val response = mCalendarSearchRepository.GetReminder(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-
-                            getRemindersListener.userReminders(response)
-                            thejob.complete()
-                        }
-                        return@launch
-                    }
-                } catch (e: ApiException) {
-                    e.message?.let {
-                        getRemindersListener.getFailure(it)
-                    }
-                } catch (e: NoInternetException) {
-                    e.message?.let {
-                        getRemindersListener.getFailure(it)
-                    }
-                } catch (e: Exception) {
-                    e.message?.let {
-                        getRemindersListener.getFailure(it)
-                    }
-                }
-                thejob.complete()
-            }
-        }
-    }
 }

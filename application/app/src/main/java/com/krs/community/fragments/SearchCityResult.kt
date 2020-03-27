@@ -310,6 +310,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         tvCount = header.findViewById(R.id.tv_count)
 
         val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
+        ivAtoz.visibility = View.VISIBLE
         ivAtoz.setOnClickListener { v ->
             val adapter = AtoZBottomAdapter(context)
             adapter.setmISortingRecords(this)

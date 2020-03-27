@@ -1737,7 +1737,7 @@ public class Utility {
         } catch (ActivityNotFoundException e) {
             Log.e("SKYPE CALL", "Skype failed", e);
         }
-        Toast.makeText(ctx, number, Toast.LENGTH_LONG).show();
+        //  Toast.makeText(ctx, number, Toast.LENGTH_LONG).show();
     }
 
     private static void shareImage(File file, Context context) {

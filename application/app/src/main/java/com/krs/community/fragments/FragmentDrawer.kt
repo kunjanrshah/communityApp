@@ -28,6 +28,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
+import com.krs.community.activity.ContactUsActivity
 import com.krs.community.adapter.NavigationDrawerAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -134,7 +135,8 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         }
         tvContactUs.setOnClickListener { v: View? ->
             mDrawerLayout!!.closeDrawers()
-            Utility.movetoFragment(activity, ContactUsFragment())
+            val intent = Intent(activity, ContactUsActivity::class.java)
+            startActivity(intent)
         }
         val adapter = NavigationDrawerAdapter(activity, data)
         recyclerView.adapter = adapter

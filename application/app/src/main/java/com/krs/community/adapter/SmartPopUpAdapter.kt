@@ -3,7 +3,6 @@ package com.krs.community.adapter
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +42,9 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
 
             convertView = mInflater.inflate(R.layout.list_smart_popup, null)
             viewHolder = PopUpViewHolder(convertView)
+
             convertView.tag = viewHolder
+
             for ((key, value1) in mapChildValues) {
                 val value = value1.trim { it <= ' ' }
                 println("$key = $value1")
@@ -190,10 +191,10 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         }
 
                     }
-                } else if (key.equals(_context.resources.getString(R.string.ss_edt_mosad), ignoreCase = true)) {
+                } else if (key.equals(_context.resources.getString(R.string.expire_date), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
-                        viewHolder.llMosad.visibility = View.VISIBLE
-                        viewHolder.edtMosad.setText(value1)
+                        viewHolder.llExpire.visibility = View.VISIBLE
+                        viewHolder.tvExpire.text = value1
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_sp_education), ignoreCase = true)) {
                     if (value.isNotEmpty() && !value.equals(_context.getString(R.string.ss_education), ignoreCase = true)) {
@@ -291,7 +292,25 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         viewHolder.llBplace.visibility = View.VISIBLE
                         viewHolder.edtBplace.setText(value1)
                     }
-                } else if (key.equals(_context.resources.getString(R.string.ss_edt_height_meter), ignoreCase = true)) {
+                } else if (key.equals(_context.resources.getString(R.string.ss_min_height), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.rangeHeightBar.setMinStartValue(value.toInt().toFloat()).apply()
+                    }
+                } else if (key.equals(_context.resources.getString(R.string.ss_max_height), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.rangeHeightBar.setMaxStartValue(value.toInt().toFloat()).apply()
+                    }
+                } else if (key.equals(_context.resources.getString(R.string.ss_min_weight), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.rangeWeightBar.setMinStartValue(value.toInt().toFloat()).apply()
+                    }
+                } else if (key.equals(_context.resources.getString(R.string.ss_max_weight), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.rangeWeightBar.setMaxStartValue(value.toInt().toFloat()).apply()
+                    }
+                }
+
+                /*else if (key.equals(_context.resources.getString(R.string.ss_edt_height_meter), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llHeight.visibility = View.VISIBLE
                         viewHolder.edtHeightMeter.setText(value1)
@@ -301,7 +320,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         viewHolder.llWeight.visibility = View.VISIBLE
                         viewHolder.edtWeightKg.setText(value1)
                     }
-                } else if (key.equals(_context.resources.getString(R.string.ss_chk_is_shani), ignoreCase = true)) {
+                }*/ else if (key.equals(_context.resources.getString(R.string.ss_chk_is_shani), ignoreCase = true)) {
                     if (value.equals("true", ignoreCase = true)) {
                         viewHolder.llIsshani.visibility = View.VISIBLE
                         viewHolder.chkIsShani.isChecked = true
@@ -361,7 +380,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
             lp.flexGrow = 1.0f
             lp.alignSelf = AlignItems.FLEX_START
             view.layoutParams = lp
-            // set listener
+
             viewHolder.rangeAgeBar.setOnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
                 if (minValue.toInt() > 0 || maxValue.toInt() < 100) {
                     viewHolder.llAge.visibility = View.VISIBLE
@@ -369,9 +388,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                     viewHolder.tvMax.text = "Age $maxValue"
                 }
             }
-            // set final value listener
-            viewHolder.rangeAgeBar.setOnRangeSeekbarFinalValueListener { minValue: Number, maxValue: Number -> Log.d("CRS=>", "$minValue : $maxValue") }
-            // set listener
+
             viewHolder.rangeUpdationBar.setOnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
                 if (minValue.toInt() > 0 || maxValue.toInt() < 100) {
                     viewHolder.llPercentage.visibility = View.VISIBLE
@@ -379,8 +396,24 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                     viewHolder.tvMaxPer.text = "$maxValue%"
                 }
             }
-            // set final value listener
-            viewHolder.rangeAgeBar.setOnRangeSeekbarFinalValueListener { minValue: Number, maxValue: Number -> Log.d("CRS=>", "$minValue : $maxValue") }
+
+
+            viewHolder.rangeHeightBar.setOnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
+                if (minValue.toInt() > 0 || maxValue.toInt() < 200) {
+                    viewHolder.llHeight.visibility = View.VISIBLE
+                    viewHolder.txtMinHeight.text = "$minValue"
+                    viewHolder.txtMaxHeight.text = "$maxValue"
+                }
+            }
+
+            viewHolder.rangeWeightBar.setOnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
+                if (minValue.toInt() > 0 || maxValue.toInt() < 200) {
+                    viewHolder.llWeight.visibility = View.VISIBLE
+                    viewHolder.txtMinWeight.text = "$minValue"
+                    viewHolder.txtMaxWeight.text = "$maxValue"
+                }
+            }
+
         } else {
             viewHolder = convertView.tag as PopUpViewHolder
         }
@@ -403,7 +436,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         viewHolder.imgStateClose.setOnClickListener { v: View? -> viewHolder.llState.visibility = View.GONE }
         viewHolder.imgBdateClose.setOnClickListener { v: View? -> viewHolder.llBirthDate.visibility = View.GONE }
         viewHolder.imgMdateClose.setOnClickListener { v: View? -> viewHolder.llMdate.visibility = View.GONE }
-        viewHolder.imgMosadClose.setOnClickListener { v: View? -> viewHolder.llMosad.visibility = View.GONE }
+        viewHolder.imgMosadClose.setOnClickListener { v: View? -> viewHolder.llExpire.visibility = View.GONE }
         viewHolder.imgEducationClose.setOnClickListener { v: View? -> viewHolder.llEducation.visibility = View.GONE }
         viewHolder.imgGotraClose.setOnClickListener { v: View? -> viewHolder.llGotra.visibility = View.GONE }
         viewHolder.imgBgClose.setOnClickListener { v: View? -> viewHolder.llBg.visibility = View.GONE }
@@ -659,8 +692,8 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
             if (viewHolder.llMdate.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_edt_mdate), Utility.changeDateFormat(viewHolder.tvMdate.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
-            if (viewHolder.llMosad.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_mosad), viewHolder.edtMosad.text.toString().trim { it <= ' ' })
+            if (viewHolder.llExpire.isShown) {
+                lstValues.put(_context.resources.getString(R.string.expire_date), viewHolder.tvExpire.text.toString().trim { it <= ' ' })
             }
 
             if (viewHolder.llBg.isShown) {
@@ -686,20 +719,23 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 lstValues.put(_context.resources.getString(R.string.ss_sp_bplace), viewHolder.edtBplace.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llIsspect.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_spect), viewHolder.chkIsSpect.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_spect), viewHolder.chkIsSpect.isChecked)
             }
             if (viewHolder.llIsshani.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_shani), viewHolder.chkIsShani.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_shani), viewHolder.chkIsShani.isChecked)
             }
             if (viewHolder.llIsmangal.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_mangal), viewHolder.chkIsMangal.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_mangal), viewHolder.chkIsMangal.isChecked)
             }
             if (viewHolder.llHeight.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_height_meter), viewHolder.edtHeightMeter.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_max_height), viewHolder.rangeHeightBar.selectedMaxValue.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_min_height), viewHolder.rangeHeightBar.selectedMinValue.toString().trim { it <= ' ' })
             }
             if (viewHolder.llWeight.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_edt_weight_kg), viewHolder.edtWeightKg.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_max_weight), viewHolder.rangeWeightBar.selectedMaxValue.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_min_weight), viewHolder.rangeWeightBar.selectedMinValue.toString().trim { it <= ' ' })
             }
+
             if (viewHolder.llCreated.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_edt_created), Utility.changeDateFormat(viewHolder.tvCreated.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
@@ -796,7 +832,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var llState: LinearLayout = view.findViewById(R.id.ll_state)
         var llBirthDate: LinearLayout = view.findViewById(R.id.ll_birth_date)
         var llMdate: LinearLayout = view.findViewById(R.id.ll_mdate)
-        var llMosad: LinearLayout = view.findViewById(R.id.ll_mosad)
+        var llExpire: LinearLayout = view.findViewById(R.id.ll_expire)
         var llEducation: LinearLayout = view.findViewById(R.id.ll_education)
         var llGotra: LinearLayout = view.findViewById(R.id.ll_gotra)
         var llBg: LinearLayout = view.findViewById(R.id.ll_bg)
@@ -813,8 +849,17 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var llIsspect: LinearLayout = view.findViewById(R.id.ll_isSpect)
         var llIsshani: LinearLayout = view.findViewById(R.id.ll_isShani)
         var llIsmangal: LinearLayout = view.findViewById(R.id.ll_isMangal)
+
         var llHeight: LinearLayout = view.findViewById(R.id.ll_height)
+        var rangeHeightBar: CrystalRangeSeekbar = view.findViewById(R.id.rangeHeightBar)
+        var txtMinHeight: TextView = view.findViewById(R.id.txt_min_height)
+        var txtMaxHeight: TextView = view.findViewById(R.id.txt_max_height)
+
         var llWeight: LinearLayout = view.findViewById(R.id.ll_weight)
+        var rangeWeightBar: CrystalRangeSeekbar = view.findViewById(R.id.rangeWeightBar)
+        var txtMinWeight: TextView = view.findViewById(R.id.txt_min_weight)
+        var txtMaxWeight: TextView = view.findViewById(R.id.txt_max_weight)
+
         var llCreated: LinearLayout = view.findViewById(R.id.ll_created)
         var llUpdated: LinearLayout = view.findViewById(R.id.ll_updated)
         var llPercentage: LinearLayout = view.findViewById(R.id.ll_percentage)
@@ -830,13 +875,11 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var tvMdate: TextView = view.findViewById(R.id.tv_mdate)
         var edtOffice: EditText = view.findViewById(R.id.edt_office)
         var edtBtime: EditText = view.findViewById(R.id.edt_btime)
-        var edtHeightMeter: EditText = view.findViewById(R.id.edt_height_meter)
-        var edtWeightKg: EditText = view.findViewById(R.id.edt_weight_kg)
         var tvUpdated: TextView = view.findViewById(R.id.tv_updated)
         var tvCreated: TextView = view.findViewById(R.id.tv_created)
         var edtArea: EditText = view.findViewById(R.id.edt_area)
         var edtBplace: EditText = view.findViewById(R.id.edt_bplace)
-        var edtMosad: EditText = view.findViewById(R.id.edt_mosad)
+        var tvExpire: TextView = view.findViewById(R.id.tv_expire)
 
         var spSurname: JRSpinner = view.findViewById(R.id.sp_surname)
         var spSamaj: JRSpinner = view.findViewById(R.id.sp_samaj)
@@ -852,7 +895,6 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var spSubCat: JRSpinner = view.findViewById(R.id.sp_sub_cat)
         var spOccupation: JRSpinner = view.findViewById(R.id.sp_occupation)
         var spActivity: JRSpinner = view.findViewById(R.id.sp_activity)
-
         var rangeAgeBar: CrystalRangeSeekbar = view.findViewById(R.id.rangeSeekbar)
         var rangeUpdationBar: CrystalRangeSeekbar = view.findViewById(R.id.rangeUpdationBar)
         var tvMin: TextView = view.findViewById(R.id.textMin1)

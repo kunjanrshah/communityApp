@@ -406,7 +406,8 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override suspend fun getFailure(message: String) {
         hideSweetProgress()
-        binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
+        Utility.displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.went_wrong))
+        //   binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 
@@ -419,7 +420,8 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override suspend fun onFailure(message: String) {
         hideSweetProgress()
-        binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
+        Utility.displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.went_wrong))
+        // binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 

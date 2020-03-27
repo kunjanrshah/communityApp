@@ -59,8 +59,8 @@
                         android:id="@+id/icon_profile1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:adjustViewBounds="true"/>
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY" />
 
                     <TextView
                         android:id="@+id/icon_text1"
@@ -87,19 +87,19 @@
             <ImageView
                 android:id="@+id/icon_star"
                 android:layout_width="25dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center_horizontal"
                 android:layout_height="25dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="-5dp"
+                android:layout_marginRight="5dp"
                 android:tint="@color/icon_tint_normal" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:fontFamily="@font/montserrat_semibold"
                 android:gravity="center|top"
-                android:layout_marginTop="5dp"
                 android:text="Events"
                 android:textColor="@color/material_blue_500"
                 android:textSize="14sp" />
@@ -127,37 +127,53 @@
                     <TextView
                         android:id="@+id/tv_name"
                         android:layout_width="match_parent"
-                        android:singleLine="true"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Kunjan Patel"
+                        android:hint="name"
+                        android:singleLine="true"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:singleLine="true"
                         android:id="@+id/tv_area"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Maninagar, Ahmedabad"
+                        android:hint="Area, City"
+                        android:singleLine="true"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_role"
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/round_corner_blue"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:gravity="center"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/memberCalendar"
-                    android:singleLine="true"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_role"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/round_corner_blue"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:hint="Member"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+
+                    <com.krs.community.app.NotificationBadge
+                        android:id="@+id/badge"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_alignTop="@id/tv_role"
+                        android:layout_marginLeft="-16dp"
+                        android:layout_marginTop="-8dp"
+                        android:layout_toRightOf="@id/tv_role"
+                        app:nbBackground="@drawable/badge_bg_with_shadow"
+                        app:nbMaxTextLength="2" />
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -195,9 +211,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
-                        android:singleLine="true"
+                        android:autoLink="email|web"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="kunjanshah@gmail.com"
+                        android:hint="email address"
+                        android:singleLine="true"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -228,25 +245,12 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:fontFamily="@font/montserrat_medium"
+                            android:hint="mobile"
                             android:singleLine="true"
-                            android:text="9825450261"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="16sp" />
 
                     </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:id="@+id/imgReminder"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/bell_border"
-                        android:padding="10dp"
-                        android:tint="@color/icon_tint_normal"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -262,38 +266,85 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/tv_event1"
+                <LinearLayout
+                    android:id="@+id/ll_event1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:textColor="@color/black1"
-                    android:textSize="14sp" />
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/tv_event2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:textColor="@color/black1"
-                    android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tv_event1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/black1"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/tv_event3"
+                    <ImageView
+                        android:id="@+id/imgReminder1"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/bell_border"
+                        android:padding="10dp"
+                        android:tint="@color/icon_tint_normal" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_event2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:textColor="@color/black1"
-                    android:textSize="14sp" />
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_event2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/black1"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/imgReminder2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/bell_border"
+                        android:padding="10dp"
+                        android:tint="@color/icon_tint_normal" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_event3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_event3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:textColor="@color/black1"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/imgReminder3"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/bell_border"
+                        android:padding="10dp"
+                        android:tint="@color/icon_tint_normal" />
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

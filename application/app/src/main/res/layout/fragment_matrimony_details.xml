@@ -283,8 +283,7 @@
                             android:text="@string/kgPopup"
                             android:fontFamily="@font/montserrat_semibold"
                             android:layout_marginLeft="3dp"
-                            android:layout_gravity="bottom"
-                             />
+                            android:layout_gravity="bottom" />
 
                     </LinearLayout>
 
