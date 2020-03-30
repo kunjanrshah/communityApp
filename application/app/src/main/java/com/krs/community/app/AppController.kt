@@ -191,8 +191,10 @@ class AppController : Application(), KodeinAware {
         retrofitBase = RetrofitBase(this, false)
         Fresco.initialize(applicationContext)
 
-        val fabric = Fabric.Builder(this).kits(Crashlytics()).debuggable(true).build()
-        Fabric.with(fabric)
+        Fabric.with(this, Crashlytics())
+
+        /* val fabric = Fabric.Builder(this).kits(Crashlytics()).debuggable(true).build()
+         Fabric.with(fabric)*/
 
         MultiDex.install(this)
 

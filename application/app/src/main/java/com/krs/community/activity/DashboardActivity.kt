@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.crashlytics.android.Crashlytics
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.GetLocationDetail
 import com.example.easywaylocation.Listener
@@ -303,10 +304,24 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         return true
     }
 
+    private fun logUser(member: Member) {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(member.id)
+        Crashlytics.setUserEmail(member.emailAddress)
+        Crashlytics.setUserName(member.firstName)
+    }
+
+
+
     private fun loadProfile() {
         val memberString = Guru.getString(getString(R.string.loginMember), "")
         val member = Gson().fromJson(memberString, Member::class.java)
         val str = resources.getString(R.string.base_url_thumb) + member?.profilePic
+
+
+        logUser(member)
+
 
         Glide.with(this)
                 .load(str)

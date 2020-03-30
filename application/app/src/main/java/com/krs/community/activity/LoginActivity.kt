@@ -26,6 +26,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
+import com.crashlytics.android.Crashlytics
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -295,8 +296,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             }
 
             binding.ivHelp.setOnClickListener {
-                val intent = Intent(this, ContactUsActivity::class.java)
-                startActivity(intent)
+                forceCrash()
+                /*val intent = Intent(this, ContactUsActivity::class.java)
+                startActivity(intent)*/
             }
 
             binding.btnContinue.setOnClickListener { v ->
@@ -344,6 +346,11 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 }
             })
         }
+    }
+
+    private fun forceCrash() {
+        Crashlytics.getInstance().crash(); // Force a crash
+        throw RuntimeException("This is a crash by kunjan")
     }
 
     private fun startSMSListener() {

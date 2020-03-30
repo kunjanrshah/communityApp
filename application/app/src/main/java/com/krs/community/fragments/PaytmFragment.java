@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -20,11 +19,7 @@ import com.krs.community.app.AppController;
 import com.krs.community.model.Checksum;
 import com.krs.community.model.Paytm;
 import com.krs.community.utils.WebServiceCaller;
-import com.paytm.pgsdk.PaytmOrder;
-import com.paytm.pgsdk.PaytmPGService;
-import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -86,7 +81,7 @@ public class PaytmFragment extends Fragment {
             @Override
             public void onResponse(Call<Checksum> call, Response<Checksum> response) {
                 if (response.isSuccessful()) {
-                    processToPay(response.body().getChecksumHash(), paytm);
+                    // processToPay(response.body().getChecksumHash(), paytm);
                 }
             }
 
@@ -99,7 +94,7 @@ public class PaytmFragment extends Fragment {
 
     }
 
-    private void processToPay(String checksumHash, Paytm paytm) {
+   /* private void processToPay(String checksumHash, Paytm paytm) {
 
         Log.e("MAINACTIVITY", "checkSum----" + checksumHash);
         PaytmPGService Service = PaytmPGService.getStagingService();
@@ -121,7 +116,7 @@ public class PaytmFragment extends Fragment {
         Service.initialize(Order, null);
 
         Service.startPaymentTransaction(getContext(), true, true, new PaytmPaymentTransactionCallback() {
-            /*Call Backs*/
+            *//*Call Backs*//*
             public void someUIErrorOccurred(String inErrorMessage) {
             }
 
@@ -150,7 +145,7 @@ public class PaytmFragment extends Fragment {
             }
         });
 
-    }
+    }*/
 
     private String generateString() {
         String uuid = UUID.randomUUID().toString();

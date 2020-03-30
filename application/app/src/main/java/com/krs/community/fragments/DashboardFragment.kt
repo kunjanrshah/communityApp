@@ -354,8 +354,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
 
                     11 -> {
-                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                        return@setOnClickListener
                         if (loginMember.role != getString(R.string.User)) {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
