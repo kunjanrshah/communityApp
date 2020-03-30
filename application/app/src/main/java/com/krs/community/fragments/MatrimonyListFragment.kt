@@ -79,7 +79,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_matrimonylist, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, MatrimonyListFragment::class.simpleName)
         mApp.facebookAnalytics(context, MatrimonyListFragment::class.simpleName)
 

@@ -11,7 +11,7 @@ import com.krs.community.entities.SubCommunity
 interface SubCommunityDao {
 
     @Query("SELECT * FROM SubCommunity")
-    fun getSubCommunity() : LiveData<List<SubCommunity>>
+    fun getSubCommunity(): LiveData<List<SubCommunity>>
 
     @Query("SELECT COUNT(id) FROM SubCommunity")
     fun getSubCommunityCount(): Int
@@ -20,17 +20,17 @@ interface SubCommunityDao {
     fun getSubCommName(): LiveData<List<String>>
 
     @Query("SELECT name FROM SubCommunity WHERE id=:id")
-    fun getSubCommunityName(id:String) : String
+    fun getSubCommunityName(id: String): String
 
     @Query("SELECT id FROM SubCommunity WHERE name=:name")
-    fun getSubCommIdByName(name:String) : Int
+    fun getSubCommIdByName(name: String): Int
 
     @Query("SELECT id FROM SubCommunity WHERE id NOT IN (:Ids)")
-    fun getRemovedSubCommunityIds(Ids: List<String>) : List<Int>
+    fun getRemovedSubCommunityIds(Ids: List<String>): List<Int>
 
     @Query("DELETE FROM SubCommunity WHERE id IN (:Ids)")
-    fun deleteSubCommunityByIds(Ids: List<Int>) : Int
+    fun deleteSubCommunityByIds(Ids: List<Int>): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllSubCommunities(subCommunity : List<SubCommunity>)
+    fun saveAllSubCommunities(subCommunity: List<SubCommunity>)
 }

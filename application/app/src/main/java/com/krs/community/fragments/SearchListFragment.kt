@@ -321,12 +321,18 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 searchWord = ""
                 if (lstKeyword.size > 0) {
                     lstKeyword.removeAt(index)
-                    if (lstKeyword.size == 1) {
-                        searchWord = lstKeyword[0]
-                    } else if (lstKeyword.size == index) {
-                        searchWord = lstKeyword[index - 1]
-                    } else {
-                        searchWord = lstKeyword[index]
+                    if (lstKeyword.size > 0) {
+                        searchWord = when (lstKeyword.size) {
+                            1 -> {
+                                lstKeyword[0]
+                            }
+                            index -> {
+                                lstKeyword[index - 1]
+                            }
+                            else -> {
+                                lstKeyword[index]
+                            }
+                        }
                     }
                 }
                 if (searchWord.isNotEmpty()) {
@@ -494,7 +500,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             mShimmerViewContainer.stopShimmerAnimation()
             mShimmerViewContainer.visibility = View.GONE
 
-          //  val gif: Int = R.drawable.gif_no_record
+            //  val gif: Int = R.drawable.gif_no_record
             val gif: Int = R.drawable.gif_no_record
             TTFancyGifDialog.Builder(activity)
                     //.setTitle(getString(R.string.you_sure))

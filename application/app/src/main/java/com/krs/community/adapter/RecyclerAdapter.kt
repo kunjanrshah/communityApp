@@ -22,10 +22,10 @@ import com.krs.community.utils.inflate
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_list_search.*
 
-class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentActivity?,
-                                                       var messages: java.util.ArrayList<Message>,
-                                                       var itemClickListener: ItemClickListener? = null,
-                                                       var onClickListener: View.OnClickListener? = null, var listener: RecyclerAdapterListener? = null)
+class RecyclerAdapter<messages1 : MutableList<Message>>(var mContext: FragmentActivity?,
+                                                        var messages: java.util.ArrayList<Message>,
+                                                        var itemClickListener: ItemClickListener? = null,
+                                                        var onClickListener: View.OnClickListener? = null, var listener: RecyclerAdapterListener? = null)
     : RecyclerView.Adapter<RecyclerAdapter.BaseViewHolder.CardViewHolder<MutableList<Message>>>() {
 
     private var selectedItems: SparseBooleanArray? = SparseBooleanArray()
@@ -61,8 +61,8 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
         holder.itemView.isActivated = selectedItems!!.get(position, false)
 
         val message = messages.get(position)
-        applyProfilePicture(holder,message)
-        applyIconAnimation(holder,position)
+        applyProfilePicture(holder, message)
+        applyIconAnimation(holder, position)
         applyClickEvents(holder, position)
     }
 
@@ -70,7 +70,7 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
         fun itemClick(id: Int)
     }
 
-    abstract class BaseViewHolder<messages: MutableList<Message>>(view: View) : RecyclerView.ViewHolder(view), LayoutContainer {
+    abstract class BaseViewHolder<messages : MutableList<Message>>(view: View) : RecyclerView.ViewHolder(view), LayoutContainer {
 
         override val containerView: View?
             get() = itemView
@@ -106,7 +106,7 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
     private fun applyClickEvents(holder: BaseViewHolder.CardViewHolder<MutableList<Message>>, position: Int) {
         holder.icon_container1.setOnClickListener({ listener?.onIconClicked(position) })
 
-        holder.message_container1.setOnClickListener({ listener?.onMessageRowClicked(position,holder.itemView) })
+        holder.message_container1.setOnClickListener({ listener?.onMessageRowClicked(position, holder.itemView) })
 
         holder.message_container1.setOnLongClickListener({ view ->
             listener?.onRowLongClicked(position)
@@ -211,7 +211,7 @@ class RecyclerAdapter<messages1: MutableList<Message>>(var mContext: FragmentAct
 
         fun onIconImportantClicked(position: Int)
 
-        fun onMessageRowClicked(position: Int,view: View)
+        fun onMessageRowClicked(position: Int, view: View)
 
         fun onRowLongClicked(position: Int)
     }

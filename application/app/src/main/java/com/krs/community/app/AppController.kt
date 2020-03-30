@@ -29,7 +29,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.TranslateApi.TranslateAPI
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
@@ -56,7 +55,6 @@ class AppController : Application(), KodeinAware {
     lateinit var typeface: Typeface
     lateinit var firebaseAnalytics: FirebaseAnalytics
     lateinit var logger: AppEventsLogger
-    lateinit var translateAPI: TranslateAPI
     lateinit var typeface_bold: Typeface
     lateinit var retrofitBase: RetrofitBase
     lateinit var connectionLiveData: ConnectionLiveData
@@ -125,8 +123,8 @@ class AppController : Application(), KodeinAware {
     }
 
     fun facebookAnalytics(getContext: Context?, Name: String?) {
-        logger = AppEventsLogger.newLogger(getContext);
-        logger.logEvent(Name);
+        logger = AppEventsLogger.newLogger(getContext)
+        logger.logEvent(Name)
     }
 
     /*  fun stringTranslateAPI(Name: String?):String {
@@ -218,7 +216,7 @@ class AppController : Application(), KodeinAware {
                 .setReadTimeout(30_000)
                 .setConnectTimeout(30_000)
                 .build()
-        PRDownloader.initialize(getApplicationContext(), config)
+        PRDownloader.initialize(applicationContext, config)
 
         startRepeatingTask()
     }

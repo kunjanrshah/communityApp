@@ -114,15 +114,15 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         }
     }
 
-    private fun getFamilyDetails(){
+    private fun getFamilyDetails() {
 
-        val jsonObject= JSONObject()
+        val jsonObject = JSONObject()
         val headId = Guru.getString(getString(R.string.user_id), "")
         if (this.headId.isNotEmpty()) {
             jsonObject.put(getString(R.string.id), this.headId)
         }
-        jsonObject.put(getString(R.string.head_id),headId)
-        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        jsonObject.put(getString(R.string.head_id), headId)
+        val records = JsonParser().parse(jsonObject.toString()) as JsonObject
         familyDetailViewModel.getFamilyDetails(records)
     }
 
@@ -216,12 +216,12 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
             return
         }
         mFusedLocationProviderClient?.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
-        Toast.makeText(getApplicationContext(), "Location update started", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Location update started", Toast.LENGTH_SHORT).show()
     }
 
     private fun stopLocationUpdates() {
         mFusedLocationProviderClient!!.removeLocationUpdates(mLocationCallback)
-        Toast.makeText(getApplicationContext(), "Location update stopped.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Location update stopped.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -281,7 +281,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
 
                 } else {
-                    Log.e("hii"," not null");
+                    Log.e("hii", " not null")
                     bearing = if (loc.value.hasBearing()) {
                         loc.value.bearing
                     } else {
@@ -354,6 +354,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     override fun getMessage(response: DeleteProfileResponse) {
 
     }
+
     override suspend fun getFailure(message: String) {
 
     }

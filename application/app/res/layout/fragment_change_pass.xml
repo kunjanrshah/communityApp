@@ -41,17 +41,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -64,17 +65,16 @@
 
                     <TextView
                         android:id="@+id/tv_forgot"
-                        android:clickable="true"
-                        android:focusable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="@string/forgot_pin"
                         android:textColor="@color/colorGray"
-                        android:textSize="10sp"
-                         />
+                        android:textSize="10sp" />
 
 
                 </LinearLayout>
@@ -84,23 +84,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="5dp"
-                    android:inputType="textPassword"
-                    android:paddingRight="20dp"
+                    android:background="@drawable/round_corner_white"
                     android:drawableEnd="@drawable/hide_pass"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:background="@drawable/round_corner_white"
                     android:hint="@string/enter_current_pin"
-                    android:textColorHint="@color/color_mid_light_gray"
-                    android:paddingLeft="20dp" />
+                    android:inputType="textPassword"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:textColorHint="@color/color_mid_light_gray" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
@@ -117,24 +117,24 @@
                     android:id="@+id/edt_new"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:inputType="textPassword"
                     android:layout_marginTop="5dp"
-                    android:fontFamily="@font/montserrat_semibold"
                     android:background="@drawable/round_corner_white"
-                    android:hint="@string/enter_new_pin"
-                    android:paddingRight="20dp"
                     android:drawableEnd="@drawable/hide_pass"
-                    android:textColorHint="@color/color_mid_light_gray"
-                    android:paddingLeft="20dp" />
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:hint="@string/enter_new_pin"
+                    android:inputType="textPassword"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:textColorHint="@color/color_mid_light_gray" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
@@ -152,14 +152,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="5dp"
-                    android:paddingRight="20dp"
-                    android:inputType="textPassword"
-                    android:drawableEnd="@drawable/hide_pass"
-                    android:textColorHint="@color/color_mid_light_gray"
                     android:background="@drawable/round_corner_white"
-                    android:hint="@string/enter_confirm_pin"
+                    android:drawableEnd="@drawable/hide_pass"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:paddingLeft="20dp" />
+                    android:hint="@string/enter_confirm_pin"
+                    android:inputType="textPassword"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:textColorHint="@color/color_mid_light_gray" />
 
             </LinearLayout>
 
@@ -171,8 +171,8 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/round_corner_primary"
-                android:text="@string/update_pin"
                 android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/update_pin"
                 android:textColor="@color/white" />
 
 

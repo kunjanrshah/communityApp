@@ -21,11 +21,11 @@ class SmartSearchViewModel(
     lateinit var mByKeywordListener: ByKeywordListener
     private var TAG: String = SmartSearchViewModel::class.java.simpleName
 
-   fun getLastName(id:Int):LiveData<String>{
-       return mSmartSearchRepository.getLastName(id)
+    fun getLastName(id: Int): LiveData<String> {
+        return mSmartSearchRepository.getLastName(id)
     }
 
-    fun getCityNamebyId(id:String):LiveData<String>{
+    fun getCityNamebyId(id: String): LiveData<String> {
         return mSmartSearchRepository.getCityName(id)
     }
 

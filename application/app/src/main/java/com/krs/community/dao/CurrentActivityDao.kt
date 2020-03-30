@@ -11,23 +11,23 @@ import com.krs.community.entities.CurrentActivity
 interface CurrentActivityDao {
 
     @Query("SELECT name FROM CurrentActivity")
-    fun getCurrentActivity() : LiveData<List<String>>
+    fun getCurrentActivity(): LiveData<List<String>>
 
     @Query("SELECT id FROM CurrentActivity")
-    fun getCurrentActivityIds() : LiveData<List<Int>>
+    fun getCurrentActivityIds(): LiveData<List<Int>>
 
     @Query("SELECT name FROM CurrentActivity WHERE id == :id")
-    fun getCurrentActivityById(id:Int) : LiveData<String>
+    fun getCurrentActivityById(id: Int): LiveData<String>
 
     @Query("SELECT id FROM CurrentActivity WHERE name == :name")
-    fun getActivityIdByName(name:String) : Int
+    fun getActivityIdByName(name: String): Int
 
     @Query("SELECT id FROM CurrentActivity WHERE id NOT IN (:Ids)")
-    fun getRemovedActivityIds(Ids: List<String>) : List<Int>
+    fun getRemovedActivityIds(Ids: List<String>): List<Int>
 
     @Query("DELETE FROM CurrentActivity WHERE id IN (:Ids)")
-    fun deleteActivityByIds(Ids: List<Int>) : Int
+    fun deleteActivityByIds(Ids: List<Int>): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllCurrentActivity(currentActivity : List<CurrentActivity>)
+    fun saveAllCurrentActivity(currentActivity: List<CurrentActivity>)
 }

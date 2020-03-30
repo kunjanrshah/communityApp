@@ -96,7 +96,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
 
                 if (lstMembers.size > 0) {
                     tvCount.visibility = View.VISIBLE
-                    tvCount.text = getString(R.string.members)+" ${lstMembers.size} "+getString(R.string.found)
+                    tvCount.text = getString(R.string.members) + " ${lstMembers.size} " + getString(R.string.found)
                 } else {
                     tvCount.visibility = View.GONE
                 }
@@ -136,21 +136,21 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     }
                 }
 
-                if (member.mobile.isEmpty()){
+                if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()){
+                if (member.emailAddress.isEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
@@ -220,7 +220,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
 
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 applyProfilePicture(holder, member)
-                applyClickEvents(holder, position,member)
+                applyClickEvents(holder, position, member)
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -263,7 +263,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
             jsonObject.put("mobiles", jsonArray)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
 
-            Log.e("updated----", "" + updated);
+            Log.e("updated----", "" + updated)
             contactListViewModel.getContactList(updated)
         }
     }
@@ -274,7 +274,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         while (cursor!!.moveToNext()) {
             name = cursor!!.getString(cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
             phonenumber = cursor!!.getString(cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-            val strNumber = phonenumber.toString().replace(" ", "").replace("+91", "");
+            val strNumber = phonenumber.toString().replace(" ", "").replace("+91", "")
             if (strNumber.length == 10) {
                 if (!StoreContacts.contains(strNumber)) {
                     StoreContacts.add(strNumber)
@@ -313,7 +313,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
             if ((activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED || (activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED) {
                 val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CONTACTS)
                 requestPermissions(permissions, RequestPermissionCode)
-            }else{
+            } else {
                 userContactList()
             }
         }
@@ -321,17 +321,17 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {RequestPermissionCode ->
-        {
-            if (grantResults.isNotEmpty()) {
-                val Accepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                if (Accepted) {
-                    userContactList()
-                }else {
-                    Snackbar.make(view!!, getString(R.string.permissioncontact), Snackbar.LENGTH_LONG).show()
+        when (requestCode) {
+            RequestPermissionCode -> {
+                if (grantResults.isNotEmpty()) {
+                    val Accepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    if (Accepted) {
+                        userContactList()
+                    } else {
+                        Snackbar.make(view!!, getString(R.string.permissioncontact), Snackbar.LENGTH_LONG).show()
+                    }
                 }
             }
-        }
         }
     }
 
@@ -371,11 +371,11 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 try {
                     val path = getString(R.string.base_url_original) + "" + member.profilePic
                     Log.d("NonActiveFragment", "path: $path")
-                    openImageDialog(activity as AppCompatActivity,path)
+                    openImageDialog(activity as AppCompatActivity, path)
                 } catch (e: Exception) {
                     e.message
                 }
-            }else{
+            } else {
                 holder.imgProfile.isClickable = false
             }
         }

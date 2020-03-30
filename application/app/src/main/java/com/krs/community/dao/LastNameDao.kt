@@ -11,32 +11,32 @@ import com.krs.community.entities.LastName
 interface LastNameDao {
 
     @Query("SELECT name FROM LastName ORDER BY name ASC")
-    fun getLastName() : LiveData<List<String>>
+    fun getLastName(): LiveData<List<String>>
 
     @Query("SELECT COUNT(id) FROM LastName")
     fun getLastNameCount(): Int
 
     @Query("SELECT id FROM LastName ORDER BY name ASC")
-    fun getLastNameIds() : LiveData<List<Int>>
+    fun getLastNameIds(): LiveData<List<Int>>
 
     @Query("SELECT id FROM LastName WHERE name == :name")
-    fun getIdByLastName(name:String) : Int
+    fun getIdByLastName(name: String): Int
 
     @Query("SELECT id FROM LastName WHERE name == :name")
-    fun getIdOfLastName(name:String) : Int
+    fun getIdOfLastName(name: String): Int
 
     @Query("SELECT name FROM LastName WHERE id == :id")
-    fun getLastNameById(id:Int) : LiveData<String>
+    fun getLastNameById(id: Int): LiveData<String>
 
     @Query("SELECT name FROM LastName WHERE id == :id")
-    fun getLastName(id:Int) : String
+    fun getLastName(id: Int): String
 
     @Query("SELECT id FROM LastName WHERE id NOT IN (:Ids)")
-    fun getRemovedLastNameIds(Ids: List<String>) : List<Int>
+    fun getRemovedLastNameIds(Ids: List<String>): List<Int>
 
     @Query("DELETE FROM LastName WHERE id IN (:Ids)")
-    fun deleteLastNameByIds(Ids: List<Int>) : Int
+    fun deleteLastNameByIds(Ids: List<Int>): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllLastName(subCommunity : List<LastName>)
+    fun saveAllLastName(subCommunity: List<LastName>)
 }

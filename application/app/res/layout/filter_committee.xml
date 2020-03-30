@@ -29,10 +29,10 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:paddingLeft="10dp"
-        android:gravity="center_vertical"
+        android:background="@drawable/round_corner_mid_gray"
         android:fontFamily="@font/montserrat_regular"
-        android:background="@drawable/round_corner_mid_gray" />
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,10 +49,10 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:paddingLeft="10dp"
-        android:gravity="center_vertical"
+        android:background="@drawable/round_corner_mid_gray"
         android:fontFamily="@font/montserrat_regular"
-        android:background="@drawable/round_corner_mid_gray" />
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,10 +69,10 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:paddingLeft="10dp"
-        android:gravity="center_vertical"
+        android:background="@drawable/round_corner_mid_gray"
         android:fontFamily="@font/montserrat_regular"
-        android:background="@drawable/round_corner_mid_gray" />
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -89,16 +89,16 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:paddingLeft="10dp"
-        android:gravity="center_vertical"
+        android:background="@drawable/round_corner_mid_gray"
         android:fontFamily="@font/montserrat_regular"
-        android:background="@drawable/round_corner_mid_gray" />
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat_semibold"
         android:text="@string/SarchKeyword"
         android:textColor="@color/black"
@@ -109,16 +109,17 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:paddingLeft="10dp"
-        android:gravity="center_vertical"
-        android:singleLine="true"
+        android:background="@drawable/round_corner_mid_gray"
         android:fontFamily="@font/montserrat_regular"
-        android:background="@drawable/round_corner_mid_gray" />
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:singleLine="true" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="center|bottom">
+
         <Button
             android:id="@+id/btn_search"
             android:layout_width="150dp"

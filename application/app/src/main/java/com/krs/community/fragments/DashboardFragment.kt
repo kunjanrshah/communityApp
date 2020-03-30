@@ -354,6 +354,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
 
                     11 -> {
+                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        return@setOnClickListener
                         if (loginMember.role != getString(R.string.User)) {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
@@ -422,7 +424,9 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             }
 
             holder.imgProfile.setOnClickListener {
-                moveToProfileDetail()
+                if (!member.id.isNullOrEmpty()) {
+                    moveToProfileDetail(member)
+                }
             }
         }
 
@@ -455,10 +459,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         }
     }
 
-    private fun moveToProfileDetail() {
+    private fun moveToProfileDetail(member: Member) {
         Utility.startSweetProgress(activity, getString(R.string.MoveProfile), getString(R.string.loading))
         val intent = Intent(activity, ProfileDetailActivity::class.java)
-        intent.putExtra(getString(R.string.member), loginMember)
+        intent.putExtra(getString(R.string.member), member)
         startActivity(intent)
         fade(activity)
     }
@@ -528,13 +532,16 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         try {
             sharedAdapter = SharedProfileAdapter(defaultProfiles)
             binding.lstSharedProfile.adapter = sharedAdapter
+
             if (ProcessMainClass.serviceIntent != null) {
+                if (RestartServiceBroadcastReceiver.jobScheduler != null) {
+                    RestartServiceBroadcastReceiver.jobScheduler.cancel(1)
+                }
                 activity?.stopService(ProcessMainClass.serviceIntent)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-
 
 }

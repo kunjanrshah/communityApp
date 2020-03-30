@@ -32,37 +32,57 @@ public class FeedImageView extends ImageView {
 
 	*/
 /**
-	 * The URL of the network image to load
-	 *//*
+ * The URL of the network image to load
+ * <p>
+ * Resource ID of the image to be used as a placeholder until the network
+ * image is loaded.
+ * <p>
+ * Resource ID of the image to be used if the network response fails.
+ * <p>
+ * Local copy of the ImageLoader.
+ * <p>
+ * Current ImageContainer. (either in-flight or finished)
+ * <p>
+ * Sets the default image resource ID to be used for this view until the
+ * attempt to load it completes.
+ * <p>
+ * Sets the error image resource ID to be used for this view in the event
+ * that the image requested fails to load.
+ * <p>
+ * Loads the image for the view if it isn't already loaded.
+ *
+ * @param isInLayoutPass
+ * True if this was invoked from a layout pass, false otherwise.
+ *//*
 
 	private String mUrl;
 
 	*/
 /**
-	 * Resource ID of the image to be used as a placeholder until the network
-	 * image is loaded.
-	 *//*
+ * Resource ID of the image to be used as a placeholder until the network
+ * image is loaded.
+ *//*
 
 	private int mDefaultImageId;
 
 	*/
 /**
-	 * Resource ID of the image to be used if the network response fails.
-	 *//*
+ * Resource ID of the image to be used if the network response fails.
+ *//*
 
 	private int mErrorImageId;
 
 	*/
 /**
-	 * Local copy of the ImageLoader.
-	 *//*
+ * Local copy of the ImageLoader.
+ *//*
 
 	private ImageLoader mImageLoader;
 
 	*/
 /**
-	 * Current ImageContainer. (either in-flight or finished)
-	 *//*
+ * Current ImageContainer. (either in-flight or finished)
+ *//*
 
 	private ImageContainer mImageContainer;
 
@@ -89,9 +109,9 @@ public class FeedImageView extends ImageView {
 
 	*/
 /**
-	 * Sets the default image resource ID to be used for this view until the
-	 * attempt to load it completes.
-	 *//*
+ * Sets the default image resource ID to be used for this view until the
+ * attempt to load it completes.
+ *//*
 
 	public void setDefaultImageResId(int defaultImage) {
 		mDefaultImageId = defaultImage;
@@ -99,9 +119,9 @@ public class FeedImageView extends ImageView {
 
 	*/
 /**
-	 * Sets the error image resource ID to be used for this view in the event
-	 * that the image requested fails to load.
-	 *//*
+ * Sets the error image resource ID to be used for this view in the event
+ * that the image requested fails to load.
+ *//*
 
 	public void setErrorImageResId(int errorImage) {
 		mErrorImageId = errorImage;
@@ -109,11 +129,11 @@ public class FeedImageView extends ImageView {
 
 	*/
 /**
-	 * Loads the image for the view if it isn't already loaded.
-	 * 
-	 * @param isInLayoutPass
-	 *            True if this was invoked from a layout pass, false otherwise.
-	 *//*
+ * Loads the image for the view if it isn't already loaded.
+ *
+ * @param isInLayoutPass
+ *            True if this was invoked from a layout pass, false otherwise.
+ *//*
 
 	private void loadImageIfNecessary(final boolean isInLayoutPass) {
 		final int width = getWidth();
@@ -252,8 +272,8 @@ public class FeedImageView extends ImageView {
 
 	*/
 /*
-	 * Adjusting imageview height
-	 * *//*
+ * Adjusting imageview height
+ * *//*
 
 	private void adjustImageAspect(int bWidth, int bHeight) {
 		LinearLayout.LayoutParams params = (LayoutParams) getLayoutParams();

@@ -30,7 +30,7 @@
     <string-array name="main_menu">
         <item>શહેર</item>
         <item>ક્યૂઆરકોડ</item>
-        <item >અંતર</item>
+        <item>અંતર</item>
         <item>લગ્ન</item>
         <item>માયપોસ્ટ</item>
         <item>પ્રિય</item>
@@ -70,7 +70,7 @@
     <string name="hash_key">હેશ_કી</string>
     <string name="otp_send">તમારા નંબર પર મેસેજિંગ ઓટીપી કોડ!</string>
     <string name="seat_back_relax">સીટ પાછળ &amp;  આરામ કરો!</string>
-    <string name="you_sure" >શું તમને ખાતરી છે?</string>
+    <string name="you_sure">શું તમને ખાતરી છે?</string>
 
     <!--Login page-->
     <string name="_continue">ચાલુ રાખો</string>
@@ -78,7 +78,7 @@
     <!--<string name="hashkey">પાસવર્ડ</string>-->
     <string name="or_login_with">ઓર લોગઇન વિથ</string>
     <string name="do_you_have_an_account_register_now">શું તમારી પાસે એકાઉન્ટ છે?</string>
-   <!-- <string name="send_otp">OTP મોકલો</string>-->
+    <!-- <string name="send_otp">OTP મોકલો</string>-->
     <string name="yes">હા</string>
     <string name="no">ના</string>
     <string name="loading">કાર્ય પ્રગતિમાં છે...</string>
@@ -263,7 +263,6 @@
 
     <!-- Location Adapter -->
     <string name="location">સ્થાન</string>
-
 
 
     <string name="office">ઓફિસ</string>
@@ -778,7 +777,6 @@
     <string name="QrCode">ક્યૂઆરકોડ ગેલેરી</string>
     <string name="Generatingcode">ક્યૂઆરકોડ જનરેટ કરી રહ્યું છે ...</string>
     <string name="search_by_calendar">કેલેન્ડર દ્વારા શોધો</string>
-
 
 
     <string name="total_family">કુલ કુટુંબ</string>

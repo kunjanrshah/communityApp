@@ -19,22 +19,23 @@ class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterReposi
     private lateinit var completableJob: CompletableJob
     lateinit var mByFilterListener: ByFilterListener
     lateinit var mLoginListener: ILoginListener
-    fun getSubCommunity(id: String):String{
+    fun getSubCommunity(id: String): String {
         return mSmartFilterRepository.getSubCommunity(id)
     }
-    fun getLocalCommunity(id: String):String{
+
+    fun getLocalCommunity(id: String): String {
         return mSmartFilterRepository.getLocalCommunity(id)
     }
 
-    fun getListCityName():LiveData<List<String>>{
+    fun getListCityName(): LiveData<List<String>> {
         return mSmartFilterRepository.getListCityName()
     }
 
-     fun getCityIdByName(name:String):Int{
+    fun getCityIdByName(name: String): Int {
         return mSmartFilterRepository.getCityIdByName(name)
     }
 
-    fun getLastName():LiveData<List<String>>{
+    fun getLastName(): LiveData<List<String>> {
         return mSmartFilterRepository.getLastName()
     }
 
@@ -46,7 +47,7 @@ class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterReposi
         return mSmartFilterRepository.getLastNameById(id)
     }
 
-     fun getIdByLastName(name:String):Int{
+    fun getIdByLastName(name: String): Int {
         return mSmartFilterRepository.getIdByLastName(name)
     }
 

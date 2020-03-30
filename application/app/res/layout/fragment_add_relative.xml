@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
-    android:paddingTop="20dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="20dp">
 
     <ImageView
         android:id="@+id/iv_cancel"
@@ -67,8 +67,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_relation"
-        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

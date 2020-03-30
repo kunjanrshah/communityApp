@@ -59,7 +59,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             jsonObj.put(getString(R.string.id), userId)
 
             val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
-            mSmartFilterRepository= SmartFilterRepository(ApiServices(), AppDatabase(applicationContext))
+            mSmartFilterRepository = SmartFilterRepository(ApiServices(), AppDatabase(applicationContext))
 
             CoroutineScope(Dispatchers.IO + thejob).launch {
                 try {
@@ -75,15 +75,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     }
                 } catch (e: ApiException) {
                     e.message?.let {
-                       // mByFilterListener.getFailure(it)
+                        // mByFilterListener.getFailure(it)
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
-                       // mByFilterListener.getFailure(it)
+                        // mByFilterListener.getFailure(it)
                     }
                 } catch (e: Exception) {
                     e.message?.let {
-                       // mByFilterListener.getFailure(it)
+                        // mByFilterListener.getFailure(it)
                     }
                 }
                 thejob.complete()
@@ -97,21 +97,21 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val subCastId = response.data.subCastId
         val mobile = response.data.mobile
         val email = response.data.emailAddress
-        val photo =resources.getString(R.string.base_url_thumb)+ response.data.profilePic
+        val photo = resources.getString(R.string.base_url_thumb) + response.data.profilePic
         val homeAddress = response.data.address
         val cityId = response.data.cityId
-        var Lastname=""
-        var CityName =""
+        var Lastname = ""
+        var CityName = ""
 
         Coroutines.io {
-            Lastname =   mSmartFilterRepository.getLastNameById(subCastId.toInt())
-            CityName =   mSmartFilterRepository.getCityName(cityId)
-            val Fullname = firstName +" "+Lastname
+            Lastname = mSmartFilterRepository.getLastNameById(subCastId.toInt())
+            CityName = mSmartFilterRepository.getCityName(cityId)
+            val Fullname = firstName + " " + Lastname
 
-            Log.e("Fullname--",""+Fullname)
+            Log.e("Fullname--", "" + Fullname)
             Coroutines.main {
                 val resultIntent = Intent(applicationContext, DashboardActivity::class.java)
-                showNotification(getApplicationContext(),  resultIntent,Fullname,mobile,email,photo,homeAddress,CityName);
+                showNotification(applicationContext, resultIntent, Fullname, mobile, email, photo, homeAddress, CityName)
             }
 
         }
@@ -119,11 +119,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     }
 
-    private fun showNotification(context: Context, intent: Intent, fullname: String, mobile: String, email: String, photo: String, homeAddress: String,CityName: String) {
+    private fun showNotification(context: Context, intent: Intent, fullname: String, mobile: String, email: String, photo: String, homeAddress: String, CityName: String) {
         val notificationUtils = NotificationUtils(context)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        notificationUtils.getBitmapAsyncAndNotification(message, intent,fullname,mobile,email,photo,homeAddress,userId,CityName)
+        notificationUtils.getBitmapAsyncAndNotification(message, intent, fullname, mobile, email, photo, homeAddress, userId, CityName)
     }
 
     companion object {

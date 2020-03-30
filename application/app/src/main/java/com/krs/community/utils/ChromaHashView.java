@@ -20,8 +20,8 @@ public class ChromaHashView extends EditText {
     private static int MINIMUM_CHARACTER_THRESHOLD = 6;
 
     Paint paint = new Paint();
-    private String[] colors;
     MessageDigest md5 = null;
+    private String[] colors;
 
     public ChromaHashView(Context context) {
         super(context);
@@ -56,7 +56,7 @@ public class ChromaHashView extends EditText {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = s.toString();
-                if(s.length() > 0) {
+                if (s.length() > 0) {
                     md5.reset();
                     md5.update(text.getBytes());
                     byte[] result = md5.digest();
@@ -73,7 +73,7 @@ public class ChromaHashView extends EditText {
                             colors[i] = colorToGreyScale(colors[i]);
                         }
                     }
-                }else{
+                } else {
                     colors = null;
                 }
             }

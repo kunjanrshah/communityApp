@@ -13,7 +13,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.krs.community.R;
 import com.philliphsu.numberpadtimepicker.BottomSheetNumberPadTimePickerDialog;
-import com.philliphsu.numberpadtimepicker.NumberPadTimePickerDialog;
 import com.philliphsu.numberpadtimepicker.NumberPadTimePickerDialogThemer;
 
 import java.lang.annotation.Retention;
@@ -21,13 +20,8 @@ import java.lang.annotation.RetentionPolicy;
 
 public class NumberPadTimePickerDialogFragment extends DialogFragment {
 
-    static final int MODE_ALERT = 1;
     public static final int MODE_BOTTOM_SHEET = 2;
-
-    @IntDef({MODE_ALERT, MODE_BOTTOM_SHEET})
-    @Retention(RetentionPolicy.SOURCE)
-    @interface DialogMode {}
-
+    static final int MODE_ALERT = 1;
     @DialogMode
     private int dialogMode;
     @StyleRes
@@ -54,9 +48,14 @@ public class NumberPadTimePickerDialogFragment extends DialogFragment {
         Dialog dialog;
 
         boolean is24HourMode = DateFormat.is24HourFormat(getContext());
-        BottomSheetNumberPadTimePickerDialog bottomSheetPicker = new BottomSheetNumberPadTimePickerDialog(getContext(),themeResId, listener, true);
-        NumberPadTimePickerDialogThemer themer=bottomSheetPicker.getThemer();
+        BottomSheetNumberPadTimePickerDialog bottomSheetPicker = new BottomSheetNumberPadTimePickerDialog(getContext(), themeResId, listener, true);
+        NumberPadTimePickerDialogThemer themer = bottomSheetPicker.getThemer();
         dialog = bottomSheetPicker;
         return dialog;
+    }
+
+    @IntDef({MODE_ALERT, MODE_BOTTOM_SHEET})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface DialogMode {
     }
 }

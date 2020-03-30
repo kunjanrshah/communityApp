@@ -57,7 +57,7 @@ class RegisterViewModel(
         jobRegistration?.cancel()
     }
 
-    fun getUserRegistration() {
+    fun getUserRegistration(isLogin: Boolean) {
         val register: AppConstants.UserRegister = AppConstants.UserRegister()
 
         if (fname.isNullOrBlank()) {
@@ -156,6 +156,9 @@ class RegisterViewModel(
         register.city_id = cityId.toString()
         register.sub_community_id = subCommId.toString()
         register.local_community_id = localCommId.toString()
+        if (!isLogin) {
+            register.isAdmin = "1"
+        }
         if (isNetworkConnected(app.applicationContext)) {
             jobRegistration = Job()
             jobRegistration.let { thejob ->

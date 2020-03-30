@@ -1,196 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<LinearLayout
-    android:id="@+id/ll_parent"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/ll_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center|center_vertical"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/img_back"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/left_arrow" />
-
-            <TextView
-                android:id="@+id/txt_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:text="@string/my_profile"
-                android:textColor="@color/black1"
-                android:fontFamily="@font/montserrat_semibold"
-                android:textSize="18sp"     />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/iv_family"
-            android:layout_width="25dp"
-            android:layout_height="22dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/view_family" />
-
-        <TextView
-            android:id="@+id/tv_save"
-            android:layout_width="wrap_content"
-            android:text="@string/save"
-            android:textSize="18sp"
-            android:padding="3dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:textColor="@color/colorPrimary"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/iv_verify"
-            android:layout_width="25dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="60dp"
-            android:visibility="gone"
-            android:background="@drawable/sunglasses" />
-
-        <TextView
-            android:id="@+id/tv_percent"
-            android:layout_width="wrap_content"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="110dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:textColor="@color/colorPrimary"
-            android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center|center_vertical"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:visibility="invisible"
-                android:layout_width="wrap_content"
+                android:id="@+id/img_back"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/left_arrow" />
+
                 <TextView
+                    android:id="@+id/txt_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:text="@string/view_family" />
+                    android:text="@string/my_profile"
+                    android:textColor="@color/black1"
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp">
-                <com.vaibhavlakhera.circularprogressview.CircularProgressView
-                    android:id="@+id/progressView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    app:animate="true"
-                    app:animateDuration="600"
-                    app:fillColor="@color/colorPrimary"
-                    app:progressColor="#FFF"
-                    app:progressInterpolator="@android:anim/accelerate_decelerate_interpolator"
-                    app:progressRoundCap="true"
-                    app:progressTextColor="#FFF"
-                    app:progressTextEnabled="true"
-                    app:progressTextSize="32sp"
-                    app:progressTextType="progress"
-                    app:progressWidth="5dp"
-                    app:startAngle="270"
-                    app:totalValue="100"
-                    app:totalColor="@color/colorPrimaryDark"
-                    app:totalWidth="10dp" />
+            <ImageView
+                android:id="@+id/iv_family"
+                android:layout_width="25dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/view_family" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:alpha="0.0"
-                    android:layout_gravity="center"
-                    android:id="@+id/img_profile"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@drawable/user_profile" />
-
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="@dimen/ms__item_height"
-                android:layout_weight="1"
+            <TextView
+                android:id="@+id/tv_save"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible" />
+                android:fontFamily="@font/montserrat_semibold"
+                android:padding="3dp"
+                android:text="@string/save"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_verify"
+                android:layout_width="25dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="60dp"
+                android:background="@drawable/sunglasses"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="110dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/view_family" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="100dp"
+                    android:layout_height="100dp">
+
+                    <com.vaibhavlakhera.circularprogressview.CircularProgressView
+                        android:id="@+id/progressView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:animate="true"
+                        app:animateDuration="600"
+                        app:fillColor="@color/colorPrimary"
+                        app:progressColor="#FFF"
+                        app:progressInterpolator="@android:anim/accelerate_decelerate_interpolator"
+                        app:progressRoundCap="true"
+                        app:progressTextColor="#FFF"
+                        app:progressTextEnabled="true"
+                        app:progressTextSize="32sp"
+                        app:progressTextType="progress"
+                        app:progressWidth="5dp"
+                        app:startAngle="270"
+                        app:totalColor="@color/colorPrimaryDark"
+                        app:totalValue="100"
+                        app:totalWidth="10dp" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_profile"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.0"
+                        android:background="@drawable/user_profile" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/ms__item_height"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
 
-    <com.krs.community.utils.ImageSteps
-        android:background="@color/white"
-        android:id="@+id/imageSteps"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        app:default_color="@color/gray_btn_bg_color"/>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round1_corner_mid_gray"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
-
-        android:visibility="gone"
-        android:paddingBottom="5dp">
-
-        <Button
-            android:layout_width="wrap_content"
+        <com.krs.community.utils.ImageSteps
+            android:id="@+id/imageSteps"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/border_color_primary"
-            android:text="@string/save"
-            android:fontFamily="@font/montserrat_semibold"
-            android:textColor="@color/browser_actions_title_color"
-            android:textStyle="bold" />
+            android:background="@color/white"
+            app:default_color="@color/gray_btn_bg_color" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/border_bg_color_primary"
-            android:padding="10dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="@string/save_amp_next"
-            android:textColor="@color/white"
-             />
-
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1" />
     </LinearLayout>
-
-
-</LinearLayout>
 </layout>

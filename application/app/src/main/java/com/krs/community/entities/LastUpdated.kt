@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class LastUpdated(
-   @PrimaryKey(autoGenerate = false)
-   var name: String,
-   var date:String
+        @PrimaryKey(autoGenerate = false)
+        var name: String,
+        var date: String
 )

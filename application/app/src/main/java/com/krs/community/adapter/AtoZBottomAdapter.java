@@ -16,6 +16,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
 
     private Context _context;
     private ISortingRecords mISortingRecords;
+
     public AtoZBottomAdapter(Context _context) {
         this._context = _context;
     }
@@ -51,7 +52,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             viewHolder = (AtoZViewHolder) convertView.getTag();
         }
         viewHolder.tv_a.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.Selected, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.Selected, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.a));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -59,7 +60,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_b.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedB, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedB, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.b));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -67,7 +68,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_c.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedC, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedC, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.c));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -75,7 +76,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_d.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelecetdD, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelecetdD, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.d));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -83,7 +84,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_e.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelecetdE, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelecetdE, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.e));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -91,7 +92,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_f.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelecetdF, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelecetdF, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.f));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -99,7 +100,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_g.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedG, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedG, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.g));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -107,7 +108,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_h.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelecetdH, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelecetdH, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.h));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -115,7 +116,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_i.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelecetdeI, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelecetdeI, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.i));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -123,7 +124,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_j.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelecetedJ, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelecetedJ, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.j));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -131,7 +132,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_k.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelecetedK, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelecetedK, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.k));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -139,7 +140,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_l.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedL, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedL, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.l));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -147,7 +148,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_m.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedM, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedM, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.m));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -155,7 +156,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_n.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedN, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedN, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.n));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -163,7 +164,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_o.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedO, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedO, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.o));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -171,7 +172,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_p.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedP, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedP, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.p));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -179,7 +180,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_q.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedQ, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedQ, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.q));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -187,7 +188,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_r.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedR, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedR, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.r));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -195,7 +196,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_s.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedS, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedS, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.s));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -203,7 +204,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_t.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedT, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedT, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.t));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -212,7 +213,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
 
         });
         viewHolder.tv_u.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedU, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedU, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.u));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -220,7 +221,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_v.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedV, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedV, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.v));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -228,7 +229,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_w.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedW, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedW, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.w));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -236,7 +237,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_x.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedX, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedX, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.x));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -244,7 +245,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_y.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedY, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedY, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.y));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -252,7 +253,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
         viewHolder.tv_z.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedZ, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedZ, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha(_context.getString(R.string.z));
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -261,7 +262,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
         });
 
         viewHolder.tv_all.setOnClickListener(v -> {
-            Toast.makeText(_context,  R.string.SelectedAll, Toast.LENGTH_SHORT).show();
+            Toast.makeText(_context, R.string.SelectedAll, Toast.LENGTH_SHORT).show();
             SearchCityResult.Companion.setAlpha("");
             mISortingRecords.getRecords();
             if (SearchCityResult.Companion.getDialog() != null) {
@@ -278,7 +279,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
 
     private class AtoZViewHolder {
         TextView tv_a, tv_b, tv_c, tv_d, tv_e, tv_f, tv_g, tv_h, tv_i, tv_j, tv_k, tv_l,
-                tv_m, tv_n, tv_o, tv_p, tv_q, tv_r, tv_s, tv_t, tv_u, tv_v, tv_w, tv_x, tv_y, tv_z,tv_all;
+                tv_m, tv_n, tv_o, tv_p, tv_q, tv_r, tv_s, tv_t, tv_u, tv_v, tv_w, tv_x, tv_y, tv_z, tv_all;
 
         AtoZViewHolder(View view) {
             tv_a = view.findViewById(R.id.tv_a);
@@ -307,7 +308,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             tv_x = view.findViewById(R.id.tv_x);
             tv_y = view.findViewById(R.id.tv_y);
             tv_z = view.findViewById(R.id.tv_z);
-            tv_all= view.findViewById(R.id.tv_all);
+            tv_all = view.findViewById(R.id.tv_all);
         }
     }
 

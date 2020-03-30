@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/round_corner_white"
         android:orientation="vertical"
-        android:padding="15dp" >
+        android:padding="15dp">
 
     </LinearLayout>
 </LinearLayout>

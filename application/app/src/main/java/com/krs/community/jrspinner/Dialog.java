@@ -61,27 +61,10 @@ public class Dialog extends DialogFragment {
     }
 
     /**
-     * method to set the listener
-     * @param listener on click listener
-     * @param view spinner view
-     */
-    public void setListener(JRSpinner.OnItemClickListener listener, JRSpinner view) {
-        this.listener = listener;
-        this.view = view;
-    }
-
-    /**
-     * method to add search listener
-     * @param watcher search box text watcher
-     */
-    public void addSearchListener(TextWatcher watcher){
-        this.watcher = watcher;
-    }
-
-    /**
      * method to create dialog object
-     * @param title title of dialog
-     * @param data items of spinner
+     *
+     * @param title    title of dialog
+     * @param data     items of spinner
      * @param selected selected position
      * @return the dialog
      */
@@ -93,6 +76,26 @@ public class Dialog extends DialogFragment {
         arguments.putInt("selected", selected);
         instance.setArguments(arguments);
         return instance;
+    }
+
+    /**
+     * method to set the listener
+     *
+     * @param listener on click listener
+     * @param view     spinner view
+     */
+    public void setListener(JRSpinner.OnItemClickListener listener, JRSpinner view) {
+        this.listener = listener;
+        this.view = view;
+    }
+
+    /**
+     * method to add search listener
+     *
+     * @param watcher search box text watcher
+     */
+    public void addSearchListener(TextWatcher watcher) {
+        this.watcher = watcher;
     }
 
     @Override
@@ -178,7 +181,7 @@ public class Dialog extends DialogFragment {
                 }
             });
 
-            if (watcher != null){
+            if (watcher != null) {
                 etSearch.addTextChangedListener(watcher);
             }
 

@@ -26,19 +26,19 @@ class RoomMemberViewModel(
     var mRoomMemberListener: RoomMemberListener? = null
 
 
-    fun getLastName(id:Int):LiveData<String>{
+    fun getLastName(id: Int): LiveData<String> {
         return mRoomMemberRepository.getLastName(id)
     }
 
-    fun getCityNamebyId(id:String):LiveData<String>{
+    fun getCityNamebyId(id: String): LiveData<String> {
         return mRoomMemberRepository.getCityName(id)
     }
 
-    fun getRoomMember(id:Int): LiveData<RoomMember> {
+    fun getRoomMember(id: Int): LiveData<RoomMember> {
         return mRoomMemberRepository.getRoomMember(id)
     }
 
-    fun getRoomMembers(){
+    fun getRoomMembers() {
         jobGetMembers = Job()
         jobGetMembers.let { thejob ->
             CoroutineScope(Dispatchers.IO + thejob).launch {
@@ -59,7 +59,7 @@ class RoomMemberViewModel(
         }
     }
 
-    fun deleteRoomMember(id:Int){
+    fun deleteRoomMember(id: Int) {
         jobByDelete = Job()
         jobByDelete.let { thejob ->
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
@@ -78,9 +78,9 @@ class RoomMemberViewModel(
         }
     }
 
-    fun insertRoomMember(roomMember: RoomMember){
-        jobByInsert=Job()
-        jobByInsert.let {thejob ->
+    fun insertRoomMember(roomMember: RoomMember) {
+        jobByInsert = Job()
+        jobByInsert.let { thejob ->
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
                     mRoomMemberRepository.insertRoomMember(roomMember)
@@ -89,7 +89,7 @@ class RoomMemberViewModel(
                         thejob.complete()
                     }
                     return@launch
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     mRoomMemberListener?.getFailure(e.message.toString())
                 }
                 thejob.complete()

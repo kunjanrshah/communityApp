@@ -1,4 +1,3 @@
-
 package com.krs.community.model;
 
 import com.google.gson.annotations.Expose;

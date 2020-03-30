@@ -11,23 +11,23 @@ import com.krs.community.entities.Designation
 interface DesignationDao {
 
     @Query("SELECT * FROM Designation")
-    fun getDesignation() : LiveData<List<Designation>>
+    fun getDesignation(): LiveData<List<Designation>>
 
     @Query("SELECT id FROM Designation WHERE name=:name")
-    fun getDesignationName(name:String) : Int
+    fun getDesignationName(name: String): Int
 
     @Query("SELECT name FROM Designation WHERE id=:id")
     fun getDesignationNameById(id: Int): String
 
     @Query("SELECT name FROM Designation ORDER BY name ASC")
-    fun getDesignationName() : LiveData<List<String>>
+    fun getDesignationName(): LiveData<List<String>>
 
     @Query("SELECT id FROM Designation WHERE id NOT IN (:Ids)")
-    fun getRemovedDesignationIds(Ids: List<String>) : List<Int>
+    fun getRemovedDesignationIds(Ids: List<String>): List<Int>
 
     @Query("DELETE FROM Designation WHERE id IN (:Ids)")
-    fun deleteDesignationByIds(Ids: List<Int>) : Int
+    fun deleteDesignationByIds(Ids: List<Int>): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllDesignation(designation : List<Designation>)
+    fun saveAllDesignation(designation: List<Designation>)
 }

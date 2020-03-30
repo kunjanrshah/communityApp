@@ -116,7 +116,7 @@ public class NotificationUtils {
         }
     }
 
-    public void getBitmapAsyncAndNotification( String message,  Intent intent,  String fullname,  String mobile,  String email,  String photo,  String homeAddress,String userId,String CityName) {
+    public void getBitmapAsyncAndNotification(String message, Intent intent, String fullname, String mobile, String email, String photo, String homeAddress, String userId, String CityName) {
         final Bitmap[] bitmap = {null};
         if (!TextUtils.isEmpty(photo)) {
             if (photo.length() > 4 && Patterns.WEB_URL.matcher(photo).matches()) {
@@ -127,20 +127,20 @@ public class NotificationUtils {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                 bitmap[0] = resource;
-                                displayImageNotification(bitmap[0], intent,message,fullname,mobile,email,homeAddress,userId,CityName);
+                                displayImageNotification(bitmap[0], intent, message, fullname, mobile, email, homeAddress, userId, CityName);
                             }
 
                             @Override
                             public void onLoadCleared(@Nullable Drawable placeholder) {
                                 Bitmap bitmap1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.user_profile);
-                                displayImageNotification(bitmap1,  intent, message, fullname, mobile, email, homeAddress,userId,CityName);
+                                displayImageNotification(bitmap1, intent, message, fullname, mobile, email, homeAddress, userId, CityName);
                             }
                         });
             }
         }
     }
 
-    private void displayImageNotification(Bitmap bitmap, @NonNull Intent intent, String message, String fullname, String mobile, String email, String homeAddress,String userId,String CityName) {
+    private void displayImageNotification(Bitmap bitmap, @NonNull Intent intent, String message, String fullname, String mobile, String email, String homeAddress, String userId, String CityName) {
 
         /*Intent intentAction = new Intent(mContext,NotificationReceiver.class);
         intentAction.putExtra("action","Call");
@@ -153,26 +153,26 @@ public class NotificationUtils {
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
 
         Intent intentCall = new Intent(mContext, NotificationReceiver.class);
-        intentCall.putExtra("action","Call");
-        intentCall.putExtra("Phone",mobile);
-        intentCall.putExtra("userId",userId);
+        intentCall.putExtra("action", "Call");
+        intentCall.putExtra("Phone", mobile);
+        intentCall.putExtra("userId", userId);
         intentCall.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         Intent intentWhatsApp = new Intent(mContext, NotificationReceiver.class);
-        intentWhatsApp.putExtra("action","WhatsApp");
-        intentWhatsApp.putExtra("Phone",mobile);
-        intentWhatsApp.putExtra("userId",userId);
+        intentWhatsApp.putExtra("action", "WhatsApp");
+        intentWhatsApp.putExtra("Phone", mobile);
+        intentWhatsApp.putExtra("userId", userId);
         intentWhatsApp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        Intent intentApprove= new Intent(mContext, NotificationReceiver.class);
-        intentApprove.putExtra("action","Approve");
-        intentApprove.putExtra("Phone",mobile);
-        intentApprove.putExtra("userId",userId);
+        Intent intentApprove = new Intent(mContext, NotificationReceiver.class);
+        intentApprove.putExtra("action", "Approve");
+        intentApprove.putExtra("Phone", mobile);
+        intentApprove.putExtra("userId", userId);
         intentApprove.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        PendingIntent pendingIntentCall= PendingIntent.getBroadcast(mContext, 0, intentCall, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntentCall = PendingIntent.getBroadcast(mContext, 0, intentCall, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent pendingIntentWhatsApp = PendingIntent.getBroadcast(mContext, 1, intentWhatsApp, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent pendingIntentApprove = PendingIntent.getBroadcast(mContext, 2, intentApprove, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -193,7 +193,7 @@ public class NotificationUtils {
                 .setContentTitle(message)
                 .setSound(alarmSound)
                 .setStyle(inboxStyle)//bigPictureStyle
-               // .setContentIntent(IntentCall())
+                // .setContentIntent(IntentCall())
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
@@ -202,7 +202,7 @@ public class NotificationUtils {
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary))
                 .addAction(R.drawable.ic_code_scanner_flash_on, "Approve", pendingIntentApprove)
                 .addAction(R.drawable.ic_code_scanner_flash_on, "WhatsApp", pendingIntentWhatsApp)
-                .addAction(R.drawable.ic_code_scanner_flash_on, "Call",pendingIntentCall )
+                .addAction(R.drawable.ic_code_scanner_flash_on, "Call", pendingIntentCall)
 
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setLargeIcon(bitmap).setContentText(message)

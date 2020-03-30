@@ -57,7 +57,7 @@ public class AddRelativeFragment extends Fragment {
         iv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mIntent=new Intent(getActivity(), FamilyTreeDetailActivity.class);
+                Intent mIntent = new Intent(getActivity(), FamilyTreeDetailActivity.class);
                 startActivity(mIntent);
                 getActivity().finish();
                 Utility.fade(getActivity());

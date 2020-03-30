@@ -18,6 +18,7 @@ public class ProcessMainClass {
             serviceIntent = new Intent(context, Service.class);
         }
     }
+
     /**
      * launching the service
      */

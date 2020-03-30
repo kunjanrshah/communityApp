@@ -127,8 +127,6 @@ public class Utility {
     public static String dd_MM_yyyy = "dd-MM-yyyy";
     public static String yyyy_MM_dd_TIME = "yyyy-MM-dd HH:mm:ss";
     public static String dd_MM_yyyy_TIME = "dd-MM-yyyy h:mm a";
-    static boolean doubleBackToExitPressedOnce = false;
-
     public static SweetAlertDialog dialog = null;
     public static long INTERVAL = 5 * 60 * 1000;
     public static InputFilter filter = (source, start, end, dest, dstart, dend) -> {
@@ -139,6 +137,7 @@ public class Utility {
         }
         return null;
     };
+    static boolean doubleBackToExitPressedOnce = false;
     private static ProgressDialog pDialog;
     private static Logger logger = new Logger(Utility.class.getSimpleName());
 
@@ -1548,10 +1547,10 @@ public class Utility {
         Rect bounds = new Rect();
         paint.getTextBounds(gText, 0, gText.length(), bounds);
         int x = (bitmap.getWidth() - bounds.width()) / 2;
-        int y = (bitmap.getHeight() + bounds.height()) - 40;
+        int y = (bitmap.getHeight() + bounds.height()) - 35;
 
         canvas.drawText(gText, x, y, paint);
-        canvas.drawText(context.getString(R.string.app_name) + " App", x + 50, 25, paint);
+        canvas.drawText(context.getString(R.string.app_name) + " App", x, 25, paint);
         return bitmap;
     }
 

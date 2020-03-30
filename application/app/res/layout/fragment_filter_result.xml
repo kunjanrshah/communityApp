@@ -1,78 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:shimmer="http://schemas.android.com/apk/res-auto" >
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="browseCityViewModel"
             type="com.krs.community.viewmodel.BrowseCityViewModel" />
     </data>
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/ll_parent"
-    android:orientation="vertical">
-
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer_view_container"
+        android:id="@+id/ll_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginTop="80dp"
-        android:orientation="vertical"
-        shimmer:duration="800">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginTop="80dp"
+            android:orientation="vertical"
+            shimmer:duration="800">
 
-            <include layout="@layout/filter_result_list_shimmer" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-            <include layout="@layout/filter_result_list_shimmer" />
+                <include layout="@layout/filter_result_list_shimmer" />
 
-
-        </LinearLayout>
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
+                <include layout="@layout/filter_result_list_shimmer" />
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/lstFilter"
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:scrollbars="vertical" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lstFilter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-</LinearLayout>
-</layout >
+    </LinearLayout>
+</layout>

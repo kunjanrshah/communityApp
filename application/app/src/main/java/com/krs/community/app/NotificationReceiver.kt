@@ -59,15 +59,15 @@ class NotificationReceiver : BroadcastReceiver() {
             val jsonObject = JSONObject()
             jsonObject.put(context.getString(R.string.access_token), Guru.getString(context.getString(R.string.access_token), ""))
             jsonObject.put(context.getString(R.string.user_id), Guru.getString(context.getString(R.string.user_id), ""))
-            jsonObject.put(context.getString(R.string.id),Guru.getString(context.getString(R.string.member_id), ""))
+            jsonObject.put(context.getString(R.string.id), Guru.getString(context.getString(R.string.member_id), ""))
             jsonObject.put("status", "1")
             jsonObject.put(context.getString(R.string.idList), userId)
 
-          //  jsonObject.put(context.getString(R.string.idList), Ids)
+            //  jsonObject.put(context.getString(R.string.idList), Ids)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-            Log.e("updated----",""+updated);
+            Log.e("updated----", "" + updated)
 
-            changeStatus(updated,context)
+            changeStatus(updated, context)
 
             val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
             context.sendBroadcast(it)
@@ -77,7 +77,7 @@ class NotificationReceiver : BroadcastReceiver() {
     fun changeStatus(jsonObject: JsonObject, context: Context) {
         jobChangeStatus = Job()
         jobChangeStatus.let { thejob ->
-            mRoomMemberRepository= RoomMemberRepository(ApiServices(), AppDatabase(context))
+            mRoomMemberRepository = RoomMemberRepository(ApiServices(), AppDatabase(context))
 
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
@@ -89,18 +89,18 @@ class NotificationReceiver : BroadcastReceiver() {
                         }
                         return@launch
                     }
-                   // mRoomMemberListener?.getFailure(response.message as String)
+                    // mRoomMemberListener?.getFailure(response.message as String)
                 } catch (e: ApiException) {
                     e.message?.let {
-                       // mRoomMemberListener?.getFailure(it)
+                        // mRoomMemberListener?.getFailure(it)
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
-                       // mRoomMemberListener?.getFailure(it)
+                        // mRoomMemberListener?.getFailure(it)
                     }
                 } catch (e: Exception) {
                     e.message?.let {
-                       // mRoomMemberListener?.getFailure(it)
+                        // mRoomMemberListener?.getFailure(it)
                     }
                 }
                 thejob.complete()
@@ -111,12 +111,12 @@ class NotificationReceiver : BroadcastReceiver() {
     private fun getMembers(response: searchByKeywordsResponse) {
 
         var success = response.success
-        Log.e("success",""+success)
+        Log.e("success", "" + success)
 
-        if (success.equals("true")){
+        if (success.equals("true")) {
 
 
-            Log.e("success",""+success)
+            Log.e("success", "" + success)
         }
 
     }

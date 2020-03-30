@@ -65,7 +65,7 @@
     <string-array name="main_menu">
         <item>City</item>
         <item>QRCode</item>
-        <item >Distance</item>
+        <item>Distance</item>
         <item>Matrimony</item>
         <item>MyPost</item>
         <item>Favorite</item>
@@ -90,16 +90,16 @@
     </string-array>
 
     <string-array name="languages">
-    <item>Choose Language</item>
-    <item>@string/_english</item>
-    <item>@string/_gujarati</item>
-    <item>@string/_hindi</item>
+        <item>Choose Language</item>
+        <item>@string/_english</item>
+        <item>@string/_gujarati</item>
+        <item>@string/_hindi</item>
     </string-array>
 
     <string name="_english" translatable="false">English</string>
     <string name="_gujarati" translatable="false">ગુજરાતી</string>
     <string name="_hindi" translatable="false">हिन्दी</string>
-    
+
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
@@ -141,7 +141,7 @@
     <string name="facebook_app_id" translatable="false">2264814596961704</string>//1749295805152367
     <string name="fb_login_protocol_scheme" translatable="false">fb2264814596961704</string>
 
-   <!-- <string name="web_client_id" translatable="false">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>-->
+    <!-- <string name="web_client_id" translatable="false">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>-->
     <string name="web_client_id" translatable="false">317054014432-ns6e6r26hvd1jju005tu35bab6r7460p.apps.googleusercontent.com</string>
     <string name="map_api_key" translatable="false">AIzaSyDci3uC0jldqqy0I4g4D1QpEauiVONXa1Y</string>
 
@@ -201,9 +201,9 @@
     <string name="invalid_mobile_range">Mobile number must be 10 digit</string>
     <string name="invalid_email">Invalid Email Address!</string>
     <string name="err_invalid_email" translatable="false">Invalid Email Address!</string>
-    <string name="err_msg_repeat_password" >PIN and Repeat hashkey not match</string>
+    <string name="err_msg_repeat_password">PIN and Repeat hashkey not match</string>
     <string name="user_not" translatable="false">User not</string>
-    <string name="user_not_found" >User not found!</string>
+    <string name="user_not_found">User not found!</string>
 
     <!-- Common Screen -->
     <string name="can_not_connect_to_internet">Cannot connect to Internet...Please check your connection!</string>
@@ -323,7 +323,7 @@
     <string name="otp_send">Messaging OTP Code on your number!</string>
     <string name="seat_back_relax">Seat back &amp; Relax!</string>
     <string name="fetching_states">Fetching States</string>
-    <string name="you_sure" >Are you sure?</string>
+    <string name="you_sure">Are you sure?</string>
     <string name="restrict_space" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
     <string name="only_chars" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</string>
     <string name="member_code" translatable="false">member_code</string>
@@ -564,7 +564,6 @@
     <string name="locationUpdate">Location updated</string>
 
 
-
     <string name="selectedImage">Cannot retrieve selected image</string>
     <string name="image">Image</string>
 
@@ -649,7 +648,6 @@
     <string name="location">Location</string>
 
 
-
     <string name="office">Office</string>
 
     <!-- MyRole Adapter -->
@@ -725,21 +723,19 @@
     <string name="kgPopup">Kg</string>
     <string name="created_datePopup">Created Date :</string>
     <string name="updated_datePopup">Updated Date :</string>
-    <string name="is_donorPopup">is Donor?</string>
-    <string name="is_rentedPopup">is Rented?</string>
-    <string name="is_expiredPopup">is Expired?</string>
-    <string name="is_spectPopup">is Spect?</string>
-    <string name="is_shaniPopup">is Shani?</string>
-    <string name="is_mangalPopup">is Mangal?</string>
+    <string name="is_donorPopup">Donor?</string>
+    <string name="is_rentedPopup">Rented?</string>
+    <string name="is_expiredPopup">Expired?</string>
+    <string name="is_spectPopup">Glasses?</string>
+    <string name="is_shaniPopup">Shani?</string>
+    <string name="is_mangalPopup">Mangal?</string>
     <string name="percentagePopup">Percentage :</string>
     <string name="_0Popup">0%</string>
     <string name="_100Popup">100%</string>
 
-
     <!-- ViewPager Fragment -->
 
     <string name="mainAction">Main action clicked!</string>
-
 
     <!-- AddFacts Fragment -->
     <string name="add_fact">Add Fact</string>

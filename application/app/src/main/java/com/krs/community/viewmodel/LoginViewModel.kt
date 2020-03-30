@@ -59,12 +59,12 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                     secs = seconds.toString()
                 }
                 otp_timer?.set("$mins:$secs")
-                stopTime.value=false
+                stopTime.value = false
                 Log.d(TAG, "remaining time: " + otp_timer?.get())
             }
 
             override fun onFinish() {
-                stopTime.value=true
+                stopTime.value = true
 
                 Log.d(TAG, "onFinish")
             }
@@ -127,24 +127,24 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                         loginRequest.login_type = "0"
                         getLoginUser(loginRequest)
                     } else {
-                        status.value=false
+                        status.value = false
                         Utility.hideSweetProgress()
                     }
                 }
             } else {
                 Utility.hideSweetProgress()
-                status.value=false
+                status.value = false
                 Log.w(TAG, "signInWithCredential:failure", task.exception)
             }
         }
     }
 
-    fun loginWithFB(email: String){
+    fun loginWithFB(email: String) {
         try {
             val loginRequest = AppConstants.LoginRequest()
             //fb_profile_url = data.getString("url")
             if (email.isEmpty()) {
-                status.value=false
+                status.value = false
                 return
             }
             loginRequest.username = email

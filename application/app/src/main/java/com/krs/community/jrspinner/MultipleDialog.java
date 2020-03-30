@@ -67,27 +67,10 @@ public class MultipleDialog extends DialogFragment {
     }
 
     /**
-     * method to set the listener
-     * @param listener on multiple items selected listener
-     * @param view spinner view
-     */
-    public void setListener(JRSpinner.OnSelectMultipleListener listener, JRSpinner view) {
-        this.listener = listener;
-        this.view = view;
-    }
-
-    /**
-     * method to add search listener
-     * @param watcher search box text watcher
-     */
-    public void addSearchListener(TextWatcher watcher){
-        this.watcher = watcher;
-    }
-
-    /**
      * method to create dialog object
-     * @param title title of dialog
-     * @param data items of spinner
+     *
+     * @param title    title of dialog
+     * @param data     items of spinner
      * @param selected selected items position
      * @return the dialog
      */
@@ -99,6 +82,26 @@ public class MultipleDialog extends DialogFragment {
         arguments.putIntegerArrayList("selected", (ArrayList<Integer>) selected);
         instance.setArguments(arguments);
         return instance;
+    }
+
+    /**
+     * method to set the listener
+     *
+     * @param listener on multiple items selected listener
+     * @param view     spinner view
+     */
+    public void setListener(JRSpinner.OnSelectMultipleListener listener, JRSpinner view) {
+        this.listener = listener;
+        this.view = view;
+    }
+
+    /**
+     * method to add search listener
+     *
+     * @param watcher search box text watcher
+     */
+    public void addSearchListener(TextWatcher watcher) {
+        this.watcher = watcher;
     }
 
     @Override
@@ -217,7 +220,7 @@ public class MultipleDialog extends DialogFragment {
                 }
             });
 
-            if (watcher != null){
+            if (watcher != null) {
                 etSearch.addTextChangedListener(watcher);
             }
 

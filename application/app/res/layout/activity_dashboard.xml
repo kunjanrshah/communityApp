@@ -25,8 +25,8 @@
 
                 <include
                     android:id="@+id/toolbar"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"
-                    layout="@layout/toolbar" />
+                    layout="@layout/toolbar"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             </com.google.android.material.appbar.AppBarLayout>
 

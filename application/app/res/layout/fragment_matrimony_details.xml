@@ -2,12 +2,12 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/border"
-    android:padding="10dp"
-    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/border"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -24,18 +24,17 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/matrimonyDetail"
                         android:layout_weight="1"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:textSize="18sp"
+                        android:text="@string/matrimonyDetail"
                         android:textColor="@color/colorPrimary"
-                          />
+                        android:textSize="18sp" />
 
 
                     <CheckBox
@@ -61,24 +60,24 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/about_meDetails"
-                        android:fontFamily="@font/montserrat_semibold" />
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/about_meDetails" />
 
                     <EditText
                         android:id="@+id/edtAbout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_color_gray"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="left|top"
                         android:inputType="textMultiLine"
                         android:lines="3"
                         android:maxLines="3"
-                        android:padding="5dp"
-                        android:textSize="15sp"
-                        android:gravity="left|top"
                         android:minLines="3"
-                        android:fontFamily="@font/montserrat_regular"
+                        android:padding="5dp"
                         android:scrollbars="vertical"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -92,19 +91,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/facebook_profile_url"
                         android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/facebook_profile_url"
                         android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/edt_fb_url"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:paddingLeft="10dp"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/montserrat_regular"
                         android:background="@drawable/border_color_gray"
-                        android:singleLine="true" />
+                        android:fontFamily="@font/montserrat_regular"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -117,8 +116,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.6"
                         android:layout_marginRight="10dp"
+                        android:layout_weight="0.6"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -129,20 +128,20 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/birthtime"
                                 android:fontFamily="@font/montserrat_semibold"
+                                android:text="@string/birthtime"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/txt_btime"
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
-                                android:textSize="22sp"
-                                android:padding="5dp"
-                                android:gravity="center_vertical"
-                                android:fontFamily="@font/montserrat_regular"
                                 android:background="@drawable/border_color_gray"
-                                android:singleLine="true" />
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center_vertical"
+                                android:padding="5dp"
+                                android:singleLine="true"
+                                android:textSize="22sp" />
 
                         </LinearLayout>
 
@@ -150,8 +149,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/hh_mm_with_24_hours"
                             android:fontFamily="@font/montserrat_regular"
+                            android:text="@string/hh_mm_with_24_hours"
                             android:textSize="10sp" />
                     </LinearLayout>
 
@@ -164,19 +163,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/birthplace"
                             android:fontFamily="@font/montserrat_semibold"
+                            android:text="@string/birthplace"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/edt_bplace"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            android:paddingLeft="5dp"
-                            android:textSize="16sp"
-                            android:fontFamily="@font/montserrat_regular"
                             android:background="@drawable/border_color_gray"
-                            android:singleLine="true" />
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingLeft="5dp"
+                            android:singleLine="true"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -191,19 +190,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/hobby"
                         android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/hobby"
                         android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/edt_hobby"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:paddingLeft="10dp"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/montserrat_regular"
                         android:background="@drawable/border_color_gray"
-                        android:singleLine="true" />
+                        android:fontFamily="@font/montserrat_regular"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -218,19 +217,18 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/expectation"
                         android:fontFamily="@font/montserrat_semibold"
-                         />
+                        android:text="@string/expectation" />
 
                     <EditText
                         android:id="@+id/edt_expectation"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:textSize="16sp"
-                        android:paddingLeft="10dp"
-                        android:fontFamily="@font/montserrat_regular"
                         android:background="@drawable/border_color_gray"
-                        android:singleLine="true" />
+                        android:fontFamily="@font/montserrat_regular"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -250,82 +248,79 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/weight"
                                 android:fontFamily="@font/montserrat_semibold"
-                                 />
+                                android:text="@string/weight" />
 
                             <EditText
                                 android:id="@+id/edt_weight"
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
-                                android:gravity="center"
-                                android:textSize="18sp"
-                                android:inputType="number"
-                                android:fontFamily="@font/montserrat_regular"
                                 android:background="@drawable/border_color_gray"
-                                android:singleLine="true" />
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:singleLine="true"
+                                android:textSize="18sp" />
 
                         </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/kgPopup"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:layout_marginLeft="3dp"
                             android:layout_gravity="bottom"
-                             />
+                            android:layout_marginLeft="3dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="@string/kgPopup" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
                         android:orientation="horizontal">
 
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/height"
                                 android:fontFamily="@font/montserrat_semibold"
-                                 />
+                                android:text="@string/height" />
 
                             <EditText
-                                android:inputType="number"
                                 android:id="@+id/edt_height"
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
-                                android:gravity="center"
-                                android:textSize="18sp"
-                                android:fontFamily="@font/montserrat_regular"
                                 android:background="@drawable/border_color_gray"
-                                android:singleLine="true" />
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:singleLine="true"
+                                android:textSize="18sp" />
 
                         </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/meter"
-                            android:fontFamily="@font/montserrat_semibold"
+                            android:layout_gravity="bottom"
                             android:layout_marginLeft="3dp"
-                            android:layout_gravity="bottom" />
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="@string/meter" />
 
                     </LinearLayout>
 
@@ -338,33 +333,33 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:text="@string/spectacles"
                         android:id="@+id/chk_glass"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:textSize="16sp" />
-
-                    <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/mangal"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="@string/spectacles"
+                        android:textSize="16sp" />
+
+                    <CheckBox
                         android:id="@+id/chk_is_mangal"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:textSize="16sp" />
-
-                    <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/shani"
-                        android:id="@+id/chk_is_shani"
                         android:fontFamily="@font/montserrat_regular"
+                        android:text="@string/mangal"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/chk_is_shani"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="@string/shani"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -374,6 +369,6 @@
 
         </ScrollView>
 
-</LinearLayout>
+    </LinearLayout>
 
 </layout>

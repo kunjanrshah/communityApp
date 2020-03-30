@@ -53,13 +53,12 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.lang.reflect.Method;
 
-;
-
 public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewPagerFragmentBase.FragmentListener {
 
     public static final String KEY_VIEW_PAGER_FRAG_TYPE_STRING = "key_view_pager_frag_type_string";
     private static final String TAG = FamilyTreeDetailActivity.class.getSimpleName();
     private static final int HEADER_BOTTOM_OFFSET = 100;
+    public static PhotosFragment photosFragment = new PhotosFragment();
     //base views
     protected ViewPager mViewPager;
     protected FragmentViewPagerAdapter mFragmentViewPagerAdapter;
@@ -91,7 +90,6 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
     protected float diffHolder = 1; //used to keep track of compact toolbar recall.
     protected boolean mainFabShown = false;
     protected boolean fabOpen = false;
-
     //To add or remove viewPager fragments, add or remove titles
     int[] mViewPagerFragmentTitles = new int[]{
             R.string.fragment_title_1,
@@ -99,13 +97,12 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
             R.string.fragment_title_3,
     };
     RelativesFragment relativesFragment = new RelativesFragment();
-    public static PhotosFragment photosFragment = new PhotosFragment();
     FactsFragment factsFragment = new FactsFragment();
+    NetworkChangeReceiver mNetworkReceiver;
     private KenBurnsView kv_header_img;
     private ImageView back_button_icon;
     private Handler mHandler;
     private IhideView ihideOverlay;
-    NetworkChangeReceiver mNetworkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,12 +121,13 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
         if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setScreenLayout();
-        }else{
+        } else {
             setNoInternetLayout();
         }
 
     }
-    private void setScreenLayout(){
+
+    private void setScreenLayout() {
 
         if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setContentView(R.layout.activity_tree_detailview);
@@ -188,7 +186,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
             //position views dependent on other views positions. Views need to be added before calculations can be done.
             //TODO: if possible, change all view dimensions to constants in dimens file to allow for measurement in onCreate
             adjustLayoutSetConstants();
-            ihideOverlay=relativesFragment;
+            ihideOverlay = relativesFragment;
             mOverFlow.setOnClickListener(v -> {
                 try {
                     PopupMenu popup = new PopupMenu(this, v);
@@ -221,7 +219,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
             mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    Log.d(TAG,"onPageScrolled: "+position);
+                    Log.d(TAG, "onPageScrolled: " + position);
                 }
 
                 @Override
@@ -239,15 +237,16 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
                 @Override
                 public void onPageScrollStateChanged(int state) {
-                    Log.d(TAG,"onPageScrollStateChanged: "+state);
+                    Log.d(TAG, "onPageScrollStateChanged: " + state);
                 }
             });
 
-            ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         }
     }
-    private void setNoInternetLayout(){
+
+    private void setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
@@ -259,7 +258,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         anim.setRepeatCount(Animation.INFINITE);
         AppCompatImageView imageView = findViewById(R.id.no_internet_image);
         imageView.setAnimation(anim);
-        AppCompatButton retryButton=findViewById(R.id.retry_button);
+        AppCompatButton retryButton = findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
             if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
                 setScreenLayout();
@@ -267,6 +266,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
         });
     }
+
     private void registerNetworkBroadcastForNougat() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -275,37 +275,24 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
             registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
     }
+
     private void unregisterNetworkBroadcastForNougat() {
-        try{
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 unregisterReceiver(mNetworkReceiver);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 unregisterReceiver(mNetworkReceiver);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterNetworkBroadcastForNougat();
-    }
-    class NetworkChangeReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try{
-                if (ConnectionLiveData.Companion.isNetworkConnected(context)) {
-                    setScreenLayout();
-                }else{
-                    setNoInternetLayout();
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -512,11 +499,6 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
         }
     }
 
-    //given a value, if that value is between a defined range, will return the linear equivalent of another range
-    //for example. given the range [100-200] as the input range and [5-1] as the output range, given a value of 100, getScaleBetweenRange will
-    //return 5.
-    //if given a value outside of [100-200] such as 95, getScaleBetweenRange will default to the min value, which in this case would be 5.
-
     //The title area and slidingTabLayout is not elevated when scrolled all the way down, but when pulled back down as a sticky
     //header in its compacted form, it does.
     private void setHeaderGroupElevation(int elevation) {
@@ -534,6 +516,11 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
             ViewCompat.setElevation(mTitleBox, elevation);
         }
     }
+
+    //given a value, if that value is between a defined range, will return the linear equivalent of another range
+    //for example. given the range [100-200] as the input range and [5-1] as the output range, given a value of 100, getScaleBetweenRange will
+    //return 5.
+    //if given a value outside of [100-200] such as 95, getScaleBetweenRange will default to the min value, which in this case would be 5.
 
     /**
      * Broaadcasts an update to all attached fragments once the current fragment stops scrolling
@@ -670,7 +657,24 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
 
     public interface IhideView {
         void hideOverlay();
+
         boolean isOpen();
+    }
+
+    class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (ConnectionLiveData.Companion.isNetworkConnected(context)) {
+                    setScreenLayout();
+                } else {
+                    setNoInternetLayout();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private class FragmentViewPagerAdapter extends FragmentPagerAdapter {

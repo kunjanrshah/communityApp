@@ -6,22 +6,23 @@ import com.krs.community.app.AppDatabase
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
 
-class SmartSearchRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
+class SmartSearchRepository(private val api: ApiServices, private val db: AppDatabase) : SafeApiRequest() {
 
     suspend fun searchByKeyword(jsonObject: JsonObject): searchByKeywordsResponse {
-        return apiRequest{
+        return apiRequest {
             api.getSearchByKeywords(jsonObject)
         }
     }
 
-    fun getLastName(id:Int):LiveData<String>{
-      return  db.getLastNameDao().getLastNameById(id)
+    fun getLastName(id: Int): LiveData<String> {
+        return db.getLastNameDao().getLastNameById(id)
     }
-    fun getCityName(id:String): LiveData<String> {
+
+    fun getCityName(id: String): LiveData<String> {
         return db.getCityDao().getcityNameById(Integer.parseInt(id))
     }
 
-    fun getRelationName(id:String): String {
+    fun getRelationName(id: String): String {
         return db.getRelationsDao().getRelationNameById(Integer.parseInt(id))
     }
 }

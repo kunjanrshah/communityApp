@@ -26,12 +26,13 @@ class SettingFragment : Fragment() {
     private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
     private val PERMISSION_REQUEST_READ_PHONE_STATE_CALL = 2
     protected var switchDialog: LabeledSwitch? = null
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragmnet_settings, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, SettingFragment::class.simpleName)
         mApp.facebookAnalytics(context, SettingFragment::class.simpleName)
 
@@ -105,22 +106,22 @@ class SettingFragment : Fragment() {
                 if (grantResults.isNotEmpty()) {
                     val callAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
                     if (!callAccepted) {
-                    Snackbar.make(view!!, "Permission Required for Phone Call Dialog Feature", Snackbar.LENGTH_LONG).show()
-                    switchDialog?.isOn = false
+                        Snackbar.make(view!!, "Permission Required for Phone Call Dialog Feature", Snackbar.LENGTH_LONG).show()
+                        switchDialog?.isOn = false
+                    }
                 }
             }
-        }else -> {
-            if (grantResults.isNotEmpty()) {
-                val callAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                if (!callAccepted) {
-                    Snackbar.make(view!!, "Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG).show()
-                    switchDialog?.isOn = false
+            else -> {
+                if (grantResults.isNotEmpty()) {
+                    val callAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    if (!callAccepted) {
+                        Snackbar.make(view!!, "Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG).show()
+                        switchDialog?.isOn = false
+                    }
                 }
             }
-        }
         }
     }
-
 
 
     override fun onResume() {

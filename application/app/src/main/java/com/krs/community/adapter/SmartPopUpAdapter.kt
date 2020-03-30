@@ -28,7 +28,7 @@ import java.util.*
 
 class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapter,
                         private val mapChildValues: HashMap<String, String>,
-                        var profileDetailViewModel: ProfileDetailViewModel,val editFilter:String?) : BaseAdapter() {
+                        var profileDetailViewModel: ProfileDetailViewModel, val editFilter: String?) : BaseAdapter() {
 
     private var mICloseDialog: ICloseDialog = adapter
 
@@ -154,17 +154,17 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         viewHolder.edtPermanentAdd.setText(value1)
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_chk_is_donor), ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
+                    if (value.equals("1", ignoreCase = true)) {
                         viewHolder.llIsdonor.visibility = View.VISIBLE
                         viewHolder.chkIsDonor.isChecked = true
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_chk_is_expired), ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
+                    if (value.equals("1", ignoreCase = true)) {
                         viewHolder.llIsexpired.visibility = View.VISIBLE
                         viewHolder.chkIsExpired.isChecked = true
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_chk_is_rented), ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
+                    if (value.equals("1", ignoreCase = true)) {
                         viewHolder.llIsrented.visibility = View.VISIBLE
                         viewHolder.chkIsRented.isChecked = true
                     }
@@ -321,40 +321,41 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         viewHolder.edtWeightKg.setText(value1)
                     }
                 }*/ else if (key.equals(_context.resources.getString(R.string.ss_chk_is_shani), ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
+                    if (value.equals("1", ignoreCase = true)) {
                         viewHolder.llIsshani.visibility = View.VISIBLE
                         viewHolder.chkIsShani.isChecked = true
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_chk_is_mangal), ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
+                    if (value.equals("1", ignoreCase = true)) {
                         viewHolder.llIsmangal.visibility = View.VISIBLE
                         viewHolder.chkIsMangal.isChecked = true
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_chk_is_spect), ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
+                    if (value.equals("1", ignoreCase = true)) {
                         viewHolder.llIsspect.visibility = View.VISIBLE
                         viewHolder.chkIsSpect.isChecked = true
+                    }
+                } else if (key.equals(_context.resources.getString(R.string.matrimony), ignoreCase = true)) {
+                    if (value.equals("Yes", ignoreCase = true)) {
+                        viewHolder.llInterested.visibility = View.VISIBLE
+                        viewHolder.chkIsInterest.isChecked = true
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_edt_bdate), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llBirthDate.visibility = View.VISIBLE
                         viewHolder.tvBirthDate.text = value1
                     }
-                }else if (key.equals(_context.resources.getString(R.string.ss_edt_mdate), ignoreCase = true)) {
+                } else if (key.equals(_context.resources.getString(R.string.ss_edt_mdate), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llMdate.visibility = View.VISIBLE
                         viewHolder.tvMdate.text = value1
                     }
-                }
-
-                else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
+                } else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llCreated.visibility = View.VISIBLE
                         viewHolder.tvCreated.text = value1
                     }
-                }
-
-                else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
+                } else if (key.equals(_context.resources.getString(R.string.ss_edt_created), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.llCreated.visibility = View.VISIBLE
                         viewHolder.tvCreated.text = value1
@@ -364,11 +365,11 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                         viewHolder.llUpdated.visibility = View.VISIBLE
                         viewHolder.tvUpdated.text = value1
                     }
-                } else if (key.equals(_context.resources.getString(R.string.ss_minUpdate), ignoreCase = true)) {
+                } else if (key.equals(_context.resources.getString(R.string.ss_min_percentage), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.rangeUpdationBar.setMinStartValue(value.toInt().toFloat()).apply()
                     }
-                } else if (key.equals(_context.resources.getString(R.string.ss_maxUpdate), ignoreCase = true)) {
+                } else if (key.equals(_context.resources.getString(R.string.ss_max_percentage), ignoreCase = true)) {
                     if (value.isNotEmpty()) {
                         viewHolder.rangeUpdationBar.setMaxStartValue(value.toInt().toFloat()).apply()
                     }
@@ -451,6 +452,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         viewHolder.imgBtimeClose.setOnClickListener { v: View? -> viewHolder.llBtime.visibility = View.GONE }
         viewHolder.imgBplaceClose.setOnClickListener { v: View? -> viewHolder.llBplace.visibility = View.GONE }
         viewHolder.imgSpectClose.setOnClickListener { v: View? -> viewHolder.llIsspect.visibility = View.GONE }
+        viewHolder.imgInterestedClose.setOnClickListener { v: View? -> viewHolder.llInterested.visibility = View.GONE }
         viewHolder.imgShaniClose.setOnClickListener { v: View? -> viewHolder.llIsshani.visibility = View.GONE }
         viewHolder.imgMangalClose.setOnClickListener { v: View? -> viewHolder.llIsmangal.visibility = View.GONE }
         viewHolder.imgHeightClose.setOnClickListener { v: View? -> viewHolder.llHeight.visibility = View.GONE }
@@ -458,7 +460,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         viewHolder.imgPerClose.setOnClickListener { v: View? -> viewHolder.llPercentage.visibility = View.GONE }
         viewHolder.imgUpdatedClose.setOnClickListener { v: View? -> viewHolder.llUpdated.visibility = View.GONE }
         viewHolder.imgCreatedClose.setOnClickListener { v: View? -> viewHolder.llCreated.visibility = View.GONE }
-        if(!editFilter.isNullOrEmpty()){
+        if (!editFilter.isNullOrEmpty()) {
             val json = JSONObject(editFilter)
             val str = json.getString(_context.getString(R.string.name_filter))
             if (!str.equals(_context.getString(R.string.default_filter_name))) {
@@ -466,9 +468,9 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 viewHolder.edtFilterName.visibility = View.VISIBLE
                 viewHolder.edtFilterName.setText(str)
             }
-        }else{
+        } else {
             viewHolder.edtFilterName.visibility = View.INVISIBLE
-            viewHolder.chkSave.isChecked=false
+            viewHolder.chkSave.isChecked = false
         }
 
         viewHolder.chkSave.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
@@ -489,17 +491,17 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 }
 
                 if (viewHolder.chkSave.isChecked && filterName.isNotEmpty()) {
-                    val jsonArray:JSONArray
-                    val listFilter= Guru.getString(_context.getString(R.string.list_filter),"")
-                    if(listFilter.isNullOrEmpty()){
-                        jsonArray= JSONArray()
-                    }else{
-                        jsonArray= JSONArray(listFilter)
+                    val jsonArray: JSONArray
+                    val listFilter = Guru.getString(_context.getString(R.string.list_filter), "")
+                    if (listFilter.isNullOrEmpty()) {
+                        jsonArray = JSONArray()
+                    } else {
+                        jsonArray = JSONArray(listFilter)
                     }
 
                     for (i in 0 until jsonArray.length()) {
                         val item = jsonArray.getJSONObject(i)
-                        val name= item.getString(_context.getString(R.string.name_filter))
+                        val name = item.getString(_context.getString(R.string.name_filter))
                         if (name.toString() == filterName) {
 
                             SweetAlertDialog(_context as AppCompatActivity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
@@ -532,11 +534,11 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                             break
                         }
                     }
-                    val jsonObject= JSONObject()
+                    val jsonObject = JSONObject()
                     jsonObject.put(_context.getString(R.string.name_filter), filterName)
-                    jsonObject.put(_context.getString(R.string.value_filter),filter)
+                    jsonObject.put(_context.getString(R.string.value_filter), filter)
                     jsonArray.put(jsonObject)
-                    Guru.putString(_context.getString(R.string.list_filter),jsonArray.toString())
+                    Guru.putString(_context.getString(R.string.list_filter), jsonArray.toString())
                 }
 
                 mICloseDialog.PopupClose()
@@ -693,20 +695,20 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 lstValues.put(_context.resources.getString(R.string.ss_edt_mdate), Utility.changeDateFormat(viewHolder.tvMdate.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
             if (viewHolder.llExpire.isShown) {
-                lstValues.put(_context.resources.getString(R.string.expire_date), viewHolder.tvExpire.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.expire_date), Utility.changeDateFormat(viewHolder.tvExpire.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
 
             if (viewHolder.llBg.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_sp_bg), viewHolder.spBg.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llIsdonor.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_donor), viewHolder.chkIsDonor.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_donor), "1")
             }
             if (viewHolder.llIsrented.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_rented), viewHolder.chkIsRented.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_rented), "1")
             }
             if (viewHolder.llIsexpired.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_expired), viewHolder.chkIsExpired.text.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_expired), "1")
             }
             if (viewHolder.llOfficeAdd.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_edt_office), viewHolder.edtOffice.text.toString().trim { it <= ' ' })
@@ -719,13 +721,16 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 lstValues.put(_context.resources.getString(R.string.ss_sp_bplace), viewHolder.edtBplace.text.toString().trim { it <= ' ' })
             }
             if (viewHolder.llIsspect.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_spect), viewHolder.chkIsSpect.isChecked)
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_spect), "1")
+            }
+            if (viewHolder.llInterested.isShown) {
+                lstValues.put(_context.resources.getString(R.string.matrimony), "Yes")
             }
             if (viewHolder.llIsshani.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_shani), viewHolder.chkIsShani.isChecked)
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_shani), "1")
             }
             if (viewHolder.llIsmangal.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_chk_is_mangal), viewHolder.chkIsMangal.isChecked)
+                lstValues.put(_context.resources.getString(R.string.ss_chk_is_mangal), "1")
             }
             if (viewHolder.llHeight.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_max_height), viewHolder.rangeHeightBar.selectedMaxValue.toString().trim { it <= ' ' })
@@ -743,8 +748,8 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 lstValues.put(_context.resources.getString(R.string.ss_edt_updated), Utility.changeDateFormat(viewHolder.tvUpdated.text.toString(), Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
             }
             if (viewHolder.llPercentage.isShown) {
-                lstValues.put(_context.resources.getString(R.string.ss_maxUpdate), viewHolder.rangeUpdationBar.selectedMaxValue.toString().trim { it <= ' ' })
-                lstValues.put(_context.resources.getString(R.string.ss_minUpdate), viewHolder.rangeUpdationBar.selectedMinValue.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_max_percentage), viewHolder.rangeUpdationBar.selectedMaxValue.toString().trim { it <= ' ' })
+                lstValues.put(_context.resources.getString(R.string.ss_min_percentage), viewHolder.rangeUpdationBar.selectedMinValue.toString().trim { it <= ' ' })
             }
 
         } catch (e: Exception) {
@@ -806,6 +811,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var imgBtimeClose: ImageView = view.findViewById(R.id.img_btime_close)
         var imgBplaceClose: ImageView = view.findViewById(R.id.img_bplace_close)
         var imgSpectClose: ImageView = view.findViewById(R.id.img_spect_close)
+        var imgInterestedClose: ImageView = view.findViewById(R.id.img_interested_close)
         var imgShaniClose: ImageView = view.findViewById(R.id.img_shani_close)
         var imgMangalClose: ImageView = view.findViewById(R.id.img_mangal_close)
         var imgHeightClose: ImageView = view.findViewById(R.id.img_height_close)
@@ -847,6 +853,8 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var llBtime: LinearLayout = view.findViewById(R.id.ll_btime)
         var llBplace: LinearLayout = view.findViewById(R.id.ll_bplace)
         var llIsspect: LinearLayout = view.findViewById(R.id.ll_isSpect)
+        var llInterested: LinearLayout = view.findViewById(R.id.ll_interested)
+
         var llIsshani: LinearLayout = view.findViewById(R.id.ll_isShani)
         var llIsmangal: LinearLayout = view.findViewById(R.id.ll_isMangal)
 
@@ -907,6 +915,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var chkIsRented: CheckBox = view.findViewById(R.id.chk_is_rented)
         var chkIsDonor: CheckBox = view.findViewById(R.id.chk_is_donor)
         var chkIsSpect: CheckBox = view.findViewById(R.id.chk_is_spect)
+        var chkIsInterest: CheckBox = view.findViewById(R.id.chk_interested)
         var chkIsShani: CheckBox = view.findViewById(R.id.chk_is_shani)
         var chkIsMangal: CheckBox = view.findViewById(R.id.chk_is_mangal)
         var btnApply: Button = view.findViewById(R.id.btnApply)

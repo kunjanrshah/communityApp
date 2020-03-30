@@ -56,8 +56,6 @@ import me.ydcool.lib.qrmodule.encoding.QrGenerator;
 
 import static com.facebook.AccessTokenManager.TAG;
 
-;
-
 public class QRCodeActivity extends AppCompatActivity {
 
     private static final int SELECT_PHOTO = 100;
@@ -221,7 +219,7 @@ public class QRCodeActivity extends AppCompatActivity {
                 b = Bitmap.createBitmap(binding.ivCode.getDrawingCache());
                 String str = member.getId() + "   " + member.getFirstName() + "   " + date;
                 Bitmap bmp = Utility.drawTextToBitmap(b, str, QRCodeActivity.this);
-                saveImage(bmp);
+                saveImage(bmp, member.getId(), member.getFirstName());
 
             }, 1000);
 
@@ -269,13 +267,14 @@ public class QRCodeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void saveImage(Bitmap image) {
+    private void saveImage(Bitmap image, String id, String name) {
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
         File imagesFolder = new File(path);
         Uri uri = null;
         try {
             imagesFolder.mkdirs();
-            File file = new File(imagesFolder, "qrcode.png");
+            String fname = id + "_" + name;
+            File file = new File(imagesFolder, fname + ".png");
             FileOutputStream stream = new FileOutputStream(file);
             image.compress(Bitmap.CompressFormat.PNG, 100, stream);
             stream.flush();

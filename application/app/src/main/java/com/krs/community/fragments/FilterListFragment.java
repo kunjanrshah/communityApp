@@ -44,6 +44,7 @@ public class FilterListFragment extends Fragment {
     ArrayList<JSONObject> lstFilters;
     JSONArray mJsonArray;
     LinearLayout llNotFound;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -87,26 +88,26 @@ public class FilterListFragment extends Fragment {
                 ListViewHolder holder = ((ListViewHolder) viewHolder);
                 try {
                     String name = lstFilters.get(i).getString(getActivity().getString(R.string.name_filter));
-                    String value =lstFilters.get(i).getString(getActivity().getString(R.string.value_filter));
-                    Log.d("FilterListFragment",""+value);
+                    String value = lstFilters.get(i).getString(getActivity().getString(R.string.value_filter));
+                    Log.d("FilterListFragment", "" + value);
                     holder.tvName.setText(name);
 
-                    JSONObject json=new JSONObject(value);
-                    for(Iterator<String> iter = json.keys(); iter.hasNext();) {
+                    JSONObject json = new JSONObject(value);
+                    for (Iterator<String> iter = json.keys(); iter.hasNext(); ) {
                         String key = iter.next();
-                        LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View view= layoutInflater.inflate(R.layout.item_filters,null,false);
-                        TextView label=view.findViewById(R.id.tv_label);
-                        String str=key.replace("_"," ");
+                        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View view = layoutInflater.inflate(R.layout.item_filters, null, false);
+                        TextView label = view.findViewById(R.id.tv_label);
+                        String str = key.replace("_", " ");
                         String[] strArray = str.split(" ");
                         StringBuilder builder = new StringBuilder();
                         for (String s : strArray) {
                             String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
                             builder.append(cap + " ");
                         }
-                        label.setText(builder.toString()+": ");
-                        TextView value1=view.findViewById(R.id.tv_value);
-                        value1.setText(json.getString(key)+" ");
+                        label.setText(builder.toString() + ": ");
+                        TextView value1 = view.findViewById(R.id.tv_value);
+                        value1.setText(json.getString(key) + " ");
                         holder.flexboxLayout.addView(view);
                     }
                 } catch (JSONException e) {
@@ -121,11 +122,11 @@ public class FilterListFragment extends Fragment {
                 });
 
                 holder.imgEdit.setOnClickListener(v -> {
-                        ExpandableFilterListFragment listFragment=new ExpandableFilterListFragment();
-                        Bundle mBundle=new Bundle();
-                        mBundle.putString(getActivity().getString(R.string.edit_filter),lstFilters.get(i).toString());
-                        listFragment.setArguments(mBundle);
-                        Utility.movetoFragment(getActivity(),listFragment);
+                    ExpandableFilterListFragment listFragment = new ExpandableFilterListFragment();
+                    Bundle mBundle = new Bundle();
+                    mBundle.putString(getActivity().getString(R.string.edit_filter), lstFilters.get(i).toString());
+                    listFragment.setArguments(mBundle);
+                    Utility.movetoFragment(getActivity(), listFragment);
                 });
 
                 holder.llFilter.setOnClickListener(v -> {
@@ -226,6 +227,7 @@ public class FilterListFragment extends Fragment {
         LinearLayout llFilter;
         FlexboxLayout flexboxLayout;
         ImageView imgEdit, imgDelete;
+
         ListViewHolder(View v) {
             super(v);
             tvName = v.findViewById(R.id.tv_name);

@@ -1,10 +1,10 @@
-
 package com.krs.community.responses;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.krs.community.model.Member;
+
+import java.util.List;
 
 public class ByDistanceResponse {
 

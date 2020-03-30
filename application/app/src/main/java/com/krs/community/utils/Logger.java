@@ -8,16 +8,6 @@ public class Logger implements Serializable {
 
     private String tag;
 
-    /**
-     * Initializes logger. Logs are disabled for release builds
-     * during initialization.
-     *
-     * @param context
-     */
-    public static void init(Context context) {
-        LogUtil.init(context);
-    }
-
     private Logger() {
     }
 
@@ -27,6 +17,16 @@ public class Logger implements Serializable {
 
     public Logger(String tag) {
         this.tag = tag;
+    }
+
+    /**
+     * Initializes logger. Logs are disabled for release builds
+     * during initialization.
+     *
+     * @param context
+     */
+    public static void init(Context context) {
+        LogUtil.init(context);
     }
 
     /**

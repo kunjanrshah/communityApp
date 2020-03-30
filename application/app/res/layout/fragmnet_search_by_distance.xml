@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:shimmer="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/ll_root"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -12,9 +12,9 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="200dp"
-        android:visibility="gone"
         android:layout_marginRight="10dp"
         android:orientation="vertical"
+        android:visibility="gone"
         shimmer:duration="800">
 
         <LinearLayout
@@ -40,16 +40,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:visibility="visible"
         android:layoutAnimation="@anim/layout_animation_fall_down"
         android:overScrollMode="never"
+        android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <ImageView
-        android:layout_marginTop="200dp"
         android:id="@+id/img_map"
-        android:background="@drawable/bg_distance"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/bg_distance" />
 
 </FrameLayout>

@@ -1,4 +1,3 @@
-
 package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;

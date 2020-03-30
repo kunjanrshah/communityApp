@@ -2,11 +2,14 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:shimmer="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <variable
             name="browseCityViewModel"
             type="com.krs.community.viewmodel.BrowseCityViewModel" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,16 +45,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
+
                 <include layout="@layout/header_row_item_shimmer" />
 
             </LinearLayout>
@@ -59,10 +73,10 @@
 
         <com.ericliu.asyncexpandablelist.async.AsyncExpandableListView
             android:id="@+id/asyncExpandableCollectionView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-</LinearLayout>
+            android:layout_marginBottom="10dp" />
+    </LinearLayout>
 </layout>

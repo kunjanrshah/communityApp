@@ -7,7 +7,7 @@ import com.krs.community.retrofit.ApiServices
 class DocumentListRepository(private val api: ApiServices) : SafeApiRequest() {
 
     suspend fun getDocumentList(jsonObject: JsonObject): UploadedFilesResponse {
-        return apiRequest{
+        return apiRequest {
             api.getDocumentList(jsonObject)
         }
     }

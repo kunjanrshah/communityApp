@@ -250,7 +250,7 @@ public class ViewPagerFragmentBase extends Fragment {
             @Override
             public boolean onMainActionSelected() {
                 //showToast("Main action clicked!");
-                Toast.makeText(getActivity(),  R.string.mainAction, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.mainAction, Toast.LENGTH_SHORT).show();
                 return false; // True to keep the Speed Dial open
             }
 

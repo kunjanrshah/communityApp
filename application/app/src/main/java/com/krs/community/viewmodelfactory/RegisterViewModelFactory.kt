@@ -8,7 +8,7 @@ import com.krs.community.viewmodel.RegisterViewModel
 
 class RegisterViewModelFactory(
         private val repository: RegisterRepository
-        ):ViewModelProvider.NewInstanceFactory() {
+) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return RegisterViewModel(repository, AppController.mApplication) as T
     }

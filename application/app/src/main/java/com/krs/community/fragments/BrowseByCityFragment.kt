@@ -36,7 +36,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String, City>,KodeinAware {
+class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String, City>, KodeinAware {
 
     private lateinit var mAsyncExpandableListView: AsyncExpandableListView<String, City>
     private lateinit var shimmer_view_container: ShimmerFrameLayout
@@ -53,7 +53,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         }
 
         val binding: FragmentBrowseCityBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_browse_city, container, false)
-        val view=  binding.root
+        val view = binding.root
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, BrowseByCityFragment::class.simpleName)
@@ -66,7 +66,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
         inventory = CollectionView.Inventory()
 
-        shimmer_view_container=view.findViewById(R.id.shimmer_view_container)
+        shimmer_view_container = view.findViewById(R.id.shimmer_view_container)
         shimmer_view_container.startShimmerAnimation()
         shimmer_view_container.visibility = View.VISIBLE
 
@@ -76,7 +76,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         return view
     }
 
-    private fun getStatesFromDB()=Coroutines.main{
+    private fun getStatesFromDB() = Coroutines.main {
         browseCityViewModel?.getStates()?.observeForever {
             for ((index, stateData) in it.withIndex()) {
                 val group = inventory?.newGroup(index) //Integer.parseInt(stateData.id)// groupOrdinal is the smallest, displayed first
@@ -88,10 +88,10 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         }
     }
 
-    private fun getCityFromDB(stateId:Int)=Coroutines.main{
+    private fun getCityFromDB(stateId: Int) = Coroutines.main {
         browseCityViewModel?.getCitiesByState(stateId)?.observeForever {
-            val groupOrdinal=stateId-1
-            mAsyncExpandableListView.onFinishLoadingGroup(groupOrdinal,it)
+            val groupOrdinal = stateId - 1
+            mAsyncExpandableListView.onFinishLoadingGroup(groupOrdinal, it)
         }
     }
 
@@ -109,7 +109,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     }
 
     override fun onStartLoadingGroup(groupOrdinal: Int) {
-        getCityFromDB(groupOrdinal+1)
+        getCityFromDB(groupOrdinal + 1)
     }
 
     override fun newCollectionHeaderView(context: Context, groupOrdinal: Int, parent: ViewGroup): AsyncHeaderViewHolder {
@@ -130,7 +130,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     override fun bindCollectionItemView(context: Context, holder: RecyclerView.ViewHolder, i: Int, item: City) {
         val cityItemHolder = holder as CityItemHolder
         cityItemHolder.textViewCity.text = item.name
-        cityItemHolder.city_id=item.id.toString()
+        cityItemHolder.city_id = item.id.toString()
         if (item.name.equals("other", ignoreCase = true)) {
             cityItemHolder.textViewDevider.visibility = View.GONE
         } else {
@@ -142,24 +142,24 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
         internal val textViewCity: TextView
         internal val textViewDevider: View
-        internal var city_id:String=""
+        internal var city_id: String = ""
 
         init {
             // Define click listener for the ViewHolder's View.
             v.setOnClickListener { Log.d(TAG, "Element $position clicked.") }
 
             textViewCity = v.findViewById(R.id.tv_city)
-            textViewDevider= v.findViewById(R.id.view_devider)
+            textViewDevider = v.findViewById(R.id.view_devider)
             val row_city = v.findViewById<LinearLayout>(R.id.row_city)
 
             row_city.setOnClickListener { v1 ->
-                val fragment=SearchCityResult()
+                val fragment = SearchCityResult()
                 val mBundle = Bundle()
                 mBundle.putString("city_name", textViewCity.text.toString())
                 mBundle.putString("city_id", city_id)
                 fragment.arguments = mBundle
                 Utility.movetoFragment(activity, fragment)
-             }
+            }
         }
     }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -25,131 +25,131 @@
                 android:id="@+id/edt_office"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:singleLine="true"
-                android:fontFamily="@font/montserrat_regular"
-                android:textSize="14sp"
                 android:background="@drawable/border"
+                android:fontFamily="@font/montserrat_regular"
                 android:hint="@string/ofcAd"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_main_cat"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/selectcategory"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textSize="14sp"
                     android:hint="@string/categorySecondPopup"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/selectcategory" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_sub_cat"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/selectsubc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textSize="14sp"
                     android:hint="@string/sub_category"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/selectsubc" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_occupation"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/selectOccu"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textSize="14sp"
                     android:hint="@string/OccupationDetails"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/selectOccu" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_current_activity"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/selectCurrentActivity"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textSize="14sp"
                     android:hint="@string/current_activityDetails"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/selectCurrentActivity" />
             </RelativeLayout>
 
 

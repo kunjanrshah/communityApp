@@ -4,5 +4,5 @@ import com.krs.community.responses.NewsResponse
 
 interface NewsListener {
     fun getNewsList(response: NewsResponse)
-    fun getFailure(message:String)
+    fun getFailure(message: String)
 }

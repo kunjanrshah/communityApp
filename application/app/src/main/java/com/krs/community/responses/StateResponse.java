@@ -1,9 +1,7 @@
-
 package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.krs.community.entities.City;
 import com.krs.community.entities.States;
 
 import java.util.List;
@@ -27,6 +25,7 @@ public class StateResponse {
     @SerializedName("deleted")
     @Expose
     private List<String> deleted = null;
+
     public Boolean getSuccess() {
         return success;
     }

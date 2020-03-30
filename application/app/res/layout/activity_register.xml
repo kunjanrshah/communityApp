@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="registerviewmodel"
             type="com.krs.community.viewmodel.RegisterViewModel" />
@@ -12,62 +13,62 @@
     </data>
 
 
-<LinearLayout
-    android:id="@+id/root_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBG"
-    android:orientation="vertical">
-
     <LinearLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/img_back"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/left_arrow"
-            android:padding="5dp"
-            android:visibility="invisible"
-            tools:ignore="ContentDescription" />
+        android:layout_height="match_parent"
+        android:background="@color/colorBG"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal">
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/img_header_logo"
-                android:layout_width="250dp"
-                android:layout_height="23dp"
-                tools:ignore="ContentDescription"
-                android:background="@drawable/app_text_title" />
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            tools:ignore="ContentDescription" />
-    </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scroll"
-        android:scrollbars="none"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+                android:id="@+id/img_back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/left_arrow"
+                android:padding="5dp"
+                android:visibility="invisible"
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/img_header_logo"
+                    android:layout_width="250dp"
+                    android:layout_height="23dp"
+                    android:background="@drawable/app_text_title"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <!--<TextView
@@ -105,9 +106,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_marginEnd="10dp"
                         android:fontFamily="@font/montserrat_semibold"
                         android:gravity="end"
-                        android:layout_marginEnd="10dp"
                         android:text="@string/register_now"
                         android:textSize="20sp" />
 
@@ -118,21 +119,21 @@
                     android:id="@+id/edt_head_name"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/register_field_height"
-                    android:nextFocusDown="@+id/spinnerLname"
-                    android:imeOptions="actionNext"
                     android:layout_marginTop="10dp"
-                    android:digits= "@string/only_chars"
                     android:background="@drawable/border"
+                    android:digits="@string/only_chars"
                     android:drawableStart="@drawable/user_name"
                     android:drawablePadding="10dp"
-                    android:textSize="16sp"
-                    android:text="@={registerviewmodel.fname}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_name"
+                    android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
+                    android:nextFocusDown="@+id/spinnerLname"
                     android:paddingStart="10dp"
                     android:paddingEnd="0dp"
                     android:singleLine="true"
+                    android:text="@={registerviewmodel.fname}"
+                    android:textSize="16sp"
                     tools:ignore="Autofill" />
 
                 <RelativeLayout
@@ -140,8 +141,8 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:background="@drawable/name_gradient_spinner">
+                    android:background="@drawable/name_gradient_spinner"
+                    android:gravity="center">
 
                     <com.krs.community.jrspinner.JRSpinner
                         android:id="@+id/spinnerLname"
@@ -150,12 +151,12 @@
                         android:layout_marginLeft="30dp"
                         android:background="@null"
                         android:hint="@string/last_name"
-                        android:textSize="16sp"
                         android:imeOptions="actionNext"
                         android:nextFocusDown="@+id/edt_email_id"
                         android:paddingRight="15dp"
                         android:singleLine="true"
                         android:textColor="@color/black1"
+                        android:textSize="16sp"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
@@ -168,28 +169,29 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:background="@drawable/gender_gradient_spinner">
+                    android:background="@drawable/gender_gradient_spinner"
+                    android:gravity="center">
 
                     <com.krs.community.jrspinner.JRSpinner
                         android:id="@+id/spinnerGender"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
                         android:background="@null"
                         android:hint="@string/gender"
-                        android:layout_marginLeft="30dp"
-                        android:textSize="16sp"
                         android:imeOptions="actionNext"
                         android:nextFocusDown="@+id/edt_email_id"
                         android:paddingRight="15dp"
                         android:singleLine="true"
                         android:textColor="@color/black1"
+                        android:textSize="16sp"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
                         app:jrs_title="Select Last Name" />
 
                 </RelativeLayout>
+
                 <EditText
                     android:id="@+id/edt_email_id"
                     android:layout_width="match_parent"
@@ -198,16 +200,16 @@
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/mail"
                     android:drawablePadding="15dp"
-                    android:textSize="16sp"
-                    android:text="@={registerviewmodel.email}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_email"
+                    android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
+                    android:nextFocusDown="@+id/edt_mobile"
                     android:paddingStart="10dp"
                     android:paddingEnd="0dp"
                     android:singleLine="true"
-                    android:nextFocusDown="@+id/edt_mobile"
-                    android:imeOptions="actionNext"
+                    android:text="@={registerviewmodel.email}"
+                    android:textSize="16sp"
                     tools:ignore="Autofill" />
 
                 <LinearLayout
@@ -218,22 +220,22 @@
                     android:orientation="horizontal">
 
                     <RelativeLayout
-                        android:visibility="gone"
                         android:layout_width="130dp"
                         android:layout_height="50dp"
+                        android:layout_gravity="center"
                         android:background="@drawable/country_gradient_spinner"
-                        android:layout_gravity="center">
+                        android:visibility="gone">
 
                         <com.krs.community.jrspinner.JRSpinner
                             android:id="@+id/spinnerCountries"
-                            app:jrs_multiple="false"
-                            android:singleLine="true"
-                            android:layout_marginLeft="20dp"
-                            android:hint="@string/code"
-                            android:background="@null"
                             style="@style/Widget.AppCompat.DropDownItem.Spinner"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="20dp"
+                            android:background="@null"
+                            android:hint="@string/code"
+                            android:singleLine="true"
+                            app:jrs_multiple="false" />
                     </RelativeLayout>
 
                     <EditText
@@ -245,15 +247,15 @@
                         android:drawablePadding="15dp"
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="@string/hint_mobile"
-                        android:text="@={registerviewmodel.mobile}"
+                        android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="10"
-                        android:textSize="16sp"
-                        android:paddingEnd="0dp"
-                        android:paddingStart="10dp"
-                        android:singleLine="true"
                         android:nextFocusDown="@+id/edt_password"
-                        android:imeOptions="actionNext"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="0dp"
+                        android:singleLine="true"
+                        android:text="@={registerviewmodel.mobile}"
+                        android:textSize="16sp"
                         tools:ignore="Autofill" />
                 </LinearLayout>
 
@@ -278,7 +280,6 @@
                     tools:ignore="Autofill" />
 
                 <com.krs.community.utils.ChromaHashView
-                    tools:ignore="Autofill"
                     android:id="@+id/edt_cpassword"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/register_field_height"
@@ -286,16 +287,17 @@
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/lock"
                     android:drawablePadding="15dp"
-                    android:textSize="16sp"
-                    android:text="@={registerviewmodel.cpass}"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_conform_password"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
+                    android:nextFocusDown="@+id/spinnerStates"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:nextFocusDown="@+id/spinnerStates"
-                    android:imeOptions="actionNext"
-                    android:singleLine="true"                   />
+                    android:singleLine="true"
+                    android:text="@={registerviewmodel.cpass}"
+                    android:textSize="16sp"
+                    tools:ignore="Autofill" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -308,19 +310,19 @@
                         android:id="@+id/spinnerStates"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:singleLine="true"
-                        android:hint="Select State"
-                        android:background="@null"
                         android:layout_marginStart="30dp"
-                        android:paddingRight="15dp"
-                        android:textSize="16sp"
+                        android:background="@null"
                         android:fontFamily="@font/montserrat_regular"
+                        android:hint="Select State"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/spinnerCities"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
                         android:textColor="@color/black1"
+                        android:textSize="16sp"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
-                        android:nextFocusDown="@+id/spinnerCities"
-                        android:imeOptions="actionNext"
                         app:jrs_title="State List" />
 
                 </RelativeLayout>
@@ -336,28 +338,26 @@
                         android:id="@+id/spinnerCities"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:singleLine="true"
-                        android:hint="@string/select_city"
                         android:layout_marginStart="30dp"
-                        android:fontFamily="@font/montserrat_regular"
                         android:background="@null"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/select_city"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edt_address"
                         android:paddingRight="15dp"
-                        android:textSize="16sp"
+                        android:singleLine="true"
                         android:textColor="@color/black1"
+                        android:textSize="16sp"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
-                        android:nextFocusDown="@+id/edt_address"
-                        android:imeOptions="actionNext"
                         app:jrs_title="City List" />
 
 
                 </RelativeLayout>
 
 
-
                 <EditText
-                    tools:ignore="Autofill"
                     android:id="@+id/edt_address"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
@@ -365,15 +365,16 @@
                     android:background="@drawable/border"
                     android:drawableStart="@drawable/home_address"
                     android:drawablePadding="15dp"
-                    android:textSize="16sp"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/hint_address"
-                    android:text="@={registerviewmodel.address}"
-                    android:inputType="textCapSentences"
-                    android:paddingStart="10dp"
-                    android:nextFocusDown="@+id/spinnerSub"
                     android:imeOptions="actionNext"
-                    android:singleLine="true" />
+                    android:inputType="textCapSentences"
+                    android:nextFocusDown="@+id/spinnerSub"
+                    android:paddingStart="10dp"
+                    android:singleLine="true"
+                    android:text="@={registerviewmodel.address}"
+                    android:textSize="16sp"
+                    tools:ignore="Autofill" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -386,20 +387,20 @@
                         android:id="@+id/spinnerSub"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:singleLine="true"
-                        android:hint="@string/select_sub_community"
+                        android:layout_marginStart="15dp"
                         android:background="@null"
-                        android:textSize="16sp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/select_sub_community"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/spinnerLocal"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
+                        android:singleLine="true"
                         android:textColor="@color/black1"
-                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="16sp"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
-                        android:layout_marginStart="15dp"
-                        android:nextFocusDown="@+id/spinnerLocal"
-                        android:imeOptions="actionNext"
                         app:jrs_title="Sub Community" />
 
                 </RelativeLayout>
@@ -416,20 +417,20 @@
                         android:id="@+id/spinnerLocal"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
-                        android:singleLine="true"
-                        android:hint="@string/select_local_community"
-                        android:background="@null"
-                        android:paddingLeft="15dp"
                         android:layout_marginStart="15dp"
-                        android:paddingRight="15dp"
+                        android:background="@null"
                         android:fontFamily="@font/montserrat_regular"
-                        android:textSize="16sp"
+                        android:hint="@string/select_local_community"
+                        android:imeOptions="actionDone"
+                        android:nextFocusDown="@+id/btn_register"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
                         android:textColor="@color/black1"
+                        android:textSize="16sp"
                         app:backgroundTint="@color/colorPrimary"
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
-                        android:nextFocusDown="@+id/btn_register"
-                        android:imeOptions="actionDone"
                         app:jrs_title="Local Community" />
 
                 </RelativeLayout>
@@ -439,8 +440,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:gravity="center_horizontal"
                     android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_horizontal"
                     android:text="@string/how_to_register"
                     android:textSize="16sp" />
 
@@ -450,12 +451,12 @@
                     android:layout_height="45dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
-                    android:textSize="16sp"
                     android:background="@drawable/btn_registration"
                     android:fontFamily="@font/montserrat_semibold"
                     android:gravity="center"
                     android:text="@string/register"
-                    android:textColor="@color/mdtp_white" />
+                    android:textColor="@color/mdtp_white"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/txt_already"
@@ -468,7 +469,7 @@
                     android:textSize="16sp" />
 
             </LinearLayout>
-    </ScrollView>
+        </ScrollView>
 
-</LinearLayout>
+    </LinearLayout>
 </layout>

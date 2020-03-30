@@ -18,70 +18,70 @@ import retrofit2.http.Part
 interface ApiServices {
 
     @POST(AppConstants.UrlPath.UPDATE_PROFILE)
-    suspend fun updateProfile(@Body request:JsonObject): Response<UpdateProfileResponse>
+    suspend fun updateProfile(@Body request: JsonObject): Response<UpdateProfileResponse>
 
     @POST(AppConstants.UrlPath.GET_COMMITTEE)
-    suspend fun getCommittee(@Body request:JsonObject): Response<CommitteeResponse>
+    suspend fun getCommittee(@Body request: JsonObject): Response<CommitteeResponse>
 
     @POST(AppConstants.UrlPath.GET_DESIGNATION)
-    suspend fun getDesignation(@Body request:JsonObject): Response<DesignationResponse>
+    suspend fun getDesignation(@Body request: JsonObject): Response<DesignationResponse>
 
     @POST(AppConstants.UrlPath.GET_SUB_COMM)
-    suspend fun getSubCommunity(@Body request:JsonObject): Response<SubCommResponse>
+    suspend fun getSubCommunity(@Body request: JsonObject): Response<SubCommResponse>
 
     @POST(AppConstants.UrlPath.GET_LOCAL_COMM)
-    suspend fun getLocalCommunity(@Body request:JsonObject): Response<ResponseModel>
+    suspend fun getLocalCommunity(@Body request: JsonObject): Response<ResponseModel>
 
     @POST(AppConstants.UrlPath.GET_LIST_LOCAL_COMM)
-    suspend fun getListLocalCommunity(@Body request:JsonObject): Response<LocalCommResponse>
+    suspend fun getListLocalCommunity(@Body request: JsonObject): Response<LocalCommResponse>
 
     @POST(AppConstants.UrlPath.GET_LIST_CITY)
-    suspend fun getListCity(@Body request:JsonObject): Response<CityResponse>
+    suspend fun getListCity(@Body request: JsonObject): Response<CityResponse>
 
     @POST(AppConstants.UrlPath.GET_LIST_BUSINESS_SUB_CATEGORY)
-    suspend fun getListBusinessSubCategory(@Body request:JsonObject): Response<BusinessSubResponse>
+    suspend fun getListBusinessSubCategory(@Body request: JsonObject): Response<BusinessSubResponse>
 
     @POST(AppConstants.UrlPath.GET_RELATIONS)
-    suspend fun getRelations(@Body request:JsonObject): Response<RelationsResponse>
+    suspend fun getRelations(@Body request: JsonObject): Response<RelationsResponse>
 
     @POST(AppConstants.UrlPath.GET_STATE)
-    suspend fun getUserState(@Body request:JsonObject): Response<StateResponse>
+    suspend fun getUserState(@Body request: JsonObject): Response<StateResponse>
 
     @POST(AppConstants.UrlPath.GET_CITIES)
-    suspend fun getUserCities(@Body request:JsonObject): Response<ResponseModel>
+    suspend fun getUserCities(@Body request: JsonObject): Response<ResponseModel>
 
     @POST(AppConstants.UrlPath.GET_NATIVE)
-    suspend fun getNative(@Body request:JsonObject): Response<NativeResponse>
+    suspend fun getNative(@Body request: JsonObject): Response<NativeResponse>
 
     @POST(AppConstants.UrlPath.GET_SUBCASTE)
-    suspend fun getUserLastName(@Body request:JsonObject): Response<LastNameResponse>
+    suspend fun getUserLastName(@Body request: JsonObject): Response<LastNameResponse>
 
     @POST(AppConstants.UrlPath.GET_GOTRA)
-    suspend fun getGotra(@Body request:JsonObject): Response<GotraResponse>
+    suspend fun getGotra(@Body request: JsonObject): Response<GotraResponse>
 
     @POST(AppConstants.UrlPath.GET_EDUCATION)
-    suspend fun getEducation(@Body request:JsonObject): Response<EducationResponse>
+    suspend fun getEducation(@Body request: JsonObject): Response<EducationResponse>
 
     @POST(AppConstants.UrlPath.GET_ACTIVITY)
-    suspend fun getActivity(@Body request:JsonObject): Response<ActivityResponse>
+    suspend fun getActivity(@Body request: JsonObject): Response<ActivityResponse>
 
     @POST(AppConstants.UrlPath.GET_BUSINESS_CATEGORY)
-    suspend fun getBusinessCategory(@Body request:JsonObject): Response<BusinessCategoryResponse>
+    suspend fun getBusinessCategory(@Body request: JsonObject): Response<BusinessCategoryResponse>
 
     @POST(AppConstants.UrlPath.GET_BUSINESS_SUB_CATEGORY)
-    suspend fun getBusinessSubCategory(@Body request:JsonObject): Response<ResponseModel>
+    suspend fun getBusinessSubCategory(@Body request: JsonObject): Response<ResponseModel>
 
     @POST(AppConstants.UrlPath.GET_OCCUPATION)
-    suspend fun getOccupation(@Body request:JsonObject): Response<OccupationResponse>
+    suspend fun getOccupation(@Body request: JsonObject): Response<OccupationResponse>
 
     @POST(AppConstants.UrlPath.ADD_MEMBER)
-    suspend fun addMember(@Body request:JsonObject): Response<UpdateProfileResponse>
+    suspend fun addMember(@Body request: JsonObject): Response<UpdateProfileResponse>
 
     @POST(AppConstants.UrlPath.DELETE_MEMBER)
-    suspend fun deleteMember(@Body request:JsonObject): Response<DeleteProfileResponse>
+    suspend fun deleteMember(@Body request: JsonObject): Response<DeleteProfileResponse>
 
     @POST(AppConstants.UrlPath.GET_STATISTICS)
-    suspend fun getStatistics(@Body request:JsonObject): Response<StatisticResponse>
+    suspend fun getStatistics(@Body request: JsonObject): Response<StatisticResponse>
 
     @POST(AppConstants.UrlPath.GET_SMART_FILTER)
     suspend fun getSearchByFilter(@Body request: JsonObject): Response<SmartFilterResponse>
@@ -99,22 +99,22 @@ interface ApiServices {
     suspend fun getSearchByDistance(@Body request: ByDistanceModel): Response<ByDistanceResponse>
 
     @POST(AppConstants.UrlPath.SEARCH_BY_KEYWORDS)
-    suspend fun getSearchByKeywords(@Body request:JsonObject): Response<searchByKeywordsResponse>
+    suspend fun getSearchByKeywords(@Body request: JsonObject): Response<searchByKeywordsResponse>
 
     @POST(AppConstants.UrlPath.CHANGE_STATUS)
-    suspend fun changeStatus(@Body request:JsonObject): Response<searchByKeywordsResponse>
+    suspend fun changeStatus(@Body request: JsonObject): Response<searchByKeywordsResponse>
 
     @POST(AppConstants.UrlPath.CHANGE_ROLE)
-    suspend fun changeRole(@Body request:JsonObject): Response<searchByKeywordsResponse>
+    suspend fun changeRole(@Body request: JsonObject): Response<searchByKeywordsResponse>
 
     @POST(AppConstants.UrlPath.GET_COMMITTEE_USERS)
-    suspend fun getUsersInCommittee(@Body request:JsonObject): Response<SmartFilterResponse>
+    suspend fun getUsersInCommittee(@Body request: JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_INACTIVE_USERS)
-    suspend fun getInActiveUsers(@Body request:JsonObject): Response<SmartFilterResponse>
+    suspend fun getInActiveUsers(@Body request: JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_DOCUMENT)
-    suspend fun getDocumentList(@Body request:JsonObject): Response<UploadedFilesResponse>
+    suspend fun getDocumentList(@Body request: JsonObject): Response<UploadedFilesResponse>
 
     @POST(AppConstants.UrlPath.GET_CONTACT_LIST)
     suspend fun getUserByMobile(@Body request: JsonObject): Response<SmartFilterResponse>
@@ -158,17 +158,19 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_USER_PROFILE)
     suspend fun getUserProfile(@Body request: JsonObject): Response<LoginResponse>
 
+    @POST(AppConstants.UrlPath.SEND_MAIL)
+    suspend fun sendMail(@Body request: JsonObject): Response<LoginResponse>
 
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)
-    suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id")id: RequestBody, @Part("type") type: RequestBody): Response<JsonObject>
+    suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id") id: RequestBody, @Part("type") type: RequestBody): Response<JsonObject>
 
     @Multipart
     @POST(AppConstants.UrlPath.CREATE_EVENT)
-    suspend fun createEvent(@Part file: List<MultipartBody.Part>, @Part("id")id: RequestBody, @Part("user_id") user_id: RequestBody,@Part("access_token") access_token: RequestBody,@Part("params") params: RequestBody,@Part("youtube[]") youtube: List<RequestBody>): Response<JsonObject>
+    suspend fun createEvent(@Part file: List<MultipartBody.Part>, @Part("id") id: RequestBody, @Part("user_id") user_id: RequestBody, @Part("access_token") access_token: RequestBody, @Part("params") params: RequestBody, @Part("youtube[]") youtube: List<RequestBody>): Response<JsonObject>
 
-    companion object{
-        operator fun invoke():ApiServices{
+    companion object {
+        operator fun invoke(): ApiServices {
             return AppController.mApplication.retrofitBase.apiServices
         }
     }

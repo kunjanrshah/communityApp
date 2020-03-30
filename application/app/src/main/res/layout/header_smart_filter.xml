@@ -24,13 +24,13 @@
 
         <ImageView
             android:id="@+id/iv_atoz"
-            android:visibility="gone"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_margin="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="20dp"
-            android:background="@drawable/atoz" />
+            android:background="@drawable/atoz"
+            android:visibility="gone" />
 
 
         <ImageView
@@ -59,8 +59,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
-        android:fontFamily="@font/montserrat_medium"
         android:layout_marginBottom="5dp"
+        android:fontFamily="@font/montserrat_medium"
         android:text="Find Records"
         android:textColor="@color/black"
         android:textSize="16sp" />

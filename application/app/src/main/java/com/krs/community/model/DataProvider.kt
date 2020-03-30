@@ -6,11 +6,10 @@ import com.krs.community.R
 /**
  * Created by Alexander Kolpakov on 24.07.2018
  */
-class DataProvider
-{
+class DataProvider {
     companion object DataProvider1 {
 
-        fun  getCardData(): List<Card> {
+        fun getCardData(): List<Card> {
             val data = ArrayList<Card>()
             data.add(Card(0, "Google Play", "28.07.2018", "$38,456.78", Status.COMPLAINT, R.drawable.user_profile))
             data.add(Card(1, "Twitter", "27.07.2018", "$1,550.60", Status.RECEIVED, R.drawable.user_profile))

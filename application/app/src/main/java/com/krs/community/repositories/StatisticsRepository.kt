@@ -9,12 +9,12 @@ import kotlinx.coroutines.withContext
 
 class StatisticsRepository(
         private val api: ApiServices,
-                    private val db:AppDatabase
-): SafeApiRequest() {
+        private val db: AppDatabase
+) : SafeApiRequest() {
 
-    private val TAG:String=StatisticsRepository::class.java.simpleName
-    suspend fun getStatistics(jsonObject:JsonObject):StatisticResponse {
-        return apiRequest{
+    private val TAG: String = StatisticsRepository::class.java.simpleName
+    suspend fun getStatistics(jsonObject: JsonObject): StatisticResponse {
+        return apiRequest {
             api.getStatistics(jsonObject)
         }
     }

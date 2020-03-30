@@ -13,11 +13,11 @@ import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class ProfileDetailViewModel(
@@ -60,7 +60,7 @@ class ProfileDetailViewModel(
         return mProfileDetailRepository.getLocalCommunity(id)
     }
 
-    suspend fun getSubCommIdByName(name:String):Int{
+    suspend fun getSubCommIdByName(name: String): Int {
         return mProfileDetailRepository.getSubCommIdByName(name)
     }
 
@@ -153,49 +153,50 @@ class ProfileDetailViewModel(
     }
 
     suspend fun getCityNamebyState(id: Int): List<String> {
-        return mProfileDetailRepository.getCityName(id)}
+        return mProfileDetailRepository.getCityName(id)
+    }
 
-    suspend fun getActivityIdByName(name:String):Int{
+    suspend fun getActivityIdByName(name: String): Int {
         return mProfileDetailRepository.getActivityIdByName(name)
     }
 
-    suspend fun getOccupationIdByName(name:String):Int{
+    suspend fun getOccupationIdByName(name: String): Int {
         return mProfileDetailRepository.getOccupationIdByName(name)
     }
 
-    suspend fun getSubCategoryIdByName(name:String):Int{
+    suspend fun getSubCategoryIdByName(name: String): Int {
         return mProfileDetailRepository.getSubCategoryIdByName(name)
     }
 
-    suspend fun getCategoryIdByName(name:String):Int{
+    suspend fun getCategoryIdByName(name: String): Int {
         return mProfileDetailRepository.getCategoryIdByName(name)
     }
 
-    suspend fun getGotraIdByName(name:String):Int{
+    suspend fun getGotraIdByName(name: String): Int {
         return mProfileDetailRepository.getGotraIdByName(name)
     }
 
-    suspend fun getEducationIdByName(name:String):Int{
+    suspend fun getEducationIdByName(name: String): Int {
         return mProfileDetailRepository.getEducationIdByName(name)
     }
 
-    suspend fun getstateIdByName(name:String):Int{
+    suspend fun getstateIdByName(name: String): Int {
         return mProfileDetailRepository.getstateIdByName(name)
     }
 
-    suspend fun getCityIdByName(name:String):Int{
+    suspend fun getCityIdByName(name: String): Int {
         return mProfileDetailRepository.getCityIdByName(name)
     }
 
-    suspend fun getNativeIdByName(name:String):Int{
+    suspend fun getNativeIdByName(name: String): Int {
         return mProfileDetailRepository.getNativeIdByName(name)
     }
 
-    suspend fun getLocalCommunityId(name:String):Int{
+    suspend fun getLocalCommunityId(name: String): Int {
         return mProfileDetailRepository.getLocalCommunityId(name)
     }
 
-    suspend fun getIdByLastName(name:String):Int{
+    suspend fun getIdByLastName(name: String): Int {
         return mProfileDetailRepository.getIdByLastName(name)
     }
 
@@ -244,19 +245,13 @@ class ProfileDetailViewModel(
 
                 CoroutineScope(Dispatchers.IO + thejob).launch {
                     try {
-                        val requestFile = RequestBody.create(
-                                "image/*".toMediaTypeOrNull(),
-                                file
-                        )
+                        val requestFile = file
+                                .asRequestBody("image/*".toMediaTypeOrNull())
                         val body = MultipartBody.Part.createFormData("uploaded_file", file.name, requestFile)
-                        val id = RequestBody.create(
-                                "text/plain".toMediaTypeOrNull(),
-                                id)
+                        val id = id.toRequestBody("text/plain".toMediaTypeOrNull())
 
 
-                        val _type = RequestBody.create(
-                                "text/plain".toMediaTypeOrNull(),
-                                type)
+                        val _type = type.toRequestBody("text/plain".toMediaTypeOrNull())
 
                         val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, _type)
 
@@ -264,9 +259,9 @@ class ProfileDetailViewModel(
                             withContext(Dispatchers.Main) {
                                 Log.d("Response", response.toString())
                                 if (response.get("success").asString.equals("success")) {
-                                    mImageUploadListener.getResult(response.getAsJsonObject("data"))
+                                    mImageUploadListener.onUploadSuccess(response.getAsJsonObject("data"))
                                 } else {
-                                    mImageUploadListener.onFailure(response.get("message").asString)
+                                    mImageUploadListener.onUploadFail(response.get("message").asString)
                                 }
                                 response.get("data")
                                 thejob.complete()
@@ -275,15 +270,15 @@ class ProfileDetailViewModel(
                         }
                     } catch (e: ApiException) {
                         e.message?.let {
-                            mImageUploadListener.onFailure(it)
+                            mImageUploadListener.onUploadFail(it)
                         }
                     } catch (e: NoInternetException) {
                         e.message?.let {
-                            mImageUploadListener.onFailure(it)
+                            mImageUploadListener.onUploadFail(it)
                         }
                     } catch (e: Exception) {
                         e.message?.let {
-                            mImageUploadListener.onFailure(it)
+                            mImageUploadListener.onUploadFail(it)
                         }
                     }
                     thejob.complete()

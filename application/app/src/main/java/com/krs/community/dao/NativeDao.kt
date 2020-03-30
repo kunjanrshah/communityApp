@@ -11,23 +11,23 @@ import com.krs.community.entities.Native
 interface NativeDao {
 
     @Query("SELECT name FROM Native ORDER BY name ASC")
-    fun getNative() : LiveData<List<String>>
+    fun getNative(): LiveData<List<String>>
 
     @Query("SELECT id FROM Native")
-    fun getNativeIds() : LiveData<List<Int>>
+    fun getNativeIds(): LiveData<List<Int>>
 
     @Query("SELECT name FROM Native WHERE id == :id")
-    fun getNativeById(id:Int) : LiveData<String>
+    fun getNativeById(id: Int): LiveData<String>
 
     @Query("SELECT id FROM Native WHERE name == :name")
-    fun getNativeIdByName(name:String) : Int
+    fun getNativeIdByName(name: String): Int
 
     @Query("SELECT id FROM Native WHERE id NOT IN (:Ids)")
-    fun getRemovedNativeIds(Ids: List<String>) : List<Int>
+    fun getRemovedNativeIds(Ids: List<String>): List<Int>
 
     @Query("DELETE FROM Native WHERE id IN (:Ids)")
-    fun deleteNativeByIds(Ids: List<Int>) : Int
+    fun deleteNativeByIds(Ids: List<Int>): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllNative(native : List<Native>)
+    fun saveAllNative(native: List<Native>)
 }

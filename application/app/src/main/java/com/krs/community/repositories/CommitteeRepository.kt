@@ -9,16 +9,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class CommitteeRepository(
-    private val api:ApiServices,private val db: AppDatabase
-): SafeApiRequest() {
+        private val api: ApiServices, private val db: AppDatabase
+) : SafeApiRequest() {
 
     suspend fun getUsersInCommittee(data: JsonObject): SmartFilterResponse {
-        return apiRequest{
+        return apiRequest {
             api.getUsersInCommittee(data)
         }
     }
 
-    suspend fun getLastnameById(id:Int): String {
+    suspend fun getLastnameById(id: Int): String {
         return withContext(Dispatchers.IO) {
             db.getLastNameDao().getLastName(id)
         }
@@ -43,7 +43,7 @@ class CommitteeRepository(
     }
 
 
-    suspend fun getLocalCommunity(id:Int): LiveData<List<String>> {
+    suspend fun getLocalCommunity(id: Int): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getLocalCommunityDao().getLocalCommNameBySubId(id)
         }
@@ -61,19 +61,19 @@ class CommitteeRepository(
         }
     }
 
-    suspend fun getLocalCommunityName(name:String): Int {
+    suspend fun getLocalCommunityName(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getLocalCommunityDao().getLocalCommunityId(name)
         }
     }
 
-    suspend fun getCommitteeName(name:String): Int {
+    suspend fun getCommitteeName(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getCommitteeDao().getCommitteeName(name)
         }
     }
 
-    suspend fun getDesignationName(name:String): Int {
+    suspend fun getDesignationName(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getDesignationDao().getDesignationName(name)
         }

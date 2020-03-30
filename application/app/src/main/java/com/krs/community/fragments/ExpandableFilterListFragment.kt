@@ -26,7 +26,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 
-class ExpandableFilterListFragment : Fragment() , KodeinAware {
+class ExpandableFilterListFragment : Fragment(), KodeinAware {
 
     private var previousGroup = -1
     private var adapter: SmartFilterAdapter? = null
@@ -60,8 +60,8 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         expandableListView = rootView.findViewById(R.id.lst_expandable)
         expandableListView.setGroupIndicator(null)
 
-        val editFilter=  arguments?.getString(activity?.getString(R.string.edit_filter))
-        adapter = SmartFilterAdapter(activity as AppCompatActivity,profileDetailViewModel,editFilter)
+        val editFilter = arguments?.getString(activity?.getString(R.string.edit_filter))
+        adapter = SmartFilterAdapter(activity as AppCompatActivity, profileDetailViewModel, editFilter)
         expandableListView.setAdapter(adapter)
         (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Smart Filter"
         setListener()
@@ -70,7 +70,7 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         ivFilter.setOnClickListener { v: View? -> Utility.movetoFragment(activity, FilterListFragment()) }
         val ivCancel = rootView.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
-        val tvClear= rootView.findViewById<TextView>(R.id.tv_clear)
+        val tvClear = rootView.findViewById<TextView>(R.id.tv_clear)
         tvClear.setOnClickListener {
 
             SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)

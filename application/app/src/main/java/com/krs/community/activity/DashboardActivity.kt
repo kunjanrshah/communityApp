@@ -14,6 +14,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -33,7 +34,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -56,7 +56,6 @@ import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
 import org.json.JSONObject
-
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -67,6 +66,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private lateinit var dashboardViewModel: DashboardViewModel
     private val factory: DashboardViewModelFactory by instance()
     private var menu: Menu? = null
+
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
@@ -81,6 +81,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
 
     override val kodein by kodein()
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,8 +101,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             fade(this)
         }
 
-        setSupportActionBar(binding.toolbar as Toolbar)
-        (binding.toolbar as Toolbar).setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        setSupportActionBar(binding.toolbar as Toolbar?)
+        (binding.toolbar as Toolbar?)?.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.home)
 
@@ -182,12 +183,12 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
         movetoFragment(this@DashboardActivity, DashboardFragment())
         if (isNetworkConnected(this)) {
-            val JsonObj= JSONObject()
-            JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
-            JsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
+            val JsonObj = JSONObject()
+            JsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+            JsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
             JsonObj.put("insert", "")
-            JsonObj.put("version", BuildConfig.VERSION_NAME)
-            val updated=  JsonParser().parse(JsonObj.toString()) as JsonObject
+            JsonObj.put("version", getAppVersion(this))
+            val updated = JsonParser().parse(JsonObj.toString()) as JsonObject
             dashboardViewModel.getUpdatedVersion(updated)
         }
     }
@@ -214,7 +215,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
 
         val locale = Guru.getString(resources.getString(R.string.locale_sp), resources.getString(R.string._english))
-        Log.e("Lang",""+locale)
+        Log.e("Lang", "" + locale)
         if (locale.equals(resources.getString(R.string._gujarati), ignoreCase = true)) {
             changeLang(applicationContext, "ગુજરાતી")
         } else if (locale.equals(resources.getString(R.string._hindi), ignoreCase = true)) {

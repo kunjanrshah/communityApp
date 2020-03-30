@@ -150,8 +150,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:singleLine="true"
                             android:hint="Member Name"
+                            android:singleLine="true"
                             android:textSize="14sp" />
 
                         <TextView
@@ -159,8 +159,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
-                            android:singleLine="true"
                             android:hint="Area, City"
+                            android:singleLine="true"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -177,9 +177,9 @@
                             android:background="@drawable/round_corner_blue"
                             android:fontFamily="@font/montserrat_semibold"
                             android:gravity="center"
+                            android:hint="Member"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:hint="Member"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -208,9 +208,9 @@
                     android:background="@color/colorGray" />
 
                 <LinearLayout
-                    android:layout_marginBottom="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -243,8 +243,8 @@
                                 android:layout_marginLeft="5dp"
                                 android:autoLink="email"
                                 android:fontFamily="@font/montserrat_medium"
-                                android:singleLine="true"
                                 android:hint="email address"
+                                android:singleLine="true"
                                 android:textSize="16sp" />
 
                         </LinearLayout>
@@ -295,8 +295,8 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="5dp"
                                 android:fontFamily="@font/montserrat_medium"
-                                android:singleLine="true"
                                 android:hint="Mobile number"
+                                android:singleLine="true"
                                 android:textColor="@color/com_facebook_blue"
                                 android:textSize="16sp" />
 

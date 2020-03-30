@@ -60,24 +60,24 @@ import org.kodein.di.generic.instance
 
 class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersListener, LocationAdapter.SetLocationListner {
 
-    lateinit var members:ArrayList<Member>
-    var headId:String?=null
+    lateinit var members: ArrayList<Member>
+    var headId: String? = null
     val TAG = FamilyDetailActivity::class.java.simpleName
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
-    private lateinit var rvDetail:RecyclerView
-    private lateinit var llRoot:LinearLayout
-    private lateinit var adapter:ParallaxRecyclerAdapter<Member>
-    private var deletedId=""
+    private lateinit var rvDetail: RecyclerView
+    private lateinit var llRoot: LinearLayout
+    private lateinit var adapter: ParallaxRecyclerAdapter<Member>
+    private var deletedId = ""
     override val kodein by kodein()
     private var setLocationDialog: DialogPlus? = null
-    private lateinit var familyDetailViewModel:FamilyDetailViewModel
+    private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     lateinit var mainHandler: Handler
-    private var isShimmer:Boolean=true
-    private var memberId:String?=null
-    private var textMsg:String?=null
+    private var isShimmer: Boolean = true
+    private var memberId: String? = null
+    private var textMsg: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,8 +110,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         setContentView(R.layout.activity_family_detail)
         supportActionBar?.hide()
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container1)
-        rvDetail=findViewById(R.id.rv_detail)
-        llRoot=findViewById(R.id.ll_root)
+        rvDetail = findViewById(R.id.rv_detail)
+        llRoot = findViewById(R.id.ll_root)
 
         val mLayoutManager = LinearLayoutManager(applicationContext)
         rvDetail.setHasFixedSize(true)
@@ -129,7 +129,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private val updateAdapter = object : Runnable {
         override fun run() {
             getFamilyDetails()
-            mainHandler.postDelayed(this, 1000*60*3)
+            mainHandler.postDelayed(this, 1000 * 60 * 3)
         }
     }
 
@@ -154,22 +154,22 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
     }
 
-    private fun getFamilyDetails(){
-        if(isShimmer){
-            isShimmer=false
-            mShimmerViewContainer?.visibility=View.VISIBLE
+    private fun getFamilyDetails() {
+        if (isShimmer) {
+            isShimmer = false
+            mShimmerViewContainer?.visibility = View.VISIBLE
             mShimmerViewContainer?.startShimmerAnimation()
         }
-        val jsonObject=JSONObject()
-        if(!memberId.isNullOrEmpty()){
-            jsonObject.put(getString(R.string.id),memberId)
+        val jsonObject = JSONObject()
+        if (!memberId.isNullOrEmpty()) {
+            jsonObject.put(getString(R.string.id), memberId)
         }
-        jsonObject.put(getString(R.string.head_id),headId)
-        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        jsonObject.put(getString(R.string.head_id), headId)
+        val records = JsonParser().parse(jsonObject.toString()) as JsonObject
         familyDetailViewModel.getFamilyDetails(records)
     }
 
-    private fun deleteFamilyMember(id:String){
+    private fun deleteFamilyMember(id: String) {
         mShimmerViewContainer?.startShimmerAnimation()
         mShimmerViewContainer?.visibility = View.VISIBLE
         val mJSONObject = JSONObject()
@@ -188,7 +188,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
     override fun getFamilyMembers(data: FamilyDetailResponse) {
         mShimmerViewContainer?.stopShimmerAnimation()
-        mShimmerViewContainer?.visibility=View.GONE
+        mShimmerViewContainer?.visibility = View.GONE
 
         if (data.success) {
             members = data.member as ArrayList<Member>
@@ -198,11 +198,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
     @SuppressLint("SetTextI18n")
     private fun createCardAdapter() {
-        var family:MutableList<Member>?=null
-        if(members.size>0){
+        var family: MutableList<Member>? = null
+        if (members.size > 0) {
             family = members.subList(1, members.size)
         }
-        if(family!=null){
+        if (family != null) {
             adapter = object : ParallaxRecyclerAdapter<Member>(family) {
                 override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
 
@@ -211,21 +211,21 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     (viewHolder as FamilyDetailViewHolder).tvName.text = "${member.firstName} ${member.lastName}"
                     viewHolder.tvSubtext.text = member.relation
 
-                    if (member.mobile.isEmpty()){
+                    if (member.mobile.isNullOrEmpty()) {
                         viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                         viewHolder.ivMobile.visibility = View.GONE
                         viewHolder.tvMobile.setTextColor(ContextCompat.getColor(this@FamilyDetailActivity, R.color.gray_btn_bg_color))
-                    }else{
+                    } else {
                         viewHolder.ivMobile.visibility = View.VISIBLE
                         viewHolder.tvMobile.text = member.mobile
                         viewHolder.tvMobile.setTextColor(ContextCompat.getColor(this@FamilyDetailActivity, R.color.com_facebook_blue))
                     }
 
-                    if (member.emailAddress.isEmpty()){
+                    if (member.emailAddress.isNullOrEmpty()) {
                         viewHolder.ivEmail.visibility = View.GONE
                         viewHolder.tvEmail.text = getString(R.string.email_not_available)
                         viewHolder.tvEmail.setTextColor(ContextCompat.getColor(this@FamilyDetailActivity, R.color.gray_btn_bg_color))
-                    }else{
+                    } else {
                         viewHolder.tvEmail.setTextColor(ContextCompat.getColor(this@FamilyDetailActivity, R.color.red_btn_bg_color))
                         viewHolder.ivEmail.visibility = View.VISIBLE
                         viewHolder.tvEmail.text = member.emailAddress
@@ -243,15 +243,15 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         viewHolder.tvLogin.text = "Happy to see you"
                     }*/
 
-                    var imgStatus=R.drawable.ico_red
-                    if(memberId==member.id){
-                        imgStatus=R.drawable.ico_blue
-                    }else if(member.loginStatus==1 && member.onlineStatus==0){
-                        imgStatus=R.drawable.ico_pink
-                    }else if(member.loginStatus==0){
-                        imgStatus=R.drawable.ico_red
-                    }else if(member.onlineStatus==1){
-                        imgStatus=R.drawable.ico_green
+                    var imgStatus = R.drawable.ico_red
+                    if (memberId == member.id) {
+                        imgStatus = R.drawable.ico_blue
+                    } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
+                        imgStatus = R.drawable.ico_pink
+                    } else if (member.loginStatus == 0) {
+                        imgStatus = R.drawable.ico_red
+                    } else if (member.onlineStatus == 1) {
+                        imgStatus = R.drawable.ico_green
                     }
                     try {
                         Glide.with(AppController.mApplication).load(imgStatus).thumbnail(0.5f).into(viewHolder.imgState)
@@ -260,21 +260,21 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }
 
                     viewHolder.frontLayout.setOnClickListener {
-                        if(!memberId.isNullOrEmpty()){
+                        if (!memberId.isNullOrEmpty()) {
                             val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
                             intent.putExtra(getString(R.string.member), member)
                             startActivity(intent)
                             fade(this@FamilyDetailActivity)
-                        }else{
-                            if(!member.profilePassword.isNullOrEmpty()){
+                        } else {
+                            if (!member.profilePassword.isNullOrEmpty()) {
 
-                                if(memberId==member.id){
+                                if (memberId == member.id) {
                                     textMsg = "Exit"
-                                }else if(member.loginStatus==1 && member.onlineStatus==0){
+                                } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
                                     textMsg = "Exit"
-                                }else if(member.loginStatus==0){
+                                } else if (member.loginStatus == 0) {
                                     textMsg = "Enter"
-                                }else if(member.onlineStatus==1){
+                                } else if (member.onlineStatus == 1) {
                                     textMsg = "Exit"
                                 }
 
@@ -291,14 +291,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                 TTFancyGifDialog.Builder(this@FamilyDetailActivity)
                                         .setTitle(title)
                                         .setMessage("To $textMsg please type your PIN")
-                                        .setPositiveBtnText( getString(R.string.yes))
+                                        .setPositiveBtnText(getString(R.string.yes))
                                         .setPositiveBtnBackground("#22b573")
                                         .setNegativeBtnText(getString(R.string.no))
                                         .setNegativeBtnBackground("#c1272d")
                                         .setGifResource(gif)
                                         .isCancellable(false)
                                         .OnPositiveClicked {
-                                            val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                                            val intent = Intent(this@FamilyDetailActivity, PinViewActivity::class.java)
                                             intent.putExtra(getString(R.string.member), member)
                                             startActivity(intent)
                                         }
@@ -308,8 +308,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                         .build()
                                 true
 
-                            }else{
-                                llRoot.snackbar(getString(R.string.pinFoundDetail),Snackbar.LENGTH_LONG)
+                            } else {
+                                llRoot.snackbar(getString(R.string.pinFoundDetail), Snackbar.LENGTH_LONG)
                             }
                         }
                     }
@@ -393,9 +393,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     applyClickEvents(viewHolder, member)
                     applyProfilePicture(viewHolder, member)
                 }
+
                 override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
                     return FamilyDetailViewHolder(layoutInflater.inflate(R.layout.row_list_family_detail, viewGroup, false))
                 }
+
                 override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
                     return (family.size)
                 }
@@ -407,17 +409,17 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
         val login = header.findViewById<ImageView>(R.id.login)
         val imgMap = header.findViewById<ImageView>(R.id.img_map)
-        if(!memberId.isNullOrEmpty()){
-            cancel.visibility=View.VISIBLE
+        if (!memberId.isNullOrEmpty()) {
+            cancel.visibility = View.VISIBLE
             imgMap.visibility = View.VISIBLE
             login.visibility = View.GONE
-        }else{
+        } else {
             imgMap.visibility = View.GONE
             login.visibility = View.VISIBLE
-            cancel.visibility=View.INVISIBLE
+            cancel.visibility = View.INVISIBLE
         }
         cancel.setOnClickListener {
-            val intent=Intent(this,DashboardActivity::class.java)
+            val intent = Intent(this, DashboardActivity::class.java)
             startActivity(intent)
             finish()
             fade(this)
@@ -425,13 +427,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val member = members.get(0)
 
         imgMap.setOnClickListener {
+            displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
 
-            //val url=resources.getString(R.string.base_url_thumb)+member.profilePic
-            /*val intent = Intent(this, MapviewActivity::class.java)
-            intent.putExtra("image", url)
-            startActivity(intent)  */
-            /* Utility.displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
-             return@setOnClickListener*/
             /*val intent = Intent(this, MapTrackingActivity::class.java)
             intent.putExtra("head_id", headId)
             startActivity(intent)
@@ -461,13 +458,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             true
         }
         val tvName: TextView = header.findViewById(R.id.tv_name1)
-        tvName.text = member.firstName+" "+member.lastName
+        tvName.text = member.firstName + " " + member.lastName
         //  val mApp = applicationContext as AppController
         // val strDemo =  mApp.stringTranslateAPI(member.firstName);
         val iconText: TextView = header.findViewById(R.id.icon_text1)
         iconText.text = tvName.text.substring(0, 1)
         val tvMobile: TextView = header.findViewById(R.id.tv_mobile)
-        tvMobile.text=member.mobile
+        tvMobile.text = member.mobile
         tvMobile.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             val str = "tel:" + tvMobile.text
@@ -479,11 +476,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         imgProfile.setOnClickListener {
             val path = getString(R.string.base_url_original) + "" + member.profilePic
             Log.d(TAG, "path: $path")
-            openImageDialog(this,path)
+            openImageDialog(this, path)
         }
         if (!TextUtils.isEmpty(member.profilePic)) {
             imgProfile.isClickable = true
-            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+            val url = resources.getString(R.string.base_url_thumb) + member.profilePic
             Glide.with(this@FamilyDetailActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(imgProfile)
             imgProfile.colorFilter = null
             iconText.visibility = View.GONE
@@ -496,24 +493,24 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
 
         val tvArea: TextView = header.findViewById(R.id.tv_area)
-        tvArea.text=member.area+" "+member.city
+        tvArea.text = member.area + " " + member.city
 
         val tvEmail: TextView = header.findViewById(R.id.tv_email)
-        tvEmail.text=member.emailAddress
+        tvEmail.text = member.emailAddress
 
         val tvAddr: TextView = header.findViewById(R.id.tv_addr)
-        tvAddr.text=member.address
+        tvAddr.text = member.address
 
         val imgState: ImageView = header.findViewById(R.id.img_state)
-        var icStatus=R.drawable.ico_red
-        if(memberId==member.id){
-            icStatus=R.drawable.ico_blue
-        }else if(member.loginStatus==1 && member.onlineStatus==0){
-            icStatus=R.drawable.ico_pink
-        }else if(member.loginStatus==0){
-            icStatus=R.drawable.ico_red
-        }else if(member.onlineStatus==1){
-            icStatus=R.drawable.ico_green
+        var icStatus = R.drawable.ico_red
+        if (memberId == member.id) {
+            icStatus = R.drawable.ico_blue
+        } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
+            icStatus = R.drawable.ico_pink
+        } else if (member.loginStatus == 0) {
+            icStatus = R.drawable.ico_red
+        } else if (member.onlineStatus == 1) {
+            icStatus = R.drawable.ico_green
         }
         try {
             Glide.with(AppController.mApplication).load(icStatus).thumbnail(0.5f).into(imgState)
@@ -579,20 +576,20 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         val llFamilyHead: LinearLayout = header.findViewById(R.id.ll_family_head)
         llFamilyHead.setOnClickListener {
-            if(!memberId.isNullOrEmpty()){
+            if (!memberId.isNullOrEmpty()) {
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member), members.get(0))
                 startActivity(intent)
                 fade(this)
-            }else{
-                if(!member.profilePassword.isNullOrEmpty()){
-                    if(memberId==member.id){
+            } else {
+                if (!member.profilePassword.isNullOrEmpty()) {
+                    if (memberId == member.id) {
                         textMsg = getString(R.string.exitDetails)
-                    }else if(member.loginStatus==1 && member.onlineStatus==0){
+                    } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
                         textMsg = getString(R.string.exitDetails)
-                    }else if(member.loginStatus==0){
+                    } else if (member.loginStatus == 0) {
                         textMsg = getString(R.string.EnterDetails)
-                    }else if(member.onlineStatus==1){
+                    } else if (member.onlineStatus == 1) {
                         textMsg = getString(R.string.exitDetails)
                     }
                     var gif: Int = R.drawable.enter
@@ -616,7 +613,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             .setGifResource(gif)
                             .isCancellable(false)
                             .OnPositiveClicked {
-                                val intent=Intent(this@FamilyDetailActivity,PinViewActivity::class.java)
+                                val intent = Intent(this@FamilyDetailActivity, PinViewActivity::class.java)
                                 intent.putExtra(getString(R.string.member), member)
                                 startActivity(intent)
                             }
@@ -624,16 +621,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             }
                             .build()
                     true
-                }else{
-                    llRoot.snackbar(getString(R.string.pinFoundDetail),Snackbar.LENGTH_LONG)
+                } else {
+                    llRoot.snackbar(getString(R.string.pinFoundDetail), Snackbar.LENGTH_LONG)
                 }
             }
         }
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
         if (!memberId.isNullOrEmpty() && member.id == memberId) {
-            tvAdd.visibility=View.VISIBLE
-        }else{
-            tvAdd.visibility=View.GONE
+            tvAdd.visibility = View.VISIBLE
+        } else {
+            tvAdd.visibility = View.GONE
         }
         tvAdd.setOnClickListener {
             val intent = Intent(this, ProfileDetailActivity::class.java)
@@ -647,11 +644,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         adapter.data = family
         rvDetail.adapter = adapter
     }
+
     @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: FamilyDetailViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
             holder.imgProfile.isClickable = true
-            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+            val url = resources.getString(R.string.base_url_thumb) + member.profilePic
             Glide.with(this@FamilyDetailActivity).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
@@ -675,7 +673,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             try {
                 val path = getString(R.string.base_url_original) + "" + member.profilePic
                 Log.d(TAG, "path: $path")
-                openImageDialog(this@FamilyDetailActivity,path)
+                openImageDialog(this@FamilyDetailActivity, path)
             } catch (e: Exception) {
                 e.message
             }
@@ -703,7 +701,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     }
 
     override fun getMessage(response: DeleteProfileResponse) {
-        if(response.success){
+        if (response.success) {
             var member1: Member? = null
             for (member in members) {
                 if (member.id == deletedId) {
@@ -718,14 +716,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             }
         }
         mShimmerViewContainer?.stopShimmerAnimation()
-        mShimmerViewContainer?.visibility=View.GONE
-        llRoot.snackbar(response.message,Snackbar.LENGTH_LONG)
+        mShimmerViewContainer?.visibility = View.GONE
+        llRoot.snackbar(response.message, Snackbar.LENGTH_LONG)
     }
 
     override suspend fun getFailure(message: String) {
         mShimmerViewContainer?.stopShimmerAnimation()
-        mShimmerViewContainer?.visibility=View.GONE
-        llRoot.snackbar(message,Snackbar.LENGTH_LONG)
+        mShimmerViewContainer?.visibility = View.GONE
+        llRoot.snackbar(message, Snackbar.LENGTH_LONG)
     }
 
     override fun onResume() {

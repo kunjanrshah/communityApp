@@ -31,41 +31,41 @@ import kotlin.collections.ArrayList
 
 class SmartFilterAdapter(private val _context: Context,
                          var profileDetailViewModel: ProfileDetailViewModel,
-                         private val editFilter:String?) : BaseExpandableListAdapter(), ICloseDialog , DatePickerDialog.OnDateSetListener{
+                         private val editFilter: String?) : BaseExpandableListAdapter(), ICloseDialog, DatePickerDialog.OnDateSetListener {
     var previousGroup = -1
     private val header: MutableList<String>
     private val mapChildValues: HashMap<String, String> = HashMap()
-    private var edtHeadName: EditText?=null
-    private var edtFamilyCode: EditText?=null
-    private var edtMemberName: EditText?=null
-    private var edtEmail: EditText?=null
-    private var edtMobile: EditText?=null
-    private var edtLocalAdd: EditText?=null
-    private var edtPermanentAdd: EditText?=null
-    private var edtPinCode: EditText?=null
-    private var edtOffice: EditText?=null
+    private var edtHeadName: EditText? = null
+    private var edtFamilyCode: EditText? = null
+    private var edtMemberName: EditText? = null
+    private var edtEmail: EditText? = null
+    private var edtMobile: EditText? = null
+    private var edtLocalAdd: EditText? = null
+    private var edtPermanentAdd: EditText? = null
+    private var edtPinCode: EditText? = null
+    private var edtOffice: EditText? = null
 
     // private var edtHeightMeter: EditText?=null
     //private var edtWeightKg: EditText?=null
-    private var edtArea: EditText?=null
+    private var edtArea: EditText? = null
     private var tvExpired: TextView? = null
-    private var edtBirthPlace: EditText?=null
+    private var edtBirthPlace: EditText? = null
 
-    private var tvBdate: TextView?=null
-    private var tvMdate: TextView?=null
-    private var tvCreated: TextView?=null
-    private var tvUpdated: TextView?=null
-    private var tvBirthTime: TextView?=null
+    private var tvBdate: TextView? = null
+    private var tvMdate: TextView? = null
+    private var tvCreated: TextView? = null
+    private var tvUpdated: TextView? = null
+    private var tvBirthTime: TextView? = null
     private var tvMinWeight: TextView? = null
     private var tvMaxWeight: TextView? = null
     private var tvMinHeight: TextView? = null
     private var tvMaxHeight: TextView? = null
 
-    private var imgBdateClose: ImageView?=null
-    private var imgMdateClose: ImageView?=null
+    private var imgBdateClose: ImageView? = null
+    private var imgMdateClose: ImageView? = null
     private var imgEdateClose: ImageView? = null
-    private var imgUpdatedClose: ImageView?=null
-    private var imgCreatedClose: ImageView?=null
+    private var imgUpdatedClose: ImageView? = null
+    private var imgCreatedClose: ImageView? = null
 
     private lateinit var spSurname: JRSpinner
     private lateinit var spLocalComm: JRSpinner
@@ -82,24 +82,25 @@ class SmartFilterAdapter(private val _context: Context,
     private lateinit var spOccupation: JRSpinner
     private lateinit var spActivity: JRSpinner
 
-    private var rangeAgeBar: CrystalRangeSeekbar?=null
-    private var rangeUpdationBar: CrystalRangeSeekbar?=null
+    private var rangeAgeBar: CrystalRangeSeekbar? = null
+    private var rangeUpdationBar: CrystalRangeSeekbar? = null
     private var rangeHeightBar1: CrystalRangeSeekbar? = null
     private var rangeWeightBar: CrystalRangeSeekbar? = null
 
-    private var chkIsDonor: CheckBox?=null
-    private var chkIsRented: CheckBox?=null
-    private var chkIsExpired: CheckBox?=null
-    private var chkIsSpect: CheckBox?=null
-    private var chkIsShani: CheckBox?=null
-    private var chkIsMangal: CheckBox?=null
+    private var chkIsDonor: CheckBox? = null
+    private var chkIsRented: CheckBox? = null
+    private var chkIsExpired: CheckBox? = null
+    private var chkIsSpect: CheckBox? = null
+    private var chkIsInterested: CheckBox? = null
+    private var chkIsShani: CheckBox? = null
+    private var chkIsMangal: CheckBox? = null
 
-    private var which:Int=0
-    private var pattern="dd-MM-yyyy"
+    private var which: Int = 0
+    private var pattern = "dd-MM-yyyy"
     private var datepicker = SpinnerDatePickerDialogBuilder()
     private lateinit var dialog: DialogPlus
 
-    init{
+    init {
         setEditFilterValues()
     }
 
@@ -173,15 +174,15 @@ class SmartFilterAdapter(private val _context: Context,
     }
 
 
-    private fun setEditFilterValues(){
-        if(!editFilter.isNullOrEmpty()){
-            val values=JSONObject(editFilter).getString(_context.getString(R.string.value_filter))
-            val json=JSONObject(values)
-            val iterator:Iterator<String>
-            iterator=json.keys()
+    private fun setEditFilterValues() {
+        if (!editFilter.isNullOrEmpty()) {
+            val values = JSONObject(editFilter).getString(_context.getString(R.string.value_filter))
+            val json = JSONObject(values)
+            val iterator: Iterator<String>
+            iterator = json.keys()
             mapChildValues.clear()
-            while(iterator.hasNext()){
-                val key=iterator.next()
+            while (iterator.hasNext()) {
+                val key = iterator.next()
                 mapChildValues[key] = json.getString(key)
             }
         }
@@ -346,23 +347,23 @@ class SmartFilterAdapter(private val _context: Context,
 
             val donor = chkIsDonor?.isChecked.toString()
             if (donor.isNotEmpty() && !donor.equals("false", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_chk_is_donor)] = donor
+                mapChildValues[_context.getString(R.string.ss_chk_is_donor)] = "1"
             } else {
-                mapChildValues[_context.getString(R.string.ss_chk_is_donor)] = "false"
+                mapChildValues[_context.getString(R.string.ss_chk_is_donor)] = "0"
             }
 
             val isRented = chkIsRented?.isChecked.toString()
             if (isRented.isNotEmpty() && !isRented.equals("false", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_chk_is_rented)] = isRented
+                mapChildValues[_context.getString(R.string.ss_chk_is_rented)] = "1"
             } else {
-                mapChildValues[_context.getString(R.string.ss_chk_is_rented)] = "false"
+                mapChildValues[_context.getString(R.string.ss_chk_is_rented)] = "0"
             }
 
             val expired = chkIsExpired?.isChecked.toString()
             if (expired.isNotEmpty() && !expired.equals("false", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_chk_is_expired)] = expired
+                mapChildValues[_context.getString(R.string.ss_chk_is_expired)] = "1"
             } else {
-                mapChildValues[_context.getString(R.string.ss_chk_is_expired)] = "false"
+                mapChildValues[_context.getString(R.string.ss_chk_is_expired)] = "0"
             }
         }
         if (edtOffice != null) {
@@ -437,23 +438,31 @@ class SmartFilterAdapter(private val _context: Context,
             } else {
                 mapChildValues[_context.getString(R.string.ss_sp_bplace)] = ""
             }
-            val is_spect = chkIsSpect?.isChecked.toString()
-            if (is_spect.isNotEmpty() && !is_spect.equals("false", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_chk_is_spect)] = is_spect
+            val isSpect = chkIsSpect?.isChecked.toString()
+            if (isSpect.isNotEmpty() && !isSpect.equals("false", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_chk_is_spect)] = "1"
             } else {
-                mapChildValues[_context.getString(R.string.ss_chk_is_spect)] = "false"
+                mapChildValues[_context.getString(R.string.ss_chk_is_spect)] = "0"
             }
-            val is_shani = chkIsShani?.isChecked.toString()
-            if (is_shani.isNotEmpty() && !is_shani.equals("false", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_chk_is_shani)] = is_shani
+
+            val isInterested = chkIsInterested?.isChecked.toString()
+            if (isInterested.isNotEmpty() && !isInterested.equals("false", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.matrimony)] = "Yes"
             } else {
-                mapChildValues[_context.getString(R.string.ss_chk_is_shani)] = "false"
+                mapChildValues[_context.getString(R.string.matrimony)] = "No"
             }
-            val is_mangal = chkIsMangal?.isChecked.toString()
-            if (is_mangal.isNotEmpty() && !is_mangal.equals("false", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_chk_is_mangal)] = is_mangal
+
+            val isShani = chkIsShani?.isChecked.toString()
+            if (isShani.isNotEmpty() && !isShani.equals("false", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_chk_is_shani)] = "1"
             } else {
-                mapChildValues[_context.getString(R.string.ss_chk_is_mangal)] = "false"
+                mapChildValues[_context.getString(R.string.ss_chk_is_shani)] = "0"
+            }
+            val isMangal = chkIsMangal?.isChecked.toString()
+            if (isMangal.isNotEmpty() && !isMangal.equals("false", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_chk_is_mangal)] = "1"
+            } else {
+                mapChildValues[_context.getString(R.string.ss_chk_is_mangal)] = "0"
             }
         }
         if (tvCreated != null) {
@@ -470,11 +479,11 @@ class SmartFilterAdapter(private val _context: Context,
             val min = rangeUpdationBar?.selectedMinValue.toString()
             val max = rangeUpdationBar?.selectedMaxValue.toString()
             if ((min.isNotEmpty() && max.isNotEmpty()) || !(max.equals("100", ignoreCase = true) && min.equals("0", ignoreCase = true))) {
-                mapChildValues[_context.getString(R.string.ss_minUpdate)] = min
-                mapChildValues[_context.resources.getString(R.string.ss_maxUpdate)] = max
+                mapChildValues[_context.getString(R.string.ss_min_percentage)] = min
+                mapChildValues[_context.resources.getString(R.string.ss_max_percentage)] = max
             } else {
-                mapChildValues[_context.getString(R.string.ss_minUpdate)] = "0"
-                mapChildValues[_context.resources.getString(R.string.ss_maxUpdate)] = "100"
+                mapChildValues[_context.getString(R.string.ss_min_percentage)] = "0"
+                mapChildValues[_context.resources.getString(R.string.ss_max_percentage)] = "100"
             }
         }
     }
@@ -596,11 +605,11 @@ class SmartFilterAdapter(private val _context: Context,
                     spBg.setText(bg)
                 }
                 val isDoner = mapChildValues[_context.getString(R.string.ss_chk_is_donor)]
-                chkIsDonor?.isChecked = isDoner != null && isDoner.equals(_context.getString(R.string.ss_true), ignoreCase = true)
+                chkIsDonor?.isChecked = isDoner != null && isDoner.equals("1", ignoreCase = true)
                 val isRented = mapChildValues[_context.getString(R.string.ss_chk_is_rented)]
-                chkIsRented?.isChecked = isRented != null && isRented.equals(_context.getString(R.string.ss_true), ignoreCase = true)
+                chkIsRented?.isChecked = isRented != null && isRented.equals("1", ignoreCase = true)
                 val isExpired = mapChildValues[_context.getString(R.string.ss_chk_is_expired)]
-                chkIsExpired?.isChecked = isExpired != null && isExpired.equals(_context.getString(R.string.ss_true), ignoreCase = true)
+                chkIsExpired?.isChecked = isExpired != null && isExpired.equals("1", ignoreCase = true)
             }
             if (edtOffice != null) {
                 val office = mapChildValues[_context.getString(R.string.ss_edt_office)]
@@ -653,12 +662,14 @@ class SmartFilterAdapter(private val _context: Context,
                 if (bplace != null && bplace.isNotEmpty()) {
                     edtBirthPlace?.setText(bplace)
                 }
+                val isInterested = mapChildValues[_context.getString(R.string.matrimony)]
+                chkIsInterested?.isChecked = isInterested != null && isInterested.equals("Yes", ignoreCase = true)
                 val isSpect = mapChildValues[_context.getString(R.string.ss_chk_is_spect)]
-                chkIsSpect?.isChecked = isSpect != null && isSpect.equals(_context.getString(R.string.ss_true), ignoreCase = true)
-                val is_shani = mapChildValues[_context.getString(R.string.ss_chk_is_shani)]
-                chkIsShani?.isChecked = is_shani != null && is_shani.equals(_context.getString(R.string.ss_true), ignoreCase = true)
+                chkIsSpect?.isChecked = isSpect != null && isSpect.equals("1", ignoreCase = true)
+                val isShani = mapChildValues[_context.getString(R.string.ss_chk_is_shani)]
+                chkIsShani?.isChecked = isShani != null && isShani.equals("1", ignoreCase = true)
                 val isMangal = mapChildValues[_context.getString(R.string.ss_chk_is_mangal)]
-                chkIsMangal?.isChecked = isMangal != null && isMangal.equals(_context.getString(R.string.ss_true), ignoreCase = true)
+                chkIsMangal?.isChecked = isMangal != null && isMangal.equals("1", ignoreCase = true)
             }
             if (tvCreated != null) {
                 val created = mapChildValues[_context.getString(R.string.ss_edt_created)]
@@ -677,8 +688,8 @@ class SmartFilterAdapter(private val _context: Context,
                         tvUpdated?.text = updated
                     }
                 }
-                val maxUpdate = mapChildValues[_context.getString(R.string.ss_maxUpdate)]
-                val minUpdate = mapChildValues[_context.getString(R.string.ss_minUpdate)]
+                val maxUpdate = mapChildValues[_context.getString(R.string.ss_max_percentage)]
+                val minUpdate = mapChildValues[_context.getString(R.string.ss_min_percentage)]
                 if (maxUpdate != null && maxUpdate.isNotEmpty()) {
                     rangeUpdationBar?.setMaxStartValue(maxUpdate.toInt().toFloat())?.apply()
                 }
@@ -714,32 +725,32 @@ class SmartFilterAdapter(private val _context: Context,
                 val tvMax = convertView.findViewById<TextView>(R.id.textMax1)
 
                 spSurname.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spSurname.setText("")
                     }
                 }
                 spLocalComm.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spLocalComm.setText("")
                     }
                 }
                 spCity.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spCity.setText("")
                     }
                 }
                 spGender.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spGender.setText("")
                     }
                 }
                 spMarital.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spMarital.setText("")
                     }
                 }
                 spNative.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spNative.setText("")
                     }
                 }
@@ -747,7 +758,7 @@ class SmartFilterAdapter(private val _context: Context,
 
                 Coroutines.main {
                     profileDetailViewModel.lstNativeName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spNative.setItems(lstValue.toTypedArray())
@@ -755,7 +766,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     profileDetailViewModel.lstLastName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spSurname.setItems(lstValue.toTypedArray())
@@ -763,7 +774,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     profileDetailViewModel.getLocalCommName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spLocalComm.setItems(lstValue.toTypedArray())
@@ -771,26 +782,26 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     profileDetailViewModel.lstCityName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spCity.setItems(lstValue.toTypedArray())
                         spCity.setExpandTint(R.color.black)
                     }
 
-                    val lstMarital =  _context.resources.getStringArray(R.array.marital)
-                    val lstValue=ArrayList<String>()
+                    val lstMarital = _context.resources.getStringArray(R.array.marital)
+                    val lstValue = ArrayList<String>()
                     lstValue.add(_context.getString(R.string.no_selection))
                     lstValue.addAll(lstMarital)
                     spMarital.setItems(lstValue.toTypedArray())
                     spMarital.setExpandTint(R.color.black)
 
-                    val lstGender = arrayOf(_context.getString(R.string.no_selection),"Male", "Female")
+                    val lstGender = arrayOf(_context.getString(R.string.no_selection), "Male", "Female")
                     spGender.setItems(lstGender)
                     spGender.setExpandTint(R.color.black)
 
                     rangeAgeBar?.setOnRangeSeekbarChangeListener { minValue: Number, maxValue: Number ->
-                        tvMin.text = "Age"+" $minValue"
+                        tvMin.text = "Age" + " $minValue"
                         tvMax.text = "Age $maxValue"
                     }
 
@@ -814,20 +825,20 @@ class SmartFilterAdapter(private val _context: Context,
                 edtArea = convertView.findViewById(R.id.edt_area)
 
                 spState.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spState.setText("")
                     }
                 }
 
 
                 Coroutines.main {
-                   profileDetailViewModel.lstStateName.await().observeForever {
-                       val lstValue=ArrayList<String>()
-                       lstValue.add(_context.getString(R.string.no_selection))
-                       lstValue.addAll(it.toTypedArray())
-                       spState.setItems(lstValue.toTypedArray())
-                       spState.setExpandTint(R.color.black)
-                   }
+                    profileDetailViewModel.lstStateName.await().observeForever {
+                        val lstValue = ArrayList<String>()
+                        lstValue.add(_context.getString(R.string.no_selection))
+                        lstValue.addAll(it.toTypedArray())
+                        spState.setItems(lstValue.toTypedArray())
+                        spState.setExpandTint(R.color.black)
+                    }
                     setFieldValues()
                 }
             }
@@ -868,46 +879,46 @@ class SmartFilterAdapter(private val _context: Context,
                 }
 
                 tvBdate?.setOnClickListener {
-                    which=1
+                    which = 1
                     val memDate = tvBdate?.text.toString().trim()
                     setDatePicker(memDate)
                 }
 
                 tvMdate?.setOnClickListener {
-                    which=2
+                    which = 2
                     val memDate = tvMdate?.text.toString().trim()
                     setDatePicker(memDate)
                 }
 
                 spEducation.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spEducation.setText("")
                     }
                 }
 
                 spGotra.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spGotra.setText("")
                     }
                 }
 
                 spBg.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spBg.setText("")
                     }
                 }
 
                 Coroutines.main {
 
-                    val lstBlood =  _context.resources.getStringArray(R.array.bloodGroup)
-                    val lstValue=ArrayList<String>()
+                    val lstBlood = _context.resources.getStringArray(R.array.bloodGroup)
+                    val lstValue = ArrayList<String>()
                     lstValue.add(_context.getString(R.string.no_selection))
                     lstValue.addAll(lstBlood)
                     spBg.setItems(lstValue.toTypedArray())
                     spBg.setExpandTint(R.color.black)
 
                     profileDetailViewModel.lstGotraName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spGotra.setItems(lstValue.toTypedArray())
@@ -915,7 +926,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     profileDetailViewModel.lstEducationName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spEducation.setItems(lstValue.toTypedArray())
@@ -938,22 +949,22 @@ class SmartFilterAdapter(private val _context: Context,
 
 
                 spMainCat.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spMainCat.setText("")
                     }
                 }
                 spSubCat.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spSubCat.setText("")
                     }
                 }
                 spOccupation.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spOccupation.setText("")
                     }
                 }
                 spActivity.setOnItemClickListener {
-                    if(it==0){
+                    if (it == 0) {
                         spActivity.setText("")
                     }
                 }
@@ -961,7 +972,7 @@ class SmartFilterAdapter(private val _context: Context,
                 Coroutines.main {
 
                     profileDetailViewModel.lstBusinessCategoryName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spMainCat.setItems(lstValue.toTypedArray())
@@ -969,7 +980,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     profileDetailViewModel.lstBusinessSubCategoryName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spSubCat.setItems(lstValue.toTypedArray())
@@ -977,7 +988,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     profileDetailViewModel.lstOccupationName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spOccupation.setItems(lstValue.toTypedArray())
@@ -985,7 +996,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     profileDetailViewModel.lstActivityName.await().observeForever {
-                        val lstValue=ArrayList<String>()
+                        val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
                         spActivity.setItems(lstValue.toTypedArray())
@@ -1005,6 +1016,7 @@ class SmartFilterAdapter(private val _context: Context,
                 rangeHeightBar1 = convertView.findViewById(R.id.rangeHeight1)
                 rangeWeightBar = convertView.findViewById(R.id.rangeWeight)
                 edtBirthPlace = convertView.findViewById(R.id.edt_birth_place)
+                chkIsInterested = convertView.findViewById(R.id.chk_is_interested)
                 chkIsSpect = convertView.findViewById(R.id.chk_is_spect)
                 chkIsShani = convertView.findViewById(R.id.chk_is_shani)
                 chkIsMangal = convertView.findViewById(R.id.chk_is_mangal)
@@ -1041,20 +1053,20 @@ class SmartFilterAdapter(private val _context: Context,
                 val tvMax1 = convertView.findViewById<TextView>(R.id.textMax1)
 
                 imgUpdatedClose?.setOnClickListener {
-                    tvUpdated?.text=""
+                    tvUpdated?.text = ""
                 }
 
                 imgCreatedClose?.setOnClickListener {
-                    tvCreated?.text=""
+                    tvCreated?.text = ""
                 }
 
                 tvCreated?.setOnClickListener {
-                    which=3
+                    which = 3
                     setDatePicker(tvCreated!!.text.toString().trim())
                 }
 
                 tvUpdated?.setOnClickListener {
-                    which=4
+                    which = 4
                     setDatePicker(tvUpdated!!.text.toString().trim())
                 }
 
@@ -1074,19 +1086,19 @@ class SmartFilterAdapter(private val _context: Context,
 
     private val mListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
 
-        var hour:String=hourOfDay.toString()
-        var min:String=minute.toString()
-        if(hour.length==1){
-            hour="0$hour"
+        var hour: String = hourOfDay.toString()
+        var min: String = minute.toString()
+        if (hour.length == 1) {
+            hour = "0$hour"
         }
-        if(min.length==1){
-            min="0$min"
+        if (min.length == 1) {
+            min = "0$min"
         }
         tvBirthTime?.text = "$hour:$min"
     }
 
-    fun clearAll(){
-        if(edtFamilyCode!=null){
+    fun clearAll() {
+        if (edtFamilyCode != null) {
             edtFamilyCode?.text?.clear()
             edtHeadName?.text?.clear()
             edtMemberName?.text?.clear()
@@ -1097,7 +1109,7 @@ class SmartFilterAdapter(private val _context: Context,
             spNative.text?.clear()
             spCity.text?.clear()
         }
-        if(edtEmail!=null){
+        if (edtEmail != null) {
             edtEmail?.text?.clear()
             edtMobile?.text?.clear()
             edtLocalAdd?.text?.clear()
@@ -1106,30 +1118,31 @@ class SmartFilterAdapter(private val _context: Context,
             edtArea?.text?.clear()
             spState.text?.clear()
         }
-        if(tvBdate!=null){
+        if (tvBdate != null) {
             spEducation.text?.clear()
             spGotra.text?.clear()
             spBg.text?.clear()
-            tvBdate?.text=""
-            tvMdate?.text=""
+            tvBdate?.text = ""
+            tvMdate?.text = ""
             tvExpired?.text = ""
-            chkIsDonor?.isChecked=false
-            chkIsRented?.isChecked=false
-            chkIsExpired?.isChecked=false
+            chkIsDonor?.isChecked = false
+            chkIsRented?.isChecked = false
+            chkIsExpired?.isChecked = false
         }
-        if(edtOffice!=null){
+        if (edtOffice != null) {
             edtOffice?.text?.clear()
             spMainCat.text?.clear()
             spSubCat.text?.clear()
             spOccupation.text?.clear()
             spActivity.text?.clear()
         }
-        if(tvBirthTime!=null){
-            tvBirthTime?.text=""
+        if (tvBirthTime != null) {
+            tvBirthTime?.text = ""
             edtBirthPlace?.text?.clear()
-            chkIsSpect?.isChecked=false
-            chkIsShani?.isChecked=false
-            chkIsMangal?.isChecked=false
+            chkIsSpect?.isChecked = false
+            chkIsShani?.isChecked = false
+            chkIsInterested?.isChecked = false
+            chkIsMangal?.isChecked = false
 
             rangeHeightBar1?.setMinStartValue(0f)
             rangeHeightBar1?.setMaxStartValue(200f)
@@ -1139,9 +1152,9 @@ class SmartFilterAdapter(private val _context: Context,
             rangeWeightBar?.setMaxStartValue(200f)
             rangeWeightBar?.apply()
         }
-        if(tvCreated!=null){
-            tvCreated?.text=""
-            tvUpdated?.text=""
+        if (tvCreated != null) {
+            tvCreated?.text = ""
+            tvUpdated?.text = ""
 
             rangeAgeBar?.setMinStartValue(0f)
             rangeAgeBar?.setMaxStartValue(100f)
@@ -1169,7 +1182,7 @@ class SmartFilterAdapter(private val _context: Context,
     fun openBottomSheetDailog() {
         getFiledValues()
         if (mapChildValues.size > 0) {
-            val popUpAdapter = SmartPopUpAdapter(_context, this, mapChildValues,profileDetailViewModel,editFilter)
+            val popUpAdapter = SmartPopUpAdapter(_context, this, mapChildValues, profileDetailViewModel, editFilter)
             dialog = DialogPlus
                     .newDialog(_context)
                     .setAdapter(popUpAdapter)
@@ -1196,7 +1209,7 @@ class SmartFilterAdapter(private val _context: Context,
         header.add("")
     }
 
-    private fun setDatePicker(mem_date:String) {
+    private fun setDatePicker(mem_date: String) {
         val year: Int = Calendar.getInstance().get(Calendar.YEAR)
         val day: Int = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         val month: Int = Calendar.getInstance().get(Calendar.MONTH)
@@ -1240,14 +1253,14 @@ class SmartFilterAdapter(private val _context: Context,
             month = "0${month}"
         }
         val date = "$day-$month-$year"
-        if(which==1){
+        if (which == 1) {
             tvBdate?.text = date
-        }else if(which==2){
+        } else if (which == 2) {
             tvMdate?.text = date
-        }else if(which==3){
-            tvCreated?.text=date
-        }else if(which==4){
-            tvUpdated?.text=date
+        } else if (which == 3) {
+            tvCreated?.text = date
+        } else if (which == 4) {
+            tvUpdated?.text = date
         } else if (which == 5) {
             tvExpired?.text = date
         }

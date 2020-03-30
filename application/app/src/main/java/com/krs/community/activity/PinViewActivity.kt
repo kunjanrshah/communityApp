@@ -1,4 +1,3 @@
-
 package com.krs.community.activity
 
 import android.content.Intent
@@ -44,11 +43,11 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerLogoutListner {
+class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerLogoutListner {
     private lateinit var mPinView: PinView
     private lateinit var member: Member
     private lateinit var imgView: ImageView
-    private lateinit var relative:RelativeLayout
+    private lateinit var relative: RelativeLayout
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     override val kodein by kodein()
@@ -60,8 +59,8 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
-        familyDetailViewModel.mILoginListener=this
-        familyDetailViewModel.innerLogoutListner=this
+        familyDetailViewModel.mILoginListener = this
+        familyDetailViewModel.innerLogoutListner = this
 
         if (isNetworkConnected(this)) {
             setScreenLayout()
@@ -96,7 +95,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
 
     private fun setScreenLayout() {
         setContentView(R.layout.activity_pinview)
-        relative=findViewById(R.id.ll_parent)
+        relative = findViewById(R.id.ll_parent)
         mPinView = findViewById(R.id.pattern_view)
         member = intent.getSerializableExtra(getString(R.string.member)) as Member
         imgView = findViewById(R.id.imageView)
@@ -160,76 +159,77 @@ class PinViewActivity : AppCompatActivity(), KodeinAware , ILoginListener,InnerL
                     mPinView.snackbar(getString(R.string.check_network), Snackbar.LENGTH_SHORT)
                 }
             }
+
             override fun onAuthenticationFailed() {
             }
         })
     }
 
-    private fun getMemberLogin(){
-        startSweetProgress(this,getString(R.string.enter),getString(R.string.loading))
-        val jsonObject= JSONObject()
-        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
-        jsonObject.put(getString(R.string.id),member.id)
-        jsonObject.put(getString(R.string.profile_password),member.profilePassword)
-        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
+    private fun getMemberLogin() {
+        startSweetProgress(this, getString(R.string.enter), getString(R.string.loading))
+        val jsonObject = JSONObject()
+        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        jsonObject.put(getString(R.string.id), member.id)
+        jsonObject.put(getString(R.string.profile_password), member.profilePassword)
+        val records = JsonParser().parse(jsonObject.toString()) as JsonObject
         familyDetailViewModel.innerLogin(records)
     }
 
-    private fun getMemberLogout(){
-        startSweetProgress(this,getString(R.string.Exit),getString(R.string.loading))
-        val jsonObject= JSONObject()
-        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id),""))
-        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
-        jsonObject.put(getString(R.string.id),member.id)
-        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
+    private fun getMemberLogout() {
+        startSweetProgress(this, getString(R.string.Exit), getString(R.string.loading))
+        val jsonObject = JSONObject()
+        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        jsonObject.put(getString(R.string.id), member.id)
+        val records = JsonParser().parse(jsonObject.toString()) as JsonObject
         familyDetailViewModel.getInnerLogout(records)
     }
 
     override fun userLogin(response: LoginResponse) {
         hideSweetProgress()
-        if(response.success){
-            if(response.data!=null){
-                val json= Gson().toJson(response.data)
+        if (response.success) {
+            if (response.data != null) {
+                val json = Gson().toJson(response.data)
                 Guru.putString(getString(R.string.loginMember), json)
-                Guru.putString(getString(R.string.member_id),response.data.id)
-                Guru.putString(getString(R.string.user_id),response.data.id)
+                Guru.putString(getString(R.string.member_id), response.data.id)
+                Guru.putString(getString(R.string.user_id), response.data.id)
                 val intent = Intent(this, DashboardActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
                 fade(this)
-            }else{
-                relative.snackbar(getString(R.string.went_wrong),Snackbar.LENGTH_LONG)
+            } else {
+                relative.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
             }
-        }else{
-            relative.snackbar(response.message,Snackbar.LENGTH_LONG)
+        } else {
+            relative.snackbar(response.message, Snackbar.LENGTH_LONG)
         }
     }
 
     override fun userLogout(response: UserInnerLogoutResponse) {
-         hideSweetProgress()
-         if(response.success){
-            Guru.putString(getString(R.string.loginMember),"")
+        hideSweetProgress()
+        if (response.success) {
+            Guru.putString(getString(R.string.loginMember), "")
             Guru.putString(getString(R.string.member_id), "")
-             val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
-             if(member.headId=="0"){
-                 intent.putExtra(getString(R.string.id), member.id)
-             }else{
-                 intent.putExtra(getString(R.string.id), member.headId)
-             }
-             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-             startActivity(intent)
-             finish()
-             fade(this)
-         }else{
+            val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
+            if (member.headId == "0") {
+                intent.putExtra(getString(R.string.id), member.id)
+            } else {
+                intent.putExtra(getString(R.string.id), member.headId)
+            }
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+            fade(this)
+        } else {
 
-         }
+        }
     }
 
     override suspend fun getFailure(message: String) {
         hideSweetProgress()
-        relative.snackbar(message,Snackbar.LENGTH_SHORT)
+        relative.snackbar(message, Snackbar.LENGTH_SHORT)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

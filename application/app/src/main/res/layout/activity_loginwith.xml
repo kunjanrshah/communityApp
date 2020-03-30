@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="loginViewModel"
             type="com.krs.community.viewmodel.LoginViewModel" />
@@ -50,114 +51,116 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_view_mobile"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="15dp">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_mobile"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="@string/welcome"
-                    android:textColor="@color/black"
-                    android:textSize="26sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="@string/Mobile"
-                    android:textSize="20sp" />
+                android:layout_height="230dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="15dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="20dp"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:background="@drawable/round_corner_mid_light_gray"
-                        android:visibility="gone">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/welcome"
+                        android:textColor="@color/black"
+                        android:textSize="26sp" />
 
-                        <com.krs.community.jrspinner.JRSpinner
-                            android:id="@+id/spinnerCountries"
-                            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/Mobile"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:background="@drawable/round_corner_mid_light_gray"
+                            android:visibility="gone">
+
+                            <com.krs.community.jrspinner.JRSpinner
+                                android:id="@+id/spinnerCountries"
+                                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:background="@null"
+                                android:hint="Code"
+                                android:singleLine="true"
+                                app:jrs_multiple="false" />
+                        </RelativeLayout>
+
+                        <EditText
+                            android:id="@+id/edt_mobile"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
-                            android:background="@null"
-                            android:hint="Code"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/round_corner_mid_light_gray"
+                            android:digits="0123456789"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:hint="@string/_10_digit_number"
+                            android:inputType="number"
+                            android:paddingLeft="20dp"
                             android:singleLine="true"
-                            app:jrs_multiple="false" />
-                    </RelativeLayout>
+                            android:text="@={loginViewModel.mobile}"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/dialogplus_black_overlay"
+                            android:textSize="18sp" />
+                    </LinearLayout>
 
-                    <EditText
-                        android:id="@+id/edt_mobile"
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/round_corner_mid_light_gray"
-                        android:digits="0123456789"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:hint="@string/_10_digit_number"
-                        android:inputType="number"
-                        android:paddingLeft="20dp"
-                        android:singleLine="true"
-                        android:text="@={loginViewModel.mobile}"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/dialogplus_black_overlay"
-                        android:textSize="18sp" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number"
+                        android:textColor="@color/black2"
+                        android:textSize="14sp" />
+
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:fontFamily="@font/montserrat_light"
-                    android:text="@string/_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number"
-                    android:textColor="@color/black2"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-    </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_view_otp"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
-                android:visibility="gone"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="20dp"
+                android:visibility="gone"
                 app:cardCornerRadius="15dp">
 
                 <ImageView
@@ -190,8 +193,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="10dp"
-                        android:text="@string/enter_the_otp_you_have_received_to"
                         android:fontFamily="@font/montserrat_light"
+                        android:text="@string/enter_the_otp_you_have_received_to"
                         android:textSize="14sp" />
 
                     <TextView
@@ -246,111 +249,111 @@
         </RelativeLayout>
 
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnContinue"
-            android:layout_width="170dp"
-            android:layout_height="50dp"
-            android:background="@drawable/btn_registration_selection"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="@string/_continue"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <com.krs.community.utils.MovableFloatingActionButton
-            android:id="@+id/fab_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|end"
-            android:layout_marginRight="10dp"
-            android:backgroundTint="@android:color/white"
-            android:src="@drawable/rocket"
-            app:borderWidth="0dp"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            android:layout_marginBottom="10dp"
-            app:maxImageSize="40dp" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="- - - - - -  - - - - -" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:text="@string/or_login_with" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="- - - - - - - - - - - -" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_login_google"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:background="@drawable/google_btn" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_login_fb"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/facebook_btn" />
-
-        </LinearLayout>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/have_acc"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="16sp"
-            android:layout_marginBottom="60dp"
-            android:text="@string/do_you_have_an_account"
-            android:textColor="@color/dark_color_primary" />
+            android:layout_marginTop="100dp">
 
-    </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnContinue"
+                android:layout_width="170dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_registration_selection"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/_continue"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
-</FrameLayout>
+        </RelativeLayout>
 
-    </layout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <com.krs.community.utils.MovableFloatingActionButton
+                android:id="@+id/fab_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@android:color/white"
+                android:src="@drawable/rocket"
+                app:borderWidth="0dp"
+                app:elevation="6dp"
+                app:fabSize="normal"
+                app:maxImageSize="40dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- - - - - -  - - - - -" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="@string/or_login_with" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- - - - - - - - - - - -" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_login_google"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/google_btn" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_login_fb"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/facebook_btn" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/have_acc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="60dp"
+                android:text="@string/do_you_have_an_account"
+                android:textColor="@color/dark_color_primary"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>
 
 

@@ -88,7 +88,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? { // Inflating view layout
         val layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, FragmentDrawer::class.simpleName)
         mApp.facebookAnalytics(context, FragmentDrawer::class.simpleName)
 
@@ -207,16 +207,11 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
 
         containerView = Objects.requireNonNull(activity)?.findViewById(fragmentId)
         mDrawerLayout = drawerLayout
-        mDrawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        mDrawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         mDrawerToggle = object : ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 Utility.hideKeyboard(activity)
-            }
-
-            override fun onDrawerClosed(drawerView: View) {
-                super.onDrawerClosed(drawerView)
-                //getActivity().invalidateOptionsMenu();
             }
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {

@@ -49,9 +49,9 @@
             android:layout_height="35dp"
             android:layout_marginStart="5dp"
             android:background="@drawable/round_corner_primary"
-            android:textColor="@color/white"
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/apply"
+            android:textColor="@color/white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -91,11 +91,11 @@
                 android:id="@+id/edt_family_code"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginStart="5dp"
+                android:layout_weight="1"
                 android:background="@null"
-                android:inputType="textCapCharacters"
                 android:fontFamily="@font/montserrat_regular"
+                android:inputType="textCapCharacters"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
@@ -135,8 +135,8 @@
                 android:id="@+id/edt_head_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginStart="5dp"
+                android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
@@ -177,8 +177,8 @@
                 android:id="@+id/edt_member"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -200,9 +200,9 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:visibility="gone"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -245,12 +245,12 @@
 
         <LinearLayout
             android:id="@+id/ll_samaj"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -292,13 +292,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_gender"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -341,13 +341,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_marital"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -389,13 +389,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_native"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -437,13 +437,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_city"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -485,13 +485,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_state"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -533,13 +533,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_education"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -581,13 +581,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_gotra"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -629,13 +629,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_bg"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -677,13 +677,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_cat"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -725,13 +725,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_sub_cat"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -773,13 +773,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_occupation"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -821,13 +821,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_activity"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -873,9 +873,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:padding="5dp"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
+            android:padding="5dp"
             android:visibility="gone">
 
             <LinearLayout
@@ -923,19 +923,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:textSize="14sp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="@string/age_0" />
+                        android:text="@string/age_0"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/textMax1"
                         android:layout_width="100dp"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/montserrat_medium"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
+                        android:fontFamily="@font/montserrat_medium"
                         android:gravity="right"
-                        android:text="@string/age_100" />
+                        android:text="@string/age_100"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -974,8 +974,8 @@
                 android:id="@+id/edt_email"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1015,8 +1015,8 @@
                 android:id="@+id/edt_area"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1056,8 +1056,8 @@
                 android:id="@+id/edt_mobile"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1097,8 +1097,8 @@
                 android:id="@+id/edt_local_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1138,8 +1138,8 @@
                 android:id="@+id/edt_permanent_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1179,12 +1179,12 @@
                 android:id="@+id/edt_pincode"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
-                android:inputType="number"
-                android:maxLength="6"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:digits="0123456789"
                 android:fontFamily="@font/montserrat_regular"
+                android:inputType="number"
+                android:maxLength="6"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
@@ -1205,8 +1205,8 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:gravity="center_vertical"
             android:background="@drawable/round_corner_white"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -1224,10 +1224,10 @@
                 android:id="@+id/tv_birth_date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="3dp"
-                android:gravity="center_vertical"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
@@ -1247,10 +1247,10 @@
             android:id="@+id/ll_mdate"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:visibility="gone"
             android:layout_margin="5dp"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal"         >
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -1266,10 +1266,10 @@
                 android:id="@+id/tv_mdate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="3dp"
-                android:gravity="center_vertical"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
@@ -1306,11 +1306,12 @@
 
             <TextView
                 android:id="@+id/tv_expire"
-                android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
@@ -1349,8 +1350,8 @@
                 android:id="@+id/edt_office"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1390,8 +1391,8 @@
                 android:id="@+id/edt_btime"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1431,8 +1432,8 @@
                 android:id="@+id/edt_bplace"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
                 android:singleLine="true"
                 android:textSize="14sp" />
@@ -1454,9 +1455,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:padding="5dp"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
+            android:padding="5dp"
             android:visibility="gone">
 
             <LinearLayout
@@ -1536,9 +1537,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:padding="5dp"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
+            android:padding="5dp"
             android:visibility="gone">
 
             <LinearLayout
@@ -1633,10 +1634,10 @@
                 android:id="@+id/tv_created"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="3dp"
-                android:gravity="center_vertical"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
@@ -1657,9 +1658,9 @@
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_margin="5dp"
-            android:visibility="gone"
             android:background="@drawable/round_corner_white"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -1675,10 +1676,10 @@
                 android:id="@+id/tv_updated"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:layout_marginStart="5dp"
-                android:gravity="center_vertical"
+                android:background="@null"
                 android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textSize="14sp" />
 
@@ -1782,6 +1783,35 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_interested"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <CheckBox
+                android:id="@+id/chk_interested"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="@string/interested"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/img_interested_close"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_cancel_pop_item"
+                android:padding="5dp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/ll_isSpect"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
@@ -1873,9 +1903,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:padding="5dp"
             android:background="@drawable/round_corner_white"
             android:orientation="horizontal"
+            android:padding="5dp"
             android:visibility="gone">
 
             <LinearLayout

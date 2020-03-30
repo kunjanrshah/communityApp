@@ -48,7 +48,7 @@ public class NotificationListFragment extends Fragment {
         ParallaxRecyclerAdapter<JSONObject> adapter = new ParallaxRecyclerAdapter<JSONObject>(lstNotifications) {
             @Override
             public void onBindViewHolderImpl(RecyclerView.ViewHolder holder1, ParallaxRecyclerAdapter<JSONObject> adapter, int position) {
-                ListViewHolder holder=((ListViewHolder) holder1);
+                ListViewHolder holder = ((ListViewHolder) holder1);
                 holder.tv_date.setText("26/07/2019");
 
                 LayoutInflater layoutInflater = getLayoutInflater();
@@ -111,8 +111,8 @@ public class NotificationListFragment extends Fragment {
 
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         RecyclerView rv_notification = root.findViewById(R.id.rv_notification);
-        View header=LayoutInflater.from(getActivity()).inflate(R.layout.header_notifications, container, false);
-        ImageView iv_cancel= header.findViewById(R.id.iv_cancel);
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_notifications, container, false);
+        ImageView iv_cancel = header.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {
             Utility.movetoFragment(getActivity(), new DashboardFragment());
         });

@@ -28,6 +28,7 @@ public class ChangeLanguageFragment extends Fragment {
 
     private AppCompatRadioButton rb_hindi, rb_gujarati, rb_english;
     private TextView tvChangeLang, tvEng, tvGuj, tvHindi;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
@@ -60,13 +61,13 @@ public class ChangeLanguageFragment extends Fragment {
         tvGuj = root.findViewById(R.id.tvGuj);
         tvHindi = root.findViewById(R.id.tvHindi);
 
-        ll_hindi.setOnClickListener(v -> {
+        /*ll_hindi.setOnClickListener(v -> {
             if (!rb_hindi.isChecked()) {
                 rb_hindi.setChecked(true);
                 rb_gujarati.setChecked(false);
                 rb_english.setChecked(false);
 
-                Utility.changeLang(getContext(), "हिन्दी".toString());
+                Utility.changeLang(getContext(), "हिन्दी");
 
                 tvChangeLang.setText(getResources().getString(R.string.choose_language));
                 tvHindi.setText(getResources().getString(R.string._hindi));
@@ -81,7 +82,7 @@ public class ChangeLanguageFragment extends Fragment {
                 rb_gujarati.setChecked(true);
                 rb_english.setChecked(false);
 
-                Utility.changeLang(getContext(), "ગુજરાતી".toString());
+                Utility.changeLang(getContext(), "ગુજરાતી");
 
                 tvChangeLang.setText(getResources().getString(R.string.choose_language));
                 tvHindi.setText(getResources().getString(R.string._hindi));
@@ -89,7 +90,7 @@ public class ChangeLanguageFragment extends Fragment {
                 tvEng.setText(getResources().getString(R.string._english));
 
             }
-        });
+        });*/
 
         ll_english.setOnClickListener(v -> {
             if (!rb_english.isChecked()) {
@@ -97,7 +98,7 @@ public class ChangeLanguageFragment extends Fragment {
                 rb_gujarati.setChecked(false);
                 rb_english.setChecked(true);
 
-                Utility.changeLang(getContext(), "English".toString());
+                Utility.changeLang(getContext(), "English");
 
                 tvChangeLang.setText(getResources().getString(R.string.choose_language));
                 tvHindi.setText(getResources().getString(R.string._hindi));
@@ -121,7 +122,7 @@ public class ChangeLanguageFragment extends Fragment {
                 rb_gujarati.setChecked(true);
                 rb_english.setChecked(false);
 
-                Utility.changeLang(getContext(), "ગુજરાતી".toString());
+                Utility.changeLang(getContext(), "ગુજરાતી");
 
                 tvChangeLang.setText(getResources().getString(R.string.choose_language));
                 tvHindi.setText(getResources().getString(R.string._hindi));
@@ -136,7 +137,7 @@ public class ChangeLanguageFragment extends Fragment {
                 rb_english.setChecked(false);
 
 
-                Utility.changeLang(getContext(), "हिन्दी".toString());
+                Utility.changeLang(getContext(), "हिन्दी");
 
                 tvChangeLang.setText(getResources().getString(R.string.choose_language));
                 tvHindi.setText(getResources().getString(R.string._hindi));
@@ -149,7 +150,7 @@ public class ChangeLanguageFragment extends Fragment {
                 rb_gujarati.setChecked(false);
                 rb_english.setChecked(true);
 
-                Utility.changeLang(getContext(), "English".toString());
+                Utility.changeLang(getContext(), "English");
 
                 tvChangeLang.setText(getResources().getString(R.string.choose_language));
                 tvHindi.setText(getResources().getString(R.string._hindi));

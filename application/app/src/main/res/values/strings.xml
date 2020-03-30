@@ -91,8 +91,8 @@
     <string-array name="languages">
         <item>Choose Language</item>
         <item>@string/_english</item>
-        <item>@string/_gujarati</item>
-        <item>@string/_hindi</item>
+        <!-- <item>@string/_gujarati</item>
+         <item>@string/_hindi</item>-->
     </string-array>
 
     <string name="_english" translatable="false">English</string>
@@ -226,8 +226,8 @@
     <string name="ss_chk_is_mangal" translatable="false">@string/is_mangal</string>
     <string name="ss_edt_created" translatable="false">created_dt</string>
     <string name="ss_edt_updated" translatable="false">@string/updated_dt</string>
-    <string name="ss_minUpdate" translatable="false">minUpdate</string>
-    <string name="ss_maxUpdate" translatable="false">maxUpdate</string>
+    <string name="ss_min_percentage" translatable="false">min_percentage</string>
+    <string name="ss_max_percentage" translatable="false">max_percentage</string>
     <string name="ss_maxAge" translatable="false">max_age</string>
     <string name="ss_minAge" translatable="false">min_age</string>
     <string name="ss_true" translatable="false">true</string>
@@ -336,6 +336,7 @@
     <string name="is_shani" translatable="false">is_shani</string>
     <string name="updated_dt" translatable="false">updated_dt</string>
     <string name="user_id" translatable="false">user_id</string>
+    <string name="profile_percentage" translatable="false">profile_percent</string>
     <string name="access_token" translatable="false">access_token</string>
     <string name="date" translatable="false">date</string>
     <string name="state" translatable="false">state</string>
@@ -437,7 +438,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="Register">Register</string>
-    <string name="RequestAdmin">Request sent to your admin</string>
+    <string name="RequestAdmin">Your request will be approved within 24 hours by your Admin</string>
     <string name="CannotImage">Cannot retrieve selected image</string>
 
 
@@ -656,12 +657,12 @@
     <string name="kgPopup">(kg)</string>
     <string name="created_datePopup">Created Date :</string>
     <string name="updated_datePopup">Updated Date :</string>
-    <string name="is_donorPopup">is Donor?</string>
-    <string name="is_rentedPopup">is Rented?</string>
-    <string name="is_expiredPopup">is Expired?</string>
-    <string name="is_spectPopup">is Spect?</string>
-    <string name="is_shaniPopup">is Shani?</string>
-    <string name="is_mangalPopup">is Mangal?</string>
+    <string name="is_donorPopup">Donor?</string>
+    <string name="is_rentedPopup">Rented?</string>
+    <string name="is_expiredPopup">Expired?</string>
+    <string name="is_spectPopup">Glasses?</string>
+    <string name="is_shaniPopup">Shani?</string>
+    <string name="is_mangalPopup">Mangal?</string>
     <string name="percentagePopup">Percentage :</string>
     <string name="_0Popup">0%</string>
     <string name="_100Popup">100%</string>
@@ -723,6 +724,7 @@
     <string name="you_can_contact_us_on_various_platform_and_also_send_your_feedback_with_us">You can contact us on various platform and also send your feedback with us</string>
     <string name="type_your_message">Type Your Message...</string>
     <string name="send_now">Send Now</string>
+    <string name="dev_name">Mehboob Gogda</string>
 
     <!-- DashBoard Fragment -->
     <string name="DevicDont">Your Device Don\'t Support Speech Input</string>
@@ -757,14 +759,14 @@
     <!-- MatrimonyDetail Fragment -->
     <string name="bottomSheet">bottom_sheet</string>
     <string name="matrimonyDetail">Matrimony</string>
-    <string name="interested">Interested</string>
+    <string name="interested">Interested?</string>
     <string name="about_meDetails">About Me</string>
     <string name="facebook_profile_url">Facebook Profile URL</string>
     <string name="birthtime">BirthTime</string>
     <string name="birthplace">BirthPlace</string>
     <string name="hh_mm_with_24_hours">HH:MM with 24 Hours</string>
     <string name="meter">(cm)</string>
-    <string name="spectacles">Spectacles</string>
+    <string name="spectacles">Glasses</string>
     <string name="mangal">Mangal</string>
     <string name="shani">Shani</string>
 
@@ -931,7 +933,7 @@
     <string name="FamilyMemberDetail">Family Member List (0)</string>
     <string name="AddMemberDetails">Add Member</string>
     <string name="SearchNearby">Search by Distance</string>
-    <string name="EnterNewrby">Enter Distance(Km)</string>
+    <string name="EnterNewrby">Enter Distance (km)</string>
     <string name="SearchNearBy">Search Now</string>
     <string name="NameFilter">Name</string>
     <string name="SurnameFilter">Surname</string>
@@ -1031,18 +1033,18 @@
     <string name="areadetails">Area</string>
     <string name="select_statedetails">Select State</string>
     <string name="wife_s_native">Wife\'s Native</string>
-    <string name="is_doner">is Doner?</string>
-    <string name="is_renteddetails">is Rented?</string>
-    <string name="is_expireddetails">is Expired?</string>
+    <string name="is_doner">Doner?</string>
+    <string name="is_renteddetails">Rented?</string>
+    <string name="is_expireddetails">Expired?</string>
     <string name="ofcAd">Office Address</string>
     <string name="selectcategory">Select Category</string>
     <string name="selectsubc">Select Sub Category</string>
     <string name="sub_category">Sub Category</string>
     <string name="selectOccu">Select Occupation</string>
     <string name="birth_placedetails">Birth Place</string>
-    <string name="is_spectacles">is Spectacles?</string>
-    <string name="is_shaniDetails">is Shani?</string>
-    <string name="is_mangalDetails">is Mangal?</string>
+    <string name="is_spectacles">Glasses?</string>
+    <string name="is_shaniDetails">Shani?</string>
+    <string name="is_mangalDetails">Mangal?</string>
     <string name="profile_created_date">Profile Created Date</string>
     <string name="profile_updated_date">Profile Updated Date</string>
     <string name="profile_updatation_percentage">Profile update</string>
@@ -1146,4 +1148,7 @@
     <string name="confPin">ConfPin</string>
     <string name="not_updated">Not updated</string>
     <string name="zero_date">0000-00-00</string>
+    <string name="fromdate">fromdate</string>
+    <string name="todate">todate</string>
+    <string name="filter">filter</string>
 </resources>

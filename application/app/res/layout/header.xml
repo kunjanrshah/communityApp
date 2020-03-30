@@ -23,9 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="@color/black"
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/WelcomeSmart"
+            android:textColor="@color/black"
             android:textSize="30sp" />
 
         <TextView
@@ -57,8 +57,8 @@
     <TextView
         android:id="@+id/tv_bottom"
         android:layout_width="match_parent"
-        android:layout_marginBottom="80dp"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"
+        android:layout_marginBottom="80dp" />
 
 
 </LinearLayout>

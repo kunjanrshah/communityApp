@@ -20,16 +20,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapResource;
 import java.security.MessageDigest;
 
 
-
 public class RoundedCornersTransformation implements Transformation<Bitmap> {
-
-    public enum CornerType {
-        ALL,
-        TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT,
-        TOP, BOTTOM, LEFT, RIGHT,
-        OTHER_TOP_LEFT, OTHER_TOP_RIGHT, OTHER_BOTTOM_LEFT, OTHER_BOTTOM_RIGHT,
-        DIAGONAL_FROM_TOP_LEFT, DIAGONAL_FROM_TOP_RIGHT, BORDER
-    }
 
     private final BitmapPool mBitmapPool;
     private final int mRadius;
@@ -38,24 +29,23 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
     private final CornerType mCornerType;
     private String mColor;
     private int mBorder;
-
-    /*public RoundedCornersTransformation(@NonNull Context context, int radius, int margin) {
-        this(context, radius, margin, CornerType.ALL);
-    }*/
-
     public RoundedCornersTransformation(@NonNull Context context, int radius, int margin, String color, int border) {
         this(context, radius, margin, CornerType.BORDER);
         mColor = color;
         mBorder = border;
     }
 
-    /*public RoundedCornersTransformation(BitmapPool pool, int radius, int margin) {
-        this(pool, radius, margin, CornerType.ALL);
+    /*public RoundedCornersTransformation(@NonNull Context context, int radius, int margin) {
+        this(context, radius, margin, CornerType.ALL);
     }*/
 
     private RoundedCornersTransformation(@NonNull Context context, int radius, int margin, CornerType cornerType) {
         this(Glide.get(context).getBitmapPool(), radius, margin, cornerType);
     }
+
+    /*public RoundedCornersTransformation(BitmapPool pool, int radius, int margin) {
+        this(pool, radius, margin, CornerType.ALL);
+    }*/
 
     private RoundedCornersTransformation(BitmapPool pool, int radius, int margin, CornerType cornerType) {
         mBitmapPool = pool;
@@ -64,7 +54,6 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         mMargin = margin;
         mCornerType = cornerType;
     }
-
 
     @NonNull
     @Override
@@ -269,7 +258,6 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
         canvas.drawRoundRect(new RectF(mMargin, mMargin, right, bottom), mRadius, mRadius, strokePaint);
     }
 
-
     @Override
     public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
 
@@ -278,5 +266,13 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
     @NonNull
     public String getId() {
         return "RoundedTransformation(radius=" + mRadius + ", margin=" + mMargin + ", diameter=" + mDiameter + ", cornerType=" + mCornerType.name() + ")";
+    }
+
+    public enum CornerType {
+        ALL,
+        TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT,
+        TOP, BOTTOM, LEFT, RIGHT,
+        OTHER_TOP_LEFT, OTHER_TOP_RIGHT, OTHER_BOTTOM_LEFT, OTHER_BOTTOM_RIGHT,
+        DIAGONAL_FROM_TOP_LEFT, DIAGONAL_FROM_TOP_RIGHT, BORDER
     }
 }

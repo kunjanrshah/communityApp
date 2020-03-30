@@ -18,21 +18,17 @@ package com.krs.community.awareviewpager;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.krs.community.R;
-import com.krs.community.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -174,11 +170,11 @@ public class HeaderAutoFooterRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
         if (viewHolder instanceof ItemViewHolder) {
             ItemViewHolder itemViewHolder = ((ItemViewHolder) viewHolder);
-           // Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.enjoy);
+            // Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.enjoy);
 
             if (itemViewHolder.iv_photo != null) {
                 //mItemList.get(position);
-                String url="https://cdn-30-skcir4i63ajp.netdna-ssl.com/wp-content/uploads/2018/12/Aamir-Khan.png";
+                String url = "https://cdn-30-skcir4i63ajp.netdna-ssl.com/wp-content/uploads/2018/12/Aamir-Khan.png";
                 itemViewHolder.iv_photo.setImageURI(url);
             }
 

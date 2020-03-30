@@ -31,7 +31,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
+class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
 
     private lateinit var statisticsViewModel: StatisticsViewModel
     private val factory: StatisticsViewModelFactory by instance()
@@ -40,7 +40,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, StatisticFragment::class.simpleName)
         mApp.facebookAnalytics(context, StatisticFragment::class.simpleName)
 
@@ -49,7 +49,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         }
 
         statisticsViewModel = ViewModelProvider(this, factory).get(StatisticsViewModel::class.java)
-        statisticsViewModel.mStatisticsListener=this
+        statisticsViewModel.mStatisticsListener = this
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
 
@@ -87,7 +87,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         }
 
         Coroutines.main {
-            val cities=  statisticsViewModel.lstCityName()
+            val cities = statisticsViewModel.lstCityName()
             binding.spCity.clear()
             binding.spCity.setItems(cities.toTypedArray())
             binding.spCity.setExpandTint(R.color.black)
@@ -97,7 +97,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
         binding.ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
     }
 
-    private fun getStatisticsResult(cityId:Int){
+    private fun getStatisticsResult(cityId: Int) {
         if (isNetworkConnected(activity as AppCompatActivity)) {
             val jsonObject = JSONObject()
             jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
@@ -112,17 +112,17 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
     }
 
     override fun getStatistics(response: StatisticResponse) {
-        binding.scroll.visibility=View.VISIBLE
+        binding.scroll.visibility = View.VISIBLE
         Utility.hideKeyboard(activity)
         binding.shimmerViewContainer.stopShimmerAnimation()
-        binding.shimmerViewContainer.visibility=View.GONE
-        if(response.success){
-            binding.tvFamily.text =response.data.totalFamily.toString()
+        binding.shimmerViewContainer.visibility = View.GONE
+        if (response.success) {
+            binding.tvFamily.text = response.data.totalFamily.toString()
             binding.tvMembers.text = response.data.totalMembers.toString()
             binding.tvMale.text = response.data.totalMale.toString()
-            binding.tvFemale.text =response.data.totalFemale.toString()
-            binding.tvUnMale.text =response.data.totalUnmarriedMale.toString()
-            binding.tvUnFemale.text =response.data.totalUnmarriedFemale.toString()
+            binding.tvFemale.text = response.data.totalFemale.toString()
+            binding.tvUnMale.text = response.data.totalUnmarriedMale.toString()
+            binding.tvUnFemale.text = response.data.totalUnmarriedFemale.toString()
             if (response.data.totalVillages == null) {
                 binding.llVillages.visibility = View.GONE
             } else {
@@ -134,7 +134,7 @@ class StatisticFragment : Fragment(), KodeinAware,StatisticsListener {
 
     override fun getFailure(message: String) {
         binding.shimmerViewContainer.stopShimmerAnimation()
-        binding.shimmerViewContainer.visibility=View.GONE
+        binding.shimmerViewContainer.visibility = View.GONE
         //toast(activity,message)
     }
 

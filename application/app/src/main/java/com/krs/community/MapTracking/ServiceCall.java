@@ -12,40 +12,42 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by Marty on 3/20/2017.
  */
 
 public class ServiceCall {
-    public static final String TIME_OUT="timeout";
-    public static String doServerCall(String method, URL url, String jsonData, String token){
+    public static final String TIME_OUT = "timeout";
+
+    public static String doServerCall(String method, URL url, String jsonData, String token) {
         HttpURLConnection connection = null;
         Boolean postPut;
         postPut = method.equals("POST") || method.equals("PUT") || method.equals("DELETE");
         try {
-            connection = (HttpURLConnection)url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("token",  token);
+            connection.setRequestProperty("token", token);
             connection.setDoOutput(postPut);
             connection.setConnectTimeout(60000);
             connection.setReadTimeout(60000);
-            if(postPut) {
-                if(jsonData!=null) {
-                    Writer writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"));
+            if (postPut) {
+                if (jsonData != null) {
+                    Writer writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));
                     writer.write(jsonData);
                     writer.close();
-                }else{
-                    Log.d("json data "," null");
+                } else {
+                    Log.d("json data ", " null");
                 }
             }
             BufferedReader reader;
             InputStream inputStream = null;
             int status = connection.getResponseCode();
 
-            if(status == 200)
+            if (status == 200)
                 inputStream = connection.getInputStream();
             else
                 inputStream = connection.getErrorStream();
@@ -65,13 +67,12 @@ public class ServiceCall {
                 return null;
             }
             return buffer.toString();
-        } catch (SocketTimeoutException e){
+        } catch (SocketTimeoutException e) {
             return TIME_OUT;
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }finally{
-            if(connection != null)
+        } finally {
+            if (connection != null)
                 connection.disconnect();
         }
         return null;

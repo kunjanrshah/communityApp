@@ -47,7 +47,7 @@
     <string name="no">नहीं</string>
     <string name="invalid_username_password">उपयोगकर्ता नाम या पासवर्ड गलत है</string>
     <string name="loading">काम चालू है...</string>
-    <string name="user_not_found" >यूजर नॉट फाउंड!</string>
+    <string name="user_not_found">यूजर नॉट फाउंड!</string>
 
     <!--Registraion page-->
     <string name="register_now">रजिस्टर करें</string>
@@ -70,7 +70,6 @@
     <string name="server_could_not_found">सर्वर नहीं मिल सका। कृपया कुछ समय बाद फिर से प्रयास करें !!</string>
     <string name="parsing_error">पार्सिंग की त्रुटि! कृपया कुछ समय बाद फिर से प्रयास करें !!</string>
     <string name="connection_timeout">कनेक्शन का समय समाप्त! कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>
-
 
 
     <!-- Login Sccren -->
@@ -250,7 +249,6 @@
     <!-- Location Adapter -->
     <string name="Private">निजी</string>
     <string name="location">स्थान</string>
-
 
 
     <string name="office">कार्यालय</string>

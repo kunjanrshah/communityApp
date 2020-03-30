@@ -6,7 +6,7 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 
 
-class BroadcastLocationChange extends IntentService{
+class BroadcastLocationChange extends IntentService {
 
     public BroadcastLocationChange(String name) {
         super(name);

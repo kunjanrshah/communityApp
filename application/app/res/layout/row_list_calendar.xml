@@ -59,8 +59,8 @@
                         android:id="@+id/icon_profile1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:adjustViewBounds="true"/>
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY" />
 
                     <TextView
                         android:id="@+id/icon_text1"
@@ -87,19 +87,19 @@
             <ImageView
                 android:id="@+id/icon_star"
                 android:layout_width="25dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center_horizontal"
                 android:layout_height="25dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="-5dp"
+                android:layout_marginRight="5dp"
                 android:tint="@color/icon_tint_normal" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:fontFamily="@font/montserrat_semibold"
                 android:gravity="center|top"
-                android:layout_marginTop="5dp"
                 android:text="Events"
                 android:textColor="@color/material_blue_500"
                 android:textSize="14sp" />
@@ -127,18 +127,18 @@
                     <TextView
                         android:id="@+id/tv_name"
                         android:layout_width="match_parent"
-                        android:singleLine="true"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
+                        android:singleLine="true"
                         android:text="Kunjan Patel"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:singleLine="true"
                         android:id="@+id/tv_area"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
+                        android:singleLine="true"
                         android:text="Maninagar, Ahmedabad"
                         android:textSize="16sp" />
 
@@ -154,8 +154,8 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="@string/memberCalendar"
                     android:singleLine="true"
+                    android:text="@string/memberCalendar"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -176,10 +176,10 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ll_mobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:id="@+id/ll_mobile"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -196,8 +196,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="9825450261"
                         android:singleLine="true"
+                        android:text="9825450261"
                         android:textColor="@color/com_facebook_blue"
                         android:textSize="16sp" />
 
@@ -222,8 +222,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
-                        android:singleLine="true"
                         android:fontFamily="@font/montserrat_medium"
+                        android:singleLine="true"
                         android:text="kunjanshah@gmail.com"
                         android:textSize="16sp" />
 
@@ -242,7 +242,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/tv_event1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -250,10 +249,10 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/black1"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone" />
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/tv_event2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -261,10 +260,10 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/black1"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone" />
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/tv_event3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -272,7 +271,8 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/black1"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </LinearLayout>

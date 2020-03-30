@@ -63,9 +63,9 @@
                             android:id="@+id/edt_com_name"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            android:inputType="textCapSentences"
                             android:background="@drawable/border_color_gray"
                             android:fontFamily="@font/montserrat_regular"
+                            android:inputType="textCapSentences"
                             android:paddingLeft="5dp"
                             android:singleLine="true" />
 
@@ -216,9 +216,9 @@
                         android:id="@+id/edt_url"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:hint="https://"
                         android:background="@drawable/border_color_gray"
                         android:fontFamily="@font/montserrat_regular"
+                        android:hint="https://"
                         android:paddingLeft="5dp"
                         android:singleLine="true" />
 

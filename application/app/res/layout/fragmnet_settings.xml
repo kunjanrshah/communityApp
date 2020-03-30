@@ -24,8 +24,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
         android:orientation="vertical">
 
@@ -40,10 +40,10 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/lock"
                 android:layout_marginLeft="20dp"
+                android:background="@drawable/lock"
 
-                 />
+                />
 
             <TextView
                 android:layout_width="match_parent"
@@ -64,10 +64,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_privacy"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/ll_privacy"
             android:background="@drawable/border_color_gray1"
             android:gravity="center_vertical"
             android:orientation="horizontal">

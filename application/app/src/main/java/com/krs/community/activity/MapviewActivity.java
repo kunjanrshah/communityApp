@@ -66,10 +66,52 @@ public class MapviewActivity extends AppCompatActivity implements OnMapReadyCall
     Location mLastLocation;
     Marker mCurrLocationMarker;
     FrameLayout Fmap;
+    String image;
     private LocationSettingsRequest mLocationSettingsRequest;
     private SettingsClient mSettingsClient;
     private GoogleMap mMap;
-    String image;
+
+    public static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
+
+        View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
+
+        CircleImageView markerImage = marker.findViewById(R.id.user_dp);
+        markerImage.setImageResource(resource);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
+        marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+        marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+        marker.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        marker.draw(canvas);
+
+        return bitmap;
+    }
+
+    public static Bitmap createCustomMarkerCurrent(Context context, String resource) {
+
+        View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
+
+        CircleImageView markerImage = marker.findViewById(R.id.user_dp);
+
+        Glide.with(context).load("https://muslimghanchisamaj.in/uploads/users/thumb/c2c03908f3eaa4141d678f630bf7f20d.jpg").into(markerImage);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
+        marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+        marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+        marker.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        marker.draw(canvas);
+
+        return bitmap;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,19 +121,18 @@ public class MapviewActivity extends AppCompatActivity implements OnMapReadyCall
         AppController mApp = (AppController) getApplicationContext();
         mApp.firebaseAnalytics(MapviewActivity.this, MapviewActivity.class.getSimpleName());
 
-        Fmap = (FrameLayout) findViewById(R.id.Fmap);
+        Fmap = findViewById(R.id.Fmap);
         getPermission();
 
-        Intent iin= getIntent();
+        Intent iin = getIntent();
         Bundle b = iin.getExtras();
 
-        if(b!=null)
-        {
-             image =(String) b.get("image");
+        if (b != null) {
+            image = (String) b.get("image");
 
         }
 
-        Log.e("image---",""+image);
+        Log.e("image---", "" + image);
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -109,11 +150,8 @@ public class MapviewActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     private boolean checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(MapviewActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(MapviewActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        return false;
+        return ActivityCompat.checkSelfPermission(MapviewActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(MapviewActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     private boolean isLocationEnabled() {
@@ -206,7 +244,7 @@ public class MapviewActivity extends AppCompatActivity implements OnMapReadyCall
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCustomMarkerCurrent(MapviewActivity.this,image)));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createCustomMarkerCurrent(MapviewActivity.this, image)));
         markerOptions.title("Current Position");
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
@@ -219,16 +257,16 @@ public class MapviewActivity extends AppCompatActivity implements OnMapReadyCall
         LatLng customMarkerLocationThree = new LatLng(28.580903, 77.317408);
         LatLng customMarkerLocationFour = new LatLng(28.580108, 77.315271);
         mMap.addMarker(new MarkerOptions().position(customMarkerLocationOne).
-                icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(MapviewActivity.this,R.drawable.usermap)))).setTitle("iPragmatech Solutions Pvt Lmt");
+                icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(MapviewActivity.this, R.drawable.usermap)))).setTitle("iPragmatech Solutions Pvt Lmt");
         mMap.addMarker(new MarkerOptions().position(customMarkerLocationTwo).
                 icon(BitmapDescriptorFactory.fromBitmap(
-                        createCustomMarker(MapviewActivity.this,R.drawable.usermap)))).setTitle("Hotel Nirulas Noida");
+                        createCustomMarker(MapviewActivity.this, R.drawable.usermap)))).setTitle("Hotel Nirulas Noida");
         mMap.addMarker(new MarkerOptions().position(customMarkerLocationThree).
                 icon(BitmapDescriptorFactory.fromBitmap(
-                        createCustomMarker(MapviewActivity.this,R.drawable.usermap)))).setTitle("Acha Khao Acha Khilao");
+                        createCustomMarker(MapviewActivity.this, R.drawable.usermap)))).setTitle("Acha Khao Acha Khilao");
         mMap.addMarker(new MarkerOptions().position(customMarkerLocationFour).
                 icon(BitmapDescriptorFactory.fromBitmap(
-                        createCustomMarker(MapviewActivity.this,R.drawable.usermap)))).setTitle("Subway Sector 16 Noida");
+                        createCustomMarker(MapviewActivity.this, R.drawable.usermap)))).setTitle("Subway Sector 16 Noida");
 
         //LatLngBound will cover all your marker on Google Maps
 
@@ -262,46 +300,7 @@ public class MapviewActivity extends AppCompatActivity implements OnMapReadyCall
         mMap.getUiSettings().setAllGesturesEnabled(true);
 
     }
-    public static Bitmap createCustomMarker(Context context, @DrawableRes int resource) {
 
-        View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
-
-        CircleImageView markerImage = (CircleImageView) marker.findViewById(R.id.user_dp);
-        markerImage.setImageResource(resource);
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
-        marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
-        marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
-        marker.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        marker.draw(canvas);
-
-        return bitmap;
-    }
-
-    public static Bitmap createCustomMarkerCurrent(Context context,  String resource) {
-
-        View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker_layout, null);
-
-        CircleImageView markerImage = (CircleImageView) marker.findViewById(R.id.user_dp);
-
-        Glide.with(context).load("https://muslimghanchisamaj.in/uploads/users/thumb/c2c03908f3eaa4141d678f630bf7f20d.jpg").into(markerImage);
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
-        marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
-        marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
-        marker.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        marker.draw(canvas);
-
-        return bitmap;
-    }
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(MapviewActivity.this)
                 .addConnectionCallbacks(this)

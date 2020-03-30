@@ -49,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
         getHashKey(this);
         if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setScreenLayout();
-        }else{
+        } else {
             setNoInternetLayout();
         }
 
@@ -59,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    private void setNoInternetLayout(){
+    private void setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
@@ -71,7 +71,7 @@ public class SplashActivity extends AppCompatActivity {
         anim.setRepeatCount(Animation.INFINITE);
         AppCompatImageView imageView = findViewById(R.id.no_internet_image);
         imageView.setAnimation(anim);
-        AppCompatButton retryButton=findViewById(R.id.retry_button);
+        AppCompatButton retryButton = findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
             if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
                 setScreenLayout();
@@ -80,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
-    private void setScreenLayout(){
+    private void setScreenLayout() {
 
         if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setContentView(R.layout.activity_splash);
@@ -179,7 +179,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(splanguage!=null){
+        if (splanguage != null) {
             String locale = Guru.getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
             if (locale.equalsIgnoreCase(getResources().getString(R.string._gujarati))) {
                 splanguage.setSelection(2);
