@@ -607,7 +607,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 .setContentText("Do you want to $isSet $strType1 for $name?")
                 .setConfirmText(isSet)
                 .setCancelText(activity?.getString(R.string.no))
-                .setCustomImage(R.drawable.icon_ghanchi)
+                .setCustomImage(R.drawable.ic_medk)
                 .showCancelButton(true)
                 .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                     sweetAlertDialog.dismissWithAnimation()

@@ -119,7 +119,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
                         .setContentText("Do you want to send message to " + getString(R.string.dev_name) + "?")
                         .setConfirmText("Yes")
                         .setCancelText("No")
-                        .setCustomImage(R.drawable.icon_ghanchi)
+                        .setCustomImage(R.drawable.ic_medk)
                         .showCancelButton(true)
                         .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                             sweetAlertDialog.dismissWithAnimation()

@@ -81,7 +81,7 @@
                             android:layout_gravity="center_horizontal"
                             android:autoLink="web"
                             android:fontFamily="@font/montserrat_regular"
-                            android:text="muslimghanchi.org"
+                            android:text="medkapp.org"
                             android:textSize="14sp" />
 
 

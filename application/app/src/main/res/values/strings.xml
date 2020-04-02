@@ -966,8 +966,8 @@
     <string name="retry">Retry</string>
     <string name="coming_soon">Working on it</string>
     <string name="admin_only">For Admin only</string>
-    <string name="contact_number">9377133222</string> <!--9427051418-->
-    <string name="fb_url" translatable="false">https://www.facebook.com/MEHBOOBGHANCHI</string> <!--https://www.facebook.com/kunjanrshah87-->
+    <string name="contact_number">9427051418</string> <!--9427051418-->
+    <string name="fb_url" translatable="false">https://www.facebook.com/kunjanrshah87</string> <!--https://www.facebook.com/kunjanrshah87-->
     <string name="linkedin_url" translatable="false">""</string> <!--https://www.linkedin.com/in/kunjan-shah-76901b6a/-->
 
     <string name="mobile_not_available">Mobile not available</string>
@@ -1013,7 +1013,7 @@
     <string name="dev_email">saraoffsetprinters@gmail.com</string>
     <string name="dev_gmail_subject">@string/app_name</string>
     <string name="dev_content">Hello</string>
-    <string name="dev_link">https://muslimghanchi.org</string>
+    <string name="dev_link">https://medkapp.org</string>
     <string name="expo">Exporting</string>
     <string name="families">Families:</string>
     <string name="mem">Members:</string>

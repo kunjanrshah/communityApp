@@ -406,7 +406,7 @@ fun showVersionDialog(activity: FragmentActivity) {
             .setContentText(activity.getString(R.string.thereversion))
             .setConfirmText(activity.getString(R.string.updatenow))
             .setCancelText("Later")
-            .setCustomImage(R.drawable.icon_ghanchi)
+            .setCustomImage(R.drawable.ic_medk)
             .showCancelButton(true)
             .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                 sweetAlertDialog.dismissWithAnimation()

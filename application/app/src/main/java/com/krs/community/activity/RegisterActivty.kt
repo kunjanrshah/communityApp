@@ -231,7 +231,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                         .setContentText("Do you have good internet speed?")
                         .setConfirmText("Upload")
                         .setCancelText("Later")
-                        .setCustomImage(R.drawable.icon_ghanchi)
+                        .setCustomImage(R.drawable.ic_medk)
                         .showCancelButton(true)
                         .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                             sweetAlertDialog.dismissWithAnimation()

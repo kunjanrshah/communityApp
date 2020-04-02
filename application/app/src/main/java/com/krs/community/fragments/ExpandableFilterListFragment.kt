@@ -78,7 +78,7 @@ class ExpandableFilterListFragment : Fragment(), KodeinAware {
                     .setContentText("Do you want to clear all values?")
                     .setConfirmText(context?.getString(R.string.YesPleaseCity))
                     .setCancelText(context?.getString(R.string.no))
-                    .setCustomImage(R.drawable.icon_ghanchi)
+                    .setCustomImage(R.drawable.ic_medk)
                     .showCancelButton(true)
                     .setConfirmClickListener { sDialog ->
                         sDialog.dismiss()
