@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipChildren="false">
@@ -8,16 +7,16 @@
     <com.flaviofaria.kenburnsview.KenBurnsView
         android:id="@+id/kv_header_img"
         android:layout_width="match_parent"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
         android:layout_height="@dimen/image_header_size"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:src="@drawable/enjoy" />
 
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:id="@+id/header_box"
@@ -29,40 +28,40 @@
             android:id="@+id/title_background"
             android:layout_width="match_parent"
             android:layout_height="@dimen/bar_height"
-            android:background="@color/colorPrimary"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary" />
 
         <LinearLayout
             android:id="@+id/title_box"
             android:layout_width="match_parent"
             android:layout_height="@dimen/bar_height"
-            android:orientation="vertical"
-            android:gravity="center_vertical"
             android:layout_above="@+id/sliding_tabs"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
             android:paddingLeft="@dimen/header_padding">
 
             <TextView
                 android:id="@+id/title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kunjan Shah"
-                android:textSize="@dimen/title_text_size"
-                android:fontFamily="sans-serif"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:gravity="center_vertical"
-                android:paddingRight="@dimen/header_padding"
                 android:ellipsize="marquee"
+                android:focusableInTouchMode="true"
+                android:fontFamily="sans-serif"
+                android:gravity="center_vertical"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:focusableInTouchMode="true"/>
+                android:paddingRight="@dimen/header_padding"
+                android:singleLine="true"
+                android:text="Kunjan Shah"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/title_text_size" />
 
             <TextView
                 android:id="@+id/level_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1987"
-                android:textSize="18sp"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -74,14 +73,14 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_more_vert_white_24"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
 
         <com.krs.community.awareviewpager.SlidingTabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true" />
 
     </RelativeLayout>
 
@@ -89,19 +88,19 @@
         android:id="@+id/fab_layout"
         android:layout_width="@dimen/large_fab_size"
         android:layout_height="@dimen/large_fab_size"
-        android:clickable="true"
-        android:focusable="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/keyline_1"
-        android:background="@drawable/cirlce">
+        android:background="@drawable/cirlce"
+        android:clickable="true"
+        android:focusable="true">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="center"
-            android:background="@drawable/user_profile"
             android:layout_gravity="center"
-            android:padding="24dp"/>
+            android:background="@drawable/user_profile"
+            android:padding="24dp"
+            android:scaleType="center" />
 
     </FrameLayout>
 
@@ -109,8 +108,8 @@
         android:id="@+id/faux_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:background="@android:color/transparent">
 
         <FrameLayout
@@ -124,14 +123,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
                 android:layout_marginLeft="@dimen/keyline_1"
-                android:src="@drawable/ic_arrow_back_white_24dp"/>
+                android:src="@drawable/ic_arrow_back_white_24dp" />
 
         </FrameLayout>
 
 
-
     </FrameLayout>
-
 
 
 </RelativeLayout>

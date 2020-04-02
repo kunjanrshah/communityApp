@@ -45,35 +45,37 @@ import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
+class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     override val kodein by kodein()
     private lateinit var shareEventViewModel: ShareEventViewModel
     private val shareEventFactory: ShareEventViewModelFactory by instance()
+
     // class variables
     private val REQUEST_CODE = 123
     private var adapter: ImagesAdapter? = null
     private var mResults: ArrayList<String> = ArrayList()
     private var yURLs = ArrayList<String>()
     lateinit var txtStart: TextView
+
     //lateinit var edtEndDate: TextView
     //  private lateinit var txtEndTime: TextView
     private lateinit var txtStartTime: TextView
     var isStart = false
-    private lateinit var userId:String
-    lateinit var linearLayout:LinearLayout
+    private lateinit var userId: String
+    lateinit var linearLayout: LinearLayout
     lateinit var adapter1: URLAdapter
     lateinit var fab: MovableFloatingActionButton
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_share_event, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, ShareEventFragment::class.simpleName)
         mApp.facebookAnalytics(context, ShareEventFragment::class.simpleName)
 
         shareEventViewModel = ViewModelProvider(this, shareEventFactory).get(ShareEventViewModel::class.java)
 
         shareEventViewModel.mCreateEventListener = this
-        userId= Guru.getString(getString(R.string.user_id), "")!!
+        userId = Guru.getString(getString(R.string.user_id), "")!!
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.color_mid_light_gray, false)
@@ -184,19 +186,19 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
             if (isValidated) {
                 yURLs.removeAll(Arrays.asList(""))
                 val json = JSONObject()
-                json.put("id",userId)
-                json.put("event_date",edt_start.text.toString())
+                json.put("id", userId)
+                json.put("event_date", edt_start.text.toString())
                 json.put("title", edtTitle.text.toString())
                 json.put("description", edtDescription.text.toString())
                 json.put("location", edtAddress.text.toString())
-                json.put("lat","23.7546")
-                json.put("lng","72.2308")
+                json.put("lat", "23.7546")
+                json.put("lng", "72.2308")
                 json.put("youtube", yURLs)
 
 
 //              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
                 Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
-                shareEventViewModel.createEvent(mResults,userId,userId,Guru.getString(getString(R.string.access_token), "").toString(),json.toString(),yURLs)
+                shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)
             }
         }
         /* btnShare.setOnClickListener { v: View? ->
@@ -288,7 +290,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
     }*/
 
 
-     inner class URLAdapter : RecyclerView.Adapter<URLViewHolder>() {
+    inner class URLAdapter : RecyclerView.Adapter<URLViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): URLViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_youtube_url, parent, false)
             return URLViewHolder(view)
@@ -433,7 +435,7 @@ class ShareEventFragment : Fragment(), KodeinAware,CreateEventListener {
 
     override fun getResult(profile: String) {
         Utility.hideSweetProgress()
-        linearLayout.snackbar( profile,Snackbar.LENGTH_SHORT)
+        linearLayout.snackbar(profile, Snackbar.LENGTH_SHORT)
         edt_title.setText("")
         edt_description.setText("")
         edt_address.setText("")

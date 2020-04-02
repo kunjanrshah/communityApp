@@ -21,6 +21,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     private final List<NavDrawerItem> data;
     private final LayoutInflater inflater;
     private Context context;
+
     public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
         inflater = LayoutInflater.from(context);
         this.data = data;
@@ -66,6 +67,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
         final TextView title;
         final ImageView imgDrawer;
         final LinearLayout llItem;
+
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
             llItem = itemView.findViewById(R.id.ll_item);

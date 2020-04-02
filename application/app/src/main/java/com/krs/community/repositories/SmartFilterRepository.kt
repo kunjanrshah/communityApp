@@ -7,27 +7,28 @@ import com.krs.community.model.LoginResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
 
-class SmartFilterRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
+class SmartFilterRepository(private val api: ApiServices, private val db: AppDatabase) : SafeApiRequest() {
 
     suspend fun searchByName(jsonObject: JsonObject): SmartFilterResponse {
-        return apiRequest{
+        return apiRequest {
             api.getSearchByFilter(jsonObject)
         }
     }
+
     suspend fun searchByUser(jsonObject: JsonObject): LoginResponse {
-        return apiRequest{
+        return apiRequest {
             api.getUserProfile(jsonObject)
         }
     }
 
     suspend fun getSharedProfile(jsonObject: JsonObject): SmartFilterResponse {
-        return apiRequest{
+        return apiRequest {
             api.getSharedProfile(jsonObject)
         }
     }
 
     suspend fun getInActiveRecords(jsonObject: JsonObject): SmartFilterResponse {
-        return apiRequest{
+        return apiRequest {
             api.getInActiveUsers(jsonObject)
         }
     }
@@ -35,7 +36,8 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
     fun getListCityName(): LiveData<List<String>> {
         return db.getCityDao().getcityNames()
     }
-     fun getCityIdByName(name:String): Int {
+
+    fun getCityIdByName(name: String): Int {
         return db.getCityDao().getCityId(name)
     }
 
@@ -47,11 +49,11 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
         return db.getCityDao().getcityName(Integer.parseInt(id))
     }
 
-    fun getSubCommunity(id:String): String {
+    fun getSubCommunity(id: String): String {
         return db.getSubCommunityDao().getSubCommunityName(id)
     }
 
-    fun getLocalCommunity(id:String): String {
+    fun getLocalCommunity(id: String): String {
         return db.getLocalCommunityDao().getLocalCommName(id)
     }
 
@@ -59,7 +61,7 @@ class SmartFilterRepository(private val api: ApiServices, private val db:AppData
         return db.getLastNameDao().getLastName(id)
     }
 
-     fun getIdByLastName(name:String): Int {
+    fun getIdByLastName(name: String): Int {
         return db.getLastNameDao().getIdOfLastName(name)
     }
 }

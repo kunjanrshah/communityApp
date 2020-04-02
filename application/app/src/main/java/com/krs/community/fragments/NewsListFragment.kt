@@ -41,12 +41,12 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class NewsListFragment : Fragment() , KodeinAware,NewsListener {
+class NewsListFragment : Fragment(), KodeinAware, NewsListener {
 
     private lateinit var listView: RecyclerView
     private lateinit var mShimmerViewContainer: ShimmerFrameLayout
     private lateinit var adapter: ParallaxRecyclerAdapter<News>
-    private var lstNews=ArrayList<News>()
+    private var lstNews = ArrayList<News>()
     override val kodein by kodein()
 
     private lateinit var newsViewModel: NewsViewModel
@@ -58,12 +58,12 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
             Utility.changeStatusbarColor(activity, R.color.bg_gray, false)
         }
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, NewsListFragment::class.simpleName)
         mApp.facebookAnalytics(context, NewsListFragment::class.simpleName)
 
         newsViewModel = ViewModelProvider(this, factory).get(NewsViewModel::class.java)
-        newsViewModel.mNewsListener =this
+        newsViewModel.mNewsListener = this
 
         listView = rootView.findViewById(R.id.list)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
@@ -85,9 +85,9 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
                 val item: News = lstNews.get(position)
                 val holder = viewHolder as FeedListViewHolder
                 holder.name.text = item.title
-                val eDate=Utility.changeDateFormat(item.eventDate,Utility.yyyy_MM_dd,Utility.ddMMyyyy)
-                holder.txtExpire.text=eDate
-                val times=1578140965000
+                val eDate = Utility.changeDateFormat(item.eventDate, Utility.yyyy_MM_dd, Utility.ddMMyyyy)
+                holder.txtExpire.text = eDate
+                val times = 1578140965000
                 // Converting timestamp into x ago format
                 val timeAgo = DateUtils.getRelativeTimeSpanString(times, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
                 holder.timestamp.text = timeAgo
@@ -98,33 +98,33 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
                 } else { // status is empty, remove from view
                     holder.statusMsg.visibility = View.GONE
                 }
-                val profilePic="https://api.androidhive.info/feed/img/time.png"
+                val profilePic = "https://api.androidhive.info/feed/img/time.png"
 
                 // Checking for null feed url
-                val url_="http://bit.ly/kunjan1"
-               // item.youtubeUrl[0]
-              //  if (item.youtubeUrl != null) {
-                    holder.url.text = Html.fromHtml("<a href=\"" + url_ + "\">" + url_ + "</a> ")
-                    // Making url clickable
-                    holder.url.movementMethod = LinkMovementMethod.getInstance()
-                    holder.url.visibility = View.VISIBLE
+                val url_ = "http://bit.ly/kunjan1"
+                // item.youtubeUrl[0]
+                //  if (item.youtubeUrl != null) {
+                holder.url.text = Html.fromHtml("<a href=\"" + url_ + "\">" + url_ + "</a> ")
+                // Making url clickable
+                holder.url.movementMethod = LinkMovementMethod.getInstance()
+                holder.url.visibility = View.VISIBLE
                 /*} else { // url is null, remove from the view
                     holder.url.visibility = View.GONE
                 }*/
 
                 // user profile pic
-                val imageUrl="https://api.androidhive.info/feed/img/cosmos.jpg"
+                val imageUrl = "https://api.androidhive.info/feed/img/cosmos.jpg"
                 Glide.with(activity!!).load(profilePic).thumbnail(0.5f).transition(DrawableTransitionOptions.withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.profilePic)
-             //   holder.profilePic.setImageUrl(item.profilePic, imageLoader)
+                //   holder.profilePic.setImageUrl(item.profilePic, imageLoader)
                 // Feed image
-               // if (item.images != null) {
-                    Glide.with(activity!!).load(imageUrl).thumbnail(0.5f).transition(DrawableTransitionOptions.withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.feedImageView)
-                    //holder.feedImageView.setImageUrl(item.images[0], imageLoader)
-                    holder.feedImageView.visibility = View.VISIBLE
-                    /*holder.feedImageView.setResponseObserver(object : FeedImageView.ResponseObserver {
-                        override fun onError() {}
-                        override fun onSuccess() {}
-                    })*/
+                // if (item.images != null) {
+                Glide.with(activity!!).load(imageUrl).thumbnail(0.5f).transition(DrawableTransitionOptions.withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.feedImageView)
+                //holder.feedImageView.setImageUrl(item.images[0], imageLoader)
+                holder.feedImageView.visibility = View.VISIBLE
+                /*holder.feedImageView.setResponseObserver(object : FeedImageView.ResponseObserver {
+                    override fun onError() {}
+                    override fun onSuccess() {}
+                })*/
                 /*} else {
                     holder.feedImageView.visibility = View.GONE
                 }*/
@@ -143,16 +143,16 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
         adapter.setParallaxHeader(header, listView)
         listView.adapter = adapter
 
-        val jsonObject=JSONObject()
-        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token),""))
-        jsonObject.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
-        jsonObject.put("page","1")
-        val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        val jsonObject = JSONObject()
+        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+        jsonObject.put("page", "1")
+        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
         newsViewModel.getNewsSearch(updated)
         Handler().postDelayed({
             mShimmerViewContainer.stopShimmerAnimation()
-            mShimmerViewContainer.visibility=View.GONE
-        },4000)
+            mShimmerViewContainer.visibility = View.GONE
+        }, 4000)
         mShimmerViewContainer.startShimmerAnimation()
         mShimmerViewContainer.visibility = View.VISIBLE
         return rootView
@@ -182,14 +182,14 @@ class NewsListFragment : Fragment() , KodeinAware,NewsListener {
 
     override fun getNewsList(response: NewsResponse) {
         mShimmerViewContainer.stopShimmerAnimation()
-        mShimmerViewContainer.visibility=View.GONE
-        if(response.success){
+        mShimmerViewContainer.visibility = View.GONE
+        if (response.success) {
             if (response.data.size > 0) {
                 lstNews.clear()
                 lstNews.addAll(response.data)
                 adapter.notifyDataSetChanged()
-            }else{
-               Utility.displaySnackBarWithBottomMargin(listView,response.message)
+            } else {
+                Utility.displaySnackBarWithBottomMargin(listView, response.message)
             }
         }
     }

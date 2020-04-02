@@ -115,7 +115,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
 
                 if (lstAdmins.size > 0) {
                     tvCount.visibility = View.VISIBLE
-                    tvCount.text = "${lstAdmins.size} "+getString(R.string.adminsfound)
+                    tvCount.text = "${lstAdmins.size} " + getString(R.string.adminsfound)
                 } else {
                     tvCount.visibility = View.GONE
                 }
@@ -203,7 +203,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post {
-                                Utility.startSweetProgress(activity, getString(R.string.expo)+"${member.firstName}"+getString(R.string.DetailList), getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.expo) + "${member.firstName}" + getString(R.string.DetailList), getString(R.string.please_wait))
                             }
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -217,7 +217,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
                             } else {
                                 Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                             }
@@ -474,7 +474,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstAdmins.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //  Utility.fade(activity)
         }
     }
 
@@ -551,7 +551,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         val selectedItemPositions = getSelectedItems()
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.you_sure))
-                .setContentText("${selectedItemPositions.size}"+getString(R.string.profilerole)+"'$role'!")
+                .setContentText("${selectedItemPositions.size}" + getString(R.string.profilerole) + "'$role'!")
                 .setConfirmText(getString(R.string.YesPleaseCity))
                 .setCancelText(getString(R.string.no))
                 .setConfirmClickListener {

@@ -223,7 +223,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
                             } else {
                                 Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                             }
@@ -310,6 +310,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         tvCount = header.findViewById(R.id.tv_count)
 
         val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
+        ivAtoz.visibility = View.VISIBLE
         ivAtoz.setOnClickListener { v ->
             val adapter = AtoZBottomAdapter(context)
             adapter.setmISortingRecords(this)
@@ -317,7 +318,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     .setAdapter(adapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
-                    .setExpanded(true, 1200)
+                    .setExpanded(true, 900)
                     .setContentBackgroundResource(R.drawable.popup_top_corner)
                     .create()
             dialog?.show()
@@ -390,7 +391,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 }
 
                 adapter.notifyDataSetChanged()
-                binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
+                // binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
                 selectedPosition = members.size - 1
                 DashboardActivity.stop = false
 
@@ -399,14 +400,15 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     Snackbar.make(binding.llParent, getString(R.string.EndCity) + " " + "$alpha" + " " + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
                 }
             } else {
+                //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
                 DashboardActivity.stop = true
                 tvCount.visibility = View.GONE
                 ivExport.visibility = View.GONE
                 if (members.isEmpty()) {
                     Snackbar.make(binding.llParent, getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
+                } else {
+                    Snackbar.make(binding.llParent, getString(R.string.EndCity) + " " + "$alpha" + " " + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
                 }
-                //rootView!!.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                Snackbar.make(binding.llParent, getString(R.string.EndCity) + " " + "$alpha" + " " + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
             }
         } else {
             if (members.isEmpty()) {
@@ -823,7 +825,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), members.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //  Utility.fade(activity)
         }
     }
 

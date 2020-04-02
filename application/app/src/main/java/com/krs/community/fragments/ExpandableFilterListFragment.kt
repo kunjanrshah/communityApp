@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.adapter.SmartFilterAdapter
@@ -25,7 +26,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 
-class ExpandableFilterListFragment : Fragment() , KodeinAware {
+class ExpandableFilterListFragment : Fragment(), KodeinAware {
 
     private var previousGroup = -1
     private var adapter: SmartFilterAdapter? = null
@@ -59,8 +60,8 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         expandableListView = rootView.findViewById(R.id.lst_expandable)
         expandableListView.setGroupIndicator(null)
 
-        val editFilter=  arguments?.getString(activity?.getString(R.string.edit_filter))
-        adapter = SmartFilterAdapter(activity as AppCompatActivity,profileDetailViewModel,editFilter)
+        val editFilter = arguments?.getString(activity?.getString(R.string.edit_filter))
+        adapter = SmartFilterAdapter(activity as AppCompatActivity, profileDetailViewModel, editFilter)
         expandableListView.setAdapter(adapter)
         (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Smart Filter"
         setListener()
@@ -69,10 +70,22 @@ class ExpandableFilterListFragment : Fragment() , KodeinAware {
         ivFilter.setOnClickListener { v: View? -> Utility.movetoFragment(activity, FilterListFragment()) }
         val ivCancel = rootView.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
-        val tvClear= rootView.findViewById<TextView>(R.id.tv_clear)
+        val tvClear = rootView.findViewById<TextView>(R.id.tv_clear)
         tvClear.setOnClickListener {
-            Utility.hideKeyboard(activity)
-            adapter?.clearAll()
+
+            SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText(context?.getString(R.string.smart_filter))
+                    .setContentText("Do you want to clear all values?")
+                    .setConfirmText(context?.getString(R.string.YesPleaseCity))
+                    .setCancelText(context?.getString(R.string.no))
+                    .setCustomImage(R.drawable.icon_ghanchi)
+                    .showCancelButton(true)
+                    .setConfirmClickListener { sDialog ->
+                        sDialog.dismiss()
+                        Utility.hideKeyboard(activity)
+                        adapter?.clearAll()
+                    }
+                    .show()
         }
 
         expandableListView.setOnScrollListener(object : OnScrollObserver() {

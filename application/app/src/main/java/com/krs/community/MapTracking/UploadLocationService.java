@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -21,27 +20,28 @@ import java.util.ArrayList;
  * Created by Marty on 12/20/2017.
  */
 
-public class UploadLocationService extends IntentService{
+public class UploadLocationService extends IntentService {
 
     ArrayList<Location> points;
 
-    public UploadLocationService(){
+    public UploadLocationService() {
         super("UploadLocationService");
     }
+
     public UploadLocationService(String name) {
         super(name);
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if(intent !=null) {
+        if (intent != null) {
             Bundle b = intent.getExtras();
             if (b != null) {
                 points = intent.getParcelableArrayListExtra("points");
                 URL url;
                 try {
-                        url = new URL("http://localhost:8000/trackdrivertrip/update"); // set your server url
-                        sendLocation(url,"");
+                    url = new URL("http://localhost:8000/trackdrivertrip/update"); // set your server url
+                    sendLocation(url, "");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -49,17 +49,17 @@ public class UploadLocationService extends IntentService{
         }
     }
 
-    private void sendLocation(URL url,String token){
+    private void sendLocation(URL url, String token) {
         try {
             String jsonResp;
             int code = 0;
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id","userid");
+            jsonObject.put("id", "userid");
             JSONArray pointsArray = new JSONArray();
             for (int i = 0; i < points.size(); i++) {
                 pointsArray.put(new JSONArray().put(points.get(i).getLongitude()).put(points.get(i).getLatitude()));
             }
-            jsonObject.put("coordinates",pointsArray);
+            jsonObject.put("coordinates", pointsArray);
             Log.d("data sent", jsonObject.toString());
             if (pointsArray.length() != 0) {
                 jsonResp = ServiceCall.doServerCall("POST", url, pointsArray.toString(), token);
@@ -77,7 +77,7 @@ public class UploadLocationService extends IntentService{
                 code = 100;
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

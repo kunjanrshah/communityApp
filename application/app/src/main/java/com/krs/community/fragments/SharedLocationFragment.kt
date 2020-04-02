@@ -27,7 +27,10 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
-import com.krs.community.activity.*
+import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.FamilyTreeListActivity
+import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.bkservice.ProcessMainClass
@@ -190,7 +193,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
                             } else {
                                 Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                             }
@@ -243,15 +246,16 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         val header = LayoutInflater.from(activity).inflate(R.layout.header_shared, container, false)
         val tvCount = header.findViewById<ImageView>(R.id.tv_count)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
-        val img_map = header.findViewById<ImageView>(R.id.img_map)
+        val imgMap = header.findViewById<ImageView>(R.id.img_map)
 
         ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
 
-        img_map.setOnClickListener { v: View? ->
-            val intent = Intent(activity, MapTrackingActivity::class.java)
+        imgMap.setOnClickListener { v: View? ->
+            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_LONG).show()
+            /*val intent = Intent(activity, MapTrackingActivity::class.java)
             intent.putExtra("head_id", members.get(0).headId)
             startActivity(intent)
-            Utility.fade(activity)
+            Utility.fade(activity)*/
         }
         adapter.setParallaxHeader(header, binding.rvLocation)
         binding.rvLocation.adapter = adapter
@@ -420,7 +424,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), members.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //   Utility.fade(activity)
         }
     }
 
@@ -643,6 +647,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 }
             }
             if (members.size > 0) {
+                binding.rvLocation.visibility = View.VISIBLE
                 binding.llNotFound.visibility = View.GONE
             } else {
                 binding.llNotFound.visibility = View.VISIBLE

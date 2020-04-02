@@ -294,6 +294,11 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 btnContinue.performClick()
             }
 
+            binding.ivHelp.setOnClickListener {
+                val intent = Intent(this, ContactUsActivity::class.java)
+                startActivity(intent)
+            }
+
             binding.btnContinue.setOnClickListener { v ->
 
                 if (!ReceviedOTP.isNullOrEmpty() && ReceviedOTP == squareField.text.toString()) {

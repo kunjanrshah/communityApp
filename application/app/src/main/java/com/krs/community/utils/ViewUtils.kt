@@ -401,21 +401,22 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
 
 fun showVersionDialog(activity: FragmentActivity) {
 
-    SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+    SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
             .setTitleText(activity.getString(R.string.newupdate))
             .setContentText(activity.getString(R.string.thereversion))
-            .setNeutralText(activity.getString(R.string.updatenow))
-            .setNeutralClickListener {
-                it.dismissWithAnimation()
+            .setConfirmText(activity.getString(R.string.updatenow))
+            .setCancelText("Later")
+            .setCustomImage(R.drawable.icon_ghanchi)
+            .showCancelButton(true)
+            .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                sweetAlertDialog.dismissWithAnimation()
                 val appPackageName = activity.packageName
                 try {
-                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
-                } catch (e: android.content.ActivityNotFoundException) {
-                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+                } catch (e: ActivityNotFoundException) {
+                    activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
                 }
-            }
-            .setCancelText("Later")
-            .setCancelClickListener {
+            }.setCancelClickListener {
                 it.dismissWithAnimation()
             }
             .show()
@@ -819,64 +820,64 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
 
         Coroutines.main {
             Handler().postDelayed({
-        val MainDetail = header + "<br><h3><b>" +
-                name + "</b></h3><br>" +
-                headerImage + "<br><br>" +
-                labelMain + "<br>" +
-                lblGender + gender + "<br>" +
-                lblFather + father + "<br>" +
-                lblMother + mother + "<br>" +
-                lblEmail + email + "<br>" +
-                lblMobile + mobile + "<br>" +
-                lblState + state + "<br>" +
-                lblCity + city + "<br>" +
-                lblArea + area + "<br>" +
-                lblAddress + address + "<br>" +
-                lblPinCode + pincode
+                val MainDetail = header + "<br><h3><b>" +
+                        name + "</b></h3><br>" +
+                        headerImage + "<br><br>" +
+                        labelMain + "<br>" +
+                        lblGender + gender + "<br>" +
+                        lblFather + father + "<br>" +
+                        lblMother + mother + "<br>" +
+                        lblEmail + email + "<br>" +
+                        lblMobile + mobile + "<br>" +
+                        lblState + state + "<br>" +
+                        lblCity + city + "<br>" +
+                        lblArea + area + "<br>" +
+                        lblAddress + address + "<br>" +
+                        lblPinCode + pincode
 
-        val PersonalDetail = "<br> <br>" + lblPersonal + "<br>" +
-                lblRole + strRole + "<br>" +
-                lblBdate + bDate + "<br>" +
-                lblBG + bloodGroup + "<br>" +
-                lblNative + native + "<br>" +
-                lblEducation + education + "<br>" +
-                lblActivity + currentActivity + "<br>" +
-                lblEdate + exDate + "<br>" +
-                lblMarital + maritalStatus + "<br>" +
-                lblMdate + mDate + "<br>" +
-                lblLaddress + localAddress
+                val PersonalDetail = "<br> <br>" + lblPersonal + "<br>" +
+                        lblRole + strRole + "<br>" +
+                        lblBdate + bDate + "<br>" +
+                        lblBG + bloodGroup + "<br>" +
+                        lblNative + native + "<br>" +
+                        lblEducation + education + "<br>" +
+                        lblActivity + currentActivity + "<br>" +
+                        lblEdate + exDate + "<br>" +
+                        lblMarital + maritalStatus + "<br>" +
+                        lblMdate + mDate + "<br>" +
+                        lblLaddress + localAddress
 
-        val ProfessionalDetail = "<br> <br>" + lblProfessional + "<br>" +
-                lblLogo + logo + "<br><br>" +
-                lblCompany + companyName + "<br>" +
-                lblOcc + occupation + "<br>" +
-                lblWorkCat + workcategory + "<br>" +
-                lblWorkSubCat + worksubCategory + "<br>" +
-                lblWebsite + website + "<br>" +
-                lblWorkDetail + workDetails + "<br>" +
-                lblWorkAddr + businessAddress
+                val ProfessionalDetail = "<br> <br>" + lblProfessional + "<br>" +
+                        lblLogo + logo + "<br><br>" +
+                        lblCompany + companyName + "<br>" +
+                        lblOcc + occupation + "<br>" +
+                        lblWorkCat + workcategory + "<br>" +
+                        lblWorkSubCat + worksubCategory + "<br>" +
+                        lblWebsite + website + "<br>" +
+                        lblWorkDetail + workDetails + "<br>" +
+                        lblWorkAddr + businessAddress
 
-        val MatrimonyDetail = "<br><br>" + lblMatrimony + "<br>" +
-                lblGotra + gotra + "<br>" +
-                lblAbout + about + "<br>" +
-                lblBtime + birthTime + "<br>" +
-                lblBPlace + birthPlace + "<br>" +
-                lblHobby + hobby + "<br>" +
-                lblExpectation + expectation + "<br>" +
-                lblFBurl + facebookProfile + "<br>" +
-                lblWeight + weight + "<br>" +
-                lblHeight + height
+                val MatrimonyDetail = "<br><br>" + lblMatrimony + "<br>" +
+                        lblGotra + gotra + "<br>" +
+                        lblAbout + about + "<br>" +
+                        lblBtime + birthTime + "<br>" +
+                        lblBPlace + birthPlace + "<br>" +
+                        lblHobby + hobby + "<br>" +
+                        lblExpectation + expectation + "<br>" +
+                        lblFBurl + facebookProfile + "<br>" +
+                        lblWeight + weight + "<br>" +
+                        lblHeight + height
 
-        val MailString = MainDetail + PersonalDetail + ProfessionalDetail + MatrimonyDetail
-        Log.v("ViewUtils", "MailString: $MailString")
+                val MailString = MainDetail + PersonalDetail + ProfessionalDetail + MatrimonyDetail
+                Log.v("ViewUtils", "MailString: $MailString")
 
-        if (Utility.checkExternalStoragePermission(mContext)) {
-            createPdf(mContext, name, MailString)
-        } else {
-            Utility.requestStoragePermission(mContext as AppCompatActivity)
-        }
+                if (Utility.checkExternalStoragePermission(mContext)) {
+                    createPdf(mContext, name, MailString)
+                } else {
+                    Utility.requestStoragePermission(mContext as AppCompatActivity)
+                }
 
-    }, 1500)
+            }, 1500)
         }
 
     }
@@ -908,7 +909,7 @@ private fun createPdf(mContext: Context, fname: String, test: String) {
 fun displayPDFDialog(context: Context, name: String, filePath: String, content: String) {
 
     SweetAlertDialog(context, SweetAlertDialog.PDF_TYPE)
-            .setTitleText("$name"+context.getString(R.string.Profile))
+            .setTitleText("$name" + context.getString(R.string.Profile))
             .setContentText(context.getString(R.string.youcanshare))
             .setCustomImage(R.drawable.app_logo)
             .showCancelButton(true)
@@ -965,17 +966,15 @@ fun shareFile(context: Context, filePath: String) {
 
 fun shareDetails(activity: FragmentActivity?, name: String, mobile: String, email: String, area: String, address: String) {
     val appName = activity?.getString(R.string.app_name)
-    val text = activity?.getString(R.string.install) + appName + "\n" + "https://play.google.com/store/apps/details?id=com.krs.community \n \n" +
-            activity?.getString(R.string.name) +" : " + name + "\n" +
-            activity?.getString(R.string.Mobile)  +" : "  + mobile + "\n" +
-            activity?.getString(R.string.email) +" : "  + email + "\n" +
-            activity?.getString(R.string.areaDetails) +" : "  +area + "\n" +
-            activity?.getString(R.string.addressNon) +" : "  + address
-
+    val text = activity?.getString(R.string.name) + " : " + name + "\n" +
+            activity?.getString(R.string.Mobile) + " : " + mobile + "\n" +
+            activity?.getString(R.string.email) + " : " + email + "\n" +
+            activity?.getString(R.string.areaDetails) + " : " + area + "\n" +
+            activity?.getString(R.string.addressNon) + " : " + address + "\n" +
+            activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=com.krs.community"
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"
     intent.putExtra(Intent.EXTRA_TEXT, text)
     activity?.startActivity(Intent.createChooser(intent, "Choose one"))
-
 }
 

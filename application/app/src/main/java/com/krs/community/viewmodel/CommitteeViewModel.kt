@@ -16,43 +16,43 @@ class CommitteeViewModel(
         private val committeeRepository: CommitteeRepository,
         var app: Application) : AndroidViewModel(app) {
 
-   private var TAG: String = CommitteeViewModel::class.java.simpleName
-   private lateinit var completableJob: CompletableJob
-   lateinit var filterListener: ByFilterListener
+    private var TAG: String = CommitteeViewModel::class.java.simpleName
+    private lateinit var completableJob: CompletableJob
+    lateinit var filterListener: ByFilterListener
 
-   fun getUsersInCommittee(jsonObject: JsonObject) {
-       if (isNetworkConnected(app.applicationContext)) {
-           completableJob = Job()
-           completableJob.let { thejob ->
+    fun getUsersInCommittee(jsonObject: JsonObject) {
+        if (isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
 
-               CoroutineScope(Dispatchers.IO + thejob).launch {
-                   try {
-                       val response = committeeRepository.getUsersInCommittee(jsonObject)
-                       response.let {
-                           withContext(Dispatchers.Main) {
-                               filterListener.getMembers(response)
-                               thejob.complete()
-                           }
-                           return@launch
-                       }
-                   } catch (e: ApiException) {
-                       e.message?.let {
-                           filterListener.getFailure(it)
-                       }
-                   } catch (e: NoInternetException) {
-                       e.message?.let {
-                           filterListener.getFailure(it)
-                       }
-                   } catch (e: Exception) {
-                       e.message?.let {
-                           filterListener.getFailure(it)
-                       }
-                   }
-                   thejob.complete()
-               }
-           }
-       }
-   }
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = committeeRepository.getUsersInCommittee(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                filterListener.getMembers(response)
+                                thejob.complete()
+                            }
+                            return@launch
+                        }
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            filterListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            filterListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            filterListener.getFailure(it)
+                        }
+                    }
+                    thejob.complete()
+                }
+            }
+        }
+    }
 
     suspend fun getLastName(id: Int): String {
         return committeeRepository.getLastnameById(id)
@@ -72,25 +72,25 @@ class CommitteeViewModel(
 
     suspend fun getLocalCommunityId(name: String): Int {
         return committeeRepository.getLocalCommunityName(name)
-   }
+    }
 
     suspend fun getCommitteeId(name: String): Int {
         return committeeRepository.getCommitteeName(name)
-   }
+    }
 
     suspend fun getDesignationId(name: String): Int {
         return committeeRepository.getDesignationName(name)
-   }
+    }
 
-   suspend fun getLocalCommunity(id:Int): LiveData<List<String>> {
-      return committeeRepository.getLocalCommunity(id)
-   }
+    suspend fun getLocalCommunity(id: Int): LiveData<List<String>> {
+        return committeeRepository.getLocalCommunity(id)
+    }
 
-   suspend fun getCommitteeList(): LiveData<List<String>>{
-       return committeeRepository.getCommitteeList()
-   }
+    suspend fun getCommitteeList(): LiveData<List<String>> {
+        return committeeRepository.getCommitteeList()
+    }
 
-   suspend fun getDesignation(): LiveData<List<String>>{
+    suspend fun getDesignation(): LiveData<List<String>> {
         return committeeRepository.getDesignationList()
-   }
+    }
 }

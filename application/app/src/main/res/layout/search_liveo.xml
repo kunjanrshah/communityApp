@@ -49,8 +49,8 @@
             android:imeOptions="actionSearch"
             android:inputType="textCapWords"
             android:maxLines="1"
-            android:paddingEnd="8dp"
             android:paddingStart="12dp"
+            android:paddingEnd="8dp"
             android:textColor="#212121"
             android:textColorHint="@color/search_liveo_text_hint"
             android:textSize="16sp" />

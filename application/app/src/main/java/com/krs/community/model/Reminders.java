@@ -1,11 +1,9 @@
-
 package com.krs.community.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Reminders implements Serializable {
 
@@ -128,7 +126,6 @@ public class Reminders implements Serializable {
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
     }
-
 
 
 }

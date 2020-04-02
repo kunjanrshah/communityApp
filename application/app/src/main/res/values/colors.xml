@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-     <!--<color name="colorPrimary">#ff2975</color>-->
-    <color name="colorPrimary">#843f52</color>  //#92315C
+    <!--<color name="colorPrimary">#ff2975</color>-->
+    <color name="colorPrimary">#843f52</color>
+    //#92315C
     <color name="colorTree">#C54464</color>
     <color name="colorTree1">#FBE9EE</color>
     <color name="colorText">#212121</color>
@@ -28,6 +29,7 @@
 
     <!--<color name="colorAccent">#FF80AB</color>-->
     <color name="colorAccent">@color/colorTree</color>
+
     <color name="material_purple_200">#CE93D8</color>
     <color name="material_white_1000">#ffffff</color>
     <!--<color name="ripple">#F06292</color>

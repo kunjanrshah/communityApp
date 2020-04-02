@@ -8,7 +8,8 @@ public class AppConstants {
     public static final String PREF_NAME = "Vastipatrak";
     public static final String INSERT = "insert";
     public static final String VERSION = "version";
-    public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
+    //public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
+    public static final String APPLICATION_BASE_URL = "https://www.muslimghanchi.org/API/";
     public static final String UPLOAD_DOCUMENT = APPLICATION_BASE_URL + "UploadFiles";
 
     public interface UrlPath {
@@ -58,10 +59,11 @@ public class AppConstants {
         String INNER_LOGIN = "InnerLogin";
         String INNER_LOGOUT = "InnerLogout";
         String SET_REMINDER = "SetReminder";
-        String GET_REMINDER = "GetReminders";
         String GET_USER_PROFILE = "GetUserProfile";
         String GET_USER_STATUS = "GetUserActivityStatus";
         String GET_MASTER_UPDATE_COUNTS = "GetMasterUpdateCounts";
+        String SEND_MAIL = "SendMail";
+
     }
 
     public interface TimeOut {
@@ -79,13 +81,13 @@ public class AppConstants {
     }
 
 
-    public static class UserRegister{
-        String profile_pic;
+    public static class UserRegister {
+        String is_admin;
         String first_name;
         String sub_cast_id;
         String email_address;
         String mobile;
-        String profile_password;
+        String plain_password;
         String state_id;
         String city_id;
         String address;
@@ -97,16 +99,40 @@ public class AppConstants {
             return sub_cast_id;
         }
 
+        public void setSub_cast_id(String sub_cast_id) {
+            this.sub_cast_id = sub_cast_id;
+        }
+
+        public String getIsAdmin() {
+            return is_admin;
+        }
+
+        public void setIsAdmin(String is_admin) {
+            this.is_admin = is_admin;
+        }
+
         public String getProfile_password() {
-            return profile_password;
+            return plain_password;
+        }
+
+        public void setProfile_password(String profile_password) {
+            this.plain_password = profile_password;
         }
 
         public String getState_id() {
             return state_id;
         }
 
+        public void setState_id(String state_id) {
+            this.state_id = state_id;
+        }
+
         public String getSub_community_id() {
             return sub_community_id;
+        }
+
+        public void setSub_community_id(String sub_community_id) {
+            this.sub_community_id = sub_community_id;
         }
 
         public String getLocal_community_id() {
@@ -125,10 +151,6 @@ public class AppConstants {
             this.first_name = first_name;
         }
 
-        public void setSub_cast_id(String sub_cast_id) {
-            this.sub_cast_id = sub_cast_id;
-        }
-
         public String getEmail_address() {
             return email_address;
         }
@@ -145,20 +167,12 @@ public class AppConstants {
             this.mobile = mobile;
         }
 
-        public void setProfile_password(String profile_password) {
-            this.profile_password = profile_password;
-        }
-
         public String getGender() {
             return gender;
         }
 
         public void setGender(String gender) {
             this.gender = gender;
-        }
-
-        public void setState_id(String state_id) {
-            this.state_id = state_id;
         }
 
         public String getCity_id() {
@@ -175,10 +189,6 @@ public class AppConstants {
 
         public void setAddress(String address) {
             this.address = address;
-        }
-
-        public void setSub_community_id(String sub_community_id) {
-            this.sub_community_id = sub_community_id;
         }
     }
 

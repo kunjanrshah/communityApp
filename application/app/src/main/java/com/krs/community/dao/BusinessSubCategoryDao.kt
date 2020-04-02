@@ -11,23 +11,23 @@ import com.krs.community.entities.BusinessSubCategory
 interface BusinessSubCategoryDao {
 
     @Query("SELECT name FROM BusinessSubCategory")
-    fun getBusinessSubCategory() : LiveData<List<String>>
+    fun getBusinessSubCategory(): LiveData<List<String>>
 
     @Query("SELECT id FROM BusinessSubCategory")
-    fun getBusinessSubCategoryIds() : LiveData<List<Int>>
+    fun getBusinessSubCategoryIds(): LiveData<List<Int>>
 
     @Query("SELECT name FROM BusinessSubCategory WHERE id == :id")
-    fun getBusinessSubCategoryById(id:Int) : LiveData<String>
+    fun getBusinessSubCategoryById(id: Int): LiveData<String>
 
     @Query("SELECT id FROM BusinessSubCategory WHERE name == :name")
-    fun getSubCategoryIdByName(name:String) : Int
+    fun getSubCategoryIdByName(name: String): Int
 
     @Query("SELECT id FROM BusinessSubCategory WHERE id NOT IN (:Ids)")
-    fun getRemovedSubCategoryIds(Ids: List<String>) : List<Int>
+    fun getRemovedSubCategoryIds(Ids: List<String>): List<Int>
 
     @Query("DELETE FROM BusinessSubCategory WHERE id IN (:Ids)")
-    fun deleteSubCategoryByIds(Ids: List<Int>) : Int
+    fun deleteSubCategoryByIds(Ids: List<Int>): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllBusinessSubCategory(businessSubCategory : List<BusinessSubCategory>)
+    fun saveAllBusinessSubCategory(businessSubCategory: List<BusinessSubCategory>)
 }

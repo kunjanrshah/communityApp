@@ -3,35 +3,29 @@ package com.krs.community.repositories
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
-import com.krs.community.model.GetRemindersResponse
-import com.krs.community.model.LoginResponse
+import com.krs.community.responses.ReminderResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
 
-class CalendarSearchRepository(private val api: ApiServices, private val db:AppDatabase): SafeApiRequest()  {
+class CalendarSearchRepository(private val api: ApiServices, private val db: AppDatabase) : SafeApiRequest() {
 
     suspend fun getSearchByDate(jsonObject: JsonObject): SmartFilterResponse {
-        return apiRequest{
+        return apiRequest {
             api.getSearchByDate(jsonObject)
         }
     }
 
-    suspend fun setReminder(jsonObject: JsonObject): LoginResponse {
+    suspend fun setReminder(jsonObject: JsonObject): ReminderResponse {
         return apiRequest {
             api.setReminder(jsonObject)
-        }
-    }
-
-    suspend fun GetReminder(jsonObject: JsonObject): GetRemindersResponse {
-        return apiRequest {
-            api.GetReminder(jsonObject)
         }
     }
 
     fun getListCityName(): LiveData<List<String>> {
         return db.getCityDao().getcityNames()
     }
-     fun getCityIdByName(name:String): Int {
+
+    fun getCityIdByName(name: String): Int {
         return db.getCityDao().getCityId(name)
     }
 
@@ -39,15 +33,15 @@ class CalendarSearchRepository(private val api: ApiServices, private val db:AppD
         return db.getLastNameDao().getLastName()
     }
 
-    fun getCityName(id:String): String {
+    fun getCityName(id: String): String {
         return db.getCityDao().getcityName(Integer.parseInt(id))
     }
 
-     fun getLastNameById(id:Int): String {
+    fun getLastNameById(id: Int): String {
         return db.getLastNameDao().getLastName(id)
     }
 
-     fun getIdByLastName(name:String): Int {
+    fun getIdByLastName(name: String): Int {
         return db.getLastNameDao().getIdOfLastName(name)
     }
 }

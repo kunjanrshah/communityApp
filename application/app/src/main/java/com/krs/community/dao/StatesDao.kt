@@ -11,31 +11,31 @@ import com.krs.community.entities.States
 interface StatesDao {
 
     @Query("SELECT * FROM States")
-    fun getStates() : LiveData<List<States>>
+    fun getStates(): LiveData<List<States>>
 
     @Query("SELECT COUNT(id) FROM States")
     fun getStatesCount(): Int
 
     @Query("SELECT name FROM States")
-    fun getStateNames() : LiveData<List<String>>
+    fun getStateNames(): LiveData<List<String>>
 
     @Query("SELECT name FROM States WHERE id == :id")
     fun getstateNameById(id: Int): String
 
     @Query("SELECT id FROM States WHERE name == :name")
-    fun getstateIdByName(name:String) : Int
+    fun getstateIdByName(name: String): Int
 
     @Query("SELECT id FROM States")
-    fun getStateIds() : LiveData<List<Int>>
+    fun getStateIds(): LiveData<List<Int>>
 
     @Query("SELECT id FROM States WHERE id NOT IN (:Ids)")
-    fun getRemovedStateIds(Ids: List<String>) : List<Int>
+    fun getRemovedStateIds(Ids: List<String>): List<Int>
 
     @Query("DELETE FROM States WHERE id IN (:Ids)")
-    fun deleteStateByIds(Ids: List<Int>) : Int
+    fun deleteStateByIds(Ids: List<Int>): Int
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllStates(state : List<States>)
+    fun saveAllStates(state: List<States>)
 
 }

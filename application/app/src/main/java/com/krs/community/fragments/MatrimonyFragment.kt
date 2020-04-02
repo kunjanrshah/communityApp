@@ -28,7 +28,7 @@ import org.kodein.di.generic.instance
 
 class MatrimonyFragment : Fragment(), KodeinAware {
 
-    private lateinit var binding:FragmentMatrimonyBinding
+    private lateinit var binding: FragmentMatrimonyBinding
     override val kodein by kodein()
     private val factory: SmartFilterViewModelFactory by instance()
     private lateinit var smartFilterViewModel: SmartFilterViewModel
@@ -36,9 +36,9 @@ class MatrimonyFragment : Fragment(), KodeinAware {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding= DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, MatrimonyFragment::class.simpleName)
         mApp.facebookAnalytics(context, MatrimonyFragment::class.simpleName)
 
@@ -53,8 +53,8 @@ class MatrimonyFragment : Fragment(), KodeinAware {
         binding.edtName.setOnTouchListener { _: View?, event: MotionEvent ->
             val RIGHT = 2
             if (event.action == MotionEvent.ACTION_UP) {
-                if ((event.rawX+35) >= binding.edtName.right - binding.edtName.compoundDrawables[RIGHT].bounds.width()) {
-                    activity?.let { openFilter(it,smartFilterViewModel) }
+                if ((event.rawX + 35) >= binding.edtName.right - binding.edtName.compoundDrawables[RIGHT].bounds.width()) {
+                    activity?.let { openFilter(it, smartFilterViewModel) }
                     return@setOnTouchListener true
                 }
             }
@@ -70,12 +70,12 @@ class MatrimonyFragment : Fragment(), KodeinAware {
         }
 
         binding.btnSearch.setOnClickListener {
-            if(binding.edtName.text.trim().isNotEmpty()){
-                val jsonObject=JSONObject()
-                jsonObject.put(getString(R.string.first_name),binding.edtName.text.trim())
+            if (binding.edtName.text.trim().isNotEmpty()) {
+                val jsonObject = JSONObject()
+                jsonObject.put(getString(R.string.first_name), binding.edtName.text.trim())
                 moveToMatrimonyListScreen(activity, jsonObject.toString())
-            }else{
-                binding.edtName.error=getString(R.string.enterName)
+            } else {
+                binding.edtName.error = getString(R.string.enterName)
             }
 
         }

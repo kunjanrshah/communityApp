@@ -15,6 +15,9 @@ public class MasterUpdateResponse {
     @SerializedName("countList")
     @Expose
     private CountList countList;
+    @SerializedName("userCounts")
+    @Expose
+    private UserCounts userCounts;
 
     public Boolean getSuccess() {
         return success;
@@ -38,6 +41,14 @@ public class MasterUpdateResponse {
 
     public void setCountList(CountList countList) {
         this.countList = countList;
+    }
+
+    public UserCounts getUserCounts() {
+        return userCounts;
+    }
+
+    public void setUserCounts(UserCounts userCounts) {
+        this.userCounts = userCounts;
     }
 
 }

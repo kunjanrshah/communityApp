@@ -30,20 +30,18 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@color/placeholder_bg"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="centerCrop"
-                    />
-
+                    android:src="@color/placeholder_bg" />
 
 
                 <TextView
 
-                    android:background="@color/placeholder_bg"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semibold"
                     android:layout_marginTop="7dp"
+                    android:background="@color/placeholder_bg"
+                    android:fontFamily="@font/montserrat_semibold"
                     android:textColor="@color/colorPrimary" />
 
             </LinearLayout>
@@ -66,30 +64,30 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:background="@color/placeholder_bg"
                             android:id="@+id/tv_name"
-                            android:singleLine="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@color/placeholder_bg"
                             android:fontFamily="@font/montserrat_semibold"
+                            android:singleLine="true"
                             android:textSize="16sp" />
 
                         <TextView
-                            android:background="@color/placeholder_bg"
-                            android:fontFamily="@font/montserrat_medium"
                             android:id="@+id/tv_area"
-                            android:singleLine="true"
-                            android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/placeholder_bg"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:singleLine="true"
                             android:textSize="12sp" />
 
                         <LinearLayout
-                            android:background="@color/placeholder_bg"
-                            android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
-                            android:gravity="center_vertical"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/placeholder_bg"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -99,12 +97,12 @@
 
                             <TextView
                                 android:id="@+id/tv_mobile"
-                                android:singleLine="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="5dp"
                                 android:fontFamily="@font/montserrat_semibold"
+                                android:singleLine="true"
                                 android:textColor="@color/com_facebook_blue"
                                 android:textSize="12sp" />
 
@@ -113,11 +111,11 @@
                     </LinearLayout>
 
                     <TextView
-                        android:background="@color/placeholder_bg"
                         android:id="@+id/tv_role"
                         android:layout_width="70dp"
                         android:layout_height="25dp"
                         android:layout_margin="5dp"
+                        android:background="@color/placeholder_bg"
                         android:fontFamily="@font/montserrat_semibold"
                         android:gravity="center"
                         android:paddingLeft="10dp"
@@ -131,19 +129,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="5dp"
-                    android:alpha="1"
-                    android:visibility="gone"
                     android:layout_marginTop="5dp"
-                    android:background="@color/colorGray" />
+                    android:alpha="1"
+                    android:background="@color/colorGray"
+                    android:visibility="gone" />
 
                 <LinearLayout
-                    android:background="@color/placeholder_bg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/placeholder_bg"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -153,13 +151,13 @@
 
                     <TextView
                         android:id="@+id/tv_email"
-                        android:singleLine="true"
-                        android:autoLink="email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
+                        android:autoLink="email"
                         android:fontFamily="@font/montserrat_medium"
+                        android:singleLine="true"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -173,28 +171,28 @@
                     android:background="@color/colorGray" />
 
                 <LinearLayout
-                    android:background="@color/placeholder_bg"
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_height="wrap_content">
+                    android:layout_marginTop="5dp"
+                    android:background="@color/placeholder_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/location"
-                        android:layout_height="15dp" />
+                        android:background="@drawable/location" />
+
                     <TextView
                         android:layout_width="wrap_content"
-                        android:textSize="14sp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:layout_height="wrap_content" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>

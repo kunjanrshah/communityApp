@@ -11,9 +11,9 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/sorting_by_a_z"
@@ -24,10 +24,10 @@
             android:id="@+id/iv_cancel"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:padding="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/cancel_popup" />
+            android:background="@drawable/cancel_popup"
+            android:padding="5dp" />
 
     </LinearLayout>
 
@@ -56,8 +56,8 @@
                 android:id="@+id/tv_a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/a"
                 android:textColor="@color/black1"
@@ -67,8 +67,8 @@
                 android:id="@+id/tv_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/b"
                 android:textColor="@color/black1"
@@ -78,8 +78,8 @@
                 android:id="@+id/tv_c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/c"
                 android:textColor="@color/black1"
@@ -90,8 +90,8 @@
                 android:id="@+id/tv_d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/d"
                 android:textColor="@color/black1"
@@ -102,8 +102,8 @@
                 android:id="@+id/tv_e"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/e"
                 android:textColor="@color/black1"
@@ -113,8 +113,8 @@
                 android:id="@+id/tv_f"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/f"
                 android:textColor="@color/black1"
@@ -128,14 +128,12 @@
             android:gravity="center_horizontal">
 
 
-
-
             <TextView
                 android:id="@+id/tv_g"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/g"
                 android:textColor="@color/black1"
@@ -146,8 +144,8 @@
                 android:id="@+id/tv_h"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/h"
                 android:textColor="@color/black1"
@@ -157,8 +155,8 @@
                 android:id="@+id/tv_i"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/i"
                 android:textColor="@color/black1"
@@ -168,8 +166,8 @@
                 android:id="@+id/tv_j"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/j"
                 android:textColor="@color/black1"
@@ -180,8 +178,8 @@
                 android:id="@+id/tv_k"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/k"
                 android:textColor="@color/black1"
@@ -192,8 +190,8 @@
                 android:id="@+id/tv_l"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/l"
                 android:textColor="@color/black1"
@@ -207,13 +205,12 @@
             android:gravity="center_horizontal">
 
 
-
             <TextView
                 android:id="@+id/tv_m"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/m"
                 android:textColor="@color/black1"
@@ -223,8 +220,8 @@
                 android:id="@+id/tv_n"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/n"
                 android:textColor="@color/black1"
@@ -234,8 +231,8 @@
                 android:id="@+id/tv_o"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/o"
                 android:textColor="@color/black1"
@@ -245,8 +242,8 @@
                 android:id="@+id/tv_p"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/p"
                 android:textColor="@color/black1"
@@ -256,8 +253,8 @@
                 android:id="@+id/tv_q"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/q"
                 android:textColor="@color/black1"
@@ -267,8 +264,8 @@
                 android:id="@+id/tv_r"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/r"
                 android:textColor="@color/black1"
@@ -282,14 +279,12 @@
             android:gravity="center_horizontal">
 
 
-
-
             <TextView
                 android:id="@+id/tv_s"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/s"
                 android:textColor="@color/black1"
@@ -300,8 +295,8 @@
                 android:id="@+id/tv_t"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/t"
                 android:textColor="@color/black1"
@@ -311,8 +306,8 @@
                 android:id="@+id/tv_u"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/u"
                 android:textColor="@color/black1"
@@ -322,8 +317,8 @@
                 android:id="@+id/tv_v"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/v"
                 android:textColor="@color/black1"
@@ -333,8 +328,8 @@
                 android:id="@+id/tv_w"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/w"
                 android:textColor="@color/black1"
@@ -345,8 +340,8 @@
                 android:id="@+id/tv_x"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/x"
                 android:textColor="@color/black1"
@@ -363,8 +358,8 @@
                 android:id="@+id/tv_y"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/y"
                 android:textColor="@color/black1"
@@ -375,8 +370,8 @@
                 android:id="@+id/tv_z"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/z"
                 android:textColor="@color/black1"
@@ -387,8 +382,8 @@
                 android:id="@+id/tv_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:fontFamily="@font/montserrat_semibold"
+                android:gravity="center"
                 android:padding="10dp"
                 android:text="@string/all"
                 android:textColor="@color/black1"
@@ -397,24 +392,24 @@
 
         </TableRow>
 
-       <!-- <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
+        <!-- <TableRow
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:gravity="center_horizontal">
 
 
-            <TextView
-                android:id="@+id/tv_z"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:fontFamily="@font/montserrat_semibold"
-                android:padding="10dp"
-                android:text="Z"
-                android:textColor="@color/black1"
-                android:textSize="20sp" />
+             <TextView
+                 android:id="@+id/tv_z"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:gravity="center"
+                 android:fontFamily="@font/montserrat_semibold"
+                 android:padding="10dp"
+                 android:text="Z"
+                 android:textColor="@color/black1"
+                 android:textSize="20sp" />
 
-        </TableRow>-->
+         </TableRow>-->
 
     </TableLayout>
 

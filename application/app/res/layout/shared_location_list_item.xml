@@ -93,9 +93,9 @@
 
             <LinearLayout
                 android:id="@+id/message_container"
-                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -112,10 +112,10 @@
 
                         <TextView
                             android:id="@+id/tv_name"
-                            android:singleLine="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
+                            android:singleLine="true"
                             android:text="Kunjan Patel"
                             android:textSize="16sp" />
 
@@ -176,12 +176,12 @@
 
                         <TextView
                             android:id="@+id/tv_mobile"
-                            android:singleLine="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:fontFamily="@font/montserrat_regular"
+                            android:singleLine="true"
                             android:text="9825450261"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="12sp" />
@@ -201,12 +201,12 @@
 
                         <TextView
                             android:id="@+id/tv_email"
-                            android:singleLine="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:fontFamily="@font/montserrat_regular"
+                            android:singleLine="true"
                             android:text="kunjanshah@gmail.com"
                             android:textSize="12sp" />
 

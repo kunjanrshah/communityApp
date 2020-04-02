@@ -44,6 +44,7 @@ import com.krs.community.activity.*
 import com.krs.community.activity.DashboardActivity.Companion.easyWayLocation
 import com.krs.community.activity.DashboardActivity.Companion.request
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.FragmentDashboardBinding
@@ -80,7 +81,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     private val duration = 10L
     private val pixelsToMove = 30
     private val mHandler = Handler(Looper.getMainLooper())
-    private lateinit var loginMember: Member
+    private var loginMember: Member? = null
     var SCROLLING_RUNNABLE: Runnable = object : Runnable {
         override fun run() {
             binding.lstSharedProfile.smoothScrollBy(pixelsToMove, 0)
@@ -137,7 +138,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         layoutManager = LinearLayoutManager(AppController.mApplication.applicationContext)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
-
         binding.lstSharedProfile.adapter = sharedAdapter
         binding.lstSharedProfile.layoutManager = layoutManager
         defaultProfiles.clear()
@@ -161,8 +161,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         Utility.changeStatusbarColor(activity, R.color.white, false)
         //setRecyclerViewScrollListener()
 
-        val loginMember = Guru.getString(getString(R.string.loginMember), "")
-        this.loginMember = Gson().fromJson(loginMember, Member::class.java)
+        val loginMember1 = Guru.getString(getString(R.string.loginMember), "")
+        this.loginMember = Gson().fromJson(loginMember1, Member::class.java)
         return binding.root
     }
 
@@ -257,7 +257,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 3 -> sliderView.imageUrl = "https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
             }
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-            sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
+            // sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
+            sliderView.description = "Advertise with us"
             sliderView.setOnSliderClickListener { sliderView1: SliderView? ->
                 binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                 return@setOnSliderClickListener
@@ -270,6 +271,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     internal inner class MenuViewHolder {
         var image: ImageView? = null
         var textView: TextView? = null
+        var badge: NotificationBadge? = null
     }
 
     internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() {
@@ -295,6 +297,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 menuViewHolder = MenuViewHolder()
                 menuViewHolder.image = convertView.findViewById(R.id.image)
                 menuViewHolder.textView = convertView.findViewById(R.id.name)
+                menuViewHolder.badge = convertView.findViewById(R.id.badge)
                 convertView.tag = menuViewHolder
             } else {
                 menuViewHolder = convertView.tag as MenuViewHolder
@@ -304,7 +307,19 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
             menuViewHolder.image?.setImageResource(imgs.getResourceId(position, -1))
             menuViewHolder.textView?.text = mainMenu[position]
-            convertView?.setOnClickListener { v: View? ->
+            val txt = menuViewHolder.textView?.text.toString()
+            if (txt == "Restricted") {
+                DashboardActivity.statusCounts.observeForever {
+                    menuViewHolder.badge?.setNumber(Integer.parseInt(it))
+                }
+            } else if (txt == "Matrimony") {
+                DashboardActivity.matrimonyCounts.observeForever {
+                    menuViewHolder.badge?.setNumber(Integer.parseInt(it))
+                }
+            } else {
+                menuViewHolder.badge?.setNumber(0)
+            }
+            convertView?.setOnClickListener {
                 when (position) {
                     0 -> Utility.movetoFragment(activity, BrowseByCityFragment())
                     1 -> {
@@ -330,7 +345,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
                     6 -> Utility.movetoFragment(activity, AdminsFragment())
                     7 -> {
-                        if (loginMember.role != getString(R.string.User)) {
+                        if (loginMember?.role != getString(R.string.User)) {
                             Utility.movetoFragment(activity, NonActivesFragment())
                         } else {
                             binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
@@ -354,7 +369,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
 
                     11 -> {
-                        if (loginMember.role != getString(R.string.User)) {
+                        if (loginMember?.role != getString(R.string.User)) {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
                             bundle.putBoolean(getString(R.string.is_logged_in), false)
@@ -422,7 +437,9 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             }
 
             holder.imgProfile.setOnClickListener {
-                moveToProfileDetail()
+                if (!member.id.isNullOrEmpty()) {
+                    moveToProfileDetail(member)
+                }
             }
         }
 
@@ -455,12 +472,12 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         }
     }
 
-    private fun moveToProfileDetail() {
+    private fun moveToProfileDetail(member: Member) {
         Utility.startSweetProgress(activity, getString(R.string.MoveProfile), getString(R.string.loading))
         val intent = Intent(activity, ProfileDetailActivity::class.java)
-        intent.putExtra(getString(R.string.member), loginMember)
+        intent.putExtra(getString(R.string.member), member)
         startActivity(intent)
-        fade(activity)
+        //  fade(activity)
     }
 
     private fun getSharedProfileList() {
@@ -528,13 +545,16 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         try {
             sharedAdapter = SharedProfileAdapter(defaultProfiles)
             binding.lstSharedProfile.adapter = sharedAdapter
+
             if (ProcessMainClass.serviceIntent != null) {
+                if (RestartServiceBroadcastReceiver.jobScheduler != null) {
+                    RestartServiceBroadcastReceiver.jobScheduler.cancel(1)
+                }
                 activity?.stopService(ProcessMainClass.serviceIntent)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-
 
 }

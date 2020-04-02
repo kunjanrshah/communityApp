@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/ll_root"
     xmlns:shimmer="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_root"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <FrameLayout
@@ -20,19 +21,16 @@
             android:clipToPadding="false"
             android:layoutAnimation="@anim/layout_animation_fall_down"
             android:overScrollMode="never"
-            tools:itemCount="4"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            />
-
-
+            tools:itemCount="4" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:orientation="vertical"
             android:layout_marginTop="60dp"
+            android:orientation="vertical"
             android:visibility="gone"
             shimmer:duration="800">
 
@@ -55,8 +53,14 @@
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
+        <ImageView
+            android:id="@+id/iv_not_found"
+            android:layout_width="@dimen/no_records"
+            android:layout_height="@dimen/no_records"
+            android:layout_gravity="center"
+            android:background="@drawable/no_record_found"
+            android:visibility="gone" />
+
     </FrameLayout>
-
-
 
 </LinearLayout>

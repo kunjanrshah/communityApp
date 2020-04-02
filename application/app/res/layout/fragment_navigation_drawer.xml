@@ -24,11 +24,11 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
-            android:text="Muslim Ghanchi Samaj"
-            android:textStyle="bold"
             android:fontFamily="@font/montserrat_medium"
+            android:text="Muslim Ghanchi Samaj"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
     </LinearLayout>
@@ -40,9 +40,9 @@
         android:background="@color/colorGray" />
 
     <LinearLayout
+        android:id="@+id/ll_change_lan"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:id="@+id/ll_change_lan"
         android:layout_marginLeft="20dp"
         android:orientation="horizontal">
 
@@ -58,8 +58,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
-            android:text="@string/choose_language"
             android:fontFamily="@font/montserrat_medium"
+            android:text="@string/choose_language"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
@@ -76,9 +76,9 @@
         android:id="@+id/drawerList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_below="@id/bottom_line"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        android:layout_weight="1" />
 
     <View
         android:layout_width="match_parent"
@@ -88,17 +88,17 @@
         android:background="@color/colorGray" />
 
     <LinearLayout
+        android:id="@+id/ll_setting"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:id="@+id/ll_setting"
         android:layout_marginLeft="20dp"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="5dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
             android:background="@drawable/settings" />
 
         <TextView
@@ -108,25 +108,25 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
-            android:text="@string/settings"
             android:fontFamily="@font/montserrat_medium"
+            android:text="@string/settings"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
 
     <LinearLayout
+        android:id="@+id/ll_contact_us"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:id="@+id/ll_contact_us"
         android:layout_marginLeft="20dp"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="5dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
             android:background="@drawable/envelope" />
 
         <TextView
@@ -136,24 +136,24 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
-            android:text="@string/contact_us"
             android:fontFamily="@font/montserrat_medium"
+            android:text="@string/contact_us"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_logout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:id="@+id/ll_logout"
         android:layout_marginLeft="20dp"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="5dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
             android:background="@drawable/logout" />
 
         <TextView
@@ -163,8 +163,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
-            android:text="@string/logout"
             android:fontFamily="@font/montserrat_medium"
+            android:text="@string/logout"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
@@ -182,12 +182,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/version_1_2"
         android:layout_marginBottom="20dp"
         android:fontFamily="@font/montserrat_medium"
+        android:text="@string/version_1_2"
         android:textColor="@color/black2"
         android:textSize="14sp" />
-
 
 
 </LinearLayout>

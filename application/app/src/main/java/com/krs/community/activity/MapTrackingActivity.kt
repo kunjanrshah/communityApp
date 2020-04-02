@@ -9,24 +9,28 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Property
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.squti.guru.Guru
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -49,7 +53,6 @@ import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
-import de.hdodenhof.circleimageview.CircleImageView
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -70,8 +73,14 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     private lateinit var headId: String
     private val locations = HashMap<String, Location>()
+    private val lstTitle = HashMap<String, String>()
+    private val lstImage = HashMap<String, String>()
     private val oldLocations = HashMap<String, Location>()
     private val lstMarkers = HashMap<String, Marker>()
+    private var mCustomMarkerView: View? = null
+    private var mMarkerImageView: ImageView? = null
+    private var tvTitle: TextView? = null
+    private val ImageUrl = "https://s3.amazonaws.com/uifaces/faces/twitter/jsa/128.jpg"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +110,10 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
             mMap?.animateCamera(CameraUpdateFactory.zoomTo(11f))
             mMap?.setOnMapLoadedCallback {
                 mapLoaded = true
+                mCustomMarkerView = (getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_custom_marker, null)
+                mMarkerImageView = mCustomMarkerView?.findViewById<View>(R.id.profile_image) as ImageView
+                tvTitle = mCustomMarkerView?.findViewById<View>(R.id.tv_title) as TextView
+                getFamilyDetails()
                 mMap!!.uiSettings.setAllGesturesEnabled(true)
                 mMap!!.uiSettings.isZoomControlsEnabled = true
             }
@@ -109,20 +122,22 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
 
     private val updateLocations = object : Runnable {
         override fun run() {
-            getFamilyDetails()
-            mainHandler.postDelayed(this, 1000 * 60 * 10)
+            if (mapLoaded && mMap != null) {
+                getFamilyDetails()
+            }
+            mainHandler.postDelayed(this, 1000 * 60 * 5)
         }
     }
 
-    private fun getFamilyDetails(){
+    private fun getFamilyDetails() {
 
-        val jsonObject= JSONObject()
+        val jsonObject = JSONObject()
         val headId = Guru.getString(getString(R.string.user_id), "")
         if (this.headId.isNotEmpty()) {
             jsonObject.put(getString(R.string.id), this.headId)
         }
-        jsonObject.put(getString(R.string.head_id),headId)
-        val records=  JsonParser().parse(jsonObject.toString()) as JsonObject
+        jsonObject.put(getString(R.string.head_id), headId)
+        val records = JsonParser().parse(jsonObject.toString()) as JsonObject
         familyDetailViewModel.getFamilyDetails(records)
     }
 
@@ -136,7 +151,9 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                         val loc = Location(LocationManager.GPS_PROVIDER)
                         loc.latitude = member.homeLat.toDouble()
                         loc.longitude = member.homeLng.toDouble()
-                        locations[member.id] = loc
+                        locations["h_${member.id}"] = loc
+                        lstTitle["h_${member.id}"] = "Home"
+                        lstImage["h_${member.id}"] = getString(R.string.base_url_original) + member.profilePic
                     }
                 }
 
@@ -144,18 +161,19 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     val loc = Location(LocationManager.GPS_PROVIDER)
                     loc.latitude = member.officeLat.toDouble()
                     loc.longitude = member.officeLng.toDouble()
-                    locations[member.id] = loc
+                    locations["o_${member.id}"] = loc
+                    lstImage["o_${member.id}"] = getString(R.string.base_url_original) + member.profilePic
+                    lstTitle["o_${member.id}"] = member.firstName + "'s Office"
                 }
 
                 if (!member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
                     val loc = Location(LocationManager.GPS_PROVIDER)
                     loc.latitude = member.userLat.toDouble()
                     loc.longitude = member.userLng.toDouble()
-                    locations[member.id] = loc
+                    locations["u_${member.id}"] = loc
+                    lstImage["u_${member.id}"] = getString(R.string.base_url_original) + member.profilePic
+                    lstTitle["u_${member.id}"] = member.firstName.toString()
                 }
-
-                updateMarker()
-
             }
             if (locations.size > 0) {
                 updateMarker()
@@ -207,6 +225,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
                     locations[headId] = location
+                    lstTitle[headId] = "You are here"
                     updateMarker()
                 }
             }
@@ -216,12 +235,12 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
             return
         }
         mFusedLocationProviderClient?.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
-        Toast.makeText(getApplicationContext(), "Location update started", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Location update started", Toast.LENGTH_SHORT).show()
     }
 
     private fun stopLocationUpdates() {
         mFusedLocationProviderClient!!.removeLocationUpdates(mLocationCallback)
-        Toast.makeText(getApplicationContext(), "Location update stopped.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Location update stopped.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -260,28 +279,25 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         if (mMap != null && mapLoaded) {
             for (loc in locations) {
                 if (lstMarkers[loc.key] == null) {
-                    Log.e("hii", "null")
                     oldLocations[loc.key] = loc.value
-                    val markerOptions = MarkerOptions()
-                    val car = BitmapDescriptorFactory.fromResource(R.drawable.pintracking)
-                    markerOptions.icon(car)
-                    markerOptions.anchor(0.5f, 0.5f)
-                    markerOptions.flat(true)
-                    markerOptions.position(LatLng(loc.value.latitude, loc.value.longitude))
-                    lstMarkers[loc.key] = mMap!!.addMarker(markerOptions)
-                    bearing = if (loc.value.hasBearing()) { // if location has bearing set the same bearing to marker(if location is acquired using GPS bearing will be available)
-                        loc.value.bearing
-                    } else {
-                        0f // no need to calculate bearing as it will be the first point
-                    }
-                    lstMarkers[loc.key]?.rotation = bearing
-                    moveThread = MoveThread()
-                    moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), 16f)
-                    handler?.post(moveThread)
-                    animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
+                    Glide.with(applicationContext)
+                            .asBitmap()
+                            .thumbnail(0.5f)
+                            .load(lstImage[loc.key])
+                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                            .into(object : CustomTarget<Bitmap>() {
+                                override fun onLoadCleared(placeholder: Drawable?) {
+                                    val bitmap = BitmapFactory.decodeResource(resources, R.drawable.user_profile)
+                                    addMarker(loc, bitmap)
+                                }
+
+                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                    addMarker(loc, resource)
+                                }
+                            })
+
 
                 } else {
-                    Log.e("hii"," not null");
                     bearing = if (loc.value.hasBearing()) {
                         loc.value.bearing
                     } else {
@@ -299,28 +315,46 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         }
     }
 
+    private fun addMarker(loc: MutableMap.MutableEntry<String, Location>, bitmap: Bitmap) {
+        val markerOptions = MarkerOptions()
+        tvTitle?.text = lstTitle[loc.key]
+        val car = BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(mCustomMarkerView, bitmap))
+        markerOptions.icon(car)
+        markerOptions.anchor(0.5f, 0.5f)
+        markerOptions.flat(true)
+        markerOptions.position(LatLng(loc.value.latitude, loc.value.longitude))
+        lstMarkers[loc.key] = mMap!!.addMarker(markerOptions)
+        bearing = if (loc.value.hasBearing()) { // if location has bearing set the same bearing to marker(if location is acquired using GPS bearing will be available)
+            loc.value.bearing
+        } else {
+            0f // no need to calculate bearing as it will be the first point
+        }
+        lstMarkers[loc.key]?.rotation = bearing
+        moveThread = MoveThread()
+        moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), 16f)
+        handler?.post(moveThread)
+        animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
+    }
+
+    private fun getMarkerBitmapFromView(view: View?, bitmap: Bitmap): Bitmap? {
+        mMarkerImageView?.setImageBitmap(bitmap)
+        view?.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        view?.layout(0, 0, view.measuredWidth, view.measuredHeight)
+        view?.buildDrawingCache()
+        val returnedBitmap = Bitmap.createBitmap(view?.measuredWidth!!, view.measuredHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(returnedBitmap)
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN)
+        view.background?.draw(canvas)
+        view.draw(canvas)
+        return returnedBitmap
+    }
+
     companion object {
-        protected const val REQUEST_CHECK_SETTINGS = 0x1
+        private const val REQUEST_CHECK_SETTINGS = 0x1
         var moveThread: MoveThread? = null
         var handler: Handler? = null
         const val JOB_STATE_CHANGED = "jobStateChanged"
         const val LOCATION_ACQUIRED = "locAcquired"
-
-        fun createCustomMarker(context: Context, resource: String?): Bitmap {
-            val marker = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.custom_marker_layout, null)
-            val markerImage = marker.findViewById<View>(R.id.user_dp) as CircleImageView
-            Glide.with(context).load("https://muslimghanchisamaj.in/uploads/users/thumb/c2c03908f3eaa4141d678f630bf7f20d.jpg").into(markerImage)
-            val displayMetrics = DisplayMetrics()
-            (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
-            marker.layoutParams = ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT)
-            marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
-            marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
-            marker.buildDrawingCache()
-            val bitmap = Bitmap.createBitmap(marker.measuredWidth, marker.measuredHeight, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            marker.draw(canvas)
-            return bitmap
-        }
 
         fun animateMarkerToICS(marker: Marker?, finalPosition: LatLng?) {
             val typeEvaluator = TypeEvaluator<LatLng> { fraction, startValue, endValue -> interpolate(fraction, startValue, endValue) }
@@ -354,6 +388,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     override fun getMessage(response: DeleteProfileResponse) {
 
     }
+
     override suspend fun getFailure(message: String) {
 
     }

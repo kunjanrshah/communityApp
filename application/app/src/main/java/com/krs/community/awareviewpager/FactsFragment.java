@@ -7,14 +7,13 @@ import android.view.ViewGroup;
 
 import com.krs.community.R;
 import com.krs.community.activity.FamilyTreeDetailActivity;
-import com.leinardi.android.speeddial.SpeedDialOverlayLayout;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 
-public class FactsFragment extends ViewPagerFragmentBase  implements FamilyTreeDetailActivity.IhideView {
+public class FactsFragment extends ViewPagerFragmentBase implements FamilyTreeDetailActivity.IhideView {
 
     private final static String TAG = FactsFragment.class.getSimpleName();
 
@@ -60,15 +59,14 @@ public class FactsFragment extends ViewPagerFragmentBase  implements FamilyTreeD
         if (!isAdded()) {
             return;
         }
-        rvdapter =new HeaderAutoFooterRecyclerAdapter(getActivity(), arrayList, R.layout.facts_list_item, getHeaderHeight());
+        rvdapter = new HeaderAutoFooterRecyclerAdapter(getActivity(), arrayList, R.layout.facts_list_item, getHeaderHeight());
         mRecyclerView.setAdapter(rvdapter);
         initiateScrollPosition();
     }
 
     @Override
     public void hideOverlay() {
-        if(mSpeedDialView.isOpen())
-        {
+        if (mSpeedDialView.isOpen()) {
             mSpeedDialView.close(true);
             overlay.hide();
         }

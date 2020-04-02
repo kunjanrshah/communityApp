@@ -24,17 +24,11 @@ import java.util.List;
  */
 public class HeaderLayoutManagerFixed extends RecyclerView.LayoutManager {
 
-    private static final String TAG = "LinearLayoutManager";
-
-    private static final boolean DEBUG = true;
-
     public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
-
     public static final int VERTICAL = LinearLayout.VERTICAL;
-
     public static final int INVALID_OFFSET = Integer.MIN_VALUE;
-
-
+    private static final String TAG = "LinearLayoutManager";
+    private static final boolean DEBUG = true;
     /**
      * While trying to find next view to focus, LinearLayoutManager will not try to scroll more
      * than
@@ -42,21 +36,6 @@ public class HeaderLayoutManagerFixed extends RecyclerView.LayoutManager {
      * height minus padding, if layout is horizontal, total space is the width minus padding.
      */
     private static final float MAX_SCROLL_FACTOR = 0.33f;
-    private int mHeaderIncrementFixer = 0;
-
-
-    /**
-     * Current orientation. Either {@link #HORIZONTAL} or {@link #VERTICAL}
-     */
-    private int mOrientation;
-
-    /**
-     * Helper class that keeps temporary rendering state.
-     * It does not keep state after rendering is complete but we still keep a reference to re-use
-     * the same object.
-     */
-    private RenderState mRenderState;
-
     /**
      * Many calculations are made depending on orientation. To keep it clean, this interface
      * helps {@link HeaderLayoutManagerFixed} make those decisions.
@@ -64,7 +43,17 @@ public class HeaderLayoutManagerFixed extends RecyclerView.LayoutManager {
      * {@link #ensureRenderState} method.
      */
     OrientationHelper mOrientationHelper;
-
+    private int mHeaderIncrementFixer = 0;
+    /**
+     * Current orientation. Either {@link #HORIZONTAL} or {@link #VERTICAL}
+     */
+    private int mOrientation;
+    /**
+     * Helper class that keeps temporary rendering state.
+     * It does not keep state after rendering is complete but we still keep a reference to re-use
+     * the same object.
+     */
+    private RenderState mRenderState;
     /**
      * We need to track this so that we can ignore current position when it changes.
      */
@@ -195,6 +184,10 @@ public class HeaderLayoutManagerFixed extends RecyclerView.LayoutManager {
         return mOrientation == VERTICAL;
     }
 
+    public boolean getStackFromEnd() {
+        return mStackFromEnd;
+    }
+
     /**
      * Compatibility support for {@link android.widget.AbsListView#setStackFromBottom(boolean)}
      */
@@ -208,10 +201,6 @@ public class HeaderLayoutManagerFixed extends RecyclerView.LayoutManager {
         }
         mStackFromEnd = stackFromEnd;
         requestLayout();
-    }
-
-    public boolean getStackFromEnd() {
-        return mStackFromEnd;
     }
 
     /**
@@ -1329,6 +1318,185 @@ public class HeaderLayoutManagerFixed extends RecyclerView.LayoutManager {
         return true;
     }
 
+    public int getHeaderIncrementFixer() {
+        return mHeaderIncrementFixer;
+    }
+
+    public void setHeaderIncrementFixer(final View headerIncrementFixer) {
+        headerIncrementFixer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    headerIncrementFixer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    headerIncrementFixer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+                mHeaderIncrementFixer = headerIncrementFixer.getHeight();
+            }
+        });
+
+    }
+
+    OrientationHelper createVerticalOrientationHelper() {
+        return new OrientationHelper() {
+            @Override
+            public int getEndAfterPadding() {
+                return getHeight() - getPaddingBottom();
+            }
+
+            @Override
+            public void offsetChildren(int amount) {
+                offsetChildrenVertical(amount);
+            }
+
+            @Override
+            public int getStartAfterPadding() {
+                return getPaddingTop();
+            }
+
+            @Override
+            public int getDecoratedMeasurement(View view) {
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        view.getLayoutParams();
+                return getDecoratedMeasuredHeight(view) + params.topMargin + params.bottomMargin;
+            }
+
+            @Override
+            public int getDecoratedMeasurementInOther(View view) {
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        view.getLayoutParams();
+                return getDecoratedMeasuredWidth(view) + params.leftMargin + params.rightMargin;
+            }
+
+            @Override
+            public int getDecoratedEnd(View view) {
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        view.getLayoutParams();
+                return getDecoratedBottom(view) + params.bottomMargin;
+            }
+
+            @Override
+            public int getDecoratedStart(View view) {
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        view.getLayoutParams();
+                return getDecoratedTop(view) - params.topMargin;
+            }
+
+            @Override
+            public int getTotalSpace() {
+                return getHeight() - getPaddingTop() - getPaddingBottom();
+            }
+        };
+    }
+
+    OrientationHelper createHorizontalOrientationHelper() {
+        return new OrientationHelper() {
+            @Override
+            public int getEndAfterPadding() {
+                return getWidth() - getPaddingRight();
+            }
+
+            @Override
+            public void offsetChildren(int amount) {
+                offsetChildrenHorizontal(amount);
+            }
+
+            @Override
+            public int getStartAfterPadding() {
+                return getPaddingLeft();
+            }
+
+            @Override
+            public int getDecoratedMeasurement(View view) {
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        view.getLayoutParams();
+                return getDecoratedMeasuredWidth(view) + params.leftMargin + params.rightMargin;
+            }
+
+            @Override
+            public int getDecoratedMeasurementInOther(View view) {
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        view.getLayoutParams();
+                return getDecoratedMeasuredHeight(view) + params.topMargin + params.bottomMargin;
+            }
+
+            @Override
+            public int getDecoratedEnd(View view) {
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        view.getLayoutParams();
+                return getDecoratedRight(view) + params.rightMargin;
+            }
+
+            @Override
+            public int getDecoratedStart(View view) {
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        view.getLayoutParams();
+                return getDecoratedLeft(view) - params.leftMargin;
+            }
+
+            @Override
+            public int getTotalSpace() {
+                return getWidth() - getPaddingLeft() - getPaddingRight();
+            }
+        };
+    }
+
+    /**
+     * Helper interface to offload orientation based decisions
+     */
+    interface OrientationHelper {
+
+        /**
+         * @param view The view element to check
+         * @return The first pixel of the element
+         * @see #getDecoratedEnd(android.view.View)
+         */
+        int getDecoratedStart(View view);
+
+        /**
+         * @param view The view element to check
+         * @return The last pixel of the element
+         * @see #getDecoratedStart(android.view.View)
+         */
+        int getDecoratedEnd(View view);
+
+        /**
+         * @param view The view element to check
+         * @return Total space occupied by this view
+         */
+        int getDecoratedMeasurement(View view);
+
+        /**
+         * @param view The view element to check
+         * @return Total space occupied by this view in the perpendicular orientation to current one
+         */
+        int getDecoratedMeasurementInOther(View view);
+
+        /**
+         * @return The very first pixel we can draw.
+         */
+        int getStartAfterPadding();
+
+        /**
+         * @return The last pixel we can draw
+         */
+        int getEndAfterPadding();
+
+        /**
+         * Offsets all children's positions by the given amount
+         *
+         * @param amount Value to add to each child's layout parameters
+         */
+        void offsetChildren(int amount);
+
+        /**
+         * Returns the total space to layout.
+         *
+         * @return Total space to layout children
+         */
+        int getTotalSpace();
+    }
+
     /**
      * Helper class that keeps temporary state while {LayoutManager} is filling out the empty
      * space.
@@ -1454,200 +1622,26 @@ public class HeaderLayoutManagerFixed extends RecyclerView.LayoutManager {
 
     }
 
-    public int getHeaderIncrementFixer() {
-        return mHeaderIncrementFixer;
-    }
-
-    public void setHeaderIncrementFixer(final View headerIncrementFixer) {
-        headerIncrementFixer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    headerIncrementFixer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                } else {
-                    headerIncrementFixer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                }
-                mHeaderIncrementFixer = headerIncrementFixer.getHeight();
-            }
-        });
-
-    }
-
-    OrientationHelper createVerticalOrientationHelper() {
-        return new OrientationHelper() {
-            @Override
-            public int getEndAfterPadding() {
-                return getHeight() - getPaddingBottom();
-            }
-
-            @Override
-            public void offsetChildren(int amount) {
-                offsetChildrenVertical(amount);
-            }
-
-            @Override
-            public int getStartAfterPadding() {
-                return getPaddingTop();
-            }
-
-            @Override
-            public int getDecoratedMeasurement(View view) {
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
-                        view.getLayoutParams();
-                return getDecoratedMeasuredHeight(view) + params.topMargin + params.bottomMargin;
-            }
-
-            @Override
-            public int getDecoratedMeasurementInOther(View view) {
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
-                        view.getLayoutParams();
-                return getDecoratedMeasuredWidth(view) + params.leftMargin + params.rightMargin;
-            }
-
-            @Override
-            public int getDecoratedEnd(View view) {
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
-                        view.getLayoutParams();
-                return getDecoratedBottom(view) + params.bottomMargin;
-            }
-
-            @Override
-            public int getDecoratedStart(View view) {
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
-                        view.getLayoutParams();
-                return getDecoratedTop(view) - params.topMargin;
-            }
-
-            @Override
-            public int getTotalSpace() {
-                return getHeight() - getPaddingTop() - getPaddingBottom();
-            }
-        };
-    }
-
-    OrientationHelper createHorizontalOrientationHelper() {
-        return new OrientationHelper() {
-            @Override
-            public int getEndAfterPadding() {
-                return getWidth() - getPaddingRight();
-            }
-
-            @Override
-            public void offsetChildren(int amount) {
-                offsetChildrenHorizontal(amount);
-            }
-
-            @Override
-            public int getStartAfterPadding() {
-                return getPaddingLeft();
-            }
-
-            @Override
-            public int getDecoratedMeasurement(View view) {
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
-                        view.getLayoutParams();
-                return getDecoratedMeasuredWidth(view) + params.leftMargin + params.rightMargin;
-            }
-
-            @Override
-            public int getDecoratedMeasurementInOther(View view) {
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
-                        view.getLayoutParams();
-                return getDecoratedMeasuredHeight(view) + params.topMargin + params.bottomMargin;
-            }
-
-            @Override
-            public int getDecoratedEnd(View view) {
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
-                        view.getLayoutParams();
-                return getDecoratedRight(view) + params.rightMargin;
-            }
-
-            @Override
-            public int getDecoratedStart(View view) {
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
-                        view.getLayoutParams();
-                return getDecoratedLeft(view) - params.leftMargin;
-            }
-
-            @Override
-            public int getTotalSpace() {
-                return getWidth() - getPaddingLeft() - getPaddingRight();
-            }
-        };
-    }
-
-
-    /**
-     * Helper interface to offload orientation based decisions
-     */
-    interface OrientationHelper {
-
-        /**
-         * @param view The view element to check
-         * @return The first pixel of the element
-         * @see #getDecoratedEnd(android.view.View)
-         */
-        int getDecoratedStart(View view);
-
-        /**
-         * @param view The view element to check
-         * @return The last pixel of the element
-         * @see #getDecoratedStart(android.view.View)
-         */
-        int getDecoratedEnd(View view);
-
-        /**
-         * @param view The view element to check
-         * @return Total space occupied by this view
-         */
-        int getDecoratedMeasurement(View view);
-
-        /**
-         * @param view The view element to check
-         * @return Total space occupied by this view in the perpendicular orientation to current one
-         */
-        int getDecoratedMeasurementInOther(View view);
-
-        /**
-         * @return The very first pixel we can draw.
-         */
-        int getStartAfterPadding();
-
-        /**
-         * @return The last pixel we can draw
-         */
-        int getEndAfterPadding();
-
-        /**
-         * Offsets all children's positions by the given amount
-         *
-         * @param amount Value to add to each child's layout parameters
-         */
-        void offsetChildren(int amount);
-
-        /**
-         * Returns the total space to layout.
-         *
-         * @return Total space to layout children
-         */
-        int getTotalSpace();
-    }
-
     static class SavedState implements Parcelable {
 
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
         int mOrientation;
-
         int mAnchorPosition;
-
         int mAnchorOffset;
-
         boolean mReverseLayout;
-
         boolean mStackFromEnd;
-
         boolean mAnchorLayoutFromEnd;
-
 
         public SavedState() {
 
@@ -1685,18 +1679,5 @@ public class HeaderLayoutManagerFixed extends RecyclerView.LayoutManager {
             dest.writeInt(mStackFromEnd ? 1 : 0);
             dest.writeInt(mAnchorLayoutFromEnd ? 1 : 0);
         }
-
-        public static final Parcelable.Creator<SavedState> CREATOR
-                = new Parcelable.Creator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            @Override
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
     }
 }

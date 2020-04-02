@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.krs.community.R;
 import com.krs.community.activity.FamilyTreeDetailActivity;
-import com.leinardi.android.speeddial.SpeedDialOverlayLayout;
 
 import org.jetbrains.annotations.NotNull;
 

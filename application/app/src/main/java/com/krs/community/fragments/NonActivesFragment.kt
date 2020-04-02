@@ -67,7 +67,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     private lateinit var tvCount: TextView
     private lateinit var llRoot: LinearLayout
     private var selectedPosition = 0
-
+    private var count = 0
+    private lateinit var ivNotFound: ImageView
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var smartFilterViewModel: SmartFilterViewModel
 
@@ -78,21 +79,22 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
         val root = inflater.inflate(R.layout.fragment_nonactives, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, NonActivesFragment::class.simpleName)
         mApp.facebookAnalytics(context, NonActivesFragment::class.simpleName)
 
-
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
-        roomMemberViewModel.mRoomMemberListener= this
+        roomMemberViewModel.mRoomMemberListener = this
         smartFilterViewModel.mByFilterListener = this
-        AppController.mApplication.start=0
+        AppController.mApplication.start = 0
         selectedItems = SparseBooleanArray()
         animationItemsIndex = SparseBooleanArray()
         actionModeCallback = ActionModeCallback()
 
         rvSearch = root.findViewById(R.id.rv_search)
+        ivNotFound = root.findViewById(R.id.iv_not_found)
+
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
         llRoot = root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""
@@ -143,21 +145,21 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     }
                 }
 
-                if (member.mobile.isEmpty()){
+                if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()){
+                if (member.emailAddress.isEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
@@ -168,7 +170,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
                 applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
-                applyClickEvents(holder, position,member)
+                applyClickEvents(holder, position, member)
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
@@ -215,7 +217,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 Handler().postDelayed({
                     shimmerFrameLayout.stopShimmerAnimation()
                     shimmerFrameLayout.visibility = View.GONE
-                }, 4000)
+                }, 10000)
             }
             Utility.hideKeyboard(activity)
         }
@@ -229,12 +231,13 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         if (response.success) {
             if (response.members.size > 0) {
                 tvCount.visibility = View.VISIBLE
-                tvCount.text = getString(R.string.mem) + " ${response.totalRecords} " + getString(R.string.found)
-
+                count = response.totalRecords
+                tvCount.text = getString(R.string.mem) + " $count " + getString(R.string.found)
+                DashboardActivity.statusCounts.postValue(count.toString())
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
 
-               // rvSearch.layoutManager?.scrollToPosition(selectedPosition)
+                // rvSearch.layoutManager?.scrollToPosition(selectedPosition)
                 //selectedPosition = lstMembers.size - 1
                 DashboardActivity.stop = false
                 if (response.totalRecords <= AppController.mApplication.length) {
@@ -249,6 +252,12 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         } else {
             tvCount.visibility = View.GONE
             DashboardActivity.stop = true
+
+        }
+        if (lstMembers.isEmpty()) {
+            ivNotFound.visibility = View.VISIBLE
+        } else {
+            ivNotFound.visibility = View.GONE
         }
     }
 
@@ -264,6 +273,17 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         val selectedItemPositions = getSelectedItems()
         for (i in selectedItemPositions.indices.reversed()) {
             removeData(selectedItemPositions[i])
+        }
+
+        if (lstMembers.isEmpty()) {
+            DashboardActivity.statusCounts.postValue("0")
+            tvCount.visibility = View.GONE
+            ivNotFound.visibility = View.VISIBLE
+        } else {
+            count -= selectedItemPositions.size
+            tvCount.text = getString(R.string.mem) + " $count " + getString(R.string.found)
+            DashboardActivity.statusCounts.postValue(count.toString())
+            ivNotFound.visibility = View.GONE
         }
         adapter.notifyDataSetChanged()
     }
@@ -281,22 +301,22 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
     override suspend fun getFailure(message: String) {
         Coroutines.main {
-            if(message.contains("success")){
-                Utility.startSweetDialog(activity,SweetAlertDialog.SUCCESS_TYPE,getString(R.string.Approved),"${selectedItems.size()} Profiles approved")
+            if (message.contains("success")) {
+                Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Approved), "${selectedItems.size()} Profiles approved")
                 deleteMessages()
                 clearSelections()
                 actionMode?.finish()
-            }else{
-                Utility.startSweetDialog(activity,SweetAlertDialog.ERROR_TYPE,getString(R.string.Restricted),message)
+            } else {
+                Utility.startSweetDialog(activity, SweetAlertDialog.ERROR_TYPE, getString(R.string.Restricted), message)
             }
         }
     }
 
     override fun loadApi() {
-         if (!DashboardActivity.stop) {
-             AppController.mApplication.start = (lstMembers.size+1)
-             getNonActivesUsers()
-         }
+        if (!DashboardActivity.stop) {
+            AppController.mApplication.start = (lstMembers.size + 1)
+            getNonActivesUsers()
+        }
     }
 
     inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
@@ -318,7 +338,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvCreated: TextView = itemView.findViewById(R.id.tv_created)
     }
 
-    private fun applyClickEvents(holder: MyViewHolder, position: Int,member: Member) {
+    private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {
 
         holder.messageContainer.setOnClickListener { view: View? -> onMessageRowClicked(position) }
         holder.messageContainer.setOnLongClickListener { view: View ->
@@ -338,16 +358,16 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 try {
                     val path = getString(R.string.base_url_original) + "" + member.profilePic
                     Log.d("NonActiveFragment", "path: $path")
-                    openImageDialog(activity as AppCompatActivity,path)
+                    openImageDialog(activity as AppCompatActivity, path)
                 } catch (e: Exception) {
                     e.message
                 }
-            }else{
+            } else {
                 holder.imgProfile.isClickable = false
             }
         }
 
-       }
+    }
 
     fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
@@ -439,7 +459,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             selectedItems.put(pos, true)
             animationItemsIndex.put(pos, true)
         }
-        adapter.notifyItemChanged(pos+ 1)
+        adapter.notifyItemChanged(pos + 1)
     }
 
     private fun toggleSelection(position: Int) {
@@ -513,7 +533,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                                     jsonObject.put(getString(R.string.idList), Ids)
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
 
-                                    Utility.startSweetProgress(activity,getString(R.string.Restricted),getString(R.string.loading))
+                                    Utility.startSweetProgress(activity, getString(R.string.Restricted), getString(R.string.loading))
                                     roomMemberViewModel.changeStatus(updated)
                                 }
                                 .setCancelClickListener {

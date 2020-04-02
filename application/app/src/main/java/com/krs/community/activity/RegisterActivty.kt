@@ -47,8 +47,6 @@ import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
 import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.withContext
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -100,10 +98,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 }
             }
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
     }
 
     private fun setNoInternetLayout() {
@@ -158,13 +152,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
             binding.btnRegister.setOnClickListener {
                 Utility.startSweetProgress(this, getString(R.string.RegisterFamily), resources.getString(R.string.loading))
-                registerViewModel.getUserRegistration()
+                registerViewModel.getUserRegistration(isLogin)
             }
             binding.txtAlready.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
             binding.txtHowRegister.setOnClickListener { registerViewModel.onHowRegisterClicked(this) }
             binding.imgCancel.visibility = View.GONE
             binding.imgCancel.setOnClickListener {
                 binding.imgProfile.setImageResource(R.drawable.man_reg)
+                resultUri = null
                 binding.imgCancel.visibility = View.GONE
             }
 
@@ -172,15 +167,15 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 dashboardViewModel.getMasterUpdate()
             }
 
-            binding. spinnerCountries.setOnItemClickListener { pos->
-                registerViewModel.countryCode =CountryData.countryAreaCodes[pos]
+            binding.spinnerCountries.setOnItemClickListener { pos ->
+                registerViewModel.countryCode = CountryData.countryAreaCodes[pos]
             }
 
             binding.spinnerStates.setOnItemClickListener {
                 Coroutines.main {
-                    val stateId=profileDetailViewModel.getstateIdByName(binding.spinnerStates.text.toString())
+                    val stateId = profileDetailViewModel.getstateIdByName(binding.spinnerStates.text.toString())
                     val lstCity = profileDetailViewModel.getCityNamebyState(stateId)
-                    registerViewModel.stateId =stateId
+                    registerViewModel.stateId = stateId
                     binding.spinnerCities.clear()
                     registerViewModel.cityId = null
                     binding.spinnerCities.setItems(lstCity.toTypedArray())
@@ -230,7 +225,20 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 registerViewModel.gender = lstGender[position]
             }
             binding.imgProfile.setOnClickListener { v ->
-                pickFromGallery(this)
+
+                SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                        .setTitleText("Register Photo")
+                        .setContentText("Do you have good internet speed?")
+                        .setConfirmText("Upload")
+                        .setCancelText("Later")
+                        .setCustomImage(R.drawable.icon_ghanchi)
+                        .showCancelButton(true)
+                        .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                            sweetAlertDialog.dismissWithAnimation()
+                            pickFromGallery(this)
+                        }
+                        .show()
+
             }
             setDropDownList()
         }
@@ -258,7 +266,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode==PICK_GALLERY_REQUEST){
+        if (requestCode == PICK_GALLERY_REQUEST) {
             pickFromGallery(this)
         }
     }
@@ -266,74 +274,83 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     private fun ScrollView.scrollToBottom() {
         val lastChild = getChildAt(childCount - 1)
         val bottom = lastChild.bottom + paddingBottom
-        val delta = bottom - (scrollY+ height)
+        val delta = bottom - (scrollY + height)
         smoothScrollBy(0, delta)
     }
 
     override fun getRegisterFailure(message: String?, filed: Int) {
         Utility.hideSweetProgress()
-        if(message.equals(getString(R.string.fname))){
+        if (message!!.contains(getString(R.string.fname), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.enter_firstname), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.lastnameId))){
+        if (message.contains(getString(R.string.lastnameId), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.enter_lastname), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.emailstr))){
-            root_layout.snackbar(getString(R.string.enter_email), Snackbar.LENGTH_LONG)
+        if (message.contains(getString(R.string.emailstr), ignoreCase = true)) {
+            if (filed == 0) {
+                root_layout.snackbar(message, Snackbar.LENGTH_LONG)
+            } else {
+                root_layout.snackbar(getString(R.string.enter_email), Snackbar.LENGTH_LONG)
+            }
             return
         }
-        if(message.equals(getString(R.string.genderstr))){
+        if (message.contains(getString(R.string.genderstr), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.enter_gender), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.mobilestr))){
-            root_layout.snackbar(getString(R.string.enter_mobile), Snackbar.LENGTH_LONG)
+        if (message.contains(getString(R.string.mobilestr), ignoreCase = true)) {
+            if (filed == 0) {
+                root_layout.snackbar(message, Snackbar.LENGTH_LONG)
+            } else {
+                root_layout.snackbar(getString(R.string.enter_mobile), Snackbar.LENGTH_LONG)
+            }
+
             return
         }
-        if(message.equals(getString(R.string.pass))){
+        if (message.equals(getString(R.string.pass), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.enter_password), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.passsecond))){
+        if (message.equals(getString(R.string.passsecond), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.cpass))){
+        if (message.equals(getString(R.string.cpass), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.confirm_password), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.cpasssecond))){
+        if (message.equals(getString(R.string.cpasssecond), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.passequals))){
+        if (message.contains(getString(R.string.passequals), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.password_mismatch), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.addressstr))){
+        if (message.contains(getString(R.string.addressstr), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.enter_home_address), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.stateis))){
+        if (message.contains(getString(R.string.stateis), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.select_state), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.cityid))){
+        if (message.contains(getString(R.string.cityid), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.select_city), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.subcommid))){
+        if (message.contains(getString(R.string.subcommid), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.select_sub_comm), Snackbar.LENGTH_LONG)
             return
         }
-        if(message.equals(getString(R.string.localcommid))){
+        if (message.contains(getString(R.string.localcommid), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.select_local), Snackbar.LENGTH_LONG)
             return
         }
 
-        when(filed){
+        when (filed) {
             1 -> binding.edtHeadName.requestFocus()
             2 -> binding.spinnerLname.requestFocus()
             3 -> binding.edtEmailId.requestFocus()
@@ -350,10 +367,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         }
     }
 
+
     override fun getRegisterSuccess(data: RegisterModel) {
         Utility.hideSweetProgress()
         Log.d(TAG, "onRegisterButtonClick")
-        if(resultUri!=null){
+        if (resultUri != null) {
             if (isNetworkConnected(this)) {
                 try {
                     val uploadImage = File(resultUri?.path.toString())
@@ -363,13 +381,17 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     e.printStackTrace()
                 }
             }
-        }else{
+        } else {
             successResponse(data.message)
         }
     }
 
     private fun successResponse(message: String) {
         Utility.startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Register), message)
+        clearAll()
+    }
+
+    private fun clearAll() {
         binding.edtHeadName.text.clear()
         binding.edtAddress.text.clear()
         binding.edtCpassword.text.clear()
@@ -386,25 +408,21 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         binding.spinnerLocal.setText("Select Local Community")
     }
 
-    override fun getResult(profile: JsonObject) {
+    override fun onUploadSuccess(jsonObject: JsonObject) {
         Utility.hideSweetProgress()
         successResponse(getString(R.string.RequestAdmin))
     }
 
-    override suspend fun onFailure(message: String) {
+    override suspend fun onUploadFail(message: String) {
         Utility.hideSweetProgress()
-        root_layout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
+        clearAll()
+        successResponse(getString(R.string.RequestAdmin))
+        root_layout.snackbar("Photo not uploaded because of poor internet speed!", Snackbar.LENGTH_INDEFINITE)
     }
 
     override suspend fun getFailure(message: String) {
-
-        withContext(Main) {
-            if (Utility.dialog != null && Utility.dialog.isShowing) {
-                Utility.dialog.dismissWithAnimation()
-            }
-            Utility.hideSweetProgress()
-            root_layout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
-        }
+        Utility.hideSweetProgress()
+        root_layout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
     }
 
     override fun onDestroy() {
@@ -426,6 +444,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             } else if (requestCode == REQUEST_CROP) {
                 resultUri = getOutput(data!!)
                 try {
+                    binding.imgCancel.visibility = View.VISIBLE
                     Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
                 } catch (e: Exception) {
                     e.message
@@ -437,10 +456,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         }
     }
 
-   override fun onCropFinish(result: UCropFragment.UCropResult) {
+    override fun onCropFinish(result: UCropFragment.UCropResult) {
         when (result.mResultCode) {
-            RESULT_OK -> handleCropResult(result.mResultData,this,binding.imgProfile)
-            RESULT_ERROR -> handleCropError(result.mResultData,this)
+            RESULT_OK -> handleCropResult(result.mResultData, this, binding.imgProfile)
+            RESULT_ERROR -> handleCropError(result.mResultData, this)
         }
     }
 

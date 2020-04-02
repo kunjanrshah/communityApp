@@ -2,8 +2,9 @@ package com.krs.community.fragments
 
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
 import com.krs.community.R
@@ -34,49 +36,58 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
     private lateinit var loginMem: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance()
-    var numberOfLines=5
+    var numberOfLines = 5
 
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_matrimony_details, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
         mApp.facebookAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
         member = arguments?.getSerializable(getString(R.string.member)) as Member
 
-        val loginMember= Guru.getString(getString(R.string.loginMember),"")
-        loginMem= Gson().fromJson(loginMember,Member::class.java)
-        if(member.id == loginMem.id || member.headId == loginMem.id){
-        binding.chkInterested.isClickable=true
-        binding.chkGlass.isClickable=true
-        binding.chkIsMangal.isClickable=true
-        binding.chkIsShani.isClickable=true
-        binding.edtAbout.isFocusable=true
-        binding.edtFbUrl.isFocusable=true
-        binding.edtBplace.isFocusable=true
-        binding.edtHobby.isFocusable=true
-        binding.edtExpectation.isFocusable=true
-        binding.edtWeight.isFocusable=true
-        binding.edtHeight.isFocusable=true
-        }else{
-            binding.chkInterested.isClickable=false
-            binding.chkGlass.isClickable=false
-            binding.chkIsMangal.isClickable=false
-            binding.chkIsShani.isClickable=false
-            binding.edtAbout.isFocusable=false
-            binding.edtFbUrl.isFocusable=false
-            binding.edtBplace.isFocusable=false
-            binding.edtHobby.isFocusable=false
-            binding.edtExpectation.isFocusable=false
-            binding.edtWeight.isFocusable=false
-            binding.edtHeight.isFocusable=false
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        loginMem = Gson().fromJson(loginMember, Member::class.java)
+        if (member.id == loginMem.id || member.headId == loginMem.id) {
+            binding.chkInterested.isClickable = true
+            binding.chkGlass.isClickable = true
+            binding.chkIsMangal.isClickable = true
+            binding.chkIsShani.isClickable = true
+            binding.edtAbout.isFocusable = true
+            binding.edtFbUrl.isFocusable = true
+            binding.edtBplace.isFocusable = true
+            binding.edtHobby.isFocusable = true
+            binding.edtExpectation.isFocusable = true
+            binding.edtWeight.isFocusable = true
+            binding.edtHeight.isFocusable = true
+        } else {
+            binding.chkInterested.isClickable = false
+            binding.chkGlass.isClickable = false
+            binding.chkIsMangal.isClickable = false
+            binding.chkIsShani.isClickable = false
+            binding.edtAbout.isFocusable = false
+            binding.edtFbUrl.isFocusable = false
+            binding.edtFbUrl.movementMethod = LinkMovementMethod.getInstance()
+            binding.edtBplace.isFocusable = false
+            binding.edtHobby.isFocusable = false
+            binding.edtExpectation.isFocusable = false
+            binding.edtWeight.isFocusable = false
+            binding.edtHeight.isFocusable = false
         }
 
         binding.edtAbout.setText(member.aboutMe)
-        binding.edtFbUrl.setText(member.facebookProfile)
+        if (!member.facebookProfile.isNullOrEmpty()) {
+            val spannable: Spannable = SpannableString(member.facebookProfile)
+            Linkify.addLinks(spannable, Linkify.WEB_URLS)
+            val text: CharSequence = TextUtils.concat(spannable, "\u200B")
+            binding.edtFbUrl.setText(text)
+        } else {
+            binding.edtFbUrl.setText(member.facebookProfile)
+        }
+
         binding.txtBtime.text = member.birthTime
         binding.edtBplace.setText(member.birthPlace)
         binding.edtHobby.setText(member.hobby)
@@ -87,14 +98,31 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         binding.chkIsShani.isChecked = member.isShani.equals("1")
         binding.chkGlass.isChecked = member.isSpect.equals("1")
         binding.chkInterested.isChecked = member.matrimony.toString().toLowerCase().equals("yes")
+        binding.chkInterested.setOnClickListener {
 
+            SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText("Matrimony")
+                    .setContentText("Are you interested for Matrimony?")
+                    .setConfirmText("Interested")
+                    .setCancelText("No,Please")
+                    .setCustomImage(R.drawable.icon_ghanchi)
+                    .showCancelButton(true)
+                    .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                        sweetAlertDialog.dismissWithAnimation()
+                        binding.chkInterested.isChecked = true
+                    }.setCancelClickListener {
+                        it.dismissWithAnimation()
+                        binding.chkInterested.isChecked = false
+                    }
+                    .show()
+        }
         binding.txtBtime.setOnClickListener {
-            if(member.id == loginMem.id || member.headId == loginMem.id){
+            if (member.id == loginMem.id || member.headId == loginMem.id) {
                 NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.supportFragmentManager, getString(R.string.bottomSheet))
             }
         }
 
-        binding.edtAbout.addTextChangedListener(object: TextWatcher {
+        binding.edtAbout.addTextChangedListener(object : TextWatcher {
             private var text: String? = null
             override fun afterTextChanged(s: Editable?) {
 
@@ -119,58 +147,58 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
             }
             false
         })
-        
+
         return binding.root
     }
 
-    fun getSaveData(jsonObject:JSONObject){
-        try{
-            jsonObject.put(getString(R.string.about_me),binding.edtAbout.text.trim())
-            jsonObject.put(getString(R.string.facebook_profile),binding.edtFbUrl.text.trim())
-            jsonObject.put(getString(R.string.birth_time),binding.txtBtime.text.trim())
-            jsonObject.put(getString(R.string.birth_place),binding.edtBplace.text.trim())
-            jsonObject.put(getString(R.string.hobby),binding.edtHobby.text.trim())
-            jsonObject.put(getString(R.string.expectation),binding.edtExpectation.text.trim())
-            jsonObject.put(getString(R.string.weight),binding.edtWeight.text.trim())
-            jsonObject.put(getString(R.string.height),binding.edtHeight.text.trim())
+    fun getSaveData(jsonObject: JSONObject) {
+        try {
+            jsonObject.put(getString(R.string.about_me), binding.edtAbout.text.trim())
+            jsonObject.put(getString(R.string.facebook_profile), binding.edtFbUrl.text.trim())
+            jsonObject.put(getString(R.string.birth_time), binding.txtBtime.text.trim())
+            jsonObject.put(getString(R.string.birth_place), binding.edtBplace.text.trim())
+            jsonObject.put(getString(R.string.hobby), binding.edtHobby.text.trim())
+            jsonObject.put(getString(R.string.expectation), binding.edtExpectation.text.trim())
+            jsonObject.put(getString(R.string.weight), binding.edtWeight.text.trim())
+            jsonObject.put(getString(R.string.height), binding.edtHeight.text.trim())
 
-            if(binding.chkInterested.isChecked){
-                jsonObject.put(getString(R.string.matrimony),"YES")
-            }else{
-                jsonObject.put(getString(R.string.matrimony),"NO")
+            if (binding.chkInterested.isChecked) {
+                jsonObject.put(getString(R.string.matrimony), "YES")
+            } else {
+                jsonObject.put(getString(R.string.matrimony), "NO")
             }
 
-            if(binding.chkGlass.isChecked){
-                jsonObject.put(getString(R.string.is_spect),1)
-            }else{
-                jsonObject.put(getString(R.string.is_spect),0)
+            if (binding.chkGlass.isChecked) {
+                jsonObject.put(getString(R.string.is_spect), 1)
+            } else {
+                jsonObject.put(getString(R.string.is_spect), 0)
             }
 
-            if(binding.chkIsMangal.isChecked){
-                jsonObject.put(getString(R.string.is_mangal),1)
-            }else{
-                jsonObject.put(getString(R.string.is_mangal),0)
+            if (binding.chkIsMangal.isChecked) {
+                jsonObject.put(getString(R.string.is_mangal), 1)
+            } else {
+                jsonObject.put(getString(R.string.is_mangal), 0)
             }
 
-            if(binding.chkIsShani.isChecked){
-                jsonObject.put(getString(R.string.is_shani),1)
-            }else{
-                jsonObject.put(getString(R.string.is_shani),0)
+            if (binding.chkIsShani.isChecked) {
+                jsonObject.put(getString(R.string.is_shani), 1)
+            } else {
+                jsonObject.put(getString(R.string.is_shani), 0)
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private val mListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
 
-        var hour:String=hourOfDay.toString()
-        var min:String=minute.toString()
-        if(hour.length==1){
-            hour="0$hour"
+        var hour: String = hourOfDay.toString()
+        var min: String = minute.toString()
+        if (hour.length == 1) {
+            hour = "0$hour"
         }
-        if(min.length==1){
-            min="0$min"
+        if (min.length == 1) {
+            min = "0$min"
         }
 
         binding.txtBtime.text = "$hour:$min"

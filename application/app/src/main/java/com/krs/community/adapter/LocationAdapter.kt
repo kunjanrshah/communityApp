@@ -95,7 +95,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
 
         viewHolder.llHome.setOnClickListener { v: View? ->
 
-            if(!member.homeLat.isNullOrEmpty() &&  !member.homeLng.isNullOrEmpty()){
+            if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
                 Utility.showDirections(mContext as Activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}'s Home")
             } else {
                 Toast.makeText(mContext, "Home location not found!", Toast.LENGTH_LONG).show()
@@ -104,7 +104,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
 
         viewHolder.llOffice.setOnClickListener { v: View? ->
 
-            if(!member.officeLat.isNullOrEmpty() &&  !member.officeLng.isNullOrEmpty()){
+            if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
                 Utility.showDirections(mContext as Activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Office")
             } else {
                 Toast.makeText(mContext, "Office location not found!", Toast.LENGTH_LONG).show()
@@ -151,11 +151,11 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
 
         if (cur_lat.value != null && cur_lng.value != null && !member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
             val homeDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.homeLat.toDouble(), member.homeLng.toDouble()) / 1000
-            tvHome.text= String.format("%.2f KM", homeDist)
+            tvHome.text = String.format("%.2f KM", homeDist)
         }
         if (cur_lat.value != null && cur_lng.value != null && !member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
             val officeDist = EasyWayLocation.calculateDistance(cur_lat.value!!.toDouble(), cur_lng.value!!.toDouble(), member.officeLat.toDouble(), member.officeLng.toDouble()) / 1000
-            tvOffice.text= String.format("%.2f KM", officeDist)
+            tvOffice.text = String.format("%.2f KM", officeDist)
         }
     }
 

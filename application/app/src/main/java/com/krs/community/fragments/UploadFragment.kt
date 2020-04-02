@@ -48,7 +48,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class UploadFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner {
+class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner {
     override val kodein by kodein()
 
     private lateinit var btnupload: MovableFloatingActionButton
@@ -99,17 +99,17 @@ class UploadFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDial
         pullToRefreshView.setOnRefreshListener {
 
             pullToRefreshView.postDelayed(Runnable {
-                pullToRefreshView.setRefreshing(false);
+                pullToRefreshView.setRefreshing(false)
             }, 5000)
 
             Coroutines.io {
                 Coroutines.main {
                     Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchinguploadedfiles))
                 }
-                val jsonObject= JSONObject()
+                val jsonObject = JSONObject()
                 jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
 
-                val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                 documentsListModel.getUploadedFiles(updated)
             }
         }
@@ -168,10 +168,10 @@ class UploadFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDial
             Coroutines.main {
                 Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchingfiles))
             }
-            val jsonObject= JSONObject()
+            val jsonObject = JSONObject()
             jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
 
-            val updated=  JsonParser().parse(jsonObject.toString()) as JsonObject
+            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             documentsListModel.getUploadedFiles(updated)
         }
 
@@ -222,7 +222,7 @@ class UploadFragment() : Fragment(), KodeinAware, ByDocumentListener, UploadDial
 
         SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText(getString(R.string.uploadfile))
-                .setContentText(getString(R.string.doyouupload)+"$uploadedFileName?")
+                .setContentText(getString(R.string.doyouupload) + "$uploadedFileName?")
                 .setConfirmText(getString(R.string.uploadnow))
                 .setConfirmClickListener {
                     it.dismissWithAnimation()

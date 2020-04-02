@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -27,26 +27,26 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_created"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_weight="1"
-                    android:hint="@string/profile_created_date"
-                    android:gravity="center_vertical"
-                    android:textSize="14sp"
                     android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical"
+                    android:hint="@string/profile_created_date"
+                    android:paddingLeft="10dp"
                     android:singleLine="true"
-                    android:paddingLeft="10dp" />
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/img_created_close"
-                    android:layout_marginRight="15dp"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:background="@drawable/cancel_popup_gray"  />
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/cancel_popup_gray" />
 
             </LinearLayout>
 
@@ -56,74 +56,76 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_updated"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_weight="1"
-                    android:hint="@string/profile_updated_date"
-                    android:gravity="center_vertical"
-                    android:textSize="14sp"
                     android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical"
+                    android:hint="@string/profile_updated_date"
+                    android:paddingLeft="10dp"
                     android:singleLine="true"
-                    android:paddingLeft="10dp" />
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/img_updated_close"
-                    android:layout_marginRight="15dp"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:background="@drawable/cancel_popup_gray"  />
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/cancel_popup_gray" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:textSize="14sp"
-                android:fontFamily="@font/montserrat_regular"
+                android:fontFamily="@font/montserrat_medium"
                 android:text="@string/profile_updatation_percentage"
-                android:layout_height="wrap_content" />
+                android:textSize="14sp" />
 
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
                 android:id="@+id/rangeUpdationBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:corner_radius="10"
-                app:min_value="0"
-                app:max_value="100"
-                app:gap="10"
+                android:layout_marginTop="5dp"
                 app:bar_color="#C0C0C0"
                 app:bar_highlight_color="#A9A9A9"
+                app:corner_radius="10"
+                app:data_type="_integer"
+                app:gap="10"
                 app:left_thumb_color="#808080"
-                app:right_thumb_color="#808080"
                 app:left_thumb_color_pressed="#696969"
-                app:right_thumb_color_pressed="#696969"
-                app:data_type="_integer"/>
+                app:max_value="100"
+                app:min_value="0"
+                app:right_thumb_color="#808080"
+                app:right_thumb_color_pressed="#696969" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/textMin1"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="0%"
-                    android:textSize="16sp"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:layout_height="wrap_content" />
+                    android:text="0%"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/textMax1"
                     android:layout_width="100dp"
-                    android:text="100%"
-                    android:gravity="right"
-                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
-                    android:layout_height="wrap_content" />
+                    android:gravity="right"
+                    android:text="100%"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 

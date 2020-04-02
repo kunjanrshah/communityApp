@@ -32,8 +32,6 @@ import com.krs.community.utils.Utility;
 
 import java.lang.reflect.Method;
 
-;
-
 
 public class FamilyTreeListActivity extends AppCompatActivity {
 
@@ -43,7 +41,7 @@ public class FamilyTreeListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mNetworkReceiver = new NetworkChangeReceiver();
 
@@ -52,7 +50,7 @@ public class FamilyTreeListActivity extends AppCompatActivity {
 
         if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
             setScreenLayout();
-        }else{
+        } else {
             setNoInternetLayout();
         }
 
@@ -63,24 +61,27 @@ public class FamilyTreeListActivity extends AppCompatActivity {
 
 
     }
+
     private void unregisterNetworkBroadcastForNougat() {
-        try{
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 unregisterReceiver(mNetworkReceiver);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 unregisterReceiver(mNetworkReceiver);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterNetworkBroadcastForNougat();
     }
-    private void setNoInternetLayout(){
+
+    private void setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary));
@@ -92,14 +93,15 @@ public class FamilyTreeListActivity extends AppCompatActivity {
         anim.setRepeatCount(Animation.INFINITE);
         AppCompatImageView imageView = findViewById(R.id.no_internet_image);
         imageView.setAnimation(anim);
-        AppCompatButton retryButton=findViewById(R.id.retry_button);
+        AppCompatButton retryButton = findViewById(R.id.retry_button);
         retryButton.setOnClickListener(v -> {
             if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
                 setScreenLayout();
             }
         });
     }
-    private void setScreenLayout(){
+
+    private void setScreenLayout() {
 
         if (ConnectionLiveData.Companion.isNetworkConnected(this)) {
 
@@ -153,12 +155,12 @@ public class FamilyTreeListActivity extends AppCompatActivity {
             for (int i = 0; i < 10; i++) {
                 View view = LayoutInflater.from(this).inflate(R.layout.row_list_tree, ll_parent, false);
 
-                ImageView iv_profile=view.findViewById(R.id.iv_profile);
-                TextView tv_name=view.findViewById(R.id.tv_name);
-                TextView tv_relation=view.findViewById(R.id.tv_relation);
-                TextView tv_year=view.findViewById(R.id.tv_year);
+                ImageView iv_profile = view.findViewById(R.id.iv_profile);
+                TextView tv_name = view.findViewById(R.id.tv_name);
+                TextView tv_relation = view.findViewById(R.id.tv_relation);
+                TextView tv_year = view.findViewById(R.id.tv_year);
 
-                ImageView iv_menu=view.findViewById(R.id.iv_menu);
+                ImageView iv_menu = view.findViewById(R.id.iv_menu);
                 iv_menu.setOnClickListener(v -> {
                     try {
                         PopupMenu popup = new PopupMenu(this, v);
@@ -190,7 +192,7 @@ public class FamilyTreeListActivity extends AppCompatActivity {
 
                 view.setOnClickListener(v -> {
 
-                    Intent mIntent=new Intent(FamilyTreeListActivity.this,FamilyTreeDetailActivity.class);
+                    Intent mIntent = new Intent(FamilyTreeListActivity.this, FamilyTreeDetailActivity.class);
                     startActivity(mIntent);
 
                 });
@@ -200,6 +202,7 @@ public class FamilyTreeListActivity extends AppCompatActivity {
 
 
     }
+
     private void registerNetworkBroadcastForNougat() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -208,17 +211,18 @@ public class FamilyTreeListActivity extends AppCompatActivity {
             registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
     }
-    class NetworkChangeReceiver extends BroadcastReceiver{
+
+    class NetworkChangeReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            try{
+            try {
                 if (ConnectionLiveData.Companion.isNetworkConnected(context)) {
                     setScreenLayout();
-                }else{
+                } else {
                     setNoInternetLayout();
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

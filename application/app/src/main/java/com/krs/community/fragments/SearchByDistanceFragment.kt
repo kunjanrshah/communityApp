@@ -36,7 +36,10 @@ import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
-import com.krs.community.activity.*
+import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.FamilyTreeListActivity
+import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
@@ -61,31 +64,29 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Listener, LocationData.AddressCallBack,ParallaxRecyclerAdapter.OnLoadMore,RoomMemberListener, LocationAdapter.SetLocationListner  {
+class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Listener, LocationData.AddressCallBack, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener, LocationAdapter.SetLocationListner {
 
     lateinit var recyclerView: RecyclerView
-
-    private val lstMembers=ArrayList<Member>()
+    private lateinit var imgMap: ImageView
+    private val lstMembers = ArrayList<Member>()
     override val kodein by kodein()
-    var TAG=SearchByDistanceFragment::class.java.simpleName
+    var TAG = SearchByDistanceFragment::class.java.simpleName
     private lateinit var mShimmerViewContainer: ShimmerFrameLayout
     private lateinit var llRoot: FrameLayout
-    private lateinit var imgMap: ImageView
-    private lateinit var rbtnHome:RadioButton
-    private lateinit var rbtnOffice:RadioButton
-    private lateinit var rbtnUser:RadioButton
-    private lateinit var rbtnAll:RadioButton
-    private lateinit var edtKm:EditText
-    private lateinit var nearBy:String
-    private lateinit var tvRecords:TextView
-    private lateinit var img_map:ImageView
+    private lateinit var rbtnHome: RadioButton
+    private lateinit var rbtnOffice: RadioButton
+    private lateinit var rbtnUser: RadioButton
+    private lateinit var rbtnAll: RadioButton
+    private lateinit var edtKm: EditText
+    private lateinit var nearBy: String
+    private lateinit var tvRecords: TextView
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var getLocationDetail: GetLocationDetail
     private var currLat = MutableLiveData<Double>()
     private var currLng = MutableLiveData<Double>()
-    private var isCallAPI=false
+    private var isCallAPI = false
     private var selectedPosition = 0
-    private lateinit var distance:ByDistanceModel
+    private lateinit var distance: ByDistanceModel
 
     internal lateinit var mByDistanceViewModel: ByDistanceViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
@@ -94,7 +95,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     private val byDistanceViewModelFactory: ByDistanceViewModelFactory by instance()
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
     private val roomMemberFactory: RoomMemberViewModelFactory by instance()
-    var memberId:String?=null
+    var memberId: String? = null
 
     private var byDistanceAdapter: ParallaxRecyclerAdapter<Member>? = null
 
@@ -106,35 +107,33 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         }
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, SearchByDistanceFragment::class.simpleName)
         mApp.facebookAnalytics(context, SearchByDistanceFragment::class.simpleName)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         mByDistanceViewModel = ViewModelProvider(this, byDistanceViewModelFactory).get(ByDistanceViewModel::class.java)
-        mByDistanceViewModel.mByDistanceListener =this
-        roomMemberViewModel.mRoomMemberListener= this
+        mByDistanceViewModel.mByDistanceListener = this
+        roomMemberViewModel.mRoomMemberListener = this
 
         mShimmerViewContainer = root.findViewById(R.id.shimmer_view_container)
-        llRoot= root.findViewById(R.id.ll_root)
-        recyclerView= root.findViewById(R.id.recycler_view)
-        imgMap= root.findViewById(R.id.img_map)
-
+        llRoot = root.findViewById(R.id.ll_root)
+        recyclerView = root.findViewById(R.id.recycler_view)
+        imgMap = root.findViewById(R.id.iv_map)
         recyclerView.setHasFixedSize(true)
         val mLayoutManager = LinearLayoutManager(getApplicationContext())
         recyclerView.layoutManager = mLayoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
 
         createCardAdapter(recyclerView)
-        imgMap.visibility=View.VISIBLE
         getLocationDetail = GetLocationDetail(this, activity)
         val request = LocationRequest()
         request.interval = Utility.INTERVAL
         request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         easyWayLocation = EasyWayLocation(activity, request, false, this)
-        AppController.mApplication.start=0
-        DashboardActivity.stop=false
-        isCallAPI=true
+        AppController.mApplication.start = 0
+        DashboardActivity.stop = false
+        isCallAPI = true
         callDistanceAPI()
         currLat.postValue(DashboardActivity.cur_lat.value)
         currLng.postValue(DashboardActivity.cur_lng.value)
@@ -173,8 +172,15 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         rbtnOffice = header.findViewById(R.id.rbtnOffice)
         rbtnUser = header.findViewById(R.id.rbtnUser)
         rbtnAll = header.findViewById(R.id.rbtnAll)
-        tvRecords= header.findViewById(R.id.tv_total)
-        img_map= header.findViewById(R.id.img_map)
+        tvRecords = header.findViewById(R.id.tv_total)
+        val imgHeaderMap = header.findViewById<ImageView>(R.id.img_map)
+        imgHeaderMap.setOnClickListener {
+            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
+            /* val intent = Intent(activity, MapTrackingActivity::class.java)
+             intent.putExtra("head_id", memberId)
+             startActivity(intent)
+             Utility.fade(activity)*/
+        }
 
         rbtnHome.setOnClickListener { v ->
             rbtnHome.isChecked = true
@@ -211,27 +217,17 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             rbtnAll.isChecked = true
         }
 
-        img_map.setOnClickListener { v ->
-            /*val intent = Intent(activity, MapviewActivity::class.java)
-            intent.putExtra("image", "imageUrl")
-            startActivity(intent)*/
-
-            val intent = Intent(activity, MapTrackingActivity::class.java)
-            intent.putExtra("head_id", memberId)
-            startActivity(intent)
-            Utility.fade(activity)
-        }
 
         val imgCancel = header.findViewById<ImageView>(R.id.img_cancel)
         imgCancel.setOnClickListener {
-            Utility.movetoFragment(activity,DashboardFragment())
+            Utility.movetoFragment(activity, DashboardFragment())
         }
 
         edtKm = header.findViewById(R.id.edtKm)
         edtKm.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                isCallAPI=true
-                DashboardActivity.stop=false
+                isCallAPI = true
+                DashboardActivity.stop = false
                 callDistanceAPI()
             }
             false
@@ -239,8 +235,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
         val btnSearch = header.findViewById<Button>(R.id.btnSearch)
         btnSearch.setOnClickListener { v ->
-            isCallAPI=true
-            DashboardActivity.stop=false
+            isCallAPI = true
+            DashboardActivity.stop = false
             callDistanceAPI()
         }
 
@@ -251,31 +247,31 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 viewHolder.tvName.text = member.firstName
 
                 mByDistanceViewModel.getLastNamebyId(member.subCastId).observeForever {
-                    viewHolder.tvName.text = member.firstName+" "+it
+                    viewHolder.tvName.text = member.firstName + " " + it
                 }
 
                 mByDistanceViewModel.getCityNamebyId(member.cityId).observeForever {
-                    viewHolder.tvArea.text = member.area+" "+it
+                    viewHolder.tvArea.text = member.area + " " + it
                 }
 
                 /*viewHolder.tvEmail.text = member.emailAddress
                 viewHolder.tvMobile.text = member.mobile*/
 
-                if (member.mobile.isEmpty()){
+                if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()){
+                if (member.emailAddress.isEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
-                }else{
+                } else {
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
@@ -287,9 +283,9 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
                 }
 
-                if(member.headId.equals("0")){
+                if (member.headId.equals("0")) {
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
-                }else{
+                } else {
                     viewHolder.tvRole.text = resources.getString(R.string.Member)
                 }
 
@@ -300,24 +296,24 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                         if (it == 0) {
                             val profileDetailFactory: ProfileDetailViewModelFactory by instance()
                             val profileDetailViewModel = ViewModelProvider(activity as AppCompatActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
-                            createMemberPDF(activity as AppCompatActivity, member,profileDetailViewModel)
+                            createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post {
                                 Utility.startSweetProgress(activity, "Exporting ${member.firstName}'s Details", getString(R.string.please_wait))
                             }
                             /* Handler().postDelayed({
                                  Utility.hideSweetProgress()
                              }, 5000)*/
-                        }else if(it == 1) {
+                        } else if (it == 1) {
                             Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                             return@listener
                             val intent: Intent = Intent(activity as AppCompatActivity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
 
                         } else if (it == 2) {
-                            if(!member.mobile.isNullOrEmpty()){
+                            if (!member.mobile.isNullOrEmpty()) {
                                 val toNumber = "+91" + member.mobile
                                 val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity,toNumber,text)
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, toNumber, text)
                             }
 
                         } else if (it == 3) {
@@ -328,7 +324,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                             startActivity(intent)
                             Utility.fade(activity as AppCompatActivity)
                         } else if (it == 4) {
-                            shareDetails(activity as AppCompatActivity,viewHolder.tvName.text.toString(), member.mobile.toString(),member.emailAddress.toString(),viewHolder.tvArea.text.toString(), member.address.toString())
+                            shareDetails(activity as AppCompatActivity, viewHolder.tvName.text.toString(), member.mobile.toString(), member.emailAddress.toString(), viewHolder.tvArea.text.toString(), member.address.toString())
                         } else if (it == 5) {
                             val adapter = LocationAdapter(activity as AppCompatActivity, member)
                             val setLocationDialog = DialogPlus.newDialog(activity as AppCompatActivity)
@@ -349,23 +345,23 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                     viewHolder.boomMenuButton.boom()
                 }
 
-                viewHolder.tvHome.visibility=View.GONE
-                viewHolder.llHome.visibility=View.GONE
-                viewHolder.tvOffice.visibility=View.GONE
-                viewHolder.llOffice.visibility=View.GONE
-                viewHolder.tvUser.visibility=View.GONE
-                viewHolder.llUser.visibility=View.GONE
+                viewHolder.tvHome.visibility = View.GONE
+                viewHolder.llHome.visibility = View.GONE
+                viewHolder.tvOffice.visibility = View.GONE
+                viewHolder.llOffice.visibility = View.GONE
+                viewHolder.tvUser.visibility = View.GONE
+                viewHolder.llUser.visibility = View.GONE
 
-                if(nearBy.equals("Home")){
-                    viewHolder.llHome.visibility=View.VISIBLE
-                    viewHolder.tvHome.visibility=View.VISIBLE
-                    viewHolder.tvHome.text=getString(R.string.homeDistance)
-                    viewHolder.tvHomeDist.text=getDistance(member.distance)
-                }else if(nearBy.equals("Office")){
-                    viewHolder.llOffice.visibility=View.VISIBLE
-                    viewHolder.tvOffice.visibility=View.VISIBLE
-                    viewHolder.tvOffice.text=getString(R.string.Officedistance)
-                    viewHolder.tvOfficeDist.text=getDistance(member.distance)
+                if (nearBy.equals("Home")) {
+                    viewHolder.llHome.visibility = View.VISIBLE
+                    viewHolder.tvHome.visibility = View.VISIBLE
+                    viewHolder.tvHome.text = getString(R.string.homeDistance)
+                    viewHolder.tvHomeDist.text = getDistance(member.distance)
+                } else if (nearBy.equals("Office")) {
+                    viewHolder.llOffice.visibility = View.VISIBLE
+                    viewHolder.tvOffice.visibility = View.VISIBLE
+                    viewHolder.tvOffice.text = getString(R.string.Officedistance)
+                    viewHolder.tvOfficeDist.text = getDistance(member.distance)
                     val params = viewHolder.llOffice.layoutParams as LinearLayout.LayoutParams
                     params.setMargins(0, 50, 0, 0)
                     viewHolder.llOffice.layoutParams = params
@@ -411,7 +407,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
                 }
                 applyImportant(viewHolder, member)
                 applyProfilePicture(viewHolder, member)
-                applyClickEvents(viewHolder, i,member)
+                applyClickEvents(viewHolder, i, member)
 
             }
 
@@ -425,10 +421,10 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         }
 
         byDistanceAdapter?.setOnClickEvent { v, position ->
-            val intent=Intent(activity,ProfileDetailActivity::class.java)
-            intent.putExtra(getString(R.string.member),lstMembers.get(position))
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), lstMembers.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //   Utility.fade(activity)
         }
 
         layoutManagerFixed.setHeaderIncrementFixer(header)
@@ -440,8 +436,8 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
 
     }
 
-    fun getDistance(dist:String):String{
-        var distance=""
+    fun getDistance(dist: String): String {
+        var distance = ""
         try {
             val index = dist.indexOf(".")
             distance = if (dist.length > (index + 3)) {
@@ -536,7 +532,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             try {
                 val path = getString(R.string.base_url_original) + "" + member.profilePic
                 Log.d(TAG, "path: $path")
-                openImageDialog(activity as AppCompatActivity,path)
+                openImageDialog(activity as AppCompatActivity, path)
             } catch (e: Exception) {
                 e.message
             }
@@ -547,7 +543,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     private fun applyProfilePicture(holder: DistanceViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
             holder.imgProfile.isClickable = true
-            val url=resources.getString(R.string.base_url_thumb)+member.profilePic
+            val url = resources.getString(R.string.base_url_thumb) + member.profilePic
             Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
@@ -560,13 +556,13 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
         }
     }
 
-    private fun callDistanceAPI(){
+    private fun callDistanceAPI() {
         if (!DashboardActivity.stop) {
 
-            Log.e("edtKm---",""+edtKm.text.toString().trim());
-            if (edtKm.text.toString().trim().equals("") && edtKm.text.toString().trim().length ==0){
+            Log.e("edtKm---", "" + edtKm.text.toString().trim())
+            if (edtKm.text.toString().trim().equals("") && edtKm.text.toString().trim().length == 0) {
 
-            }else {
+            } else {
 
                 DashboardActivity.stop = true
                 lstMembers.clear()
@@ -618,14 +614,14 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     override fun loadApi() {
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
-            distance.start=(lstMembers.size+1).toString()
+            distance.start = (lstMembers.size + 1).toString()
             mByDistanceViewModel.getUserByDistance(distance)
         }
     }
 
     override fun getMembers(response: ByDistanceResponse) {
-        DashboardActivity.stop=false
-        if(response.success){
+        DashboardActivity.stop = false
+        if (response.success) {
             lstMembers.clear()
 
             /*for (item in response.member) {
@@ -640,28 +636,28 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
             //recyclerView.layoutManager?.scrollToPosition(selectedPosition)
             selectedPosition = lstMembers.size - 1
 
-            if(Integer.parseInt(response.totalRecords)<=AppController.mApplication.length){
+            if (Integer.parseInt(response.totalRecords) <= AppController.mApplication.length) {
                 DashboardActivity.stop = true
                 Snackbar.make(llRoot, getString(R.string.EndRecordDistance), Snackbar.LENGTH_LONG).show()
             }
 
-            if(lstMembers.size>0){
-                tvRecords.text=getString(R.string.RecordDistance)+response.totalRecords
-                imgMap.visibility=View.GONE
-                tvRecords.visibility=View.VISIBLE
-            }else{
-                tvRecords.visibility=View.GONE
-                imgMap.visibility=View.VISIBLE
+            if (lstMembers.size > 0) {
+                tvRecords.text = getString(R.string.RecordDistance) + " " + response.totalRecords
+                imgMap.visibility = View.GONE
+                tvRecords.visibility = View.VISIBLE
+            } else {
+                tvRecords.visibility = View.GONE
+                imgMap.visibility = View.VISIBLE
                 DashboardActivity.stop = true
             }
-        }else{
+        } else {
             DashboardActivity.stop = true
-            tvRecords.visibility=View.GONE
-            imgMap.visibility=View.VISIBLE
+            tvRecords.visibility = View.GONE
+            imgMap.visibility = View.VISIBLE
         }
 
         mShimmerViewContainer.stopShimmerAnimation()
-        mShimmerViewContainer.visibility =View.GONE
+        mShimmerViewContainer.visibility = View.GONE
 
         Utility.hideKeyboard(activity)
     }
@@ -669,16 +665,16 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     override suspend fun getFailure(message: String) {
         Log.d(TAG, "getFailure: $message")
         activity?.runOnUiThread {
-            if(mShimmerViewContainer.isAnimationStarted){
+            if (mShimmerViewContainer.isAnimationStarted) {
                 mShimmerViewContainer.stopShimmerAnimation()
             }
             mShimmerViewContainer.visibility = View.GONE
-            imgMap.visibility=View.VISIBLE
-            tvRecords.visibility=View.GONE
+            imgMap.visibility = View.VISIBLE
+            tvRecords.visibility = View.GONE
             DashboardActivity.stop = true
         }
 
-        llRoot.snackbar(message,Snackbar.LENGTH_LONG)
+        llRoot.snackbar(message, Snackbar.LENGTH_LONG)
         Utility.hideKeyboard(activity)
     }
 
@@ -699,7 +695,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware,ByDistanceListener, Lis
     override fun currentLocation(location: Location) {
         currLat.value = location.latitude
         currLng.value = location.longitude
-        isCallAPI=true
+        isCallAPI = true
     }
 
     override fun locationData(locationData: LocationData) {

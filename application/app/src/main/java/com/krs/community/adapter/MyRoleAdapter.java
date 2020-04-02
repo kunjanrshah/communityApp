@@ -20,9 +20,10 @@ public class MyRoleAdapter extends BaseAdapter {
 
     Context mContext;
     LayoutInflater mLayoutInflater;
-    iChangeRoleListner changeRoleListner=null;
+    iChangeRoleListner changeRoleListner = null;
     private List<String> lstRole;
     private ArrayAdapter<String> roleAdapter;
+
     public MyRoleAdapter(Context context) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -71,7 +72,7 @@ public class MyRoleAdapter extends BaseAdapter {
         viewHolder.spRole.setAdapter(roleAdapter);
 
         viewHolder.btnChange.setOnClickListener(v -> {
-            String role= lstRole.get(viewHolder.spRole.getSelectedIndex());
+            String role = lstRole.get(viewHolder.spRole.getSelectedIndex());
             changeRoleListner.changeRole(role);
         });
 
@@ -84,6 +85,7 @@ public class MyRoleAdapter extends BaseAdapter {
 
     public interface iChangeRoleListner {
         void changeRole(String role);
+
         void cancelDialog();
     }
 
@@ -96,7 +98,7 @@ public class MyRoleAdapter extends BaseAdapter {
         ViewHolder(View view) {
             spRole = view.findViewById(R.id.sp_role1);
             btnChange = view.findViewById(R.id.btn_change);
-            ivCancel= view.findViewById(R.id.iv_cancel);
+            ivCancel = view.findViewById(R.id.iv_cancel);
         }
     }
 }

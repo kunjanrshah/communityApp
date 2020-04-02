@@ -2,8 +2,10 @@ package com.krs.community.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -48,81 +50,85 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
-    var numberOfLines=5
+    var numberOfLines = 5
     override val kodein by kodein()
+
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_details, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, MainDetailsFragment::class.simpleName)
         mApp.facebookAnalytics(context, MainDetailsFragment::class.simpleName)
 
         profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
-        profileDetailViewModel.mEditMemberListener=this
+        profileDetailViewModel.mEditMemberListener = this
         member = arguments?.getSerializable(getString(R.string.member)) as Member
-        val loginMember=Guru.getString(getString(R.string.loginMember),"")
-        val loginMem= Gson().fromJson(loginMember,Member::class.java)
-        if(member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id){
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        val loginMem = Gson().fromJson(loginMember, Member::class.java)
 
-            binding.fname.isFocusable=true
-            binding.edtArea.isFocusable=true
-            binding.edtAddr.isFocusable=true
-            binding.edtPincode.isFocusable=true
-            binding.edtFather.isFocusable=true
-            binding.edtMother.isFocusable=true
-            binding.edtEmail.isFocusable=true
-            binding.edtMobile.isFocusable=true
-            binding.edtPassword.isFocusable=true
-            binding.edtCpassword.isFocusable=true
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id) {
+
+            binding.fname.isFocusable = true
+            binding.edtArea.isFocusable = true
+            binding.edtAddr.isFocusable = true
+            binding.edtEmail.isFocusable = true
+            binding.edtPincode.isFocusable = true
+            binding.edtFather.isFocusable = true
+            binding.edtMother.isFocusable = true
+            binding.edtMobile.isFocusable = true
+            binding.edtPassword.isFocusable = true
+            binding.edtCpassword.isFocusable = true
             binding.edtCode.setText(member.memberCode)
 
-            binding.spState.isEnabled=true
-            binding.spCity.isEnabled=true
-            binding.spRelation.isEnabled=true
-            binding.spLastname.isEnabled=true
-            binding.spGender.isEnabled=true
+            binding.spState.isEnabled = true
+            binding.spCity.isEnabled = true
+            binding.spRelation.isEnabled = !(member.headId == "0" && !member.id.isNullOrEmpty())
 
-            binding.chkRented.isFocusable=false
-            binding.chkRented.isClickable=true
+            binding.spLastname.isEnabled = true
+            binding.spGender.isEnabled = true
 
-            binding.llMcode.visibility=View.VISIBLE
+            binding.chkRented.isFocusable = false
+            binding.chkRented.isClickable = true
 
-            member.stateId=loginMem.stateId
-            member.cityId=loginMem.cityId
-            member.city=loginMem.city
-            member.area=loginMem.area
-            member.pincode=loginMem.pincode
-            member.address=loginMem.address
-            member.isRented=loginMem.isRented
-        }else{
-            binding.fname.isFocusable=false
-            binding.edtEmail.isFocusable=false
-            binding.edtMobile.isFocusable=false
-            binding.edtMother.isFocusable=false
-            binding.edtFather.isFocusable=false
-            binding.edtArea.isFocusable=false
-            binding.edtAddr.isFocusable=false
-            binding.edtPincode.isFocusable=false
-            binding.edtCode.isFocusable=false
-            binding.edtCode.isClickable=false
-            binding.edtPassword.isFocusable=false
-            binding.edtCpassword.isFocusable=false
+            binding.llMcode.visibility = View.VISIBLE
 
-            binding.spGender.isEnabled=false
-            binding.spLastname.isEnabled=false
-            binding.spRelation.isEnabled=false
-            binding.spState.isEnabled=false
-            binding.spCity.isEnabled=false
-            binding.chkRented.isFocusable=false
-            binding.chkRented.isClickable=false
+            member.stateId = loginMem.stateId
+            member.cityId = loginMem.cityId
+            member.city = loginMem.city
+            member.area = loginMem.area
+            member.pincode = loginMem.pincode
+            member.address = loginMem.address
+            member.isRented = loginMem.isRented
+        } else {
+            binding.fname.isFocusable = false
+            binding.edtEmail.isFocusable = false
+            binding.edtEmail.movementMethod = LinkMovementMethod.getInstance()
+            binding.edtMobile.isFocusable = false
+            binding.edtMother.isFocusable = false
+            binding.edtFather.isFocusable = false
+            binding.edtArea.isFocusable = false
+            binding.edtAddr.isFocusable = false
+            binding.edtPincode.isFocusable = false
+            binding.edtCode.isFocusable = false
+            binding.edtCode.isClickable = false
+            binding.edtPassword.isFocusable = false
+            binding.edtCpassword.isFocusable = false
 
-            if(member.memberCode.isNullOrEmpty()){
-                binding.llMcode.visibility=View.GONE
+            binding.spGender.isEnabled = false
+            binding.spLastname.isEnabled = false
+            binding.spRelation.isEnabled = false
+            binding.spState.isEnabled = false
+            binding.spCity.isEnabled = false
+            binding.chkRented.isFocusable = false
+            binding.chkRented.isClickable = false
 
-            }else{
-                binding.llMcode.visibility=View.VISIBLE
+            if (member.memberCode.isNullOrEmpty()) {
+                binding.llMcode.visibility = View.GONE
+
+            } else {
+                binding.llMcode.visibility = View.VISIBLE
                 binding.edtCode.setText(member.memberCode)
             }
         }
@@ -132,13 +138,20 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         } else {
             binding.llPin.visibility = View.GONE
         }
+        if (!member.emailAddress.isNullOrEmpty()) {
+            val spannable: Spannable = SpannableString(member.emailAddress)
+            Linkify.addLinks(spannable, Linkify.WEB_URLS)
+            val text: CharSequence = TextUtils.concat(spannable, "\u200B")
+            binding.edtEmail.setText(text)
+        } else {
+            binding.edtEmail.setText(member.emailAddress)
+        }
 
+        binding.edtEmail.filters = arrayOf(Utility.filter)
         binding.fname.setText(member.firstName)
         binding.edtFather.setText(member.fatherName)
         binding.edtMother.setText(member.motherName)
         binding.edtMobile.setText(member.mobile)
-        binding.edtEmail.setText(member.emailAddress)
-        binding.edtEmail.filters = arrayOf(Utility.filter)
         binding.edtAddr.setText(member.address)
         binding.spGender.setText(member.gender)
         binding.edtArea.setText(member.area)
@@ -186,7 +199,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
         }
 
-        binding.edtAddr.addTextChangedListener(object:TextWatcher{
+        binding.edtAddr.addTextChangedListener(object : TextWatcher {
             private var text: String? = null
             override fun afterTextChanged(s: Editable?) {
 
@@ -258,95 +271,111 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     }
 
     private fun setHomeLocation() {
-        if(!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()){
+        if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
             ProfileDetailActivity.cur_lat.observeForever {
-                if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
-                    var dist=EasyWayLocation.calculateDistance(member.homeLat.toDouble(),member.homeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
+                if (ProfileDetailActivity.cur_lat.value != null && ProfileDetailActivity.cur_lng.value != null) {
+                    var dist = EasyWayLocation.calculateDistance(member.homeLat.toDouble(), member.homeLng.toDouble(), ProfileDetailActivity.cur_lat.value!!.toDouble(), ProfileDetailActivity.cur_lng.value!!.toDouble())
                     dist /= 1000
-                    binding.tvDistance.text=String.format("%.2f KM",dist)
+                    binding.tvDistance.text = String.format("%.2f KM", dist)
                 }
             }
             ProfileDetailActivity.cur_lng.observeForever {
-                if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
-                    var dist=EasyWayLocation.calculateDistance(member.homeLat.toDouble(),member.homeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
+                if (ProfileDetailActivity.cur_lat.value != null && ProfileDetailActivity.cur_lng.value != null) {
+                    var dist = EasyWayLocation.calculateDistance(member.homeLat.toDouble(), member.homeLng.toDouble(), ProfileDetailActivity.cur_lat.value!!.toDouble(), ProfileDetailActivity.cur_lng.value!!.toDouble())
                     dist /= 1000
-                    binding.tvDistance.text=String.format("%.2f KM",dist)
+                    binding.tvDistance.text = String.format("%.2f KM", dist)
                 }
             }
-        }else{
-            binding.tvDistance.text="Home"
+        } else {
+            binding.tvDistance.text = "Home"
         }
     }
 
-    fun getSaveData(jsonObject:JSONObject){
+    private fun getEmailText(email: String): String {
+        var str = ""
+        if (email.isNotEmpty()) {
+            str = email.reversed()
+            for (char in str) {
+                if (char == '\u200b') {
+                    str = str.substring(1, str.length)
+                } else {
+                    break
+                }
+            }
+            Log.d("Email", "str: " + str)
+        }
+        return str.reversed()
+    }
+
+    fun getSaveData(jsonObject: JSONObject) {
 
         try {
-            jsonObject.put(getString(R.string.member_code),binding.edtCode.text.trim())
-            jsonObject.put(getString(R.string.first_name),binding.fname.text.trim())
-            jsonObject.put(getString(R.string.father_name),binding.edtFather.text.trim())
-            jsonObject.put(getString(R.string.mother_name),binding.edtMother.text.trim())
-            jsonObject.put(getString(R.string.mobile),binding.edtMobile.text.trim())
-            jsonObject.put(getString(R.string.email_address),binding.edtEmail.text.trim())
-            jsonObject.put(getString(R.string.address),binding.edtAddr.text.trim())
-            jsonObject.put(getString(R.string.gender),binding.spGender.text)
-            jsonObject.put(getString(R.string.area),binding.edtArea.text.trim())
-            jsonObject.put(getString(R.string.pincode),binding.edtPincode.text.trim())
-            jsonObject.put(getString(R.string.relation_id),profileDetailViewModel.selectedRelationId)
-            jsonObject.put(getString(R.string.sub_cast_id),profileDetailViewModel.selectedLastNameId)
-            jsonObject.put(getString(R.string.state_id),profileDetailViewModel.selectedStateId)
-            jsonObject.put(getString(R.string.city_id),profileDetailViewModel.selectedCityId)
+            jsonObject.put(getString(R.string.member_code), binding.edtCode.text.trim())
+            jsonObject.put(getString(R.string.first_name), binding.fname.text.trim())
+            jsonObject.put(getString(R.string.father_name), binding.edtFather.text.trim())
+            jsonObject.put(getString(R.string.mother_name), binding.edtMother.text.trim())
+            jsonObject.put(getString(R.string.mobile), binding.edtMobile.text.trim())
+            jsonObject.put(getString(R.string.email_address), getEmailText(binding.edtEmail.text.toString().trim()))
+            jsonObject.put(getString(R.string.address), binding.edtAddr.text.trim())
+            jsonObject.put(getString(R.string.gender), binding.spGender.text)
+            jsonObject.put(getString(R.string.area), binding.edtArea.text.trim())
+            jsonObject.put(getString(R.string.pincode), binding.edtPincode.text.trim())
+            jsonObject.put(getString(R.string.relation_id), profileDetailViewModel.selectedRelationId)
+            jsonObject.put(getString(R.string.sub_cast_id), profileDetailViewModel.selectedLastNameId)
+            jsonObject.put(getString(R.string.state_id), profileDetailViewModel.selectedStateId)
+            jsonObject.put(getString(R.string.city_id), profileDetailViewModel.selectedCityId)
             if (member.id.isNullOrEmpty()) {
                 jsonObject.put(getString(R.string.profile_password), binding.edtPassword.text.trim())
                 jsonObject.put(getString(R.string.confPin), binding.edtCpassword.text.trim())
             }
 
-            if(binding.chkRented.isChecked){
-                jsonObject.put(getString(R.string.is_rented),1)
-            }else{
-                jsonObject.put(getString(R.string.is_rented),0)
-            }    
-        }catch (e:Exception){
+            if (binding.chkRented.isChecked) {
+                jsonObject.put(getString(R.string.is_rented), 1)
+            } else {
+                jsonObject.put(getString(R.string.is_rented), 0)
+            }
+        } catch (e: Exception) {
             e.printStackTrace()
         }
-        
+
     }
 
     private fun setMemberRelation() = Coroutines.main {
-        if(member.relationId.isNotEmpty()){
-            if(!member.relationId.equals("0")){
+        if (member.relationId.isNotEmpty()) {
+            if (!member.relationId.equals("0")) {
                 profileDetailViewModel.selectedRelationId = Integer.parseInt(member.relationId)
                 profileDetailViewModel.relationName.await().observeForever {
                     binding.spRelation.setText(it)
                 }
-            }else{
+            } else {
                 binding.spRelation.setText(resources.getString(R.string.Family_Head))
             }
         }
     }
 
     private fun setMemberLastname() = Coroutines.main {
-     if(member.subCastId.isNotEmpty()){
-         profileDetailViewModel.selectedLastNameId = Integer.parseInt(member.subCastId)
-         val lname = profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
-         binding.spLastname.setText(lname)
-     }
+        if (member.subCastId.isNotEmpty()) {
+            profileDetailViewModel.selectedLastNameId = Integer.parseInt(member.subCastId)
+            val lname = profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
+            binding.spLastname.setText(lname)
+        }
     }
 
     private fun setMemberState() = Coroutines.main {
-     if(member.stateId.isNotEmpty()){
-         profileDetailViewModel.selectedStateId = Integer.parseInt(member.stateId)
-         val name = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
-         binding.spState.setText(name)
-     }
+        if (member.stateId.isNotEmpty()) {
+            profileDetailViewModel.selectedStateId = Integer.parseInt(member.stateId)
+            val name = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
+            binding.spState.setText(name)
+        }
     }
 
     private fun setMemberCity() = Coroutines.main {
-     if(!member.cityId.isNullOrEmpty()){
-         profileDetailViewModel.selectedCityId = Integer.parseInt(member.cityId)
-         profileDetailViewModel.cityName.await().observeForever {
-             binding.spCity.setText(it)
-         }
-     }
+        if (!member.cityId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedCityId = Integer.parseInt(member.cityId)
+            profileDetailViewModel.cityName.await().observeForever {
+                binding.spCity.setText(it)
+            }
+        }
 
     }
 
@@ -362,13 +391,13 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.spGender.setExpandTint(R.color.black)
 
         profileDetailViewModel.lstRelationName.await().observe(viewLifecycleOwner, Observer {
-           if(member.relationId != "0"){
-               if(it.isNotEmpty()){
-                   binding.spRelation.setItems(it.subList(1,it.size).toTypedArray())
-                   binding.spRelation.setExpandTint(R.color.black)
-               }
+            if (member.relationId != "0") {
+                if (it.isNotEmpty()) {
+                    binding.spRelation.setItems(it.subList(1, it.size).toTypedArray())
+                    binding.spRelation.setExpandTint(R.color.black)
+                }
 
-           }
+            }
         })
 
         profileDetailViewModel.lstLastName.await().observe(viewLifecycleOwner, Observer {
@@ -381,7 +410,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             binding.spState.setExpandTint(R.color.black)
         })
 
-        val cities= profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
+        val cities = profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
         binding.spCity.setItems(cities.toTypedArray())
         binding.spCity.setExpandTint(R.color.black)
 
@@ -393,18 +422,18 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         Utility.hideSweetProgress()
         val updatedMem = response.member
-        member.homeLat=ProfileDetailActivity.cur_lat.value.toString()
-        member.homeLng=ProfileDetailActivity.cur_lng.value.toString()
+        member.homeLat = ProfileDetailActivity.cur_lat.value.toString()
+        member.homeLng = ProfileDetailActivity.cur_lng.value.toString()
         val percentage = Utility.calculatePercentage(updatedMem)
         setPercentage(percentage)
         if (updatedMem.id == member.id) {
             Guru.putString(getString(R.string.loginMember), Gson().toJson(updatedMem))
 
         }
-        if(ProfileDetailActivity.cur_lat.value!=null && ProfileDetailActivity.cur_lng.value!=null){
-            var dist=EasyWayLocation.calculateDistance(member.homeLat.toDouble(),member.homeLng.toDouble(),ProfileDetailActivity.cur_lat.value!!.toDouble(),ProfileDetailActivity.cur_lng.value!!.toDouble())
+        if (ProfileDetailActivity.cur_lat.value != null && ProfileDetailActivity.cur_lng.value != null) {
+            var dist = EasyWayLocation.calculateDistance(member.homeLat.toDouble(), member.homeLng.toDouble(), ProfileDetailActivity.cur_lat.value!!.toDouble(), ProfileDetailActivity.cur_lng.value!!.toDouble())
             dist /= 1000
-            binding.tvDistance.text=String.format("%.2f KM",dist)
+            binding.tvDistance.text = String.format("%.2f KM", dist)
         }
         Utility.displaySnackBarWithBottomMargin(binding.llMain, "Home location updated!")
     }

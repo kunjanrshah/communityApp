@@ -22,32 +22,6 @@ import java.util.List;
 
 public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private float mScrollMultiplier = 0.5f;
-
-    public static class VIEW_TYPES {
-        public static final int NORMAL = 1;
-        public  static final int HEADER = 2;
-        public  static final int FIRST_VIEW = 3;
-       public static final int VIEW_TYPE_LOADING = 4;
-    }
-
-    public abstract void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<T> adapter, int i);
-
-    public abstract RecyclerView.ViewHolder onCreateViewHolderImpl(ViewGroup viewGroup, ParallaxRecyclerAdapter<T> adapter, int i);
-
-    public abstract int getItemCountImpl(ParallaxRecyclerAdapter<T> adapter);
-
-    public interface OnClickEvent {
-        void onClick(View v, int position);
-    }
-
-    public interface OnParallaxScroll {
-        void onParallaxScroll(float percentage, float offset, View parallax);
-    }
-
-    public interface OnLoadMore{
-        void loadApi();
-    }
-
     private List<T> mData;
     private CustomRelativeWrapper mHeader;
     private OnClickEvent mOnClickEvent;
@@ -55,6 +29,16 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     private OnLoadMore mOnLoadMore;
     private RecyclerView mRecyclerView;
     private boolean mShouldClipView = true;
+
+    public ParallaxRecyclerAdapter(List<T> data) {
+        mData = data;
+    }
+
+    public abstract void onBindViewHolderImpl(RecyclerView.ViewHolder viewHolder, ParallaxRecyclerAdapter<T> adapter, int i);
+
+    public abstract RecyclerView.ViewHolder onCreateViewHolderImpl(ViewGroup viewGroup, ParallaxRecyclerAdapter<T> adapter, int i);
+
+    public abstract int getItemCountImpl(ParallaxRecyclerAdapter<T> adapter);
 
     private void translateHeader(float of) {
         float ofCalculated = of * mScrollMultiplier;
@@ -72,7 +56,7 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
             float left;
             if (holder != null) {
                 left = Math.min(1, ((ofCalculated) / (mHeader.getHeight() * mScrollMultiplier)));
-            }else {
+            } else {
                 left = 1;
             }
             mParallaxScroll.onParallaxScroll(left, of, mHeader);
@@ -98,7 +82,7 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
 
-        if(viewHolder instanceof LoadingViewHolder){
+        if (viewHolder instanceof LoadingViewHolder) {
             showLoadingView((LoadingViewHolder) viewHolder, i);
             return;
         }
@@ -116,7 +100,7 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
 
-        if(i==VIEW_TYPES.VIEW_TYPE_LOADING){
+        if (i == VIEW_TYPES.VIEW_TYPE_LOADING) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_loading, viewGroup, false);
             return new LoadingViewHolder(view);
         }
@@ -148,15 +132,6 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
         //ProgressBar would be displayed
     }
 
-    static class LoadingViewHolder extends RecyclerView.ViewHolder {
-
-        ProgressBar progressBar;
-        LoadingViewHolder(@NonNull View itemView) {
-            super(itemView);
-            progressBar = itemView.findViewById(R.id.progressBar);
-        }
-    }
-
     public boolean hasHeader() {
         return mHeader != null;
     }
@@ -164,7 +139,6 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     public void setOnClickEvent(OnClickEvent onClickEvent) {
         mOnClickEvent = onClickEvent;
     }
-
 
     public boolean isShouldClipView() {
         return mShouldClipView;
@@ -183,12 +157,8 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
         mParallaxScroll.onParallaxScroll(0, 0, mHeader);
     }
 
-    public ParallaxRecyclerAdapter(List<T> data) {
-        mData = data;
-    }
-
-    public void setContext(OnLoadMore mOnLoadMore){
-        this.mOnLoadMore= mOnLoadMore;
+    public void setContext(OnLoadMore mOnLoadMore) {
+        this.mOnLoadMore = mOnLoadMore;
     }
 
     public List<T> getData() {
@@ -213,7 +183,6 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
         notifyItemRemoved(position + (mHeader == null ? 0 : 1));
     }
 
-
     public int getItemCount() {
         return getItemCountImpl(this) + (mHeader == null ? 0 : 1);
     }
@@ -221,16 +190,54 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
     @Override
     public int getItemViewType(int position) {
 
-        Log.d("ParallaxRecycler","position: "+position+" size: "+mData.size() +" stop: "+DashboardActivity.Companion.getStop());
-        if (position == 1){
+        Log.d("ParallaxRecycler", "position: " + position + " size: " + mData.size() + " stop: " + DashboardActivity.Companion.getStop());
+        if (position == 1) {
             return VIEW_TYPES.FIRST_VIEW;
-        } else if(position == mData.size() && !DashboardActivity.Companion.getStop()){
-            if(mOnLoadMore!=null){
+        } else if (position == mData.size() && !DashboardActivity.Companion.getStop()) {
+            if (mOnLoadMore != null) {
                 mOnLoadMore.loadApi();
                 return VIEW_TYPES.VIEW_TYPE_LOADING;
             }
         }
         return position == 0 && mHeader != null ? VIEW_TYPES.HEADER : VIEW_TYPES.NORMAL;
+    }
+
+    public float getScrollMultiplier() {
+        return this.mScrollMultiplier;
+    }
+
+    public void setScrollMultiplier(float mul) {
+        this.mScrollMultiplier = mul;
+    }
+
+    public interface OnClickEvent {
+        void onClick(View v, int position);
+    }
+
+
+    public interface OnParallaxScroll {
+        void onParallaxScroll(float percentage, float offset, View parallax);
+    }
+
+    public interface OnLoadMore {
+        void loadApi();
+    }
+
+    public static class VIEW_TYPES {
+        public static final int NORMAL = 1;
+        public static final int HEADER = 2;
+        public static final int FIRST_VIEW = 3;
+        public static final int VIEW_TYPE_LOADING = 4;
+    }
+
+    static class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+        ProgressBar progressBar;
+
+        LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.progressBar);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -261,13 +268,5 @@ public abstract class ParallaxRecyclerAdapter<T> extends RecyclerView.Adapter<Re
             mOffset = offset;
             invalidate();
         }
-    }
-
-    public void setScrollMultiplier(float mul) {
-        this.mScrollMultiplier = mul;
-    }
-
-    public float getScrollMultiplier() {
-        return this.mScrollMultiplier;
     }
 }

@@ -58,49 +58,83 @@ import java.util.TimerTask;
 
 public class SearchLiveo extends FrameLayout {
 
+    public static int REQUEST_CODE_SPEECH_INPUT = 7777;
+    private static String SEARCH_LIVEO_SEARCH_TEXT = "searchText";
+    private static String SEARCH_LIVEO_STATE_TO_SAVE = "stateToSave";
+    private static String SEARCH_LIVEO_INSTANCE_STATE = "instanceState";
     private Timer mTimer;
     private Activity mContext;
-
     private EditText mEdtSearch;
     private ImageView mImgArrow;
     private ImageView mImgVoice;
     private ImageView mImgClose;
-
     private boolean voice = true;
     private boolean active = false;
     private boolean hideKeyboard = false;
     private boolean imeActionSearch = false;
-
     private int mColorIcon = -1;
     private int mMinToSearch = 4;
     private int mSearchDelay = 800;
-
     private int mColorIconArrow = R.color.search_liveo_icon;
     private int mColorIconVoice = R.color.search_liveo_icon;
     private int mColorIconClose = R.color.search_liveo_icon;
-
     private int mColorPrimaryDark;
     private int mStatusBarHideColor = -1;
     private int mStatusBarShowColor = -1;
-
     private RelativeLayout mViewSearch;
-
     private OnSearchListener mSearchListener;
     private OnHideSearchListener mHideSearchListener;
+    //region Methods Listener
+    private OnKeyListener onKeyListener = new OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    hide();
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+    private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH && imeActionSearch) {
+                if (mSearchListener != null) {
+                    mSearchListener.changedSearch(queryText());
+                }
 
-    public static int REQUEST_CODE_SPEECH_INPUT = 7777;
+                hide();
+                return true;
+            }
 
-    private static String SEARCH_LIVEO_SEARCH_TEXT = "searchText";
-    private static String SEARCH_LIVEO_STATE_TO_SAVE = "stateToSave";
-    private static String SEARCH_LIVEO_INSTANCE_STATE = "instanceState";
+            hide();
+            return false;
+        }
+    };
+    private OnClickListener onClickSearch = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            hide();
+        }
+    };
+    private OnClickListener onClickVoice = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startVoice();
+        }
+    };
+    private OnClickListener onClickClose = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!queryText().isEmpty()) {
+                mEdtSearch.setText("");
 
-    public interface OnSearchListener {
-        void changedSearch(CharSequence text);
-    }
-
-    public interface OnHideSearchListener {
-        void hideSearch();
-    }
+                showKeyboardRunOnUiThread();
+            }
+        }
+    };
 
     public SearchLiveo(Context context) {
         this(context, null);
@@ -109,6 +143,9 @@ public class SearchLiveo extends FrameLayout {
     public SearchLiveo(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+    //endregion
+
+    //region Methods with - build
 
     public SearchLiveo(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -202,9 +239,6 @@ public class SearchLiveo extends FrameLayout {
             }
         }
     }
-    //endregion
-
-    //region Methods with - build
 
     /**
      * Start context and the listener Search Live library.
@@ -227,6 +261,7 @@ public class SearchLiveo extends FrameLayout {
 
         return this;
     }
+    //endregion
 
     /**
      * Start context and the listener Search Live library.
@@ -275,21 +310,29 @@ public class SearchLiveo extends FrameLayout {
             e.getStackTrace();
         }
     }
-    //endregion
 
     //region Methods custom
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * If SearchView is active(show), this method returns the value true
+     */
+    private void setActive(boolean active) {
+        this.active = active;
+    }
+
     public boolean isVoice() {
         return voice;
     }
 
+    private void setVoice(boolean isVoice) {
+        this.voice = isVoice;
+    }
+
     /**
      * Hiding the keyboard as soon as you finish it
-     *
-     *
      */
     public SearchLiveo hideKeyboardAfterSearch() {
         this.hideKeyboard = true;
@@ -308,14 +351,11 @@ public class SearchLiveo extends FrameLayout {
 
     /**
      * Remove search delay
-     *
-     *
      */
     public SearchLiveo removeSearchDelay() {
         this.mSearchDelay = 0;
         return this;
     }
-
 
     /**
      * Minimum number of characters to start the search
@@ -494,10 +534,8 @@ public class SearchLiveo extends FrameLayout {
     /**
      * By enabling imeActionSearch you are only activating the search when you click the imeActionSearch on the keyboard.
      * This disables the search as you type.
-     *
-     *
      */
-    public SearchLiveo imeActionSearch(){
+    public SearchLiveo imeActionSearch() {
         this.imeActionSearch = true;
         return this;
     }
@@ -556,17 +594,6 @@ public class SearchLiveo extends FrameLayout {
         }
     }
 
-    /**
-     * If SearchView is active(show), this method returns the value true
-     */
-    private void setActive(boolean active) {
-        this.active = active;
-    }
-
-    private void setVoice(boolean isVoice) {
-        this.voice = isVoice;
-    }
-
     private void setStatusBarHideColor(int statusBarHideColor) {
         this.mStatusBarHideColor = statusBarHideColor;
     }
@@ -596,6 +623,7 @@ public class SearchLiveo extends FrameLayout {
     private int getColorIconVoice() {
         return ContextCompat.getColor(mContext, mColorIconVoice);
     }
+    //endregion
 
     private void setColorIconVoice(int color) {
         this.mColorIconVoice = color;
@@ -610,135 +638,7 @@ public class SearchLiveo extends FrameLayout {
         this.mColorIconClose = color;
         this.colorIconClose();
     }
-    //endregion
 
-    //region Methods Listener
-    private OnKeyListener onKeyListener = new OnKeyListener() {
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    hide();
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
-
-    private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH && imeActionSearch) {
-                if (mSearchListener != null) {
-                    mSearchListener.changedSearch(queryText());
-                }
-
-                hide();
-                return true;
-            }
-
-            hide();
-            return false;
-        }
-    };
-
-    private class OnTextWatcherEdtSearch implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            try {
-
-                if (mTimer != null) {
-                    mTimer.cancel();
-                }
-
-                if (queryText().isEmpty()) {
-                    mImgClose.setVisibility(isVoice() ? View.GONE : View.VISIBLE);
-                    mImgVoice.setVisibility(isVoice() ? View.VISIBLE : View.GONE);
-                    mImgVoice.setImageResource(R.drawable.ic_liveo_keyboard_voice);
-                    colorIconVoice();
-                } else {
-                    mImgVoice.setVisibility(View.GONE);
-                    mImgClose.setVisibility(View.VISIBLE);
-                    mImgClose.setImageResource(R.drawable.ic_liveo_close);
-                    colorIconClose();
-                }
-
-                colorIcon();
-                colorIconArrow();
-            } catch (Exception e) {
-                e.getStackTrace();
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (imeActionSearch){
-                return;
-            }
-
-            if (s.length() >= mMinToSearch) {
-
-                mTimer = new Timer();
-                mTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        // TODO: do what you need here (refresh list)
-                        if (mTimer != null) {
-                            mTimer.cancel();
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    if (mSearchListener != null) {
-                                        mSearchListener.changedSearch(queryText());
-                                    }
-
-                                    if (hideKeyboard) {
-                                        hideKeybord();
-                                    }
-                                }
-                            });
-                        }
-                    }
-
-                }, mSearchDelay);
-            }
-        }
-    }
-
-    private OnClickListener onClickSearch = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            hide();
-        }
-    };
-
-    private OnClickListener onClickVoice = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            startVoice();
-        }
-    };
-
-    private OnClickListener onClickClose = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (!queryText().isEmpty()) {
-                mEdtSearch.setText("");
-
-                showKeyboardRunOnUiThread();
-            }
-        }
-    };
-    //endregion
-
-    //region Methods animation
     /**
      * Hide SearchLiveo
      */
@@ -828,6 +728,9 @@ public class SearchLiveo extends FrameLayout {
 
         mViewSearch.setVisibility(View.VISIBLE);
     }
+    //endregion
+
+    //region Methods animation
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void hideAnimation() {
@@ -906,7 +809,6 @@ public class SearchLiveo extends FrameLayout {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return dp * (metrics.densityDpi / 160f);
     }
-    //endregion
 
     //region Methods InstanceState
     @Override
@@ -943,7 +845,6 @@ public class SearchLiveo extends FrameLayout {
 
         super.onRestoreInstanceState(state);
     }
-    //endregion
 
     //region Methods keyboard
     private void showKeyboardRunOnUiThread() {
@@ -963,6 +864,7 @@ public class SearchLiveo extends FrameLayout {
             });
         }
     }
+    //endregion
 
     private void hideKeybord() {
         if (mContext != null && !mContext.isFinishing()) {
@@ -975,7 +877,6 @@ public class SearchLiveo extends FrameLayout {
             }
         }
     }
-    //endregion
 
     //region Methods voice
     private void startVoice() {
@@ -992,6 +893,7 @@ public class SearchLiveo extends FrameLayout {
             Toast.makeText(mContext.getApplicationContext(), R.string.liveo_not_supported, Toast.LENGTH_SHORT).show();
         }
     }
+    //endregion
 
     public void resultVoice(int requestCode, int resultCode, Intent data) {
         if (requestCode == SearchLiveo.REQUEST_CODE_SPEECH_INPUT) {
@@ -1002,6 +904,84 @@ public class SearchLiveo extends FrameLayout {
                     mEdtSearch.setText(result.get(0));
                     mSearchListener.changedSearch(result.get(0));
                 }
+            }
+        }
+    }
+
+    public interface OnSearchListener {
+        void changedSearch(CharSequence text);
+    }
+    //endregion
+
+    public interface OnHideSearchListener {
+        void hideSearch();
+    }
+
+    private class OnTextWatcherEdtSearch implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            try {
+
+                if (mTimer != null) {
+                    mTimer.cancel();
+                }
+
+                if (queryText().isEmpty()) {
+                    mImgClose.setVisibility(isVoice() ? View.GONE : View.VISIBLE);
+                    mImgVoice.setVisibility(isVoice() ? View.VISIBLE : View.GONE);
+                    mImgVoice.setImageResource(R.drawable.ic_liveo_keyboard_voice);
+                    colorIconVoice();
+                } else {
+                    mImgVoice.setVisibility(View.GONE);
+                    mImgClose.setVisibility(View.VISIBLE);
+                    mImgClose.setImageResource(R.drawable.ic_liveo_close);
+                    colorIconClose();
+                }
+
+                colorIcon();
+                colorIconArrow();
+            } catch (Exception e) {
+                e.getStackTrace();
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (imeActionSearch) {
+                return;
+            }
+
+            if (s.length() >= mMinToSearch) {
+
+                mTimer = new Timer();
+                mTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        // TODO: do what you need here (refresh list)
+                        if (mTimer != null) {
+                            mTimer.cancel();
+                            mContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if (mSearchListener != null) {
+                                        mSearchListener.changedSearch(queryText());
+                                    }
+
+                                    if (hideKeyboard) {
+                                        hideKeybord();
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                }, mSearchDelay);
             }
         }
     }

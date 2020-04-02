@@ -49,7 +49,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
 
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private lateinit var mBinding:ActivityFavoriteBinding
+    private lateinit var mBinding: ActivityFavoriteBinding
     private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
     private var mAdapter: FavoriteAdapter? = null
@@ -100,7 +100,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
         if (id == R.id.action_search) {
             mBinding.searchLiveo.show()
             return true
-        } else if(id == android.R.id.home){
+        } else if (id == android.R.id.home) {
             finish()
             Utility.fade(this)
         } else if (id == R.id.action_export) {
@@ -133,15 +133,15 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
         }
     }
 
-    private fun onInitView(){
-        mBinding=  DataBindingUtil.setContentView(this,R.layout.activity_favorite)
-        this.onInitToolbar(mBinding.toolbar,getString(R.string.Search),R.drawable.ic_arrow_back_white_24dp)
+    private fun onInitView() {
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_favorite)
+        this.onInitToolbar(mBinding.toolbar, getString(R.string.Search), R.drawable.ic_arrow_back_white_24dp)
         mBinding.searchLiveo.with(this).removeMinToSearch().removeSearchDelay().build()
         mBinding.recyclerView.setHasFixedSize(true)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun onInitToolbar(toolBar: Toolbar?, title: String?, icon: Int=-1, displayHome: Boolean=true) {
+    private fun onInitToolbar(toolBar: Toolbar?, title: String?, icon: Int = -1, displayHome: Boolean = true) {
         if (toolBar != null) {
             setSupportActionBar(toolBar)
             val actionBar: ActionBar? = supportActionBar
@@ -167,7 +167,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             mAdapter = FavoriteAdapter(lstMember as MutableList<RoomMember>)
             mBinding.recyclerView.adapter = mAdapter
             mBinding.ivNotFound.visibility = View.GONE
-        }else{
+        } else {
             mBinding.ivNotFound.visibility = View.VISIBLE
             DashboardActivity.stop = true
             Snackbar.make(mBinding.recyclerView, resources.getString(R.string.noFoundNonActives), Snackbar.LENGTH_LONG).show()
@@ -175,13 +175,13 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
     }
 
     override suspend fun getFailure(message: String) {
-        Utility.displaySnackBarWithBottomMargin(mBinding.recyclerView,message)
+        Utility.displaySnackBarWithBottomMargin(mBinding.recyclerView, message)
     }
 
     private fun applyProfilePicture(holder: FavoriteAdapter.ViewHolder, path: String) {
         if (!TextUtils.isEmpty(path)) {
             holder.imgProfile.isClickable = true
-            val url=resources.getString(R.string.base_url_thumb)+path
+            val url = resources.getString(R.string.base_url_thumb) + path
             Glide.with(this).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
@@ -196,6 +196,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
 
     inner class FavoriteAdapter(private val mMembers: MutableList<RoomMember>) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
         private val mSearchMembers: ArrayList<RoomMember> = ArrayList()
+
         init {
             if (mMembers.size > 0) {
                 mSearchMembers.addAll(mMembers)
@@ -205,7 +206,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             }
         }
 
-       inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             var iconText: TextView = view.findViewById(R.id.icon_text1)
             var tvName: TextView = view.findViewById(R.id.tv_name1)
             var tvArea: TextView = view.findViewById(R.id.tv_area)
@@ -222,10 +223,10 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             var lstFound: RecyclerView = view.findViewById(R.id.lst_found)
             var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
             var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
-           var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
-           var badge: NotificationBadge = itemView.findViewById(R.id.badge)
-           var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
-       }
+            var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+            var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+            var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.row_list_search, parent, false)
@@ -235,9 +236,9 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
             val member = mMembers[viewHolder.adapterPosition]
-            viewHolder.lstFound.visibility=View.GONE
-            viewHolder.iconFront.visibility=View.VISIBLE
-            viewHolder.iconBack.visibility=View.GONE
+            viewHolder.lstFound.visibility = View.GONE
+            viewHolder.iconFront.visibility = View.VISIBLE
+            viewHolder.iconBack.visibility = View.GONE
             var count = member.memberCount
             if (count != 0) {
                 count += 1
@@ -251,7 +252,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                 viewHolder.ivVerify.visibility = View.GONE
             }
 
-            if(!member.subCastId.isNullOrEmpty()){
+            if (!member.subCastId.isNullOrEmpty()) {
                 roomMemberViewModel.getLastName(member.subCastId.toInt()).observeForever {
                     viewHolder.tvName.text = member.firstName + " " + it
                 }
@@ -267,16 +268,16 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             } else {
                 viewHolder.ivGender.setBackgroundResource(R.drawable.female)
             }
-            if (member.mobile.isNullOrEmpty()){
+            if (member.mobile.isNullOrEmpty()) {
                 viewHolder.llMobile.visibility = View.GONE
-            }else{
+            } else {
                 viewHolder.tvMobile.text = member.mobile
             }
 
-            if (member.emailAddress.isNullOrEmpty()){
+            if (member.emailAddress.isNullOrEmpty()) {
                 viewHolder.ll_email.visibility = View.GONE
 
-            }else{
+            } else {
                 viewHolder.tvEmail.text = member.emailAddress
             }
 
@@ -300,7 +301,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                     if (it == 0) {
                         val profileDetailFactory: ProfileDetailViewModelFactory by instance()
                         val profileDetailViewModel = ViewModelProvider(this@FavoriteProfileActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
-                        createMemberPDF(this@FavoriteProfileActivity, getMemberFromRoomMember(member),profileDetailViewModel)
+                        createMemberPDF(this@FavoriteProfileActivity, getMemberFromRoomMember(member), profileDetailViewModel)
 
                         Handler().post {
                             Utility.startSweetProgress(this@FavoriteProfileActivity, getString(R.string.ExportingList) + " " + " ${member.firstName}" + getString(R.string.DetailList), getString(R.string.please_wait))
@@ -310,17 +311,17 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                         }, 5000)
 
 
-                    }else if(it == 1) {
+                    } else if (it == 1) {
                         Toast.makeText(this@FavoriteProfileActivity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                         return@listener
                         val intent: Intent = Intent(this@FavoriteProfileActivity, FamilyTreeListActivity::class.java)
                         startActivity(intent)
 
                     } else if (it == 2) {
-                        if(!member.mobile.isNullOrEmpty()){
+                        if (!member.mobile.isNullOrEmpty()) {
                             val toNumber = getString(R.string.number) + member.mobile
-                            val text = getString(R.string.InstallApp)+"\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
-                            Utility.sendWhatsappMessage(this@FavoriteProfileActivity,toNumber,text)
+                            val text = getString(R.string.InstallApp) + "\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+                            Utility.sendWhatsAppMessage(this@FavoriteProfileActivity, toNumber, text)
                         }
 
                     } else if (it == 3) {
@@ -332,9 +333,9 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                         startActivity(intent)
                         Utility.fade(this@FavoriteProfileActivity)
                     } else if (it == 4) {
-                        shareDetails(this@FavoriteProfileActivity,viewHolder.tvName.text.toString(), member.mobile.toString(),member.emailAddress.toString(),viewHolder.tvArea.text.toString(), member.address.toString())
+                        shareDetails(this@FavoriteProfileActivity, viewHolder.tvName.text.toString(), member.mobile.toString(), member.emailAddress.toString(), viewHolder.tvArea.text.toString(), member.address.toString())
                     } else if (it == 5) {
-                        val adapter: LocationAdapter = LocationAdapter(this@FavoriteProfileActivity,getMemberFromRoomMember(member))
+                        val adapter: LocationAdapter = LocationAdapter(this@FavoriteProfileActivity, getMemberFromRoomMember(member))
                         adapter.setLocationListner(this@FavoriteProfileActivity)
                         locationDialog = DialogPlus.newDialog(this@FavoriteProfileActivity)
                                 .setAdapter(adapter)
@@ -360,7 +361,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                 val intent = Intent(this@FavoriteProfileActivity, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member), getMemberFromRoomMember(member))
                 startActivity(intent)
-                Utility.fade(this@FavoriteProfileActivity)
+                //  Utility.fade(this@FavoriteProfileActivity)
             }
 
             viewHolder.tvMobile.setOnClickListener {
@@ -372,10 +373,10 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
 
             viewHolder.iconImp.setOnClickListener {
                 roomMemberViewModel.getRoomMember(member.id).observeForever {
-                        if(it!=null){
-                            lstMember.removeAt(position)
-                            roomMemberViewModel.deleteRoomMember(member.id)
-                        }
+                    if (it != null) {
+                        lstMember.removeAt(position)
+                        roomMemberViewModel.deleteRoomMember(member.id)
+                    }
                 }
             }
 
@@ -383,7 +384,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                 try {
                     val path = getString(R.string.base_url_original) + "" + member.profilePic
                     Log.d("FavoriteProfileActivity", "path: $path")
-                    openImageDialog(this@FavoriteProfileActivity,path)
+                    openImageDialog(this@FavoriteProfileActivity, path)
                 } catch (e: Exception) {
                     e.message
                 }

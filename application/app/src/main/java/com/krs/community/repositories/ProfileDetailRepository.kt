@@ -12,23 +12,23 @@ import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
-class ProfileDetailRepository (private val api: ApiServices,private val db:AppDatabase
-): SafeApiRequest()  {
+class ProfileDetailRepository(private val api: ApiServices, private val db: AppDatabase
+) : SafeApiRequest() {
 
     suspend fun updateProfile(profile: JsonObject): UpdateProfileResponse {
-        return apiRequest{
+        return apiRequest {
             api.updateProfile(profile)
         }
     }
 
-    suspend fun uploadProfileImage(profile: MultipartBody.Part,id : RequestBody,type : RequestBody): JsonObject {
-        return apiRequest{
-            api.uploadProfileImage(profile,id,type)
+    suspend fun uploadProfileImage(profile: MultipartBody.Part, id: RequestBody, type: RequestBody): JsonObject {
+        return apiRequest {
+            api.uploadProfileImage(profile, id, type)
         }
     }
 
     suspend fun addProfile(profile: JsonObject): UpdateProfileResponse {
-        return apiRequest{
+        return apiRequest {
             api.addMember(profile)
         }
     }
@@ -202,6 +202,7 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
             db.getLastNameDao().getLastName(id)
         }
     }
+
     suspend fun getLastName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getLastNameDao().getLastName()
@@ -220,7 +221,7 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun getLocalCommunityId(name:String): Int {
+    suspend fun getLocalCommunityId(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getLocalCommunityDao().getLocalCommunityId(name)
         }
@@ -238,14 +239,14 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
         }
     }
 
-    suspend fun getCityName(id:Int): List<String> {
+    suspend fun getCityName(id: Int): List<String> {
         return withContext(Dispatchers.IO) {
-            Log.d("SP_State","id: "+id)
+            Log.d("SP_State", "id: " + id)
             db.getCityDao().getCityNameByState(id)
         }
     }
 
-    suspend fun getCityId(name:String): LiveData<Int> {
+    suspend fun getCityId(name: String): LiveData<Int> {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getCityIdByName(name)
         }
@@ -262,6 +263,7 @@ class ProfileDetailRepository (private val api: ApiServices,private val db:AppDa
             db.getStatesDao().getstateNameById(id)
         }
     }
+
     suspend fun getStateName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getStatesDao().getStateNames()

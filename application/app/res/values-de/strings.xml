@@ -45,7 +45,7 @@
     <string name="no">ના</string>
     <string name="invalid_username_password">યુઝરનેમ અથવા પાસવર્ડ ખોટો છે</string>
     <string name="loading">કાર્ય પ્રગતિમાં છે...</string>
-    <string name="user_not_found" >યુઝર નોટ ફાઉન્ડ!</string>
+    <string name="user_not_found">યુઝર નોટ ફાઉન્ડ!</string>
 
     <!--Registraion page-->
     <string name="already_have_a_account_sign_in">પહેલેથી જ એકાઉન્ટ છે?</string>
@@ -68,7 +68,6 @@
     <string name="server_could_not_found">સર્વર મળી શક્યું નથી. થોડીવાર પછી ફરી પ્રયત્ન કરો !!</string>
     <string name="parsing_error">પાર્સિંગની ભૂલ! થોડીવાર પછી ફરી પ્રયત્ન કરો !!</string>
     <string name="connection_timeout">કનેક્શન સમયસમાપ્તિ! કૃપા કરીને તમારું ઇન્ટરનેટ કનેક્શન તપાસો.</string>
-
 
 
     <!-- Login Sccren -->
@@ -251,7 +250,6 @@
     <!-- Location Adapter -->
     <string name="Private">ખાનગી</string>
     <string name="location">સ્થાન</string>
-
 
 
     <string name="office">હોદ્દો</string>

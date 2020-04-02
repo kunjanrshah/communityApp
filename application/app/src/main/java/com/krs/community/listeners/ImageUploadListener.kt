@@ -3,6 +3,6 @@ package com.krs.community.listeners
 import com.google.gson.JsonObject
 
 interface ImageUploadListener {
-    fun getResult(jsonObject: JsonObject)
-    suspend fun onFailure(message:String)
+    fun onUploadSuccess(jsonObject: JsonObject)
+    suspend fun onUploadFail(message: String)
 }

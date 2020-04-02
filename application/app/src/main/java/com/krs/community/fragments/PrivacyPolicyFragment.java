@@ -30,12 +30,12 @@ public class PrivacyPolicyFragment extends Fragment {
         mApp.facebookAnalytics(getContext(), PrivacyPolicyFragment.class.getSimpleName());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utility.changeStatusbarColor(getActivity(),R.color.colorBG,false);
+            Utility.changeStatusbarColor(getActivity(), R.color.colorBG, false);
         }
 
-        ImageView iv_cancel=root.findViewById(R.id.iv_cancel);
+        ImageView iv_cancel = root.findViewById(R.id.iv_cancel);
         iv_cancel.setOnClickListener(v -> {
-            Utility.movetoFragment(getActivity(),new SettingFragment());
+            Utility.movetoFragment(getActivity(), new SettingFragment());
         });
 
 

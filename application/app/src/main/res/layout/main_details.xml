@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -25,58 +25,53 @@
                 android:id="@+id/edt_family_code"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:singleLine="true"
-                android:textSize="14sp"
-                android:fontFamily="@font/montserrat_regular"
                 android:background="@drawable/border"
+                android:digits="@string/restrict_space"
+                android:fontFamily="@font/montserrat_regular"
                 android:hint="@string/MemberCodeDetails"
                 android:inputType="textCapCharacters"
-                android:digits="@string/restrict_space"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/edt_head_name"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:textSize="14sp"
-                android:fontFamily="@font/montserrat_regular"
-                android:singleLine="true"
-                android:digits="@string/restrict_space"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
+                android:digits="@string/restrict_space"
+                android:fontFamily="@font/montserrat_regular"
                 android:hint="@string/headn"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/edt_member_name"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:singleLine="true"
-                android:textSize="14sp"
-                android:fontFamily="@font/montserrat_regular"
-                android:digits="@string/restrict_space"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
+                android:digits="@string/restrict_space"
+                android:fontFamily="@font/montserrat_regular"
                 android:hint="@string/MemberNameDetails"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_surname"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/SelctLatname"
-                    android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -87,26 +82,26 @@
                     android:nextFocusDown="@+id/rangeSeekbar"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/SelctLatname" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_samaj"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/local_communitydetails"
-                    android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -117,26 +112,26 @@
                     android:nextFocusDown="@+id/rangeSeekbar"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/local_communitydetails" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_gender"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/genderDetails"
-                    android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -147,26 +142,26 @@
                     android:nextFocusDown="@+id/rangeSeekbar"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/genderDetails" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_marital"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/marital_statusDetails"
-                    android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -177,26 +172,26 @@
                     android:nextFocusDown="@+id/rangeSeekbar"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/marital_statusDetails" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_native"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/select_native"
-                    android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -207,26 +202,26 @@
                     android:nextFocusDown="@+id/sp_city"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/select_native" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/border"
                 android:gravity="center|bottom"
                 android:textAlignment="center">
 
                 <com.krs.community.jrspinner.JRSpinner
                     android:id="@+id/sp_city"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/select_citydetails"
-                    android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -237,47 +232,53 @@
                     android:nextFocusDown="@+id/rangeSeekbar"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black1" />
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/select_citydetails" />
             </RelativeLayout>
 
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
                 android:id="@+id/rangeSeekbar"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:corner_radius="10"
-                app:min_value="0"
-                app:max_value="100"
-                app:gap="10"
+                android:layout_marginTop="10dp"
                 app:bar_color="#C0C0C0"
                 app:bar_highlight_color="#A9A9A9"
+                app:corner_radius="10"
+                app:data_type="_integer"
+                app:gap="10"
                 app:left_thumb_color="#808080"
-                app:right_thumb_color="#808080"
                 app:left_thumb_color_pressed="#696969"
-                app:right_thumb_color_pressed="#696969"
-                app:data_type="_integer"/>
+                app:max_value="100"
+                app:min_value="0"
+                app:right_thumb_color="#808080"
+                app:right_thumb_color_pressed="#696969" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/textMin1"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="16sp"
-                    android:text="@string/age_0"
                     android:fontFamily="@font/montserrat_medium"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/age_0"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/textMax1"
                     android:layout_width="100dp"
-                    android:text="@string/age_100"
-                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="right"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/age_100"
+                    android:textSize="16sp" />
 
             </LinearLayout>
         </LinearLayout>

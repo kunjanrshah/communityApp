@@ -7,11 +7,11 @@ import androidx.room.RoomDatabase
 import com.krs.community.dao.*
 import com.krs.community.entities.*
 
-@Database(entities = [RoomMember::class,Designation::class,Committee::class,States::class,Relations::class,Occupations::class,
-                    Native::class,LastName::class,Gotra::class,Educations::class,CurrentActivity::class,City::class,
+@Database(entities = [RoomMember::class, Designation::class, Committee::class, States::class, Relations::class, Occupations::class,
+    Native::class, LastName::class, Gotra::class, Educations::class, CurrentActivity::class, City::class,
     BusinessSubCategory::class, BusinessCategory::class, SubCommunity::class, LocalCommunity::class, LastUpdated::class, MasterCounts::class],
-                    version = 1)
-abstract class AppDatabase :RoomDatabase() {
+        version = 1)
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getSubCommunityDao(): SubCommunityDao
     abstract fun getLocalCommunityDao(): LocalCommunityDao

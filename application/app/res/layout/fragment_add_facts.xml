@@ -4,50 +4,51 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/ll_nearby_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="25dp"
         android:background="@drawable/round_bottom_corner_colorprimary"
         android:orientation="vertical"
+        android:paddingTop="25dp"
         android:paddingBottom="25dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
 
             android:gravity="center"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/img_cancel"
                 android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginLeft="10dp"
-                android:background="@drawable/left_arrow_white"
-                android:layout_height="20dp" />
+                android:background="@drawable/left_arrow_white" />
 
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
-                android:text="@string/add_fact"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:fontFamily="@font/montserrat_semibold"
-                android:textSize="20sp"
-                android:layout_marginLeft="15dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content" />
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/add_fact"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/img_save"
                 android:layout_width="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginRight="20dp"
-               android:text="@string/saveAddfacts"
                 android:fontFamily="@font/montserrat_medium"
+                android:text="@string/saveAddfacts"
                 android:textColor="@color/white"
-                android:textSize="20sp"
-                android:layout_height="35dp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -66,7 +67,6 @@
             android:paddingRight="10dp" />
 
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -88,10 +88,10 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="5dp"
-            android:hint="@string/event_date"
-            android:paddingLeft="10dp"
             android:background="@drawable/border_color_gray4"
             android:fontFamily="@font/montserrat_regular"
+            android:hint="@string/event_date"
+            android:paddingLeft="10dp"
             android:singleLine="true" />
     </LinearLayout>
 
@@ -114,10 +114,10 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="5dp"
-            android:hint="@string/event_place"
-            android:paddingLeft="10dp"
             android:background="@drawable/border_color_gray4"
             android:fontFamily="@font/montserrat_regular"
+            android:hint="@string/event_place"
+            android:paddingLeft="10dp"
             android:singleLine="true" />
     </LinearLayout>
 
@@ -140,10 +140,10 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="5dp"
-            android:hint="@string/event_description"
-            android:paddingLeft="10dp"
             android:background="@drawable/border_color_gray4"
-            android:fontFamily="@font/montserrat_regular"          />
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="@string/event_description"
+            android:paddingLeft="10dp" />
     </LinearLayout>
 
 

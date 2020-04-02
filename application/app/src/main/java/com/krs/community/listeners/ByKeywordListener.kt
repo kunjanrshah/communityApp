@@ -4,5 +4,5 @@ import com.krs.community.responses.searchByKeywordsResponse
 
 interface ByKeywordListener {
     fun getMembers(response: searchByKeywordsResponse)
-    suspend fun getFailure(message:String)
+    suspend fun getFailure(message: String)
 }

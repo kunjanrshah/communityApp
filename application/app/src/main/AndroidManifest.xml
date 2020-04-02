@@ -42,19 +42,23 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:replace="android:icon">
         <activity android:name=".activity.MapTrackingActivity" />
-        <activity android:name=".activity.MapviewActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
         <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/white" />
+
+        <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/notification_channel_id" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="cd2b567af7b407b2736293035d07a280439e584e" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -186,10 +190,10 @@
             android:exported="true"
             android:label="StartMyServiceAtBootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-                <action android:name="uk.ac.shef.oak.activity_recognition.sensor_service.RestartSensor" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />-->
+                <!--<action android:name="uk.ac.shef.oak.activity_recognition.sensor_service.RestartSensor" />-->
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -234,12 +238,20 @@
                 <action android:name="Approve" />
             </intent-filter>-->
         </receiver>
-        <activity
-            android:name="com.paytm.pgsdk.PaytmPGActivity"
-            android:configChanges="keyboardHidden|orientation|keyboard"
-            android:screenOrientation="portrait"
-            tools:replace="android:screenOrientation"
-            tools:ignore="LockedOrientationActivity" />
+        <!-- <activity
+             android:name="com.paytm.pgsdk.PaytmPGActivity"
+             android:configChanges="keyboardHidden|orientation|keyboard"
+             android:screenOrientation="portrait"
+             tools:replace="android:screenOrientation"
+             tools:ignore="LockedOrientationActivity" />-->
 
+        <activity
+            android:name=".activity.ContactUsActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="android:screenOrientation" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="cd2b567af7b407b2736293035d07a280439e584e" />
     </application>
 </manifest>

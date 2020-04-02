@@ -8,7 +8,7 @@ import com.krs.community.viewmodel.NewsViewModel
 
 class NewsModelFactory(
         private val repository: NewsRepository
-        ):ViewModelProvider.NewInstanceFactory() {
+) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return NewsViewModel(repository, AppController.mApplication) as T
     }

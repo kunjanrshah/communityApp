@@ -137,46 +137,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             }
         }
 
-        /* if (member?.isLocationEnable == "1") {
-             binding.switchLocation.isOn = true
-             binding.switchLocation.labelOn = "ON"
-             binding.tvDistance.text = getString(R.string.Finding)
-             val mem_id = Guru.getString(getString(R.string.member_id), "")
-             if (member?.id == mem_id) {
-                 startLocationService()
-                 Utility.displaySnackBarWithBottomMargin(binding.viewpager, "You are sharing your location")
-             }
-         } else {
-             binding.switchLocation.isOn = false
-             binding.switchLocation.labelOff = "OFF"
-             binding.tvDistance.text = getString(R.string.user)
-         }*/
-
         if (checkFineLocationPermission(this)) {
             easyWayLocation.startLocation()
         } else {
             requestFineLocationPermission(this)
         }
-
-        /*  binding.switchLocation.setOnClickListener {
-              if (!binding.switchLocation.isOn) {
-                  member?.isLocationEnable = "1"
-                  startLocationService()
-              } else {
-                  stopLocationServiceAndUpdateProfile()
-              }
-          }*/
-
-        /*   binding.tvDistance.setOnClickListener {
-               if (binding.switchLocation.isOn) {
-                   // val address= Utility.getAddress(this,member.userLat.toDouble(),member.userLng.toDouble())
-                   Utility.showDirections(this, member!!.userLat.toDouble(), member!!.userLng.toDouble(), "${member?.firstName}'s Location")
-               } else {
-                   if (!member?.id.isNullOrEmpty()) {
-                       Toast.makeText(this, "${member?.firstName}" + getString(R.string.locationOff), Toast.LENGTH_LONG).show()
-                   }
-               }
-           }*/
 
         binding.ivFamily.setOnClickListener {
             goToFamilyDetailActivity()
@@ -202,6 +167,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 professionalDetailsFragment.getSaveData(jsonObject)
                 matrimonyDetailsFragment.getSaveData(jsonObject)
                 jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                jsonObject.put(getString(R.string.profile_percentage), binding.tvPercent.text.toString().replace("%", ""))
 
                 if (member?.isLocationEnable == "1") {
                     jsonObject.put(getString(R.string.is_location_enable), "1")
@@ -214,7 +180,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
                     SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(getString(R.string.updateprofile))
-                            .setConfirmText(getString(R.string.update))
+                            .setConfirmText(getString(R.string.save))
                             .setCancelText(getString(R.string.no))
                             .setCancelClickListener {
                                 it.dismissWithAnimation()
@@ -294,6 +260,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)
         if (member?.headId == "0") {
+            intent.putExtra(getString(R.string.member_id), member?.id)
             intent.putExtra(getString(R.string.id), member?.id)
         } else {
             intent.putExtra(getString(R.string.id), member?.headId)
@@ -309,7 +276,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         val memberId = Guru.getString(getString(R.string.member_id), "")
         // binding.switchLocation.isEnabled = memberId.equals(member?.id)
-        if (member?.id == memberId) {
+        if (member?.id == memberId || member?.headId == memberId) {
             binding.tvSave.visibility = View.VISIBLE
             binding.tvSave.text = getString(R.string.save)
             binding.imgProfile.isEnabled = true
@@ -406,20 +373,22 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override suspend fun getFailure(message: String) {
         hideSweetProgress()
-        binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
+        Utility.displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.went_wrong))
+        //   binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 
-    override fun getResult(jsonObject: JsonObject) {
+    override fun onUploadSuccess(jsonObject: JsonObject) {
         hideSweetProgress()
         member?.profilePic = jsonObject.get("profile").asString
         Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
         displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.profileUpdate))
     }
 
-    override suspend fun onFailure(message: String) {
+    override suspend fun onUploadFail(message: String) {
         hideSweetProgress()
-        binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
+        Utility.displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.went_wrong))
+        // binding.viewpager.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
         Log.d(ProfileDetailActivity::class.java.simpleName, "getFailure: " + message)
     }
 

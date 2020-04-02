@@ -19,7 +19,6 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-
 import com.krs.community.bkservice.Globals;
 import com.krs.community.bkservice.ProcessMainClass;
 
@@ -49,26 +48,12 @@ public class RestartServiceBroadcastReceiver extends BroadcastReceiver {
         return 0;
     }
 
-
-
-    @Override
-    public void onReceive(final Context context, Intent intent) {
-        Log.d(TAG, "about to start timer " + context.toString());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            scheduleJob(context);
-        } else {
-            registerRestarterReceiver(context);
-            ProcessMainClass bck = new ProcessMainClass();
-            bck.launchService(context);
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void scheduleJob(Context context) {
         if (jobScheduler == null) {
             jobScheduler = (JobScheduler) context.getSystemService(JOB_SCHEDULER_SERVICE);
         }
-        ComponentName componentName = new ComponentName(context,JobService.class);
+        ComponentName componentName = new ComponentName(context, JobService.class);
         JobInfo jobInfo = new JobInfo.Builder(1, componentName)
                 // setOverrideDeadline runs it immediately - you must have at least one constraint
                 // https://stackoverflow.com/questions/51064731/firing-jobservice-without-constraints
@@ -78,7 +63,6 @@ public class RestartServiceBroadcastReceiver extends BroadcastReceiver {
 
     }
 
-
     public static void reStartTracker(Context context) {
         // restart the never ending service
         Log.i(TAG, "Restarting tracker");
@@ -86,6 +70,17 @@ public class RestartServiceBroadcastReceiver extends BroadcastReceiver {
         context.sendBroadcast(broadcastIntent);
     }
 
+    @Override
+    public void onReceive(final Context context, Intent intent) {
+        Log.d(TAG, "about to start timer " + context.toString());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            scheduleJob(context);
+        } else {
+            registerRestarterReceiver(context);
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(context);
+        }
+    }
 
     private void registerRestarterReceiver(final Context context) {
 
@@ -95,9 +90,9 @@ public class RestartServiceBroadcastReceiver extends BroadcastReceiver {
         // null. So we must use context.registerReceiver. Otherwise this will crash and we try with context.getApplicationContext
         if (restartSensorServiceReceiver == null)
             restartSensorServiceReceiver = new RestartServiceBroadcastReceiver();
-        else try{
+        else try {
             context.unregisterReceiver(restartSensorServiceReceiver);
-        } catch (Exception e){
+        } catch (Exception e) {
             // not registered
         }
         // give the time to run

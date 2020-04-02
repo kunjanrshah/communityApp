@@ -127,8 +127,6 @@ public class Utility {
     public static String dd_MM_yyyy = "dd-MM-yyyy";
     public static String yyyy_MM_dd_TIME = "yyyy-MM-dd HH:mm:ss";
     public static String dd_MM_yyyy_TIME = "dd-MM-yyyy h:mm a";
-    static boolean doubleBackToExitPressedOnce = false;
-
     public static SweetAlertDialog dialog = null;
     public static long INTERVAL = 5 * 60 * 1000;
     public static InputFilter filter = (source, start, end, dest, dstart, dend) -> {
@@ -139,6 +137,7 @@ public class Utility {
         }
         return null;
     };
+    static boolean doubleBackToExitPressedOnce = false;
     private static ProgressDialog pDialog;
     private static Logger logger = new Logger(Utility.class.getSimpleName());
 
@@ -236,19 +235,6 @@ public class Utility {
                 params.bottomMargin + 120);
         snackBarView.setLayoutParams(params);
         snackbar.show();
-    }
-
-    public static Snackbar getSnackBarWithBottomMargin(View main, String message) {
-        Snackbar snackbar = Snackbar.make(main, message, Snackbar.LENGTH_INDEFINITE);
-        final FrameLayout snackBarView = (FrameLayout) snackbar.getView();
-
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView.getLayoutParams();
-        params.setMargins(params.leftMargin + 15,
-                params.topMargin,
-                params.rightMargin + 15,
-                params.bottomMargin + 120);
-        snackBarView.setLayoutParams(params);
-        return snackbar;
     }
 
     public static int calculatePercentage(Member member) {
@@ -1561,10 +1547,10 @@ public class Utility {
         Rect bounds = new Rect();
         paint.getTextBounds(gText, 0, gText.length(), bounds);
         int x = (bitmap.getWidth() - bounds.width()) / 2;
-        int y = (bitmap.getHeight() + bounds.height()) - 40;
+        int y = (bitmap.getHeight() + bounds.height()) - 35;
 
         canvas.drawText(gText, x, y, paint);
-        canvas.drawText(context.getString(R.string.app_name), x + 50, 25, paint);
+        canvas.drawText(context.getString(R.string.app_name) + " App", x, 25, paint);
         return bitmap;
     }
 
@@ -1584,7 +1570,7 @@ public class Utility {
         return image;
     }
 
-    public static void sendWhatsappMessage(@NonNull Context mActivity, String mob_num, String message) {
+    public static void sendWhatsAppMessage(@NonNull Context mActivity, String mob_num, String message) {
         // String digits = "\\d+";
         //if (mob_num.matches(digits)) {
         try {
@@ -1750,7 +1736,7 @@ public class Utility {
         } catch (ActivityNotFoundException e) {
             Log.e("SKYPE CALL", "Skype failed", e);
         }
-        Toast.makeText(ctx, number, Toast.LENGTH_LONG).show();
+        //  Toast.makeText(ctx, number, Toast.LENGTH_LONG).show();
     }
 
     private static void shareImage(File file, Context context) {

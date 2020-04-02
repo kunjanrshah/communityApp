@@ -1,19 +1,15 @@
 package com.krs.community.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import com.example.easywaylocation.EasyWayLocation
+import android.widget.BaseAdapter
+import android.widget.ImageView
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
 import com.krs.community.R
-import com.krs.community.activity.DashboardActivity.Companion.cur_lat
-import com.krs.community.activity.DashboardActivity.Companion.cur_lng
 import com.krs.community.model.Member
-import com.krs.community.utils.Utility
 
 class TruecallerAdapter(var mContext: Context) : BaseAdapter() {
     var mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -54,19 +50,18 @@ class TruecallerAdapter(var mContext: Context) : BaseAdapter() {
         return convertView!!
     }
 
-    private fun isShareLocation():Boolean{
-        val loginUser= Guru.getString(mContext.getString(R.string.loginMember),"")
+    private fun isShareLocation(): Boolean {
+        val loginUser = Guru.getString(mContext.getString(R.string.loginMember), "")
         val loginMember = Gson().fromJson<Member>(loginUser, Member::class.java)
-        var isShare=false
+        var isShare = false
         val arrayId = loginMember?.sharingId?.split(',')
-        if (arrayId!= null) {
-            for(id in arrayId){
+        if (arrayId != null) {
+            for (id in arrayId) {
 
             }
         }
         return isShare
     }
-
 
 
     interface SetSetTruecallListner {

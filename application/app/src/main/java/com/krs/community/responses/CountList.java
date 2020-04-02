@@ -1,3 +1,4 @@
+
 package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;
@@ -50,7 +51,6 @@ public class CountList {
     @SerializedName("sub_community")
     @Expose
     private String subCommunity;
-
     @SerializedName("gotra")
     @Expose
     private String gotra;
@@ -182,4 +182,5 @@ public class CountList {
     public void setGotra(String gotra) {
         this.gotra = gotra;
     }
+
 }

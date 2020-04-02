@@ -47,6 +47,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     /**
      * the constructor to create adapter object
+     *
      * @param multiple property to know is this multiple spinner or no
      * @param listener the listener
      */
@@ -57,7 +58,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     /**
      * method to store items of spinner when use non multiple spinner
-     * @param items items of spinner
+     *
+     * @param items    items of spinner
      * @param selected selected position
      */
     public void update(String[] items, int selected) {
@@ -74,7 +76,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     /**
      * method to store items of spinner when use multiple spinner
-     * @param items items of spinner
+     *
+     * @param items    items of spinner
      * @param selected selected positions
      */
     public void update(String[] items, List<Integer> selected) {
@@ -91,6 +94,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     /**
      * method to update dialog when query of search change
+     *
      * @param query the query of search
      */
     public void update(String query) {
@@ -134,6 +138,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     /**
      * method to add selected items when use multiple spinner
+     *
      * @param selected the selected position
      */
     public void addSelect(int selected) {
@@ -143,6 +148,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     /**
      * method to remove selected items when use multiple spinner
+     *
      * @param selected the unSelected position
      */
     public void removeSelect(int selected) {
@@ -153,6 +159,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             }
         }
         notifyDataSetChanged();
+    }
+
+    interface Listener {
+        void onClick(Pair<Integer, String> item, int position);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -181,9 +191,5 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 }
             });
         }
-    }
-
-    interface Listener {
-        void onClick(Pair<Integer, String> item, int position);
     }
 }

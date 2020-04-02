@@ -19,18 +19,18 @@ class BrowseCityViewModel(
         var app: Application) : AndroidViewModel(app) {
 
     private var job_users: CompletableJob? = null
-    var ibrowseCityRecordsListener: IbrowseCityRecordsListener?=null
+    var ibrowseCityRecordsListener: IbrowseCityRecordsListener? = null
     var TAG: String = BrowseCityViewModel::class.java.simpleName
 
     suspend fun getStates(): LiveData<List<States>> {
-       return browsCityRepository.getStates()
+        return browsCityRepository.getStates()
     }
 
-    suspend fun getLastName(id:Int):String{
-       return browsCityRepository.getLastnameById(id)
+    suspend fun getLastName(id: Int): String {
+        return browsCityRepository.getLastnameById(id)
     }
 
-    suspend fun getCitiesByState(id:Int): LiveData<List<City>> {
+    suspend fun getCitiesByState(id: Int): LiveData<List<City>> {
         return browsCityRepository.getCityByStateId(id)
     }
 

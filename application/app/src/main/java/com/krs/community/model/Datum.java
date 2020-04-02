@@ -1,13 +1,7 @@
-
 package com.krs.community.model;
-
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.jetbrains.annotations.NotNull;
 
 public class Datum {
 

@@ -14,6 +14,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.crashlytics.android.Crashlytics
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.GetLocationDetail
 import com.example.easywaylocation.Listener
@@ -31,6 +33,8 @@ import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -52,7 +56,7 @@ import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
-
+import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -63,6 +67,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private lateinit var dashboardViewModel: DashboardViewModel
     private val factory: DashboardViewModelFactory by instance()
     private var menu: Menu? = null
+
+
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
@@ -71,12 +77,15 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         var easyWayLocation: EasyWayLocation? = null
         var cur_lat = MutableLiveData<Double>()
         var cur_lng = MutableLiveData<Double>()
-        var cur_addr = MutableLiveData<String>()
+        var curAddr = MutableLiveData<String>()
+        var matrimonyCounts = MutableLiveData<String>()
+        var statusCounts = MutableLiveData<String>()
     }
 
     private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
 
     override val kodein by kodein()
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,8 +105,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             fade(this)
         }
 
-        setSupportActionBar(binding.toolbar as Toolbar)
-        (binding.toolbar as Toolbar).setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        setSupportActionBar(binding.toolbar as Toolbar?)
+        (binding.toolbar as Toolbar?)?.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.home)
 
@@ -172,19 +181,20 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         })
 
+        movetoFragment(this@DashboardActivity, DashboardFragment())
+        if (isNetworkConnected(this)) {
+            val JsonObj = JSONObject()
+            JsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+            JsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+            JsonObj.put("insert", "")
+            JsonObj.put("version", getAppVersion(this))
+            val updated = JsonParser().parse(JsonObj.toString()) as JsonObject
+            dashboardViewModel.getUpdatedVersion(updated)
+        }
+
         if (isNetworkConnected(this)) {
             dashboardViewModel.getMasterUpdate()
         }
-
-        movetoFragment(this@DashboardActivity, DashboardFragment())
-        /*if (isNetworkConnected(this)) {
-            val JsonObj= JSONObject()
-            JsonObj.put(getString(R.string.user_id),Guru.getString(getString(R.string.user_id),""))
-            JsonObj.put(getString(R.string.access_token),Guru.getString(getString(R.string.access_token),""))
-            JsonObj.put("version","1")
-            val updated=  JsonParser().parse(JsonObj.toString()) as JsonObject
-            dashboardViewModel.getUpdatedVersion(updated)
-        }*/
     }
 
     override fun onResume() {
@@ -209,7 +219,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
 
         val locale = Guru.getString(resources.getString(R.string.locale_sp), resources.getString(R.string._english))
-        Log.e("Lang",""+locale)
+        Log.e("Lang", "" + locale)
         if (locale.equals(resources.getString(R.string._gujarati), ignoreCase = true)) {
             changeLang(applicationContext, "ગુજરાતી")
         } else if (locale.equals(resources.getString(R.string._hindi), ignoreCase = true)) {
@@ -217,6 +227,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         } else {
             changeLang(applicationContext, "English")
         }
+
+
     }
 
     override fun onPause() {
@@ -297,11 +309,17 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         return true
     }
 
+    private fun logUser(member: Member) {
+        Crashlytics.setUserIdentifier(member.id)
+        Crashlytics.setUserEmail(member.emailAddress)
+        Crashlytics.setUserName(member.firstName)
+    }
+
     private fun loadProfile() {
         val memberString = Guru.getString(getString(R.string.loginMember), "")
         val member = Gson().fromJson(memberString, Member::class.java)
         val str = resources.getString(R.string.base_url_thumb) + member?.profilePic
-
+        logUser(member)
         Glide.with(this)
                 .load(str)
                 .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
@@ -309,11 +327,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                         menu?.findItem(R.id.action_profile)?.icon = resource
                     }
-
                     override fun onLoadCleared(placeholder: Drawable?) {
 
                     }
-
                 })
     }
 
@@ -326,7 +342,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 val member = Gson().fromJson(memberString, Member::class.java)
                 intent.putExtra(getString(R.string.member), member)
                 startActivity(intent)
-                fade(this)
+                //fade(this)
                 true
             }
             R.id.action_notify -> {
@@ -354,7 +370,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     override fun locationData(locationData: LocationData) {
-        cur_addr.postValue(locationData.full_address)
+        curAddr.postValue(locationData.full_address)
     }
 
     override fun getVersionResponse(response: UserStatusResponse) {
@@ -367,6 +383,12 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         if (response.success) {
 
             Coroutines.io {
+                if (!response.userCounts.matrimonyCounts.isNullOrEmpty()) {
+                    matrimonyCounts.postValue(response.userCounts.matrimonyCounts)
+                }
+                if (!response.userCounts.statusCounts.isNullOrEmpty()) {
+                    statusCounts.postValue(response.userCounts.statusCounts)
+                }
 
                 val counts = MasterCounts()
                 counts.business_categories = Integer.parseInt(response.countList.businessCategories)

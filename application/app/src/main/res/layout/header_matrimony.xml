@@ -19,9 +19,9 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/backmatrimony"
             android:textSize="18sp" />
@@ -42,26 +42,26 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
         android:layout_marginBottom="5dp"
-        android:singleLine="true"
-        android:imeOptions="actionSearch"
-        android:digits="@string/restrict_space"
         android:background="@drawable/border"
+        android:digits="@string/restrict_space"
         android:drawableEnd="@drawable/controls"
         android:fontFamily="@font/montserrat_regular"
         android:hint="@string/search_name"
+        android:imeOptions="actionSearch"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp" />
+        android:paddingRight="10dp"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tvCount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:fontFamily="@font/montserrat_medium"
         android:layout_marginBottom="5dp"
+        android:fontFamily="@font/montserrat_medium"
         android:text="Find Records"
         android:textColor="@color/black"
         android:textSize="16sp" />

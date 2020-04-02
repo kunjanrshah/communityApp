@@ -1,9 +1,7 @@
-
 package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.krs.community.entities.CurrentActivity;
 import com.krs.community.entities.Occupations;
 
 import java.util.List;

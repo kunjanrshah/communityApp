@@ -26,7 +26,7 @@ class IncomingCallReceiver : BroadcastReceiver() {
 
     private var completableJob: CompletableJob? = null
     private var contactListRepository = ContactListRepository(ApiServices(), null)
-    private var isShow: Boolean = true;
+    private var isShow: Boolean = true
 
     override fun onReceive(context: Context, intent: Intent) {
         try {
@@ -35,26 +35,26 @@ class IncomingCallReceiver : BroadcastReceiver() {
                 override fun onCallStateChanged(state: Int, incomingNumber: String) {
                     super.onCallStateChanged(state, incomingNumber)
 
-                    Log.e("incomingNumber---", "number===" + incomingNumber);
-                    Log.e("state---", "" + state);
+                    Log.e("incomingNumber---", "number===" + incomingNumber)
+                    Log.e("state---", "" + state)
 
                     isShow = Guru.getBoolean(context.getString(R.string.isdialogshow), true)
-                        if (state == 1 && incomingNumber.isNotEmpty()) {
-                            if (isShow) {
-                                val jsonObject = JSONObject()
-                                jsonObject.put(context.getString(R.string.user_id), Guru.getString(context.getString(R.string.user_id), ""))
-                                jsonObject.put(context.getString(R.string.id), Guru.getString(context.getString(R.string.member_id), ""))
-                                jsonObject.put(context.getString(R.string.access_token), Guru.getString(context.getString(R.string.access_token), ""))
-                                val jsonArray = JSONArray()
-                                val number = incomingNumber.replace("+91", "")
-                                jsonArray.put(number)
-                                jsonObject.put("mobiles", jsonArray)
-                                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-                                Log.e("updated---", "" + updated);
-                                getContactList(context, updated)
-                            }
+                    if (state == 1 && incomingNumber.isNotEmpty()) {
+                        if (isShow) {
+                            val jsonObject = JSONObject()
+                            jsonObject.put(context.getString(R.string.user_id), Guru.getString(context.getString(R.string.user_id), ""))
+                            jsonObject.put(context.getString(R.string.id), Guru.getString(context.getString(R.string.member_id), ""))
+                            jsonObject.put(context.getString(R.string.access_token), Guru.getString(context.getString(R.string.access_token), ""))
+                            val jsonArray = JSONArray()
+                            val number = incomingNumber.replace("+91", "")
+                            jsonArray.put(number)
+                            jsonObject.put("mobiles", jsonArray)
+                            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                            Log.e("updated---", "" + updated)
+                            getContactList(context, updated)
                         }
                     }
+                }
             }, PhoneStateListener.LISTEN_CALL_STATE)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -90,15 +90,15 @@ class IncomingCallReceiver : BroadcastReceiver() {
                     }
                 } catch (e: ApiException) {
                     e.message?.let {
-                        Log.e("ApiException--", "" + e.toString());
+                        Log.e("ApiException--", "" + e.toString())
                     }
                 } catch (e: NoInternetException) {
                     e.message?.let {
-                        Log.e("NoInternetException--", "" + e.toString());
+                        Log.e("NoInternetException--", "" + e.toString())
                     }
                 } catch (e: Exception) {
                     e.message?.let {
-                        Log.e("Exception--", "" + e.toString());
+                        Log.e("Exception--", "" + e.toString())
                     }
                 }
                 thejob.complete()

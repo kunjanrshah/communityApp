@@ -4,6 +4,6 @@
     android:layout_width="250dp"
     android:layout_height="250dp"
     android:layout_gravity="center"
-    android:src="@drawable/waiting"
-    android:contentDescription="TODO" />
+    android:contentDescription="TODO"
+    android:src="@drawable/waiting" />
 

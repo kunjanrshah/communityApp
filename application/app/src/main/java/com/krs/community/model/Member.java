@@ -1,4 +1,3 @@
-
 package com.krs.community.model;
 
 import androidx.room.Entity;
@@ -14,27 +13,31 @@ public class Member implements Serializable {
 
     @SerializedName("login_status")
     @Expose
-    private int loginStatus=0;
+    private int loginStatus = 0;
 
-    @SerializedName("members_count")
+    @SerializedName("member_count")
     @Expose
     private int membersCount = 0;
 
     @SerializedName("last_login")
     @Expose
-    private String lastLogin="";
+    private String lastLogin = "";
+
+    @SerializedName("profile_percentage")
+    @Expose
+    private String profilePercentage = "";
 
     @SerializedName("online_status")
     @Expose
-    private int onlineStatus=0;
+    private int onlineStatus = 0;
 
     @SerializedName("sharing_id")
     @Expose
-    private String sharingId="";
+    private String sharingId = "";
 
     @SerializedName("matched")
     @Expose
-    private String matched="";
+    private String matched = "";
 
     @SerializedName("isImportant")
     @Expose
@@ -42,255 +45,267 @@ public class Member implements Serializable {
 
     @SerializedName("nearBy")
     @Expose
-    private String nearBy="";
+    private String nearBy = "";
     @SerializedName("access_token")
     @Expose
-    private String accessToken="";
+    private String accessToken = "";
     @SerializedName("profile_completed")
     @Expose
-    private String profileCompleted="0%";
+    private String profileCompleted = "0%";
 
     @SerializedName("profile_password")
     @Expose
-    private String profilePassword="";
+    private String profilePassword = "";
 
     @SerializedName("distance")
     @Expose
-    private String distance="";
+    private String distance = "";
 
     @SerializedName("head_sub_cast_id")
     @Expose
-    private String head_sub_cast_id="";
+    private String head_sub_cast_id = "";
     @SerializedName("head_name")
     @Expose
-    private String head_name="";
+    private String head_name = "";
 
     @SerializedName("id")
     @Expose
-    private String id="";
+    private String id = "";
     @SerializedName("role")
     @Expose
-    private String role="";
+    private String role = "";
     @SerializedName("head_id")
     @Expose
-    private String headId="0";
+    private String headId = "0";
     @SerializedName("member_code")
     @Expose
-    private String memberCode="";
+    private String memberCode = "";
     @SerializedName("email_address")
     @Expose
-    private String emailAddress="";
+    private String emailAddress = "";
     @SerializedName("mobile")
     @Expose
-    private String mobile="";
+    private String mobile = "";
     @SerializedName("plain_password")
     @Expose
-    private String plainPassword="";
+    private String plainPassword = "";
     @SerializedName("password")
     @Expose
-    private String password="";
+    private String password = "";
     @SerializedName("relation_id")
     @Expose
-    private String relationId="";
+    private String relationId = "";
 
     @SerializedName("relation")
     @Expose
-    private String relation="";
+    private String relation = "";
 
     @SerializedName("sub_community_id")
     @Expose
-    private String subCommunityId="";
+    private String subCommunityId = "";
     @SerializedName("local_community_id")
     @Expose
-    private String localCommunityId="";
+    private String localCommunityId = "";
     @SerializedName("committee_id")
     @Expose
-    private String committeeId="";
+    private String committeeId = "";
     @SerializedName("designation_id")
     @Expose
-    private String designationId="";
+    private String designationId = "";
     @SerializedName("first_name")
     @Expose
-    private String firstName="";
+    private String firstName = "";
     @SerializedName("last_name")
     @Expose
-    private String lastName="";
+    private String lastName = "";
     @SerializedName("father_name")
     @Expose
-    private String fatherName="";
+    private String fatherName = "";
     @SerializedName("mother_name")
     @Expose
-    private String motherName="";
+    private String motherName = "";
     @SerializedName("sub_cast_id")
     @Expose
-    private String subCastId="";
+    private String subCastId = "";
     @SerializedName("status")
     @Expose
-    private String status="";
+    private String status = "";
     @SerializedName("gender")
     @Expose
-    private String gender="";
+    private String gender = "";
     @SerializedName("address")
     @Expose
-    private String address="";
+    private String address = "";
     @SerializedName("local_address")
     @Expose
-    private String localAddress="";
+    private String localAddress = "";
     @SerializedName("city_id")
     @Expose
-    private String cityId="";
+    private String cityId = "";
     @SerializedName("city")
     @Expose
-    private String city="";
+    private String city = "";
     @SerializedName("state_id")
     @Expose
-    private String stateId="";
+    private String stateId = "";
     @SerializedName("area")
     @Expose
-    private String area="";
+    private String area = "";
     @SerializedName("pincode")
     @Expose
-    private String pincode="";
+    private String pincode = "";
     @SerializedName("phone")
     @Expose
-    private String phone="";
+    private String phone = "";
     @SerializedName("matrimony")
     @Expose
-    private String matrimony="NO";
+    private String matrimony = "NO";
     @SerializedName("birth_date")
     @Expose
-    private String birthDate="";
+    private String birthDate = "";
     @SerializedName("birth_time")
     @Expose
-    private String birthTime="";
+    private String birthTime = "";
     @SerializedName("birth_place")
     @Expose
-    private String birthPlace="";
+    private String birthPlace = "";
     @SerializedName("distinct_id")
     @Expose
-    private String distinctId="";
+    private String distinctId = "";
     @SerializedName("native_place_id")
     @Expose
-    private String nativePlaceId="";
+    private String nativePlaceId = "";
     @SerializedName("blood_group")
     @Expose
-    private String bloodGroup="";
+    private String bloodGroup = "";
     @SerializedName("about_me")
     @Expose
-    private String aboutMe="";
+    private String aboutMe = "";
     @SerializedName("weight")
     @Expose
-    private String weight="";
+    private String weight = "";
     @SerializedName("height")
     @Expose
-    private String height="";
+    private String height = "";
     @SerializedName("is_spect")
     @Expose
-    private String isSpect="0";
+    private String isSpect = "0";
     @SerializedName("is_mangal")
     @Expose
-    private String isMangal="0";
+    private String isMangal = "0";
     @SerializedName("is_shani")
     @Expose
-    private String isShani="0";
+    private String isShani = "0";
     @SerializedName("hobby")
     @Expose
-    private String hobby="";
+    private String hobby = "";
     @SerializedName("facebook_profile")
     @Expose
-    private String facebookProfile="";
+    private String facebookProfile = "";
     @SerializedName("expectation")
     @Expose
-    private String expectation="";
+    private String expectation = "";
     @SerializedName("mosaad_id")
     @Expose
-    private String mosaadId="";
+    private String mosaadId = "";
     @SerializedName("current_activity_id")
     @Expose
-    private String currentActivityId="";
+    private String currentActivityId = "";
     @SerializedName("marital_status")
     @Expose
-    private String maritalStatus="";
+    private String maritalStatus = "";
     @SerializedName("marriage_date")
     @Expose
-    private String marriageDate="";
+    private String marriageDate = "";
     @SerializedName("gotra_id")
     @Expose
-    private String gotraId="";
+    private String gotraId = "";
     @SerializedName("profile_pic")
     @Expose
-    private String profilePic="";
+    private String profilePic = "";
     @SerializedName("region")
     @Expose
-    private String region="";
+    private String region = "";
     @SerializedName("is_rented")
     @Expose
-    private String isRented="0";
+    private String isRented = "0";
     @SerializedName("is_expired")
     @Expose
-    private String isExpired="";
+    private String isExpired = "";
     @SerializedName("expire_date")
     @Expose
-    private String expireDate="";
+    private String expireDate = "";
     @SerializedName("is_donor")
     @Expose
-    private String isDonor="0";
+    private String isDonor = "0";
     @SerializedName("business_category_id")
     @Expose
-    private String businessCategoryId="";
+    private String businessCategoryId = "";
     @SerializedName("business_sub_category_id")
     @Expose
-    private String businessSubCategoryId="";
+    private String businessSubCategoryId = "";
     @SerializedName("work_details")
     @Expose
-    private String workDetails="";
+    private String workDetails = "";
     @SerializedName("company_name")
     @Expose
-    private String companyName="";
+    private String companyName = "";
     @SerializedName("business_address")
     @Expose
-    private String businessAddress="";
+    private String businessAddress = "";
     @SerializedName("business_logo")
     @Expose
-    private String businessLogo="";
+    private String businessLogo = "";
     @SerializedName("website")
     @Expose
-    private String website="";
+    private String website = "";
     @SerializedName("education_id")
     @Expose
-    private String educationId="";
+    private String educationId = "";
     @SerializedName("occupation_id")
     @Expose
-    private String occupationId="";
+    private String occupationId = "";
     @SerializedName("user_lat")
     @Expose
-    private String userLat="";
+    private String userLat = "";
     @SerializedName("user_lng")
     @Expose
-    private String userLng="";
+    private String userLng = "";
     @SerializedName("home_lat")
     @Expose
-    private String homeLat="";
+    private String homeLat = "";
     @SerializedName("home_lng")
     @Expose
-    private String homeLng="";
+    private String homeLng = "";
     @SerializedName("office_lat")
     @Expose
-    private String officeLat="";
+    private String officeLat = "";
     @SerializedName("office_lng")
     @Expose
-    private String officeLng="";
+    private String officeLng = "";
     @SerializedName("is_location_enable")
     @Expose
-    private String isLocationEnable="0";
+    private String isLocationEnable = "0";
 
     @SerializedName("updated_dt")
     @Expose
-    private String updatedDt="0";
+    private String updatedDt = "0";
 
     @SerializedName("created_dt")
     @Expose
     private String createdDt = "0";
+
+    @SerializedName("reminder_birth_date")
+    @Expose
+    private String reminderBirthDate;
+
+    @SerializedName("reminder_marriage_date")
+    @Expose
+    private String reminderMarriageDate;
+
+    @SerializedName("reminder_expire_date")
+    @Expose
+    private String reminderExpireDate;
 
     @SerializedName("matches")
     @Expose
@@ -1006,5 +1021,37 @@ public class Member implements Serializable {
 
     public void setCreatedDt(String createdDt) {
         this.createdDt = createdDt;
+    }
+
+    public String getReminderBirthDate() {
+        return reminderBirthDate;
+    }
+
+    public void setReminderBirthDate(String reminderBirthDate) {
+        this.reminderBirthDate = reminderBirthDate;
+    }
+
+    public String getReminderMarriageDate() {
+        return reminderMarriageDate;
+    }
+
+    public void setReminderMarriageDate(String reminderMarriageDate) {
+        this.reminderMarriageDate = reminderMarriageDate;
+    }
+
+    public String getReminderExpireDate() {
+        return reminderExpireDate;
+    }
+
+    public void setReminderExpireDate(String reminderExpireDate) {
+        this.reminderExpireDate = reminderExpireDate;
+    }
+
+    public String getProfilePercentage() {
+        return profilePercentage;
+    }
+
+    public void setProfilePercentage(String profilePercentage) {
+        this.profilePercentage = profilePercentage;
     }
 }

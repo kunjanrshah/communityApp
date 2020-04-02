@@ -83,6 +83,30 @@ public class JRSpinner extends AppCompatEditText {
     }
 
     /**
+     * method to get activity of the view
+     *
+     * @param context context where view found
+     * @param <T>     the return must be extend FragmentActivity
+     * @return object that extend FragmentActivity
+     */
+    public static <T extends FragmentActivity> T findActivity(Context context) {
+        if (context == null) {
+            throw new IllegalArgumentException("Context cannot be null");
+        }
+
+        if (context instanceof FragmentActivity) {
+            return (T) context;
+        } else {
+            ContextWrapper contextWrapper = (ContextWrapper) context;
+            Context baseContext = contextWrapper.getBaseContext();
+            if (baseContext == null) {
+                throw new IllegalStateException("Activity was not found as base context of view!");
+            }
+            return findActivity(baseContext);
+        }
+    }
+
+    /**
      * method that initialize the view
      *
      * @param attrs attribute of view
@@ -204,31 +228,32 @@ public class JRSpinner extends AppCompatEditText {
 
     /**
      * method to add search listener
+     *
      * @param watcher search box text watcher
      */
-    public void addSearchListener(TextWatcher watcher){
+    public void addSearchListener(TextWatcher watcher) {
         this.watcher = watcher;
     }
 
-
     /**
-     *  set selected position. Can use for set default selected position
+     * set selected position. Can use for set default selected position
+     *
      * @param position selected position
      */
-    public void select(int position){
-        if (!multiple){
+    public void select(int position) {
+        if (!multiple) {
             selected = position;
             setText(items[position]);
-        }else{
+        } else {
             multipleSelected.add(position);
             setText(items[position]);
         }
 
-        if (onItemClickListener != null){
+        if (onItemClickListener != null) {
             onItemClickListener.onItemClick(selected);
         }
 
-        if (onSelectMultipleListener != null){
+        if (onSelectMultipleListener != null) {
             onSelectMultipleListener.onMultipleSelected(multipleSelected);
         }
     }
@@ -240,14 +265,14 @@ public class JRSpinner extends AppCompatEditText {
     public boolean performClick() {
         if (!multiple) {
             dialog = Dialog.newInstance(title, items, selected);
-            if (watcher != null){
+            if (watcher != null) {
                 dialog.addSearchListener(watcher);
             }
             dialog.setListener(onItemClickListener, JRSpinner.this);
             dialog.show(findActivity(getContext()).getSupportFragmentManager(), dialog.getTag());
         } else {
             multiDialog = MultipleDialog.newInstance(title, items, multipleSelected);
-            if (watcher != null){
+            if (watcher != null) {
                 multiDialog.addSearchListener(watcher);
             }
             multiDialog.setListener(onSelectMultipleListener, JRSpinner.this);
@@ -269,30 +294,6 @@ public class JRSpinner extends AppCompatEditText {
     }
 
     /**
-     * method to get activity of the view
-     *
-     * @param context context where view found
-     * @param <T>     the return must be extend FragmentActivity
-     * @return object that extend FragmentActivity
-     */
-    public static <T extends FragmentActivity> T findActivity(Context context) {
-        if (context == null) {
-            throw new IllegalArgumentException("Context cannot be null");
-        }
-
-        if (context instanceof FragmentActivity) {
-            return (T) context;
-        } else {
-            ContextWrapper contextWrapper = (ContextWrapper) context;
-            Context baseContext = contextWrapper.getBaseContext();
-            if (baseContext == null) {
-                throw new IllegalStateException("Activity was not found as base context of view!");
-            }
-            return findActivity(baseContext);
-        }
-    }
-
-    /**
      * set the selected items position when use multiple spinner
      *
      * @param selected selected positions
@@ -302,17 +303,17 @@ public class JRSpinner extends AppCompatEditText {
         multipleSelected.addAll(selected);
     }
 
-    public boolean isHaveItems(){
+    public boolean isHaveItems() {
         return items != null && items.length > 0;
     }
 
-    public void updateItems(String[] newItems){
+    public void updateItems(String[] newItems) {
         items = newItems;
         selected = -1;
         multipleSelected = new ArrayList<>();
-        if (multiple){
+        if (multiple) {
             multiDialog.updateItems(newItems);
-        }else{
+        } else {
             dialog.updateItems(newItems);
         }
     }

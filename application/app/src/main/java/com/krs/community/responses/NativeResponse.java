@@ -1,10 +1,8 @@
-
 package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.krs.community.entities.Native;
-import com.krs.community.entities.States;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import com.krs.community.viewmodel.LoginViewModel
 
 class LoginViewModelFactory(
         private val repository: LoginRepository
-        ):ViewModelProvider.NewInstanceFactory() {
+) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return LoginViewModel(repository, AppController.mApplication) as T
     }

@@ -2,8 +2,9 @@ package com.krs.community.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -61,7 +62,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_professional_details, container, false)
 
-        val mApp =(activity as AppCompatActivity). applicationContext as AppController
+        val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, ProfessionalDetailsFragment::class.simpleName)
         mApp.facebookAnalytics(context, ProfessionalDetailsFragment::class.simpleName)
 
@@ -87,6 +88,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
             binding.spSubCat.isClickable = false
             binding.spOccupation.isClickable = false
             binding.edtUrl.isFocusable = false
+            binding.edtUrl.movementMethod = LinkMovementMethod.getInstance()
             binding.edtDetail.isFocusable = false
             binding.edtAddr.isFocusable = false
         }
@@ -226,7 +228,15 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         }
 
         binding.edtComName.setText(member.companyName)
-        binding.edtUrl.setText(member.website)
+        if (!member.website.isNullOrEmpty()) {
+            val spannable: Spannable = SpannableString(member.website)
+            Linkify.addLinks(spannable, Linkify.WEB_URLS)
+            val text: CharSequence = TextUtils.concat(spannable, "\u200B")
+            binding.edtUrl.setText(text)
+        } else {
+            binding.edtUrl.setText(member.website)
+        }
+
         binding.edtAddr.setText(member.businessAddress)
         binding.edtAddr.addTextChangedListener(object : TextWatcher {
             private var text: String? = null
@@ -274,29 +284,29 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == PICK_GALLERY_REQUEST) {
-                val selectedUri = data?.data
-                if (selectedUri != null) {
-                    startCrop(selectedUri, activity!!)
-                } else {
-                    binding.llMain.snackbar(getString(R.string.SelectedImageDetails), Snackbar.LENGTH_SHORT)
-                }
-            } else if (requestCode == UCrop.REQUEST_CROP) {
-                data?.let {
-                    val resultUri = UCrop.getOutput(it)
-                    if (resultUri != null) {
-                        if (isNetworkConnected(activity as AppCompatActivity)) {
-                            try {
-                                Glide.with(mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgLogo)
-                                val uploadImage = File(resultUri.path.toString())
-                                startSweetProgress(activity!!, getString(R.string.imageDetails), getString(R.string.loading))
-                                profileDetailViewModel.uploadImage(uploadImage, member.id.toString(), getString(R.string.company))
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
+            val selectedUri = data?.data
+            if (selectedUri != null) {
+                startCrop(selectedUri, activity!!)
+            } else {
+                binding.llMain.snackbar(getString(R.string.SelectedImageDetails), Snackbar.LENGTH_SHORT)
+            }
+        } else if (requestCode == UCrop.REQUEST_CROP) {
+            data?.let {
+                val resultUri = UCrop.getOutput(it)
+                if (resultUri != null) {
+                    if (isNetworkConnected(activity as AppCompatActivity)) {
+                        try {
+                            Glide.with(mApplication).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgLogo)
+                            val uploadImage = File(resultUri.path.toString())
+                            startSweetProgress(activity!!, "Logo uploading", getString(R.string.loading))
+                            profileDetailViewModel.uploadImage(uploadImage, member.id.toString(), getString(R.string.company))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 }
             }
+        }
 
         if (resultCode == UCrop.RESULT_ERROR) {
             data?.let { handleCropError(it, activity!!) }
@@ -381,14 +391,14 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
 
     }
 
-    override fun getResult(jsonObject: JsonObject) {
+    override fun onUploadSuccess(jsonObject: JsonObject) {
         hideSweetProgress()
         member.businessLogo = jsonObject.get("business_logo").asString
         Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
         displaySnackBarWithBottomMargin(binding.llMain, "Logo updated!")
     }
 
-    override suspend fun onFailure(message: String) {
+    override suspend fun onUploadFail(message: String) {
         hideSweetProgress()
         binding.llMain.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
     }

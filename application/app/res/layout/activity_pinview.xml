@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:paddingBottom="60dp"
     android:paddingLeft="16dp"
-    android:id="@+id/ll_parent"
+    android:paddingTop="50dp"
     android:paddingRight="16dp"
-    android:paddingTop="50dp"  >
+    android:paddingBottom="60dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -19,7 +18,7 @@
         android:layout_centerHorizontal="true"
         android:elevation="4dp"
         android:src="@drawable/user_face"
-        tools:ignore="ContentDescription"/>
+        tools:ignore="ContentDescription" />
 
     <com.kevalpatel.passcodeview.PinView
         android:id="@+id/pattern_view"
@@ -32,6 +31,6 @@
         app:fingerprintTextColor="@color/white"
         app:fingerprintTextSize="16sp"
         app:giveTactileFeedback="true"
-        app:titleTextColor="@android:color/white"/>
+        app:titleTextColor="@android:color/white" />
 
 </RelativeLayout>

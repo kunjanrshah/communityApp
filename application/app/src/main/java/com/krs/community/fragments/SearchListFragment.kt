@@ -247,7 +247,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                Utility.sendWhatsappMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
                             } else {
                                 Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                             }
@@ -319,14 +319,20 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
             override fun onSearchItemRemoved(index: Int) {
                 searchWord = ""
-                lstKeyword.removeAt(index)
                 if (lstKeyword.size > 0) {
-                    if (lstKeyword.size == 1) {
-                        searchWord = lstKeyword[0]
-                    } else if (lstKeyword.size == index) {
-                        searchWord = lstKeyword[index - 1]
-                    } else {
-                        searchWord = lstKeyword[index]
+                    lstKeyword.removeAt(index)
+                    if (lstKeyword.size > 0) {
+                        searchWord = when (lstKeyword.size) {
+                            1 -> {
+                                lstKeyword[0]
+                            }
+                            index -> {
+                                lstKeyword[index - 1]
+                            }
+                            else -> {
+                                lstKeyword[index]
+                            }
+                        }
                     }
                 }
                 if (searchWord.isNotEmpty()) {
@@ -454,10 +460,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 if (Integer.parseInt(response.totalRecords) == 0) {
                     //  Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
 
-                   // val gif: Int = R.drawable.gif_no_record
                     val gif: Int = R.drawable.gif_no_record
                     TTFancyGifDialog.Builder(activity)
-                            //.setTitle(getString(R.string.you_sure))
                             .setMessage(getString(R.string.noFoundNonActives))
                             .setPositiveBtnText(getString(R.string.ok))
                             .setPositiveBtnBackground("#843f52")
@@ -496,7 +500,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             mShimmerViewContainer.stopShimmerAnimation()
             mShimmerViewContainer.visibility = View.GONE
 
-          //  val gif: Int = R.drawable.gif_no_record
+            //  val gif: Int = R.drawable.gif_no_record
             val gif: Int = R.drawable.gif_no_record
             TTFancyGifDialog.Builder(activity)
                     //.setTitle(getString(R.string.you_sure))
@@ -593,7 +597,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMembers.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //   Utility.fade(activity)
         }
     }
 

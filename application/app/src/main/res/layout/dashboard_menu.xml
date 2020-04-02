@@ -1,28 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:background="?attr/selectableItemBackground"
     android:drawSelectorOnTop="true"
-    android:gravity="center"
+    android:orientation="vertical"
     android:padding="5dp">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_gravity="center"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_above="@+id/name"
-        android:scaleType="fitXY"
-        android:src="@drawable/dark_icon" />
-    <TextView
-        android:id="@+id/name"
-        android:fontFamily="@font/montserrat_semibold"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/search_city" />
+
+        <com.krs.community.app.NotificationBadge
+            android:id="@+id/badge"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignTop="@id/image"
+            android:layout_marginLeft="-12dp"
+            android:layout_toRightOf="@id/image"
+            android:textSize="10dp"
+            app:nbBackground="@drawable/badge_bg_with_shadow"
+            app:nbMaxTextLength="2" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/name"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:fontFamily="@font/montserrat_semibold"
         android:text="ABCD"
-        android:textSize="12sp"
-         />
+        android:textSize="10sp" />
+
 </LinearLayout>

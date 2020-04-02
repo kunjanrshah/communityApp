@@ -47,9 +47,9 @@
         android:id="@+id/rv_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="30dp"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        android:layout_marginBottom="30dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/row_list_family_detail" />
 </LinearLayout>

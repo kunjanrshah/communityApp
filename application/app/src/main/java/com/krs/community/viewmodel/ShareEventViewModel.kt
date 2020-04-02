@@ -14,6 +14,8 @@ import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class ShareEventViewModel(
@@ -25,7 +27,7 @@ class ShareEventViewModel(
     lateinit var mCreateEventListener: CreateEventListener
 
 
-    fun createEvent(images: List<String>, id : String, user_id : String, access_token: String, params: String, yourtube:List<String>) {
+    fun createEvent(images: List<String>, id: String, user_id: String, access_token: String, params: String, yourtube: List<String>) {
         if (isNetworkConnected(app.applicationContext)) {
             job_by_update = Job()
             job_by_update.let { thejob ->
@@ -36,37 +38,25 @@ class ShareEventViewModel(
                         var videoURLs: MutableList<RequestBody> = ArrayList()
 
                         for (i in 0..images.size - 1) {
-                            val requestFile = RequestBody.create(
-                                    "image/*".toMediaTypeOrNull(),
-                                    File(images.get(i))
-                            )
+                            val requestFile = File(images.get(i))
+                                    .asRequestBody("image/*".toMediaTypeOrNull())
                             val body = MultipartBody.Part.createFormData("uploaded_file", File(images.get(i)).name, requestFile)
                             imagesList.add(body)
                         }
 
                         for (i in 0..yourtube.size - 1) {
-                            val url = RequestBody.create(
-                                    "text/plain".toMediaTypeOrNull(),
-                                    id)
+                            val url = id.toRequestBody("text/plain".toMediaTypeOrNull())
                             videoURLs.add(url)
                         }
 
-                        val id = RequestBody.create(
-                                "text/plain".toMediaTypeOrNull(),
-                                id)
+                        val id = id.toRequestBody("text/plain".toMediaTypeOrNull())
 
 
-                        val user_id = RequestBody.create(
-                                "text/plain".toMediaTypeOrNull(),
-                                user_id)
+                        val user_id = user_id.toRequestBody("text/plain".toMediaTypeOrNull())
 
-                        val access_token = RequestBody.create(
-                                "text/plain".toMediaTypeOrNull(),
-                                access_token)
+                        val access_token = access_token.toRequestBody("text/plain".toMediaTypeOrNull())
 
-                        val body = RequestBody.create(
-                                "text/plain".toMediaTypeOrNull(),
-                                params)
+                        val body = params.toRequestBody("text/plain".toMediaTypeOrNull())
 
                         val response: JsonObject = shareEventRepository.createEvent(imagesList, id, user_id, access_token, body, videoURLs)
 

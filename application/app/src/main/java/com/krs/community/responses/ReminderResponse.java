@@ -1,22 +1,19 @@
-
-package com.krs.community.model;
+package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class GetRemindersResponse {
+public class ReminderResponse {
 
     @SerializedName("success")
     @Expose
     private Boolean success;
-
-
-
+    @SerializedName("message")
+    @Expose
+    private String message;
     @SerializedName("data")
     @Expose
-    private List<Reminders> data = null;
+    private Reminder data;
 
     public Boolean getSuccess() {
         return success;
@@ -26,11 +23,19 @@ public class GetRemindersResponse {
         this.success = success;
     }
 
-    public List<Reminders> getData() {
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Reminder getData() {
         return data;
     }
 
-    public void setData(List<Reminders> data) {
+    public void setData(Reminder data) {
         this.data = data;
     }
 

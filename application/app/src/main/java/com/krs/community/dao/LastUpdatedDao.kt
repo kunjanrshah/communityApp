@@ -13,11 +13,11 @@ interface LastUpdatedDao {
     fun getLastUpdated() : LiveData<List<LastUpdated>>*/
 
     @Query("SELECT date FROM LastUpdated WHERE name==:name")
-    fun getLastUpdatedDate(name:String) : String
+    fun getLastUpdatedDate(name: String): String
 
     /*@Query("UPDATE udpate FROM LastUpdated WHERE name==:name")
     fun updatedDate(name:String) : String*/
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveLastUpdated(lastUpdated : LastUpdated)
+    fun saveLastUpdated(lastUpdated: LastUpdated)
 }

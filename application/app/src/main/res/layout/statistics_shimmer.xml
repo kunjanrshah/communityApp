@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="350dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
     android:layout_height="60dp"
-    android:elevation="0dp"
-    android:layout_marginTop="10dp"
-    android:gravity="center"
     android:layout_gravity="center_horizontal"
+    android:layout_marginTop="10dp"
     android:background="@color/placeholder_bg"
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:elevation="0dp"
+    android:gravity="center"
+    android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/montserrat_semibold"
-            android:textColor="@color/black3"
-            android:textSize="14sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/black3"
+        android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tv_un_female"
-            android:layout_width="120dp"
-            android:layout_marginLeft="20dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:textColor="@color/colorPrimary"
-            android:textSize="26sp" />
+    <TextView
+        android:id="@+id/tv_un_female"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/colorPrimary"
+        android:textSize="26sp" />
 
-    </LinearLayout>
+</LinearLayout>

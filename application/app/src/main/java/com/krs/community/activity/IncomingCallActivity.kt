@@ -132,15 +132,6 @@ class IncomingCallActivity : Activity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-    }
-
     private fun sendEmail() {
         try {
             val emailIntent = Intent(Intent.ACTION_SEND)

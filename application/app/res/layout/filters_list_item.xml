@@ -26,12 +26,12 @@
 
             <TextView
                 android:id="@+id/tv_name"
-                android:singleLine="true"
-                android:layout_marginTop="-5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-5dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat_medium"
+                android:singleLine="true"
                 android:text="Filter Name"
                 android:textColor="@color/black1"
                 android:textSize="18sp" />
@@ -64,8 +64,7 @@
                     android:layout_height="wrap_content"
                     app:alignContent="stretch"
                     app:alignItems="stretch"
-                    app:flexWrap="wrap">
-                </com.google.android.flexbox.FlexboxLayout>
+                    app:flexWrap="wrap"></com.google.android.flexbox.FlexboxLayout>
             </RelativeLayout>
 
             <ImageView

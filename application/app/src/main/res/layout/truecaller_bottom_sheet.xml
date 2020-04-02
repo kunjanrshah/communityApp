@@ -56,10 +56,10 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -69,21 +69,21 @@
                     android:background="@drawable/user_profile" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/iv_gender"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/male" />
+                    android:id="@+id/iv_gender"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/male" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_gravity="top"
-                android:gravity="top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:layout_marginStart="20dp"
+                android:gravity="top"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -194,15 +194,15 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="top"
-            android:paddingBottom="20dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="20dp">
 
             <LinearLayout
                 android:id="@+id/ll_call"
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="60dp"
                 android:gravity="top"
-                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -223,14 +223,14 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:layout_height="wrap_content">
+                android:gravity="center_horizontal">
 
                 <View
                     android:layout_width="2dp"
-                    android:layout_marginTop="5dp"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
                     android:background="@color/gray_btn_bg_color" />
             </LinearLayout>
 
@@ -238,8 +238,8 @@
                 android:id="@+id/ll_email"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="top"
                 android:layout_marginRight="40dp"
+                android:gravity="top"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -261,7 +261,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
 
 
 </LinearLayout>

@@ -11,23 +11,23 @@ import com.krs.community.entities.Occupations
 interface OccupationDao {
 
     @Query("SELECT name FROM Occupations")
-    fun getOccupations() : LiveData<List<String>>
+    fun getOccupations(): LiveData<List<String>>
 
     @Query("SELECT id FROM Occupations")
-    fun getOccupationIds() : LiveData<List<Int>>
+    fun getOccupationIds(): LiveData<List<Int>>
 
     @Query("SELECT name FROM Occupations WHERE id == :id")
-    fun getOccupationById(id:Int) : LiveData<String>
+    fun getOccupationById(id: Int): LiveData<String>
 
     @Query("SELECT id FROM Occupations WHERE name == :name")
-    fun getOccupationIdByName(name:String) : Int
+    fun getOccupationIdByName(name: String): Int
 
     @Query("SELECT id FROM Occupations WHERE id NOT IN (:Ids)")
-    fun getRemovedOccupationIds(Ids: List<String>) : List<Int>
+    fun getRemovedOccupationIds(Ids: List<String>): List<Int>
 
     @Query("DELETE FROM Occupations WHERE id IN (:Ids)")
-    fun deleteOccupationByIds(Ids: List<Int>) : Int
+    fun deleteOccupationByIds(Ids: List<Int>): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllOccupation(occupations : List<Occupations>)
+    fun saveAllOccupation(occupations: List<Occupations>)
 }

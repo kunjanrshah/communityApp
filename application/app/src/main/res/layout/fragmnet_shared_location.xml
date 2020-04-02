@@ -15,6 +15,7 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <ImageView
@@ -29,9 +30,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:visibility="gone"
             android:layout_marginTop="80dp"
             android:orientation="vertical"
+            android:visibility="gone"
             shimmer:duration="800">
 
             <LinearLayout
@@ -66,7 +67,6 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_location"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
@@ -75,6 +75,7 @@
             android:layoutAnimation="@anim/layout_animation_fall_down"
             android:orientation="vertical"
             android:overScrollMode="never"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>

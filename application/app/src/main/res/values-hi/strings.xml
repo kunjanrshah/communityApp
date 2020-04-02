@@ -54,7 +54,7 @@
     <string-array name="main_menu">
         <item>शहर</item>
         <item>क्यूआर कोड</item>
-        <item >दूरी</item>
+        <item>दूरी</item>
         <item>विवाह</item>
         <item>मेरा पद</item>
         <item>पसंदीदा</item>
@@ -95,7 +95,7 @@
     <string name="hash_key">हैश कुंजी</string>
     <string name="otp_send">अपने नंबर पर मैसेजिंग ओटीपी कोड!</string>
     <string name="seat_back_relax">सीट वापस &amp;  आराम करें!</string>
-    <string name="you_sure" >क्या आपको यकीन है?</string>
+    <string name="you_sure">क्या आपको यकीन है?</string>
 
     <!-- Login Sccren -->
 
@@ -258,7 +258,6 @@
 
     <!-- Location Adapter -->
     <string name="location">स्थान</string>
-
 
 
     <string name="office">कार्यालय</string>

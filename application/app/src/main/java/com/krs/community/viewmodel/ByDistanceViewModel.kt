@@ -21,11 +21,11 @@ class ByDistanceViewModel(
     var mByDistanceListener: ByDistanceListener? = null
 
 
-    fun getCityNamebyId(id:String):LiveData<String>{
-       return mByDistanceRepository.getCityName(id)
+    fun getCityNamebyId(id: String): LiveData<String> {
+        return mByDistanceRepository.getCityName(id)
     }
 
-    fun getLastNamebyId(id:String):LiveData<String>{
+    fun getLastNamebyId(id: String): LiveData<String> {
         return mByDistanceRepository.getLastName(id)
     }
 
