@@ -2,6 +2,8 @@ package com.krs.community.service
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.github.squti.guru.Guru
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -40,14 +42,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             if (message.contains("approved")) {
                 message = "Approved your request, Please login"
             }
-            val photo = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png"
-            val resultIntent = Intent(applicationContext, SplashActivity::class.java)
-            showNotification(applicationContext, resultIntent, "fullName", "mobile", "email", photo, "homeAddress", "cityName")
+            //val photo = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png"
+            //val resultIntent = Intent(applicationContext, SplashActivity::class.java)
+            // showNotification(applicationContext, resultIntent, "fullName", "mobile", "email", photo, "homeAddress", "cityName")
 
-            /* val handler = Handler(Looper.getMainLooper())
+            val handler = Handler(Looper.getMainLooper())
              handler.postDelayed({
                  smartFilterSearch(userId)
-             }, 60*1000*3)*/
+             }, 60 * 1000 * 2)
         }
     }
 

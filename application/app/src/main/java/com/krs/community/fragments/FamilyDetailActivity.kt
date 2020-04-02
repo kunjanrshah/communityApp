@@ -721,9 +721,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     }
 
     override suspend fun getFailure(message: String) {
-        mShimmerViewContainer?.stopShimmerAnimation()
-        mShimmerViewContainer?.visibility = View.GONE
-        llRoot.snackbar(message, Snackbar.LENGTH_LONG)
+        Coroutines.main {
+            mShimmerViewContainer?.stopShimmerAnimation()
+            mShimmerViewContainer?.visibility = View.GONE
+            llRoot.snackbar(message, Snackbar.LENGTH_LONG)
+        }
     }
 
     override fun onResume() {

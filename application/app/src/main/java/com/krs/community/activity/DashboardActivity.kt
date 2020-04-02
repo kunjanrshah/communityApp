@@ -181,10 +181,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         })
 
-        if (isNetworkConnected(this)) {
-            dashboardViewModel.getMasterUpdate()
-        }
-
         movetoFragment(this@DashboardActivity, DashboardFragment())
         if (isNetworkConnected(this)) {
             val JsonObj = JSONObject()
@@ -194,6 +190,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             JsonObj.put("version", getAppVersion(this))
             val updated = JsonParser().parse(JsonObj.toString()) as JsonObject
             dashboardViewModel.getUpdatedVersion(updated)
+        }
+
+        if (isNetworkConnected(this)) {
+            dashboardViewModel.getMasterUpdate()
         }
     }
 
@@ -227,6 +227,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         } else {
             changeLang(applicationContext, "English")
         }
+
+
     }
 
     override fun onPause() {
@@ -308,24 +310,16 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     private fun logUser(member: Member) {
-        // TODO: Use the current user's information
-        // You can call any combination of these three methods
         Crashlytics.setUserIdentifier(member.id)
         Crashlytics.setUserEmail(member.emailAddress)
         Crashlytics.setUserName(member.firstName)
     }
 
-
-
     private fun loadProfile() {
         val memberString = Guru.getString(getString(R.string.loginMember), "")
         val member = Gson().fromJson(memberString, Member::class.java)
         val str = resources.getString(R.string.base_url_thumb) + member?.profilePic
-
-
         logUser(member)
-
-
         Glide.with(this)
                 .load(str)
                 .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
@@ -333,11 +327,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                         menu?.findItem(R.id.action_profile)?.icon = resource
                     }
-
                     override fun onLoadCleared(placeholder: Drawable?) {
 
                     }
-
                 })
     }
 

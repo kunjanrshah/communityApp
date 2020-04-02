@@ -159,6 +159,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             binding.imgCancel.visibility = View.GONE
             binding.imgCancel.setOnClickListener {
                 binding.imgProfile.setImageResource(R.drawable.man_reg)
+                resultUri = null
                 binding.imgCancel.visibility = View.GONE
             }
 
@@ -443,6 +444,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             } else if (requestCode == REQUEST_CROP) {
                 resultUri = getOutput(data!!)
                 try {
+                    binding.imgCancel.visibility = View.VISIBLE
                     Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
                 } catch (e: Exception) {
                     e.message

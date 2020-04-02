@@ -67,6 +67,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     private lateinit var tvCount: TextView
     private lateinit var llRoot: LinearLayout
     private var selectedPosition = 0
+    private var count = 0
     private lateinit var ivNotFound: ImageView
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var smartFilterViewModel: SmartFilterViewModel
@@ -230,8 +231,9 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         if (response.success) {
             if (response.members.size > 0) {
                 tvCount.visibility = View.VISIBLE
-                tvCount.text = getString(R.string.mem) + " ${response.totalRecords} " + getString(R.string.found)
-
+                count = response.totalRecords
+                tvCount.text = getString(R.string.mem) + " $count " + getString(R.string.found)
+                DashboardActivity.statusCounts.postValue(count.toString())
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
 
@@ -250,6 +252,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         } else {
             tvCount.visibility = View.GONE
             DashboardActivity.stop = true
+
         }
         if (lstMembers.isEmpty()) {
             ivNotFound.visibility = View.VISIBLE
@@ -270,6 +273,17 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         val selectedItemPositions = getSelectedItems()
         for (i in selectedItemPositions.indices.reversed()) {
             removeData(selectedItemPositions[i])
+        }
+
+        if (lstMembers.isEmpty()) {
+            DashboardActivity.statusCounts.postValue("0")
+            tvCount.visibility = View.GONE
+            ivNotFound.visibility = View.VISIBLE
+        } else {
+            count -= selectedItemPositions.size
+            tvCount.text = getString(R.string.mem) + " $count " + getString(R.string.found)
+            DashboardActivity.statusCounts.postValue(count.toString())
+            ivNotFound.visibility = View.GONE
         }
         adapter.notifyDataSetChanged()
     }

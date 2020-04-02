@@ -42,7 +42,6 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:replace="android:icon">
         <activity android:name=".activity.MapTrackingActivity" />
-        <activity android:name=".activity.MapviewActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"

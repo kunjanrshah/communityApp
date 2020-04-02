@@ -15,6 +15,7 @@ import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
+import com.krs.community.utils.NotificationUtils
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URLEncoder
@@ -105,12 +106,12 @@ class NotificationReceiver : BroadcastReceiver() {
 
     private fun getMembers(response: searchByKeywordsResponse) {
 
-        var success = response.success
+        val success = response.success
         Log.e("success", "" + success)
 
         if (success.equals("true")) {
             Log.e("success", "" + success)
+            NotificationUtils.clearNotifications(AppController.mApplication)
         }
-
     }
 }
