@@ -68,6 +68,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private val factory: DashboardViewModelFactory by instance()
     private var menu: Menu? = null
 
+
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
@@ -76,7 +77,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         var easyWayLocation: EasyWayLocation? = null
         var cur_lat = MutableLiveData<Double>()
         var cur_lng = MutableLiveData<Double>()
-        var cur_addr = MutableLiveData<String>()
+        var curAddr = MutableLiveData<String>()
+        var matrimonyCounts = MutableLiveData<String>()
+        var statusCounts = MutableLiveData<String>()
     }
 
     private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
@@ -347,7 +350,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 val member = Gson().fromJson(memberString, Member::class.java)
                 intent.putExtra(getString(R.string.member), member)
                 startActivity(intent)
-                fade(this)
+                //fade(this)
                 true
             }
             R.id.action_notify -> {
@@ -375,7 +378,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     override fun locationData(locationData: LocationData) {
-        cur_addr.postValue(locationData.full_address)
+        curAddr.postValue(locationData.full_address)
     }
 
     override fun getVersionResponse(response: UserStatusResponse) {
@@ -388,6 +391,12 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         if (response.success) {
 
             Coroutines.io {
+                if (!response.userCounts.matrimonyCounts.isNullOrEmpty()) {
+                    matrimonyCounts.postValue(response.userCounts.matrimonyCounts)
+                }
+                if (!response.userCounts.statusCounts.isNullOrEmpty()) {
+                    statusCounts.postValue(response.userCounts.statusCounts)
+                }
 
                 val counts = MasterCounts()
                 counts.business_categories = Integer.parseInt(response.countList.businessCategories)

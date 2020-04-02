@@ -424,7 +424,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMembers.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //   Utility.fade(activity)
         }
 
         layoutManagerFixed.setHeaderIncrementFixer(header)

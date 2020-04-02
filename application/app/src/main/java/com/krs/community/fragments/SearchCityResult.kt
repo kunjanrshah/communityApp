@@ -825,7 +825,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), members.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //  Utility.fade(activity)
         }
     }
 

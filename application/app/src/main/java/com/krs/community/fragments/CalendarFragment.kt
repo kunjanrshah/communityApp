@@ -20,7 +20,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -85,7 +84,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private val calendarSearchViewModelFactory: CalendarSearchViewModelFactory by instance()
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
     private val roomMemberFactory: RoomMemberViewModelFactory by instance()
-
+    private var selectedPosition = 0
+    private var selectedReminder = ""
     private lateinit var recyclerView: RecyclerView
     private lateinit var llRoot: LinearLayout
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
@@ -99,7 +99,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     val lblDeath = "Death"
     private var filter: String = ""
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
-    val TAG: String = "CalendarFragment"
+    val TAG: String = CalendarFragment::class.java.simpleName
     private var fromDate: String = ""
     private var toDate: String = ""
     private lateinit var tvCount: TextView
@@ -222,6 +222,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     override fun reminderResponse(response: ReminderResponse) {
         Utility.hideSweetProgress()
         if (response.success) {
+            lstCalendar[selectedPosition].reminderBirthDate = response.data.reminderId
+            if (selectedReminder == getString(R.string.marriage_date)) {
+                lstCalendar[selectedPosition].reminderMarriageDate = response.data.reminderId
+            } else if (selectedReminder == getString(R.string.expire_date)) {
+                lstCalendar[selectedPosition].reminderExpireDate = response.data.reminderId
+            }
             adapter.notifyDataSetChanged()
             Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, "Reminder", response.message)
         } else {
@@ -300,10 +306,16 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 viewHolder.tvArea.text = member.area
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
-                        viewHolder.tvName.text = member.firstName + " " + calendarSearchViewModel.getLastNameById(member.subCastId.toInt())
+                        val name = member.firstName + " " + calendarSearchViewModel.getLastNameById(member.subCastId.toInt())
+                        Coroutines.main {
+                            viewHolder.tvName.text = name
+                        }
                     }
                     if (!member.cityId.isNullOrEmpty()) {
-                        viewHolder.tvArea.text = member.area + " " + calendarSearchViewModel.getCityNamebyId(member.cityId)
+                        val area = member.area + " " + calendarSearchViewModel.getCityNamebyId(member.cityId)
+                        Coroutines.main {
+                            viewHolder.tvArea.text = area
+                        }
                     }
                 }
 
@@ -386,7 +398,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 }
 
                 if (!member.matched.isNullOrEmpty()) {
-                    if (member.matched.contains("birth_date")) {
+                    if (member.matched.contains(getString(R.string.birth_date))) {
                         val birth = Utility.changeDateFormat(member.birthDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                         val age = Utility.getAge(birth, Utility.dd_MM_yyyy)
                         var age1 = ""
@@ -400,13 +412,13 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         viewHolder.tvEvent1.text = (Html.fromHtml(first + next))
                         viewHolder.llEvent1.visibility = View.VISIBLE
 
-                        if (member.reminderBirthDate) {
+                        if (member.reminderBirthDate != "0") {
                             viewHolder.imgReminder1.visibility = View.VISIBLE
                         } else {
                             viewHolder.imgReminder1.visibility = View.GONE
                         }
 
-                    } else if (member.matched.contains("marriage_date")) {
+                    } else if (member.matched.contains(getString(R.string.marriage_date))) {
                         val mdate = Utility.changeDateFormat(member.marriageDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                         val age = Utility.getAge(mdate, Utility.dd_MM_yyyy)
                         var age1 = ""
@@ -419,12 +431,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         val next = "<font color='#C54464'>Marriage</font>"
                         viewHolder.tvEvent2.text = (Html.fromHtml(first + next))
                         viewHolder.llEvent2.visibility = View.VISIBLE
-                        if (member.reminderMarriageDate) {
+                        if (member.reminderMarriageDate != "0") {
                             viewHolder.imgReminder2.visibility = View.VISIBLE
                         } else {
                             viewHolder.imgReminder2.visibility = View.GONE
                         }
-                    } else if (lstCalendar[i].matched.contains("expire_date")) {
+                    } else if (lstCalendar[i].matched.contains(getString(R.string.expire_date))) {
                         val edate = Utility.changeDateFormat(member.expireDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                         val age = Utility.getAge(edate, Utility.dd_MM_yyyy)
                         var age1 = ""
@@ -437,7 +449,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         val next = "<font color='#C54464'>Death</font>"
                         viewHolder.tvEvent3.text = (Html.fromHtml(first + next))
                         viewHolder.llEvent3.visibility = View.VISIBLE
-                        if (member.reminderExpireDate) {
+                        if (member.reminderExpireDate != "0") {
                             viewHolder.imgReminder3.visibility = View.VISIBLE
                         } else {
                             viewHolder.imgReminder3.visibility = View.GONE
@@ -463,7 +475,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstCalendar[position])
             startActivity(intent)
-            Utility.fade(activity)
+            // Utility.fade(activity)
         }
 
         val layoutManagerFixed = HeaderLayoutManagerFixed(activity)
@@ -530,7 +542,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
         holder.iconImp.setOnClickListener {
 
-            val member: Member = lstCalendar.get(position)
+            val member: Member = lstCalendar[position]
             var flag = true
             roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, androidx.lifecycle.Observer {
                 if (flag) {
@@ -562,41 +574,27 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         }
 
         holder.llEvent1.setOnClickListener {
-            var id = ""
-            id = if (holder.imgReminder1.isVisible) {
-                member.id
-            } else {
-                "0"
-            }
-            setReminderDialog(member.birthDate, "birth_date", id, member.firstName, member.id)
+            selectedPosition = position
+            setReminderDialog(member.birthDate, getString(R.string.birth_date), member.reminderBirthDate.toString(), member.firstName, member.id)
         }
 
         holder.llEvent2.setOnClickListener {
-            var id = ""
-            id = if (holder.imgReminder2.isVisible) {
-                member.id
-            } else {
-                "0"
-            }
-            setReminderDialog(member.marriageDate, "marriage_date", id, member.firstName, member.id)
+            selectedPosition = position
+            setReminderDialog(member.marriageDate, getString(R.string.marriage_date), member.reminderMarriageDate.toString(), member.firstName, member.id)
         }
 
         holder.llEvent3.setOnClickListener {
-            var id = ""
-            id = if (holder.imgReminder3.isVisible) {
-                member.id
-            } else {
-                "0"
-            }
-            setReminderDialog(member.expireDate, "expire_date", id, member.firstName, member.id)
+            selectedPosition = position
+            setReminderDialog(member.expireDate, getString(R.string.expire_date), member.reminderExpireDate.toString(), member.firstName, member.id)
         }
     }
 
     private fun setReminderDialog(date: String, type: String, id: String, name: String, memberId: String) {
         var strType1 = "BirthDay Reminder"
-        if (type == "marriage_date") {
+        selectedReminder = type
+        if (type == getString(R.string.marriage_date)) {
             strType1 = "Marriage Reminder"
-        } else if (type == "expire_date") {
+        } else if (type == getString(R.string.expire_date)) {
             strType1 = "Death Reminder"
         }
         var isSet = "Set"
@@ -693,142 +691,152 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
             holder.txtName.text = list!![position]
 
-            if (all) {
-                when (holder.txtName.text) {
-                    lblAll -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_tithi)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
-                    }
-                    lblDeath -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblBirthday -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblMarriage -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    "Reminder" -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                }
-            } else if (death) {
-                when (holder.txtName.text) {
-                    lblAll -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblBirthday -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblMarriage -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblDeath -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_panchag)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
-                    }
-                    "Reminder" -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+            when {
+                all -> {
+                    when (holder.txtName.text) {
+                        lblAll -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_fill_tithi)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+                        }
+                        lblDeath -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblBirthday -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblMarriage -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_ann)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        "Reminder" -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
                     }
                 }
-            } else if (birthday) {
-                when (holder.txtName.text) {
-                    lblAll -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblBirthday -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_birthday)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
-                    }
-                    lblMarriage -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_ann)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblDeath -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    "Reminder" -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                death -> {
+                    when (holder.txtName.text) {
+                        lblAll -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblBirthday -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblMarriage -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_ann)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblDeath -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_fill_panchag)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+                        }
+                        "Reminder" -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
                     }
                 }
-            } else if (anniversay) {
+                birthday -> {
+                    when (holder.txtName.text) {
+                        lblAll -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblBirthday -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_fill_birthday)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+                        }
+                        lblMarriage -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_ann)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblDeath -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        "Reminder" -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                    }
+                }
+                anniversay -> {
 
-                when (holder.txtName.text) {
-                    lblAll -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblBirthday -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    lblMarriage -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_fill_ann)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
-                    }
-                    lblDeath -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
-                    }
-                    "Reminder" -> {
-                        holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
-                        holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                    when (holder.txtName.text) {
+                        lblAll -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_tithi)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblBirthday -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_birthday)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        lblMarriage -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_fill_ann)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.white))
+                        }
+                        lblDeath -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_panchag)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
+                        "Reminder" -> {
+                            holder.txtName.setBackgroundResource(R.drawable.filter_reminder)
+                            holder.txtName.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.black2))
+                        }
                     }
                 }
             }
 
             holder.txtName.setOnClickListener {
-                if (holder.txtName.text == lblAll) {
-                    all = true
-                    death = false
-                    birthday = false
-                    anniversay = false
-                    AppController.mApplication.start = 0
-                    filter = ""
-                    filterAdapter?.notifyDataSetChanged()
-                    DashboardActivity.stop = false
-                    searchCalendarList(filter)
-                } else if (holder.txtName.text == lblDeath) {
-                    all = false
-                    death = true
-                    birthday = false
-                    anniversay = false
-                    AppController.mApplication.start = 0
-                    filter = "2"
-                    filterAdapter?.notifyDataSetChanged()
-                    DashboardActivity.stop = false
-                    searchCalendarList(filter)
-                } else if (holder.txtName.text == lblBirthday) {
-                    all = false
-                    death = false
-                    birthday = true
-                    anniversay = false
-                    AppController.mApplication.start = 0
-                    filter = "0"
-                    filterAdapter?.notifyDataSetChanged()
-                    DashboardActivity.stop = false
-                    searchCalendarList(filter)
-                } else if (holder.txtName.text == lblMarriage) {
-                    all = false
-                    death = false
-                    birthday = false
-                    anniversay = true
-                    AppController.mApplication.start = 0
-                    filter = "1"
-                    filterAdapter?.notifyDataSetChanged()
-                    DashboardActivity.stop = false
-                    searchCalendarList(filter)
+                when (holder.txtName.text) {
+                    lblAll -> {
+                        all = true
+                        death = false
+                        birthday = false
+                        anniversay = false
+                        AppController.mApplication.start = 0
+                        filter = ""
+                        filterAdapter?.notifyDataSetChanged()
+                        DashboardActivity.stop = false
+                        searchCalendarList(filter)
+                    }
+                    lblDeath -> {
+                        all = false
+                        death = true
+                        birthday = false
+                        anniversay = false
+                        AppController.mApplication.start = 0
+                        filter = "2"
+                        filterAdapter?.notifyDataSetChanged()
+                        DashboardActivity.stop = false
+                        searchCalendarList(filter)
+                    }
+                    lblBirthday -> {
+                        all = false
+                        death = false
+                        birthday = true
+                        anniversay = false
+                        AppController.mApplication.start = 0
+                        filter = "0"
+                        filterAdapter?.notifyDataSetChanged()
+                        DashboardActivity.stop = false
+                        searchCalendarList(filter)
+                    }
+                    lblMarriage -> {
+                        all = false
+                        death = false
+                        birthday = false
+                        anniversay = true
+                        AppController.mApplication.start = 0
+                        filter = "1"
+                        filterAdapter?.notifyDataSetChanged()
+                        DashboardActivity.stop = false
+                        searchCalendarList(filter)
+                    }
                 }
             }
         }

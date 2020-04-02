@@ -474,7 +474,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstAdmins.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //  Utility.fade(activity)
         }
     }
 

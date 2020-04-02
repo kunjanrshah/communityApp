@@ -297,15 +297,15 @@ public class Member implements Serializable {
 
     @SerializedName("reminder_birth_date")
     @Expose
-    private Boolean reminderBirthDate;
+    private String reminderBirthDate;
 
     @SerializedName("reminder_marriage_date")
     @Expose
-    private Boolean reminderMarriageDate;
+    private String reminderMarriageDate;
 
     @SerializedName("reminder_expire_date")
     @Expose
-    private Boolean reminderExpireDate;
+    private String reminderExpireDate;
 
     @SerializedName("matches")
     @Expose
@@ -1023,27 +1023,27 @@ public class Member implements Serializable {
         this.createdDt = createdDt;
     }
 
-    public Boolean getReminderBirthDate() {
+    public String getReminderBirthDate() {
         return reminderBirthDate;
     }
 
-    public void setReminderBirthDate(Boolean reminderBirthDate) {
+    public void setReminderBirthDate(String reminderBirthDate) {
         this.reminderBirthDate = reminderBirthDate;
     }
 
-    public Boolean getReminderMarriageDate() {
+    public String getReminderMarriageDate() {
         return reminderMarriageDate;
     }
 
-    public void setReminderMarriageDate(Boolean reminderMarriageDate) {
+    public void setReminderMarriageDate(String reminderMarriageDate) {
         this.reminderMarriageDate = reminderMarriageDate;
     }
 
-    public Boolean getReminderExpireDate() {
+    public String getReminderExpireDate() {
         return reminderExpireDate;
     }
 
-    public void setReminderExpireDate(Boolean reminderExpireDate) {
+    public void setReminderExpireDate(String reminderExpireDate) {
         this.reminderExpireDate = reminderExpireDate;
     }
 

@@ -268,7 +268,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMembers[position])
             startActivity(intent)
-            Utility.fade(activity)
+            //  Utility.fade(activity)
         }
 
         val linearLayoutManager = LinearLayoutManager(activity)
@@ -355,7 +355,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMembers.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //  Utility.fade(activity)
         }
     }
 

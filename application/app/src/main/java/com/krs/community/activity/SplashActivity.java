@@ -10,7 +10,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -90,6 +89,7 @@ public class SplashActivity extends AppCompatActivity {
             String[] languages = getResources().getStringArray(R.array.languages);
             ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languages);
             splanguage.setAdapter(aa);
+            splanguage.setSelection(1);
 
             btnLogin.setOnTouchListener((v, event) -> {
                 switch (event.getAction()) {
@@ -137,7 +137,8 @@ public class SplashActivity extends AppCompatActivity {
                     Utility.fade(this);
                 }
             });
-            splanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            /*splanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Utility.changeLang(SplashActivity.this, splanguage.getSelectedItem().toString());
@@ -149,10 +150,9 @@ public class SplashActivity extends AppCompatActivity {
                 public void onNothingSelected(AdapterView<?> parent) {
 
                 }
-            });
+            });*/
         }
     }
-
 
     @SuppressLint("NewApi")
     @Override
@@ -179,7 +179,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (splanguage != null) {
+        /*if (splanguage != null) {
             String locale = Guru.getString(getResources().getString(R.string.locale_sp), getResources().getString(R.string._english));
             if (locale.equalsIgnoreCase(getResources().getString(R.string._gujarati))) {
                 splanguage.setSelection(2);
@@ -188,7 +188,7 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                 splanguage.setSelection(1);
             }
-        }
+        }*/
     }
 
     @Override

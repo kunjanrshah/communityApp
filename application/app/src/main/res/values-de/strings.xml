@@ -11,7 +11,7 @@
     <!--Splash screen -->
 
     <!--Choose Language screen -->
-    <string name="login">લોગઈન</string>
+    <string name="login">લોગીન</string>
     <string name="register">રજિસ્ટર</string>
     <string name="choose_language">ભાષા બદલો</string>
 

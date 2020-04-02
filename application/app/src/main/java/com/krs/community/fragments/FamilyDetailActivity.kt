@@ -62,6 +62,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
     lateinit var members: ArrayList<Member>
     var headId: String? = null
+    var memId: String? = null
     val TAG = FamilyDetailActivity::class.java.simpleName
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
     private lateinit var rvDetail: RecyclerView
@@ -76,7 +77,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     lateinit var mainHandler: Handler
     private var isShimmer: Boolean = true
-    private var memberId: String? = null
+    private var loginId: String? = null
     private var textMsg: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,6 +92,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         mainHandler = Handler(Looper.getMainLooper())
         headId = intent.getStringExtra(getString(R.string.id))
+        memId = intent.getStringExtra(getString(R.string.member_id))
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
@@ -117,7 +119,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         rvDetail.setHasFixedSize(true)
         rvDetail.layoutManager = mLayoutManager
         rvDetail.itemAnimator = DefaultItemAnimator()
-        memberId = Guru.getString(getString(R.string.member_id), "")
+        loginId = Guru.getString(getString(R.string.member_id), "")
         requestStoragePermission(this)
     }
 
@@ -161,8 +163,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             mShimmerViewContainer?.startShimmerAnimation()
         }
         val jsonObject = JSONObject()
-        if (!memberId.isNullOrEmpty()) {
-            jsonObject.put(getString(R.string.id), memberId)
+        if (!loginId.isNullOrEmpty()) {
+            jsonObject.put(getString(R.string.id), loginId)
         }
         jsonObject.put(getString(R.string.head_id), headId)
         val records = JsonParser().parse(jsonObject.toString()) as JsonObject
@@ -237,14 +239,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
 
-                    /*if(member.loginStatus==1){
-                        viewHolder.tvLogin.text = "See you again!"
-                    }else{
-                        viewHolder.tvLogin.text = "Happy to see you"
-                    }*/
-
                     var imgStatus = R.drawable.ico_red
-                    if (memberId == member.id) {
+                    if (loginId == member.id) {
                         imgStatus = R.drawable.ico_blue
                     } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
                         imgStatus = R.drawable.ico_pink
@@ -260,15 +256,15 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }
 
                     viewHolder.frontLayout.setOnClickListener {
-                        if (!memberId.isNullOrEmpty()) {
+                        if (!loginId.isNullOrEmpty()) {
                             val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
                             intent.putExtra(getString(R.string.member), member)
                             startActivity(intent)
-                            fade(this@FamilyDetailActivity)
+                            // fade(this@FamilyDetailActivity)
                         } else {
                             if (!member.profilePassword.isNullOrEmpty()) {
 
-                                if (memberId == member.id) {
+                                if (loginId == member.id) {
                                     textMsg = "Exit"
                                 } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
                                     textMsg = "Exit"
@@ -314,7 +310,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         }
                     }
                     viewHolder.llDelete.setOnClickListener {
-                        if (!memberId.isNullOrEmpty()) {
+                        if (!loginId.isNullOrEmpty()) {
                             TTFancyGifDialog.Builder(this@FamilyDetailActivity)
                                     .setTitle(getString(R.string.you_sure))
                                     .setMessage(getString(R.string.wontbeRecover))
@@ -409,9 +405,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
         val login = header.findViewById<ImageView>(R.id.login)
         val imgMap = header.findViewById<ImageView>(R.id.img_map)
-        if (!memberId.isNullOrEmpty()) {
+        if (!loginId.isNullOrEmpty()) {
             cancel.visibility = View.VISIBLE
-            imgMap.visibility = View.VISIBLE
+            if (!memId.isNullOrEmpty() && memId.equals(loginId)) {
+                imgMap.visibility = View.VISIBLE
+            } else {
+                imgMap.visibility = View.GONE
+            }
             login.visibility = View.GONE
         } else {
             imgMap.visibility = View.GONE
@@ -420,6 +420,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         cancel.setOnClickListener {
             val intent = Intent(this, DashboardActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
             fade(this)
@@ -427,12 +428,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val member = members.get(0)
 
         imgMap.setOnClickListener {
-            displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
-
-            /*val intent = Intent(this, MapTrackingActivity::class.java)
+            //displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
+            val intent = Intent(this, MapTrackingActivity::class.java)
             intent.putExtra("head_id", headId)
             startActivity(intent)
-            fade(this)*/
+            fade(this)
         }
 
         login.setOnClickListener {
@@ -503,7 +503,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
         val imgState: ImageView = header.findViewById(R.id.img_state)
         var icStatus = R.drawable.ico_red
-        if (memberId == member.id) {
+        if (loginId == member.id) {
             icStatus = R.drawable.ico_blue
         } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
             icStatus = R.drawable.ico_pink
@@ -576,14 +576,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         val llFamilyHead: LinearLayout = header.findViewById(R.id.ll_family_head)
         llFamilyHead.setOnClickListener {
-            if (!memberId.isNullOrEmpty()) {
+            if (!loginId.isNullOrEmpty()) {
                 val intent = Intent(this, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member), members.get(0))
                 startActivity(intent)
-                fade(this)
+                //  fade(this)
             } else {
                 if (!member.profilePassword.isNullOrEmpty()) {
-                    if (memberId == member.id) {
+                    if (loginId == member.id) {
                         textMsg = getString(R.string.exitDetails)
                     } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
                         textMsg = getString(R.string.exitDetails)
@@ -627,7 +627,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             }
         }
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
-        if (!memberId.isNullOrEmpty() && member.id == memberId) {
+        if (!loginId.isNullOrEmpty() && member.id == loginId) {
             tvAdd.visibility = View.VISIBLE
         } else {
             tvAdd.visibility = View.GONE
@@ -636,7 +636,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             val intent = Intent(this, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), Member())
             startActivity(intent)
-            fade(this)
+            // fade(this)
         }
         layoutManagerFixed.setHeaderIncrementFixer(header)
         adapter.isShouldClipView = false

@@ -162,7 +162,6 @@
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
-
                     <com.krs.community.app.NotificationBadge
                         android:id="@+id/badge"
                         android:layout_width="28dp"

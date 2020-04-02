@@ -67,7 +67,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     private lateinit var tvCount: TextView
     private lateinit var llRoot: LinearLayout
     private var selectedPosition = 0
-
+    private lateinit var ivNotFound: ImageView
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var smartFilterViewModel: SmartFilterViewModel
 
@@ -92,6 +92,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         actionModeCallback = ActionModeCallback()
 
         rvSearch = root.findViewById(R.id.rv_search)
+        ivNotFound = root.findViewById(R.id.iv_not_found)
+
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
         llRoot = root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""
@@ -248,6 +250,11 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         } else {
             tvCount.visibility = View.GONE
             DashboardActivity.stop = true
+        }
+        if (lstMembers.isEmpty()) {
+            ivNotFound.visibility = View.VISIBLE
+        } else {
+            ivNotFound.visibility = View.GONE
         }
     }
 

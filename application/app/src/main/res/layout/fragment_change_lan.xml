@@ -12,7 +12,6 @@
         android:layout_margin="10dp"
         android:background="@drawable/left_arrow" />
 
-
     <TextView
         android:id="@+id/tvChangeLang"
         android:layout_width="match_parent"
@@ -102,7 +101,6 @@
 
         </LinearLayout>
 
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -135,14 +133,9 @@
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rb_hindi"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:clickable="false"
+                android:layout_height="wrap_content"
                 android:enabled="false" />
-
         </LinearLayout>
-
-
     </LinearLayout>
-
-
 </LinearLayout>

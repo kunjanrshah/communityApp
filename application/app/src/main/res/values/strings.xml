@@ -61,20 +61,20 @@
     </string-array>
 
     <string-array name="main_menu">
-        <item>City</item>
-        <item>QRCode</item>
-        <item>Distance</item>
+        <item>City \u0020 \u0020 \u0020 </item>
+        <item>QRCode \u0020</item>
+        <item>Distance \u0020</item>
         <item>Matrimony</item>
-        <item>MyEvent</item>
-        <item>Favorite</item>
-        <item>Admin</item>
+        <item>MyEvent \u0020</item>
+        <item>Favorite \u0020 \u0020</item>
+        <item>Admin \u0020 \u0020</item>
         <item>Restricted</item>
-        <item>NewEvent</item>
-        <item>Uploads</item>
-        <item>Paytm</item>
-        <item>Register</item>
-        <item>guide</item>
-        <item>My Contacts</item>
+        <item>NewEvent \u0020</item>
+        <item>Uploads \u0020</item>
+        <item>Paytm \u0020 \u0020</item>
+        <item>Register \u0020 \u0020</item>
+        <item>Guide \u0020 \u0020</item>
+        <item>Contacts \u0020 \u0020</item>
     </string-array>
 
     <string name="married" translatable="false">Married</string>
@@ -91,8 +91,8 @@
     <string-array name="languages">
         <item>Choose Language</item>
         <item>@string/_english</item>
-        <!-- <item>@string/_gujarati</item>
-         <item>@string/_hindi</item>-->
+        <!--<item>@string/_gujarati</item>
+        <item>@string/_hindi</item>-->
     </string-array>
 
     <string name="_english" translatable="false">English</string>
@@ -1135,10 +1135,10 @@
     <string name="genderstr" translatable="false">gender</string>
     <string name="mobilestr" translatable="false">mobile</string>
     <string name="pass" translatable="false">pass</string>
-    <string name="passsecond" translatable="false">pass?</string>
+    <string name="passsecond" translatable="false">passsecond</string>
     <string name="cpass" translatable="false">cpass</string>
-    <string name="cpasssecond" translatable="false">cpass?</string>
-    <string name="passequals" translatable="false">!pass</string>
+    <string name="cpasssecond" translatable="false">cpasssecond</string>
+    <string name="passequals" translatable="false">passequals</string>
     <string name="addressstr" translatable="false">address</string>
     <string name="stateis" translatable="false">stateId</string>
     <string name="cityid" translatable="false">cityId</string>

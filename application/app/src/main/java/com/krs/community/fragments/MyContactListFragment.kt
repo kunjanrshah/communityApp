@@ -388,7 +388,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         val intent = Intent(activity, ProfileDetailActivity::class.java)
         intent.putExtra(getString(R.string.member), lstMembers.get(position))
         startActivity(intent)
-        Utility.fade(activity)
+        //  Utility.fade(activity)
     }
 
 

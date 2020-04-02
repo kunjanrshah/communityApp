@@ -61,7 +61,7 @@ public class ChangeLanguageFragment extends Fragment {
         tvGuj = root.findViewById(R.id.tvGuj);
         tvHindi = root.findViewById(R.id.tvHindi);
 
-        /*ll_hindi.setOnClickListener(v -> {
+        ll_hindi.setOnClickListener(v -> {
             if (!rb_hindi.isChecked()) {
                 rb_hindi.setChecked(true);
                 rb_gujarati.setChecked(false);
@@ -90,7 +90,7 @@ public class ChangeLanguageFragment extends Fragment {
                 tvEng.setText(getResources().getString(R.string._english));
 
             }
-        });*/
+        });
 
         ll_english.setOnClickListener(v -> {
             if (!rb_english.isChecked()) {

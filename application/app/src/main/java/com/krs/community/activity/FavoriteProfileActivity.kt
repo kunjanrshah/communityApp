@@ -361,7 +361,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                 val intent = Intent(this@FavoriteProfileActivity, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member), getMemberFromRoomMember(member))
                 startActivity(intent)
-                Utility.fade(this@FavoriteProfileActivity)
+                //  Utility.fade(this@FavoriteProfileActivity)
             }
 
             viewHolder.tvMobile.setOnClickListener {

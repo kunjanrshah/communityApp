@@ -24,53 +24,48 @@ class NotificationReceiver : BroadcastReceiver() {
     lateinit var mRoomMemberRepository: RoomMemberRepository
 
     override fun onReceive(context: Context, intent: Intent) {
-        val Phone = intent.getStringExtra("Phone")
+        val s = intent.getStringExtra("Phone")
         val userId = intent.getStringExtra("userId")
         val action = intent.getStringExtra("action")
-        if (action.equals("Call", ignoreCase = true)) {
-            val uri = "tel:$Phone"
-            val intentcall = Intent(Intent.ACTION_DIAL)
-            intentcall.data = Uri.parse(uri)
-            intentcall.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intentcall)
-            /*NotificationManager notificationManager =
-                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(Integer.parseInt(userId));*/
-            val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
-            context.sendBroadcast(it)
-        } else if (action.equals("WhatsApp", ignoreCase = true)) {
-            try {
-                val uri = Uri.parse("whatsapp://send?phone=+91" + Phone + "&text=" + URLEncoder.encode("message", "UTF-8"))
-                val i = Intent(Intent.ACTION_VIEW, uri)
-                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                context.startActivity(i)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(context, "WhatsApp not installed.", Toast.LENGTH_SHORT).show()
+        when {
+            action.equals("Call", ignoreCase = true) -> {
+                val uri = "tel:$s"
+                val intentCall = Intent(Intent.ACTION_DIAL)
+                intentCall.data = Uri.parse(uri)
+                intentCall.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(intentCall)
+                val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+                context.sendBroadcast(it)
             }
+            action.equals("WhatsApp", ignoreCase = true) -> {
+                try {
+                    val uri = Uri.parse("whatsapp://send?phone=+91" + s + "&text=" + URLEncoder.encode("message", "UTF-8"))
+                    val i = Intent(Intent.ACTION_VIEW, uri)
+                    i.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(i)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "WhatsApp not installed.", Toast.LENGTH_SHORT).show()
+                }
 
-            val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
-            context.sendBroadcast(it)
+                val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+                context.sendBroadcast(it)
 
-        } else if (action.equals("Approve", ignoreCase = true)) {
-            Log.e("Click--", "Approve")
+            }
+            action.equals("Approve", ignoreCase = true) -> {
+                Log.e("Click--", "Approve")
 
-
-            val jsonObject = JSONObject()
-            jsonObject.put(context.getString(R.string.access_token), Guru.getString(context.getString(R.string.access_token), ""))
-            jsonObject.put(context.getString(R.string.user_id), Guru.getString(context.getString(R.string.user_id), ""))
-            jsonObject.put(context.getString(R.string.id), Guru.getString(context.getString(R.string.member_id), ""))
-            jsonObject.put("status", "1")
-            jsonObject.put(context.getString(R.string.idList), userId)
-
-            //  jsonObject.put(context.getString(R.string.idList), Ids)
-            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-            Log.e("updated----", "" + updated)
-
-            changeStatus(updated, context)
-
-            val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
-            context.sendBroadcast(it)
+                val jsonObject = JSONObject()
+                jsonObject.put(context.getString(R.string.access_token), Guru.getString(context.getString(R.string.access_token), ""))
+                jsonObject.put(context.getString(R.string.user_id), Guru.getString(context.getString(R.string.user_id), ""))
+                jsonObject.put(context.getString(R.string.id), Guru.getString(context.getString(R.string.member_id), ""))
+                jsonObject.put("status", "1")
+                jsonObject.put(context.getString(R.string.idList), userId)
+                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                changeStatus(updated, context)
+                val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+                context.sendBroadcast(it)
+            }
         }
     }
 
@@ -114,8 +109,6 @@ class NotificationReceiver : BroadcastReceiver() {
         Log.e("success", "" + success)
 
         if (success.equals("true")) {
-
-
             Log.e("success", "" + success)
         }
 

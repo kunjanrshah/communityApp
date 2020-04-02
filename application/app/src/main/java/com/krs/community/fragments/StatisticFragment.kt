@@ -76,23 +76,28 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
     private fun setScreenLayout() {
 
         binding.spCity.setOnItemClickListener {
-            Coroutines.main {
+            Coroutines.io {
                 val id = statisticsViewModel.getCityIdByName(binding.spCity.text.toString().trim())
                 if (id != 0) {
                     getStatisticsResult(id)
                 } else {
-                    binding.llVillages.snackbar(getString(R.string.went_wrong), LENGTH_LONG)
+                    Coroutines.main {
+                        binding.llVillages.snackbar(getString(R.string.went_wrong), LENGTH_LONG)
+                    }
                 }
             }
         }
 
-        Coroutines.main {
+        Coroutines.io {
             val cities = statisticsViewModel.lstCityName()
-            binding.spCity.clear()
-            binding.spCity.setItems(cities.toTypedArray())
-            binding.spCity.setExpandTint(R.color.black)
+            Coroutines.main {
+                binding.spCity.clear()
+                binding.spCity.setItems(cities.toTypedArray())
+                binding.spCity.setExpandTint(R.color.black)
+            }
         }
 
+        getStatisticsResult(0)
         snackbar = make(binding.flRoot, getString(R.string.check_network), LENGTH_INDEFINITE)
         binding.ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
     }
@@ -104,9 +109,11 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
             jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
             jsonObject.put(getString(R.string.city_id), cityId)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-            binding.shimmerViewContainer.startShimmerAnimation()
-            binding.shimmerViewContainer.visibility = View.VISIBLE
-            binding.scroll.visibility = View.GONE
+            Coroutines.main {
+                binding.shimmerViewContainer.startShimmerAnimation()
+                binding.shimmerViewContainer.visibility = View.VISIBLE
+                binding.scroll.visibility = View.GONE
+            }
             statisticsViewModel.getStatistics(updated)
         }
     }

@@ -308,19 +308,19 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
             return
         }
-        if (message.contains(getString(R.string.pass), ignoreCase = true)) {
+        if (message.equals(getString(R.string.pass), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.enter_password), Snackbar.LENGTH_LONG)
             return
         }
-        if (message.contains(getString(R.string.passsecond), ignoreCase = true)) {
+        if (message.equals(getString(R.string.passsecond), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
             return
         }
-        if (message.contains(getString(R.string.cpass), ignoreCase = true)) {
+        if (message.equals(getString(R.string.cpass), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.confirm_password), Snackbar.LENGTH_LONG)
             return
         }
-        if (message.contains(getString(R.string.cpasssecond), ignoreCase = true)) {
+        if (message.equals(getString(R.string.cpasssecond), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
             return
         }

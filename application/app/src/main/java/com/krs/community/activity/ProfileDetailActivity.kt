@@ -260,6 +260,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)
         if (member?.headId == "0") {
+            intent.putExtra(getString(R.string.member_id), member?.id)
             intent.putExtra(getString(R.string.id), member?.id)
         } else {
             intent.putExtra(getString(R.string.id), member?.headId)

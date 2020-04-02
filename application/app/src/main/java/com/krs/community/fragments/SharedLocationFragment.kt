@@ -424,7 +424,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), members.get(position))
             startActivity(intent)
-            Utility.fade(activity)
+            //   Utility.fade(activity)
         }
     }
 

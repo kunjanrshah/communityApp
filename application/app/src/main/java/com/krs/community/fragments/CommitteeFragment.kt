@@ -405,14 +405,14 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMember[position])
             startActivity(intent)
-            Utility.fade(activity)
+            //   Utility.fade(activity)
         }
 
         holder.llData.setOnClickListener {
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMember[position])
             startActivity(intent)
-            Utility.fade(activity)
+            //   Utility.fade(activity)
         }
     }
 
@@ -587,6 +587,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     adapter.notifyDataSetChanged()
                     shimmerFrameLayout.startShimmerAnimation()
                     shimmerFrameLayout.visibility = View.VISIBLE
+                    ivNotFound.visibility = View.GONE
                 }
                 val updated = JsonParser().parse(jsonObject1.toString()) as JsonObject
                 committeeViewModel.getUsersInCommittee(updated)
