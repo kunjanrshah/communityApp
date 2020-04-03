@@ -70,7 +70,7 @@
                             android:layout_marginTop="40dp"
                             android:fontFamily="@font/montserrat_semibold"
                             android:singleLine="true"
-                            android:text="Mehboob Gogda"
+                            android:text="Kunjan Shah"
                             android:textColor="@color/black2"
                             android:textSize="20sp" />
 

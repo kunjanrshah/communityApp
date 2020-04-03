@@ -65,7 +65,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
 
         val ivProfile = findViewById<ImageView>(R.id.iv_profile)
 
-        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.mamaji))
+        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.kunjan))
                 .thumbnail(0.5f)
                 .transition(withCrossFade())
                 .apply(RequestOptions.circleCropTransform())
@@ -89,7 +89,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
         val llScroll = findViewById<ScrollView>(R.id.ll_scroll)
 
         imgTwitter.setOnClickListener {
-            // Utility.displaySnackBarWithBottomMargin(llScroll,"mobile: 9377133222")
+            Utility.displaySnackBarWithBottomMargin(llScroll, "mobile: 9427051418")
         }
 
         val imgSkype = findViewById<ImageView>(R.id.img_skype)
@@ -136,7 +136,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
                             jsonObject.put("body", body1)
                             jsonObject.put("to_email", getString(R.string.dev_email))
                             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-                            Utility.startSweetProgress(this, getString(R.string.app_name), "Sending your message to Mehboob Gogda")
+                            Utility.startSweetProgress(this, getString(R.string.app_name), "Sending your message to Kunjan Shah")
                             passwordViewModel?.sendEmail(updated)
 
                         }

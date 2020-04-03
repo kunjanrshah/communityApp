@@ -724,7 +724,7 @@
     <string name="you_can_contact_us_on_various_platform_and_also_send_your_feedback_with_us">You can contact us on various platform and also send your feedback with us</string>
     <string name="type_your_message">Type Your Message...</string>
     <string name="send_now">Send Now</string>
-    <string name="dev_name">Mehboob Gogda</string>
+    <string name="dev_name">Kunjan Shah</string>
 
     <!-- DashBoard Fragment -->
     <string name="DevicDont">Your Device Don\'t Support Speech Input</string>
@@ -1009,8 +1009,8 @@
     <string name="selectstatus">Select Status</string>
     <string name="selectsurname">Select your Surname</string>
 
-    <string name="kunjanrshah">9377133222</string> <!-- kunjanrshah-->
-    <string name="dev_email">saraoffsetprinters@gmail.com</string>
+    <string name="kunjanrshah">kunjanrshah</string>
+    <string name="dev_email">kunjanrshah@gmail.com</string>
     <string name="dev_gmail_subject">@string/app_name</string>
     <string name="dev_content">Hello</string>
     <string name="dev_link">https://medkapp.org</string>
