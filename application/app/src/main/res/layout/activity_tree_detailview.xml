@@ -9,9 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_header_size"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/enjoy" />
-
+        android:scaleType="centerCrop" />
+    <!--android:src="@drawable/enjoy"-->
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"

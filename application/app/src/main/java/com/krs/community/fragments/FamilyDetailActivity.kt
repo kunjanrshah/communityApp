@@ -274,19 +274,19 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                     textMsg = "Exit"
                                 }
 
-                                var gif: Int = R.drawable.enter
-                                if (textMsg!!.contains("Exit")) {
-                                    gif = R.drawable.exit_gif
-                                }
+                                var gif: Int = R.drawable.gif_dialog
+                                /* if (textMsg!!.contains("Exit")) {
+                                     gif = R.drawable.gif_dialog
+                                 }*/
                                 var title = ""
                                 if (textMsg == getString(R.string.exitDetails)) {
-                                    title = "Hey " + member.firstName + ", Good Bye"
+                                    title = "Hey " + member.firstName + ", You haven't logout properly"
                                 } else {
                                     title = "Hey " + member.firstName + ", Welcome"
                                 }
                                 TTFancyGifDialog.Builder(this@FamilyDetailActivity)
                                         .setTitle(title)
-                                        .setMessage("To $textMsg please type your PIN")
+                                        .setMessage("To $textMsg Please type your PIN")
                                         .setPositiveBtnText(getString(R.string.yes))
                                         .setPositiveBtnBackground("#22b573")
                                         .setNegativeBtnText(getString(R.string.no))
@@ -318,7 +318,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                     .setPositiveBtnBackground("#22b573")
                                     .setNegativeBtnText(getString(R.string.no))
                                     .setNegativeBtnBackground("#c1272d")
-                                    .setGifResource(R.drawable.gif_delete)
+                                    .setGifResource(R.drawable.gif_dialog)
                                     .isCancellable(false)
                                     .OnPositiveClicked {
                                         deleteFamilyMember(member.id)
@@ -443,7 +443,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .setPositiveBtnBackground("#22b573")
                     .setNegativeBtnText(getString(R.string.no))
                     .setNegativeBtnBackground("#c1272d")
-                    .setGifResource(R.drawable.gif_logout)
+                    .setGifResource(R.drawable.gif_dialog)
                     .isCancellable(false)
                     .OnPositiveClicked {
                         Guru.clear()
@@ -592,20 +592,20 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     } else if (member.onlineStatus == 1) {
                         textMsg = getString(R.string.exitDetails)
                     }
-                    var gif: Int = R.drawable.enter
-                    if (textMsg!!.contains(getString(R.string.exitDetails))) {
-                        gif = R.drawable.exit_gif
-                    }
+                    var gif: Int = R.drawable.gif_dialog
+                    /* if (textMsg!!.contains(getString(R.string.exitDetails))) {
+                         gif = R.drawable.gif_dialog
+                     }*/
                     var title = ""
                     if (textMsg == getString(R.string.exitDetails)) {
-                        title = "Hey " + member.firstName + ", Good Bye"
+                        title = "Hey " + member.firstName + ", You haven't logout properly"
                     } else {
                         title = "Hey " + member.firstName + ", Welcome"
                     }
 
                     TTFancyGifDialog.Builder(this)
                             .setTitle(title)
-                            .setMessage("To $textMsg please type your PIN")
+                            .setMessage("To $textMsg Please type your PIN")
                             .setPositiveBtnText(getString(R.string.yes))
                             .setPositiveBtnBackground("#22b573")
                             .setNegativeBtnText(getString(R.string.no))

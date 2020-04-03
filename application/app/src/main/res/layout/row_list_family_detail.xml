@@ -157,7 +157,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_semibold"
                                 android:singleLine="true"
-                                android:text="Kunjan Patel"
+                                android:hint="Name"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -165,7 +165,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:text="Maninagar, Ahmedabad"
+                                android:hint="Area, City"
                                 android:textSize="13sp" />
                         </LinearLayout>
 
@@ -209,7 +209,7 @@
                             android:autoLink="email"
                             android:fontFamily="@font/montserrat_regular"
                             android:singleLine="true"
-                            android:text="kunjanshah@gmail.com"
+                            android:hint="email address"
                             android:textSize="13sp" />
 
                     </LinearLayout>
@@ -235,7 +235,7 @@
                             android:layout_marginLeft="5dp"
                             android:fontFamily="@font/montserrat_regular"
                             android:singleLine="true"
-                            android:text="9825450261"
+                            android:hint="mobile"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="13sp" />
 
@@ -245,16 +245,14 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_light"
                             android:gravity="right"
-                            android:text="12-12-2019"
+                            android:text="dd-mm-yyyy"
                             android:textSize="12sp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-
             </LinearLayout>
-
 
         </LinearLayout>
     </FrameLayout>

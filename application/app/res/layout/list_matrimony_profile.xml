@@ -127,7 +127,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="Kunjan Patel"
+                        android:hint="Name"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -136,7 +136,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="Maninagar, Ahmedabad"
+                        android:hint="Area, City"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -175,7 +175,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:singleLine="true"
-                            android:text="9825450261"
+                            android:hint="mobile"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="14sp" />
 
@@ -202,7 +202,7 @@
                             android:layout_marginLeft="5dp"
                             android:autoLink="email"
                             android:singleLine="true"
-                            android:text="kunjanshah@gmail.com"
+                            android:hint="email address"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -221,7 +221,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="Rajndra Shah"
+                    android:hint="head name"
                     android:textSize="14sp" />
 
             </LinearLayout>

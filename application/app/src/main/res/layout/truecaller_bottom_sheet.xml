@@ -97,7 +97,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Kunjan Shah"
+                        android:hint="name"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
@@ -130,7 +130,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Maninagar ,"
+                        android:hint="Area ,"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
@@ -140,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Ahmedabad"
+                        android:hint="City"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 
@@ -164,7 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
-                        android:text="Software Engineer"
+                        android:hint="Work"
                         android:textColor="@color/colorPrimary"
                         android:textSize="16sp" />
 

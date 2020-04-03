@@ -226,7 +226,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                             .setPositiveBtnBackground("#22b573")
                             .setNegativeBtnText(lstCarrier[1])
                             .setNegativeBtnBackground("#c1272d")
-                            .setGifResource(R.drawable.gif_no_record)
+                            .setGifResource(R.drawable.gif_dialog)
                             .isCancellable(true)
                             .OnPositiveClicked {
                                 startSweetProgress(this@LoginActivity, "Login with ${lstNumber[0]}", getString(R.string.loading))

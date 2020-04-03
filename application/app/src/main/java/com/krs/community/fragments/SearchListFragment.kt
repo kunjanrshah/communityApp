@@ -460,7 +460,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 if (Integer.parseInt(response.totalRecords) == 0) {
                     //  Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
 
-                    val gif: Int = R.drawable.gif_no_record
+                    val gif: Int = R.drawable.gif_dialog
                     TTFancyGifDialog.Builder(activity)
                             .setMessage(getString(R.string.noFoundNonActives))
                             .setPositiveBtnText(getString(R.string.ok))
@@ -501,7 +501,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             mShimmerViewContainer.visibility = View.GONE
 
             //  val gif: Int = R.drawable.gif_no_record
-            val gif: Int = R.drawable.gif_no_record
+            val gif: Int = R.drawable.gif_dialog
             TTFancyGifDialog.Builder(activity)
                     //.setTitle(getString(R.string.you_sure))
                     .setMessage(getString(R.string.noFoundNonActives))

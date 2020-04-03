@@ -161,7 +161,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
                             android:singleLine="true"
-                            android:text="Kunjan Patel"
+                            android:hint="Name"
                             android:textSize="14sp" />
 
                         <TextView
@@ -170,7 +170,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
                             android:singleLine="true"
-                            android:text="Maninagar, Ahmedabad"
+                            android:hint="Area, City"
                             android:textSize="14sp" />
 
                         <LinearLayout
@@ -195,7 +195,7 @@
                                 android:layout_marginLeft="5dp"
                                 android:fontFamily="@font/montserrat_semibold"
                                 android:singleLine="true"
-                                android:text="9825450261"
+                                android:hint="Mobile"
                                 android:textColor="@color/com_facebook_blue"
                                 android:textSize="14sp" />
 
@@ -290,7 +290,7 @@
                         android:autoLink="email"
                         android:fontFamily="@font/montserrat_medium"
                         android:singleLine="true"
-                        android:text="kunjanshah@gmail.com"
+                        android:hint="email address"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -334,7 +334,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
                                 android:fontFamily="@font/montserrat_semibold"
-                                android:text="12.3KM"
+                                android:hint="N/A"
                                 android:textSize="14sp" />
 
                         </LinearLayout>
@@ -361,7 +361,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="3dp"
                                 android:fontFamily="@font/montserrat_semibold"
-                                android:text="12.3KM"
+                                android:hint="N/A"
                                 android:textSize="14sp" />
 
                         </LinearLayout>
@@ -388,7 +388,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:fontFamily="@font/montserrat_semibold"
-                                android:text="12.3KM"
+                                android:hint="N/A"
                                 android:textSize="14sp" />
 
                         </LinearLayout>
@@ -401,7 +401,7 @@
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/montserrat_light"
                         android:gravity="right"
-                        android:text="12-12-2019"
+                        android:hint="dd-mm-yyyy"
                         android:textSize="12sp" />
 
                 </LinearLayout>

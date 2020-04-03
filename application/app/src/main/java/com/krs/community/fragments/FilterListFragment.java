@@ -196,7 +196,7 @@ public class FilterListFragment extends Fragment {
     }
 
     private void noRecordDialog(String message) {
-        int gif = R.drawable.gif_no_record;
+        int gif = R.drawable.gif_dialog;
         new TTFancyGifDialog.Builder(getActivity())
                 .setMessage(message)
                 .setPositiveBtnText(getString(R.string.ok))

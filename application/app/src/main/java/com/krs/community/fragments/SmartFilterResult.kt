@@ -363,7 +363,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private fun noRecordsFound() {
         ivExport.visibility = View.GONE
         DashboardActivity.stop = true
-        val gif: Int = R.drawable.gif_no_record
+        val gif: Int = R.drawable.gif_dialog
         TTFancyGifDialog.Builder(activity)
                 .setMessage("No Record Found")
                 .setPositiveBtnText("OK")
