@@ -161,7 +161,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
         Linkify.addLinks(tvLink, Linkify.ALL)
     }
 
-    override fun userLogin(response: LoginResponse) {
+    override fun userLogin(response: LoginResponse, isForgot: Boolean) {
         Utility.hideSweetProgress()
         llScroll?.let { Snackbar.make(it, response.message, Snackbar.LENGTH_LONG).show() }
     }

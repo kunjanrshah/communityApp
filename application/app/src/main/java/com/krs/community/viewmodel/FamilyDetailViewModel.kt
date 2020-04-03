@@ -126,7 +126,7 @@ class FamilyDetailViewModel(
                         val response = mFamilyDetailRepository.innerLogin(data)
                         response.let {
                             withContext(Dispatchers.Main) {
-                                mILoginListener.userLogin(response)
+                                mILoginListener.userLogin(response, false)
                                 thejob.complete()
                             }
                             return@launch

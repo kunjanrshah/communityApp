@@ -174,7 +174,7 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
         binding.space.visibility = View.VISIBLE
     }
 
-    override fun userLogin(response: LoginResponse) {
+    override fun userLogin(response: LoginResponse, isForgot: Boolean) {
         Utility.hideSweetProgress()
         Snackbar.make(passBinding.llParent, response.message, Snackbar.LENGTH_LONG).show()
     }

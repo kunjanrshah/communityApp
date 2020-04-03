@@ -413,7 +413,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         //toast("OTP Time out")
     }
 
-    override fun userLogin(response: LoginResponse) {
+    override fun userLogin(response: LoginResponse, isForgot: Boolean) {
         hideSweetProgress()
         hideProgressDialog()
         Log.d(TAG, "login data: $response")

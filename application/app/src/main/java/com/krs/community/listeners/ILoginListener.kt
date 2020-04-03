@@ -3,6 +3,7 @@ package com.krs.community.listeners
 import com.krs.community.model.LoginResponse
 
 interface ILoginListener {
-    fun userLogin(response: LoginResponse)
+
+    fun userLogin(response: LoginResponse, isForgot: Boolean)
     suspend fun getFailure(message: String)
 }

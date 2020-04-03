@@ -30,7 +30,7 @@ class PasswordViewModel(
                         val response = passwordRepository.changePassword(jsonObject)
                         response.let {
                             withContext(Dispatchers.Main) {
-                                mLoginListener.userLogin(response)
+                                mLoginListener.userLogin(response, false)
                                 thejob.complete()
                             }
                             return@launch
@@ -64,7 +64,7 @@ class PasswordViewModel(
                         val response = passwordRepository.forgotPassword(jsonObject)
                         response.let {
                             withContext(Dispatchers.Main) {
-                                mLoginListener.userLogin(response)
+                                mLoginListener.userLogin(response, true)
                                 thejob.complete()
                             }
                             return@launch
@@ -98,7 +98,7 @@ class PasswordViewModel(
                         val response = passwordRepository.sendMail(jsonObject)
                         response.let {
                             withContext(Dispatchers.Main) {
-                                mLoginListener.userLogin(response)
+                                mLoginListener.userLogin(response, false)
                                 thejob.complete()
                             }
                             return@launch
