@@ -7,11 +7,13 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.squti.guru.Guru
@@ -34,10 +36,13 @@ import com.krs.community.listeners.InnerLogoutListner
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.responses.UserInnerLogoutResponse
+import com.krs.community.utils.Utility
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.FamilyDetailViewModel
+import com.krs.community.viewmodel.PasswordViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
+import com.krs.community.viewmodelfactory.PasswordViewModelFactory
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -48,9 +53,14 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
     private lateinit var member: Member
     private lateinit var imgView: ImageView
     private lateinit var relative: RelativeLayout
+    private lateinit var tvForgot: TextView
+
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
     override val kodein by kodein()
+
+    private lateinit var passwordViewModel: PasswordViewModel
+    private val passwordViewModelFactory: PasswordViewModelFactory by instance()
 
     companion object {
         private const val ARG_CURRENT_PIN = "current_pin"
@@ -61,6 +71,9 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mILoginListener = this
         familyDetailViewModel.innerLogoutListner = this
+
+        passwordViewModel = ViewModelProvider(this, passwordViewModelFactory).get(PasswordViewModel::class.java)
+        passwordViewModel.mLoginListener = this
 
         if (isNetworkConnected(this)) {
             setScreenLayout()
@@ -99,6 +112,8 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
         mPinView = findViewById(R.id.pattern_view)
         member = intent.getSerializableExtra(getString(R.string.member)) as Member
         imgView = findViewById(R.id.imageView)
+        tvForgot = findViewById(R.id.tv_forgot)
+
         if (!member.profilePic.isEmpty()) {
             try {
                 val str = resources.getString(R.string.base_url_thumb) + member.profilePic
@@ -163,6 +178,49 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
             override fun onAuthenticationFailed() {
             }
         })
+
+        tvForgot.setOnClickListener {
+
+            var strMobile = member.mobile
+            var strEmail = member.emailAddress
+            if (strMobile.isNullOrEmpty()) {
+                strMobile = "Not Set"
+            } else if (strMobile.length > 6) {
+                strMobile = strMobile.substring(0, 6) + "..."
+            }
+            if (strEmail.isNullOrEmpty()) {
+                strEmail = "Not Set"
+            } else if (strEmail.length > 6) {
+                strEmail = strEmail.substring(0, 6) + "..."
+            }
+
+            SweetAlertDialog(this, SweetAlertDialog.FORGOT_TYPE)
+                    .setTitleText(getString(R.string.forgotPin))
+                    .setContentText(getString(R.string.pinWillsend))
+                    .setConfirmText("Mobile\n $strMobile")
+                    .setConfirmClickListener {
+                        it.dismissWithAnimation()
+                        val jsonObject = JSONObject()
+                        jsonObject.put(getString(R.string.username), member.mobile)
+                        jsonObject.put(getString(R.string.reset_type), "mobile")
+                        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                        Utility.startSweetProgress(this, getString(R.string.forgotPin), "sending your PIN to ${member.mobile}")
+                        passwordViewModel.forgotPassword(updated)
+                    }
+                    .setNeutralText("Email\n $strEmail")
+                    .setNeutralClickListener {
+                        it.dismissWithAnimation()
+                        val jsonObject = JSONObject()
+                        jsonObject.put(getString(R.string.username), member.emailAddress)
+                        jsonObject.put(getString(R.string.reset_type), "email")
+                        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                        Utility.startSweetProgress(this, getString(R.string.forgotPin), "sending your PIN to ${member.emailAddress}")
+                        passwordViewModel.forgotPassword(updated)
+                    }
+                    .show()
+
+
+        }
     }
 
     private fun getMemberLogin() {
@@ -186,21 +244,25 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
         familyDetailViewModel.getInnerLogout(records)
     }
 
-    override fun userLogin(response: LoginResponse) {
+    override fun userLogin(response: LoginResponse, isForgot: Boolean) {
         hideSweetProgress()
         if (response.success) {
-            if (response.data != null) {
-                val json = Gson().toJson(response.data)
-                Guru.putString(getString(R.string.loginMember), json)
-                Guru.putString(getString(R.string.member_id), response.data.id)
-                Guru.putString(getString(R.string.user_id), response.data.id)
-                val intent = Intent(this, DashboardActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-                fade(this)
+            if (isForgot) {
+                relative.snackbar(response.message, Snackbar.LENGTH_INDEFINITE)
             } else {
-                relative.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
+                if (response.data != null) {
+                    val json = Gson().toJson(response.data)
+                    Guru.putString(getString(R.string.loginMember), json)
+                    Guru.putString(getString(R.string.member_id), response.data.id)
+                    Guru.putString(getString(R.string.user_id), response.data.id)
+                    val intent = Intent(this, DashboardActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                    fade(this)
+                } else {
+                    relative.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
+                }
             }
         } else {
             relative.snackbar(response.message, Snackbar.LENGTH_LONG)
