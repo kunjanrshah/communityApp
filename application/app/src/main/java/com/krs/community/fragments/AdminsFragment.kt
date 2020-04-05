@@ -141,7 +141,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                         }
                     }
                     else -> {
-                        holder.tvRole.text = resources.getString(R.string.User)
+                        holder.tvRole.text = resources.getString(R.string.USER)
                         holder.tvRegion.text = ""
                     }
                 }
@@ -567,7 +567,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                     } else if (role == getString(R.string.Sub_Admin)) {
                         changed = getString(R.string.SUB_ADMIN)
                     } else {
-                        changed = getString(R.string.User)
+                        changed = getString(R.string.USER)
                     }
 
                     jsonObject.put(getString(R.string.role), changed)

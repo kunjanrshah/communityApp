@@ -68,7 +68,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         val loginMem = Gson().fromJson(loginMember, Member::class.java)
 
-        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id) {
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString().toLowerCase() != "user") {
 
             binding.fname.isFocusable = true
             binding.edtArea.isFocusable = true
@@ -93,14 +93,16 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             binding.chkRented.isClickable = true
 
             binding.llMcode.visibility = View.VISIBLE
+            if (member.id == loginMem.id || member.headId == loginMem.id) {
+                member.stateId = loginMem.stateId
+                member.cityId = loginMem.cityId
+                member.city = loginMem.city
+                member.area = loginMem.area
+                member.pincode = loginMem.pincode
+                member.address = loginMem.address
+                member.isRented = loginMem.isRented
+            }
 
-            member.stateId = loginMem.stateId
-            member.cityId = loginMem.cityId
-            member.city = loginMem.city
-            member.area = loginMem.area
-            member.pincode = loginMem.pincode
-            member.address = loginMem.address
-            member.isRented = loginMem.isRented
         } else {
             binding.fname.isFocusable = false
             binding.edtEmail.isFocusable = false

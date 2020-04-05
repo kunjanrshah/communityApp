@@ -26,9 +26,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -79,6 +81,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private var isShimmer: Boolean = true
     private var loginId: String? = null
     private var textMsg: String? = null
+    var family: MutableList<Member>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -194,21 +197,20 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
         if (data.success) {
             members = data.member as ArrayList<Member>
+            if (members.size > 0) {
+                family = members.subList(1, members.size)
+            }
             createCardAdapter()
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun createCardAdapter() {
-        var family: MutableList<Member>? = null
-        if (members.size > 0) {
-            family = members.subList(1, members.size)
-        }
         if (family != null) {
             adapter = object : ParallaxRecyclerAdapter<Member>(family) {
                 override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
 
-                    val member = family[i]
+                    val member = family!![i]
 
                     (viewHolder as FamilyDetailViewHolder).tvName.text = "${member.firstName} ${member.lastName}"
                     viewHolder.tvSubtext.text = member.relation
@@ -274,10 +276,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                     textMsg = "Exit"
                                 }
 
-                                var gif: Int = R.drawable.gif_dialog
-                                /* if (textMsg!!.contains("Exit")) {
-                                     gif = R.drawable.gif_dialog
-                                 }*/
                                 var title = ""
                                 if (textMsg == getString(R.string.exitDetails)) {
                                     title = "Hey " + member.firstName + ", You haven't logout properly"
@@ -291,7 +289,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                         .setPositiveBtnBackground("#22b573")
                                         .setNegativeBtnText(getString(R.string.no))
                                         .setNegativeBtnBackground("#c1272d")
-                                        .setGifResource(gif)
+                                        .setGifResource(R.drawable.gif_dialog)
                                         .isCancellable(false)
                                         .OnPositiveClicked {
                                             val intent = Intent(this@FamilyDetailActivity, PinViewActivity::class.java)
@@ -309,6 +307,21 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             }
                         }
                     }
+
+                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                    var canDelete = false
+                    if (!loginuser.isNullOrEmpty()) {
+                        val loginMember = Gson().fromJson(loginuser, Member::class.java)
+                        if (loginMember.role != getString(R.string.USER) || (loginMember.headId == "0" && members[0].id == loginMember.id)) {
+                            canDelete = true
+                        }
+                    }
+                    if (canDelete) {
+                        viewHolder.swipe.setLockDrag(false)
+                    } else {
+                        viewHolder.swipe.setLockDrag(true)
+                    }
+
                     viewHolder.llDelete.setOnClickListener {
                         if (!loginId.isNullOrEmpty()) {
                             TTFancyGifDialog.Builder(this@FamilyDetailActivity)
@@ -395,7 +408,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 }
 
                 override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
-                    return (family.size)
+                    return (family!!.size)
                 }
             }
         }
@@ -425,7 +438,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             finish()
             fade(this)
         }
-        val member = members.get(0)
+        val member = members[0]
 
         imgMap.setOnClickListener {
             //displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
@@ -578,7 +591,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         llFamilyHead.setOnClickListener {
             if (!loginId.isNullOrEmpty()) {
                 val intent = Intent(this, ProfileDetailActivity::class.java)
-                intent.putExtra(getString(R.string.member), members.get(0))
+                intent.putExtra(getString(R.string.member), members[0])
                 startActivity(intent)
                 //  fade(this)
             } else {
@@ -627,7 +640,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             }
         }
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
-        if (!loginId.isNullOrEmpty() && member.id == loginId) {
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        var isAdmin = false
+        if (!loginuser.isNullOrEmpty()) {
+            val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (loginMember.role != getString(R.string.USER)) {
+                isAdmin = true
+            }
+        }
+
+        if (!loginId.isNullOrEmpty() && member.id == loginId || isAdmin) {
             tvAdd.visibility = View.VISIBLE
         } else {
             tvAdd.visibility = View.GONE
@@ -635,6 +657,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         tvAdd.setOnClickListener {
             val intent = Intent(this, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), Member())
+            intent.putExtra(getString(R.string.head_id), members[0].id)
             startActivity(intent)
             // fade(this)
         }
@@ -690,6 +713,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         var frontLayout: FrameLayout = v.findViewById(R.id.front_layout)
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var llDelete: LinearLayout = v.findViewById(R.id.ll_delete)
+        var swipe: SwipeRevealLayout = v.findViewById(R.id.swipe)
         var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         val imgState: ImageView = v.findViewById(R.id.img_state)
@@ -712,6 +736,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
             if (member1 != null) {
                 members.remove(member1)
+                if (members.size > 0) {
+                    family = members.subList(1, members.size)
+                }
+                adapter.notifyDataSetChanged()
                 createCardAdapter()
             }
         }

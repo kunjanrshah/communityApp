@@ -23,7 +23,6 @@ import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -31,7 +30,6 @@ import com.krs.community.adapter.UploadDialogAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByDocumentListener
-import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.UploadedFile
 import com.krs.community.responses.UploadedFilesResponse
@@ -40,7 +38,6 @@ import com.krs.community.utils.AppConstants.UPLOAD_DOCUMENT
 import com.krs.community.viewmodel.DocumentsListModel
 import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
-
 import lumenghz.com.pullrefresh.PullToRefreshView
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest
 import org.json.JSONObject
@@ -73,13 +70,13 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
         pullToRefreshView = root.findViewById(R.id.pull_to_refresh)
         rvDocuments = root.findViewById(R.id.rv_documents)
         ivNotFound = root.findViewById(R.id.iv_not_found)
-        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        /*val loginuser = Guru.getString(getString(R.string.loginMember), "")
         val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
-        if (loginMember?.role.equals(getString(R.string.User))) {
+        if (loginMember?.role.toString().toLowerCase() == getString(R.string.User).toLowerCase()) {
             btnupload.visibility = View.GONE
         } else {
             btnupload.visibility = View.VISIBLE
-        }
+        }*/
         btnupload.setOnClickListener {
 
             val adapter = UploadDialogAdapter(context)

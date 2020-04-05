@@ -385,6 +385,7 @@
 
     <string name="Local_Admin" translatable="false">Local Admin</string>
     <string name="LOCAL_ADMIN" translatable="false">LOCAL_ADMIN</string>
+    <string name="USER" translatable="false">USER</string>
     <string name="Sub_Admin" translatable="false">Sub Admin</string>
     <string name="SUB_ADMIN" translatable="false">SUB_ADMIN</string>
     <string name="User" translatable="false">User</string>
@@ -605,7 +606,7 @@
 
     <!-- SmartPopUp Adapter -->
     <string name="filter_name">Filter Name</string>
-    <string name="save">Save</string>
+    <string name="save">\u0020 Save \u0020</string>
     <string name="apply">Apply</string>
     <string name="head">Head :</string>
     <string name="membar">Member :</string>
@@ -965,7 +966,7 @@
     <string name="check_network">Please check your internet connection and try again</string>
     <string name="retry">Retry</string>
     <string name="coming_soon">Working on it</string>
-    <string name="admin_only">For Admin only</string>
+    <string name="admin_only">For Admin use only</string>
     <string name="contact_number">9377133222</string> <!--9427051418-->
     <string name="fb_url" translatable="false">https://www.facebook.com/MEHBOOBGHANCHI</string> <!--https://www.facebook.com/kunjanrshah87-->
     <string name="linkedin_url" translatable="false">""</string> <!--https://www.linkedin.com/in/kunjan-shah-76901b6a/-->

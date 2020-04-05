@@ -64,7 +64,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
 
         loginMem = Gson().fromJson(loginMember, Member::class.java)
-        if (member.id == loginMem.id || member.headId == loginMem.id) {
+        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString().toLowerCase() != "user") {
             binding.edtRole.isFocusable = true
             binding.spNative.isClickable = true
             binding.chkExpired.isEnabled = true
@@ -106,7 +106,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         } else if (member.role.equals(getString(R.string.SUB_ADMIN))) {
             binding.edtRole.text = getString(R.string.SubAdmin)
         } else {
-            binding.edtRole.text = getString(R.string.user)
+            binding.edtRole.text = getString(R.string.USER)
         }
 
         binding.chkIsDonor.isChecked = member.isDonor.equals("1")

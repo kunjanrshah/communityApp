@@ -159,7 +159,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
-                            android:hint="Area, City"
+                            android:hint="Area"
                             android:singleLine="true"
                             android:textSize="14sp" />
 

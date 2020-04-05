@@ -34,7 +34,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources false
             debuggable true
             proguardFile 'proguard-google-play-services.pro'

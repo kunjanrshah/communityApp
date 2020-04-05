@@ -345,7 +345,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
                     6 -> Utility.movetoFragment(activity, AdminsFragment())
                     7 -> {
-                        if (loginMember?.role != getString(R.string.User)) {
+                        if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                             Utility.movetoFragment(activity, NonActivesFragment())
                         } else {
                             binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
@@ -369,7 +369,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     }
 
                     11 -> {
-                        if (loginMember?.role != getString(R.string.User)) {
+                        if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
                             bundle.putBoolean(getString(R.string.is_logged_in), false)
@@ -528,6 +528,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 setDefaultProfileList()
             }
         } else {
+            binding.lblShared.alpha = 0.25f
+            binding.tvAllShared.isClickable = false
             setDefaultProfileList()
         }
     }

@@ -347,7 +347,11 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 rvFilters.layoutManager?.scrollToPosition(selectedPosition)
                 selectedPosition = lstMembers.size - 1
                 DashboardActivity.stop = false
-
+                if (loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
+                    ivExport.visibility = View.GONE
+                } else {
+                    ivExport.visibility = View.VISIBLE
+                }
                 if (lstMembers.size <= AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, getString(R.string.endrecord), Snackbar.LENGTH_LONG).show()
@@ -617,7 +621,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             val menuDelete = menu.findItem(R.id.action_delete)
             val menuRole = menu.findItem(R.id.action_my_role)
 
-            if (loginMember?.role.equals(getString(R.string.User))) {
+            if (loginMember?.role == getString(R.string.User)) {
                 menuDelete.isVisible = false
                 menuRole.isVisible = false
             } else {
@@ -814,7 +818,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     } else if (role == getString(R.string.Sub_Admin)) {
                         changed = getString(R.string.SUB_ADMIN)
                     } else {
-                        changed = getString(R.string.User)
+                        changed = getString(R.string.USER)
                     }
 
                     jsonObject.put(getString(R.string.role), changed)
