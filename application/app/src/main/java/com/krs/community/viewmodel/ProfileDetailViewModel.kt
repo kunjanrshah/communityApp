@@ -249,10 +249,7 @@ class ProfileDetailViewModel(
                                 .asRequestBody("image/*".toMediaTypeOrNull())
                         val body = MultipartBody.Part.createFormData("uploaded_file", file.name, requestFile)
                         val id = id.toRequestBody("text/plain".toMediaTypeOrNull())
-
-
                         val _type = type.toRequestBody("text/plain".toMediaTypeOrNull())
-
                         val response: JsonObject = mProfileDetailRepository.uploadProfileImage(body, id, _type)
 
                         response.let {

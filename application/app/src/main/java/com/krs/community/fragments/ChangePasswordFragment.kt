@@ -114,7 +114,7 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
             SweetAlertDialog(activity, SweetAlertDialog.FORGOT_TYPE)
                     .setTitleText(getString(R.string.forgotPin))
                     .setContentText(getString(R.string.pinWillsend))
-                    .setConfirmText("Mobile\n $strMobile")
+                    .setConfirmText(strMobile)
                     .setConfirmClickListener {
                         it.dismissWithAnimation()
                         val jsonObject = JSONObject()
@@ -124,7 +124,7 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
                         Utility.startSweetProgress(activity, getString(R.string.forgotPin), getString(R.string.loading))
                         passwordViewModel.forgotPassword(updated)
                     }
-                    .setNeutralText("Email\n $strEmail")
+                    .setNeutralText(strEmail)
                     .setNeutralClickListener {
                         it.dismissWithAnimation()
                         val jsonObject = JSONObject()

@@ -36,7 +36,7 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
-            debuggable true
+            debuggable false
             proguardFile 'proguard-google-play-services.pro'
             proguardFile 'proguard-gson.pro'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

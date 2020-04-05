@@ -492,7 +492,7 @@
     <string name="user">User</string>
     <string name="updateprofile">Update Profile</string>
     <string name="update">Update</string>
-    <string name="no">Cancel</string>
+    <string name="no">\u0020 No \u0020</string>
     <string name="updatingProfile">Updating your profile</string>
     <string name="pleaseWait">Please wait...</string>
     <string name="EnterFirstName">Enter FirstName</string>
@@ -861,7 +861,7 @@
     <string name="ProfileCity">Profiles!</string>
     <string name="YesCity">Share it!</string>
     <string name="ProfileRoleCity">Profiles Role will be changed to</string>
-    <string name="YesPleaseCity">Yes,Please!</string>
+    <string name="YesPleaseCity">\u0020 Yes \u0020</string>
 
     <!-- SearchList Fragment -->
     <string name="UpdateList">Updated</string>
@@ -1088,7 +1088,7 @@
     <string name="total_female">Total Female</string>
     <string name="unmarried_male">Unmarried Male</string>
 
-    <string name="uploads">Uploads</string>
+    <string name="uploads">Upload</string>
     <string name="fetchingfiles">Fetching uploaded files</string>
     <string name="somethingwrong">Something went wrong!</string>
     <string name="filedownloded">File is downloaded in</string>

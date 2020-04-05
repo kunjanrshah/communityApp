@@ -12,17 +12,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.github.squti.guru.Guru
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -30,11 +31,15 @@ import com.krs.community.adapter.UploadDialogAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByDocumentListener
+import com.krs.community.listeners.DeleteListener
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.UploadedFile
 import com.krs.community.responses.UploadedFilesResponse
-import com.krs.community.utils.*
+import com.krs.community.utils.AppConstants
 import com.krs.community.utils.AppConstants.UPLOAD_DOCUMENT
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.MovableFloatingActionButton
+import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.DocumentsListModel
 import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
@@ -45,7 +50,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner {
+class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner, DeleteListener {
     override val kodein by kodein()
 
     private lateinit var btnupload: MovableFloatingActionButton
@@ -66,17 +71,12 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
 
         documentsListModel = ViewModelProvider(this, documentListViewModelFactory).get(DocumentsListModel::class.java)
         documentsListModel.byDocumentListener = this
+        documentsListModel.mDeleteListener = this
         btnupload = root.findViewById<View>(R.id.btnupload) as MovableFloatingActionButton
         pullToRefreshView = root.findViewById(R.id.pull_to_refresh)
         rvDocuments = root.findViewById(R.id.rv_documents)
         ivNotFound = root.findViewById(R.id.iv_not_found)
-        /*val loginuser = Guru.getString(getString(R.string.loginMember), "")
-        val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
-        if (loginMember?.role.toString().toLowerCase() == getString(R.string.User).toLowerCase()) {
-            btnupload.visibility = View.GONE
-        } else {
-            btnupload.visibility = View.VISIBLE
-        }*/
+
         btnupload.setOnClickListener {
 
             val adapter = UploadDialogAdapter(context)
@@ -104,8 +104,7 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
                     Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchinguploadedfiles))
                 }
                 val jsonObject = JSONObject()
-                jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.user_id), ""))
-
+                jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
                 val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                 documentsListModel.getUploadedFiles(updated)
             }
@@ -117,26 +116,58 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
                 holder.tvFile.text = uploadfile.name
                 holder.tvName.text = uploadfile.first_name + " " + uploadfile.last_name
                 holder.tvDate.text = Utility.changeDateFormat(uploadfile.createdAt, Utility.yyyy_MM_dd_TIME, Utility.dd_MM_yyyy_TIME)
-                holder.llDownload.setOnClickListener {
-                    if (Utility.checkExternalStoragePermission(activity)) {
-                        PRDownloader.download(uploadfile.fileUrl, Utility.getPath(), uploadfile.filename).build()
-                                .setOnStartOrResumeListener {
-                                    Utility.startSweetDialog(activity, SweetAlertDialog.PROGRESS_TYPE, getString(R.string.uploads), getString(R.string.download))
+                holder.swipe.close(true)
+                holder.llDelete.setOnClickListener {
+                    val loginId = Guru.getString(getString(R.string.member_id), "")
+                    if (uploadfile.user_id == loginId) {
+                        SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                                .setTitleText("Delete")
+                                .setContentText("Do you want to delete ${uploadfile.name}?")
+                                .setConfirmText(activity!!.getString(R.string.YesPleaseCity))
+                                .setCancelText(activity!!.getString(R.string.no))
+                                .setCustomImage(R.drawable.icon_ghanchi)
+                                .showCancelButton(true)
+                                .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                                    sweetAlertDialog.dismissWithAnimation()
+                                    Utility.startSweetProgress(activity, "Deleting", resources.getString(R.string.loading))
+                                    documentsListModel.deleteFile(uploadfile.id, i)
                                 }
-                                .start(object : OnDownloadListener {
-                                    override fun onDownloadComplete() {
-                                        Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.uploads), getString(R.string.filedownloded) + AppController.mApplication.getString(R.string.app_name) + getString(R.string.folder))
-                                    }
-
-                                    override fun onError(error: Error?) {
-                                        Utility.startSweetDialog(activity, SweetAlertDialog.ERROR_TYPE, getString(R.string.uploads), getString(R.string.somethingwrong))
-                                        Log.d("PRDownloader", "onError: $error")
-                                    }
-                                })
+                                .show()
                     } else {
-                        Utility.requestStoragePermission(activity as AppCompatActivity)
+                        Utility.displaySnackBarWithBottomMargin(rvDocuments, "Sorry! You have not uploaded this file")
                     }
-                    rvDocuments.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_SHORT)
+                }
+
+                holder.llDownload.setOnClickListener {
+                    SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                            .setTitleText("Download")
+                            .setContentText("Do you want to download ${uploadfile.name}?")
+                            .setConfirmText(activity!!.getString(R.string.YesPleaseCity))
+                            .setCancelText(activity!!.getString(R.string.no))
+                            .setCustomImage(R.drawable.icon_ghanchi)
+                            .showCancelButton(true)
+                            .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                                sweetAlertDialog.dismissWithAnimation()
+                                if (Utility.checkExternalStoragePermission(activity)) {
+                                    PRDownloader.download(uploadfile.fileUrl, Utility.getPath(), uploadfile.filename).build()
+                                            .setOnStartOrResumeListener {
+                                                Utility.startSweetDialog(activity, SweetAlertDialog.PROGRESS_TYPE, getString(R.string.uploads), getString(R.string.download))
+                                            }
+                                            .start(object : OnDownloadListener {
+                                                override fun onDownloadComplete() {
+                                                    Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.uploads), getString(R.string.filedownloded) + AppController.mApplication.getString(R.string.app_name) + getString(R.string.folder))
+                                                }
+
+                                                override fun onError(error: Error?) {
+                                                    Utility.startSweetDialog(activity, SweetAlertDialog.ERROR_TYPE, getString(R.string.uploads), getString(R.string.somethingwrong))
+                                                    Log.d("PRDownloader", "onError: $error")
+                                                }
+                                            })
+                                } else {
+                                    Utility.requestStoragePermission(activity as AppCompatActivity)
+                                }
+                            }
+                            .show()
                 }
             }
 
@@ -161,6 +192,16 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
         adapter.setParallaxHeader(header, rvDocuments)
         rvDocuments.adapter = adapter
+
+        getFiles()
+        if (!Utility.checkExternalStoragePermission(activity)) {
+            Utility.requestStoragePermission(activity as AppCompatActivity)
+        }
+
+        return root
+    }
+
+    private fun getFiles() {
         Coroutines.io {
             Coroutines.main {
                 Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchingfiles))
@@ -171,12 +212,6 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             documentsListModel.getUploadedFiles(updated)
         }
-
-        if (!Utility.checkExternalStoragePermission(activity)) {
-            Utility.requestStoragePermission(activity as AppCompatActivity)
-        }
-
-        return root
     }
 
     override fun onResume() {
@@ -234,7 +269,7 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
                                 .addParameter(getString(R.string.id), Guru.getString(getString(R.string.member_id), "").toString())
                                 .addHeader(getString(R.string.apikey), AppConstants.API_KEY_VALUE)
                                 .startUpload()
-                        rvDocuments.snackbar(getString(R.string.uploadingstart), Snackbar.LENGTH_INDEFINITE)
+                        Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, "Check your Notification", "Pull to refresh after complete upload.")
                     }
                 }
                 .setCancelText("Later")
@@ -250,12 +285,14 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
         if (response.success) {
             listUpload.clear()
             tvCount.text = getString(R.string.totalrecord) + response.data.size
+            tvCount.visibility = View.VISIBLE
             listUpload.addAll(response.data)
             adapter.notifyDataSetChanged()
             ivNotFound.visibility = View.GONE
         } else {
             Coroutines.main {
                 ivNotFound.visibility = View.VISIBLE
+                tvCount.visibility = View.GONE
             }
         }
     }
@@ -269,8 +306,35 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
 
     inner class MyViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
         var llDownload: LinearLayout = view.findViewById(R.id.ll_download)
+        var llDelete: LinearLayout = view.findViewById(R.id.ll_delete)
         var tvFile: TextView = view.findViewById(R.id.tv_file)
         var tvDate: TextView = view.findViewById(R.id.tv_date)
         var tvName: TextView = view.findViewById(R.id.tv_name)
+        var swipe: SwipeRevealLayout = view.findViewById(R.id.swipe)
+
+    }
+
+    override fun getSuccess(id: Int, jsonObject: JsonObject) {
+        Utility.hideSweetProgress()
+        val mFile = listUpload[id]
+        val success = jsonObject.get("success").asString
+        val message = jsonObject.get("message").asString
+        if (success == "success") {
+            listUpload.remove(mFile)
+            adapter.notifyDataSetChanged()
+        }
+        if (listUpload.isEmpty()) {
+            ivNotFound.visibility = View.VISIBLE
+            tvCount.visibility = View.GONE
+        } else {
+            tvCount.visibility = View.VISIBLE
+            tvCount.text = getString(R.string.totalrecord) + " " + listUpload.size
+        }
+        Toast.makeText(activity, "${mFile.name} $message", Toast.LENGTH_LONG).show()
+    }
+
+    override fun getFail(message: String) {
+        Utility.hideSweetProgress()
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 }
