@@ -181,7 +181,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 }
                 jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
 
-                if (binding.tvSave.text.toString().toLowerCase().contains(getString(R.string.save))) {
+                if (binding.tvSave.text.toString().toLowerCase().contains(getString(R.string.save).toLowerCase())) {
 
                     SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(getString(R.string.updateprofile))
@@ -231,8 +231,8 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.password_mismatch))
                         return@setOnClickListener
                     }
-
                     jsonObject.remove(getString(R.string.confPin))
+
                     jsonObject.put(getString(R.string.id), headId)
                     jsonObject.put(getString(R.string.role), getString(R.string.USER))
                     startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")

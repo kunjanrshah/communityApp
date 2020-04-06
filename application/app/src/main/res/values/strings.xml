@@ -154,7 +154,7 @@
     <string name="email">Email</string>
     <string name="or_login_with">Or Login with</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
-    <string name="yes">OK</string>
+    <string name="yes">Yes</string>
     <string name="loading">Working…</string>
 
     <string name="username" translatable="false">username</string>
@@ -606,7 +606,7 @@
 
     <!-- SmartPopUp Adapter -->
     <string name="filter_name">Filter Name</string>
-    <string name="save">\u0020 Save \u0020</string>
+    <string name="save">Save</string>
     <string name="apply">Apply</string>
     <string name="head">Head :</string>
     <string name="membar">Member :</string>

@@ -324,6 +324,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                         menu?.findItem(R.id.action_profile)?.icon = resource
                     }
+
                     override fun onLoadCleared(placeholder: Drawable?) {
 
                     }

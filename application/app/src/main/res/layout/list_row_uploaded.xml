@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:layout_marginLeft="14dp"
     android:layout_marginTop="8dp"
     android:layout_marginRight="14dp"
     android:layout_marginBottom="8dp"
-    android:id="@+id/swipe"
     android:background="@drawable/round_corner_itemlist"
     app:dragEdge="right"
     app:mode="same_level">

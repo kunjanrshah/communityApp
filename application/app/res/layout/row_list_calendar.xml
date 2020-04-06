@@ -129,8 +129,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
-                        android:singleLine="true"
                         android:hint="Name"
+                        android:singleLine="true"
                         android:textSize="18sp" />
 
                     <TextView
@@ -138,8 +138,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
-                        android:singleLine="true"
                         android:hint="Area, City"
+                        android:singleLine="true"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -196,8 +196,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:singleLine="true"
                         android:hint="Mobile"
+                        android:singleLine="true"
                         android:textColor="@color/com_facebook_blue"
                         android:textSize="16sp" />
 
@@ -223,8 +223,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:singleLine="true"
                         android:hint="email address"
+                        android:singleLine="true"
                         android:textSize="16sp" />
 
                 </LinearLayout>

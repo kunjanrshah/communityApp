@@ -47,9 +47,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             // showNotification(applicationContext, resultIntent, "fullName", "mobile", "email", photo, "homeAddress", "cityName")
 
             val handler = Handler(Looper.getMainLooper())
-             handler.postDelayed({
-                 smartFilterSearch(userId)
-             }, 60 * 1000 * 2)
+            handler.postDelayed({
+                smartFilterSearch(userId)
+            }, 60 * 1000 * 2)
         }
     }
 
