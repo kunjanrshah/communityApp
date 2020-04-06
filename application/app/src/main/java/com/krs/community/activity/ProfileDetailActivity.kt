@@ -50,7 +50,6 @@ import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
-
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -74,6 +73,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private lateinit var easyWayLocation: EasyWayLocation
     private lateinit var request: LocationRequest
     private var scanId: String? = null
+    private var headId: String? = null
 
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
@@ -97,7 +97,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         profileDetailViewModel.mImageUploadListener = this
         member = intent.getSerializableExtra(getString(R.string.member)) as Member?
         scanId = intent.getStringExtra(getString(R.string.scanId))
-
+        headId = intent.getStringExtra(getString(R.string.head_id))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             changeStatusbarColor(this, R.color.white, false)
         }
@@ -143,6 +143,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             requestFineLocationPermission(this)
         }
 
+        if (member?.id.isNullOrEmpty()) {
+            binding.ivFamily.visibility = View.GONE
+        } else {
+            binding.ivFamily.visibility = View.VISIBLE
+        }
         binding.ivFamily.setOnClickListener {
             goToFamilyDetailActivity()
         }
@@ -176,7 +181,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 }
                 jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
 
-                if (binding.tvSave.text.toString().toLowerCase().equals("save")) {
+                if (binding.tvSave.text.toString().toLowerCase().contains(getString(R.string.save).toLowerCase())) {
 
                     SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(getString(R.string.updateprofile))
@@ -226,13 +231,14 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.password_mismatch))
                         return@setOnClickListener
                     }
-
                     jsonObject.remove(getString(R.string.confPin))
+
+                    jsonObject.put(getString(R.string.id), headId)
+                    jsonObject.put(getString(R.string.role), getString(R.string.USER))
                     startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
                     val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                     profileDetailViewModel.updateProfile(profile, false)
                 }
-
                 Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
                 hideSweetProgress()
             } else {
@@ -273,13 +279,18 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private fun setMemberValues() {
 
         binding.txtTitle.text = "${member?.firstName}" + getString(R.string.Profile)
-
         val memberId = Guru.getString(getString(R.string.member_id), "")
-        // binding.switchLocation.isEnabled = memberId.equals(member?.id)
-        if (member?.id == memberId || member?.headId == memberId) {
+        val memberString = Guru.getString(getString(R.string.loginMember), "")
+        val loginMember = Gson().fromJson(memberString, Member::class.java)
+        if (member?.id == memberId || member?.headId == memberId || (loginMember.role != getString(R.string.USER))) {
             binding.tvSave.visibility = View.VISIBLE
-            binding.tvSave.text = getString(R.string.save)
             binding.imgProfile.isEnabled = true
+            if (member?.id.isNullOrEmpty()) {
+                binding.tvSave.text = getString(R.string.add)
+                binding.txtTitle.text = getString(R.string.newProfile)
+            } else {
+                binding.tvSave.text = getString(R.string.save)
+            }
         } else if (member?.id.isNullOrEmpty()) {
             binding.tvSave.text = getString(R.string.add)
             binding.imgProfile.isEnabled = true

@@ -63,6 +63,7 @@ public class AppConstants {
         String GET_USER_STATUS = "GetUserActivityStatus";
         String GET_MASTER_UPDATE_COUNTS = "GetMasterUpdateCounts";
         String SEND_MAIL = "SendMail";
+        String UPLOAD_FILES = "UploadFiles";
 
     }
 

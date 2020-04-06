@@ -186,18 +186,18 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
             if (strMobile.isNullOrEmpty()) {
                 strMobile = "Not Set"
             } else if (strMobile.length > 6) {
-                strMobile = strMobile.substring(0, 6) + "..."
+                //strMobile = strMobile.substring(0, 6) + "..."
             }
             if (strEmail.isNullOrEmpty()) {
                 strEmail = "Not Set"
             } else if (strEmail.length > 6) {
-                strEmail = strEmail.substring(0, 6) + "..."
+                //  strEmail = strEmail.substring(0, 6) + "..."
             }
 
             SweetAlertDialog(this, SweetAlertDialog.FORGOT_TYPE)
                     .setTitleText(getString(R.string.forgotPin))
                     .setContentText(getString(R.string.pinWillsend))
-                    .setConfirmText("Mobile\n $strMobile")
+                    .setConfirmText("$strMobile")
                     .setConfirmClickListener {
                         it.dismissWithAnimation()
                         val jsonObject = JSONObject()
@@ -207,7 +207,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
                         Utility.startSweetProgress(this, getString(R.string.forgotPin), "sending your PIN to ${member.mobile}")
                         passwordViewModel.forgotPassword(updated)
                     }
-                    .setNeutralText("Email\n $strEmail")
+                    .setNeutralText("$strEmail")
                     .setNeutralClickListener {
                         it.dismissWithAnimation()
                         val jsonObject = JSONObject()
@@ -218,7 +218,6 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
                         passwordViewModel.forgotPassword(updated)
                     }
                     .show()
-
 
         }
     }

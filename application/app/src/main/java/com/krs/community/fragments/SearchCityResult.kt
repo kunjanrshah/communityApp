@@ -143,11 +143,14 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 val member = members[position]
                 val holder = viewHolder as SearchCityResult.ViewHolder
                 val name = member.firstName
-
-                Coroutines.main {
-                    val lastname = browseCityViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
-                    holder.tvName.text = "$name $lastname"
+                Coroutines.io {
+                    var lastname = ""
+                    lastname = browseCityViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
+                    Coroutines.main {
+                        holder.tvName.text = "$name $lastname"
+                    }
                 }
+
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
@@ -284,7 +287,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         ivCancel.setOnClickListener { v -> Utility.backNavigation(activity) }
 
         ivExport = header.findViewById(R.id.iv_export)
-        if (loginMem.role.equals(getString(R.string.User)) || loginMem.role.equals(getString(R.string.LOCAL_ADMIN))) {
+        if (loginMem.role.isNullOrEmpty() || loginMem.role == getString(R.string.USER) || loginMem.role == getString(R.string.LOCAL_ADMIN)) {
             ivExport.visibility = View.GONE
         } else {
             ivExport.visibility = View.VISIBLE
@@ -385,7 +388,12 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 tvCount.visibility = View.VISIBLE
                 val count = data.totalHead + data.totalMem
                 tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " $count"
-                ivExport.visibility = View.VISIBLE
+
+                if (loginMem.role.isNullOrEmpty() || loginMem.role == getString(R.string.USER) || loginMem.role == getString(R.string.LOCAL_ADMIN)) {
+                    ivExport.visibility = View.GONE
+                } else {
+                    ivExport.visibility = View.VISIBLE
+                }
                 for (user in data.members) {
                     members.add(user)
                 }
@@ -453,7 +461,11 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     setupList()
                 }*/
             } else {
-                Snackbar.make(binding.llParent, getString(R.string.went_wrong), Snackbar.LENGTH_LONG).show()
+                try {
+                    Snackbar.make(binding.llParent, getString(R.string.went_wrong), Snackbar.LENGTH_LONG).show()
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -657,7 +669,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             val menuDelete = menu.findItem(R.id.action_delete)
             val menuRole = menu.findItem(R.id.action_my_role)
 
-            if (loginMem.role.equals(getString(R.string.User))) {
+            if (loginMem.role.isNullOrEmpty() || loginMem.role == getString(R.string.USER)) {
                 menuDelete.isVisible = false
                 menuRole.isVisible = false
             } else {
@@ -860,7 +872,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     } else if (role == getString(R.string.Sub_Admin)) {
                         changed = getString(R.string.SUB_ADMIN)
                     } else {
-                        changed = getString(R.string.User)
+                        changed = getString(R.string.USER)
                     }
                     val loginuser = Guru.getString(getString(R.string.loginMember), "")
                     val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)

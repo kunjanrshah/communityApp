@@ -121,8 +121,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
+                        android:hint="Name"
                         android:singleLine="true"
-                        android:text="Kunjan Patel"
                         android:textSize="16sp" />
 
                     <TextView
@@ -130,8 +130,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
+                        android:hint="Area, City"
                         android:singleLine="true"
-                        android:text="Maninagar, Ahmedabad"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -146,7 +146,7 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="Family Head"
+                    android:text="Member"
                     android:textColor="@color/white"
                     android:textSize="10sp" />
 
@@ -188,8 +188,8 @@
                         android:layout_marginLeft="5dp"
                         android:autoLink="email"
                         android:fontFamily="@font/montserrat_medium"
+                        android:hint="email address"
                         android:singleLine="true"
-                        android:text="kunjanshah@gmail.com"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -224,8 +224,8 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:fontFamily="@font/montserrat_medium"
+                            android:hint="mobile"
                             android:singleLine="true"
-                            android:text="9825450261"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="14sp" />
 
@@ -237,7 +237,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="right"
-                        android:text="12-12-2019"
+                        android:hint="dd-mm-yyyy"
                         android:textSize="12sp" />
 
                 </LinearLayout>

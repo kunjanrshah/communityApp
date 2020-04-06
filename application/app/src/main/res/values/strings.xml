@@ -154,7 +154,7 @@
     <string name="email">Email</string>
     <string name="or_login_with">Or Login with</string>
     <string name="do_you_have_an_account_register_now">Do you have an account?</string>
-    <string name="yes">OK</string>
+    <string name="yes">Yes</string>
     <string name="loading">Working…</string>
 
     <string name="username" translatable="false">username</string>
@@ -385,6 +385,7 @@
 
     <string name="Local_Admin" translatable="false">Local Admin</string>
     <string name="LOCAL_ADMIN" translatable="false">LOCAL_ADMIN</string>
+    <string name="USER" translatable="false">USER</string>
     <string name="Sub_Admin" translatable="false">Sub Admin</string>
     <string name="SUB_ADMIN" translatable="false">SUB_ADMIN</string>
     <string name="User" translatable="false">User</string>
@@ -491,7 +492,7 @@
     <string name="user">User</string>
     <string name="updateprofile">Update Profile</string>
     <string name="update">Update</string>
-    <string name="no">Cancel</string>
+    <string name="no">\u0020 No \u0020</string>
     <string name="updatingProfile">Updating your profile</string>
     <string name="pleaseWait">Please wait...</string>
     <string name="EnterFirstName">Enter FirstName</string>
@@ -860,7 +861,7 @@
     <string name="ProfileCity">Profiles!</string>
     <string name="YesCity">Share it!</string>
     <string name="ProfileRoleCity">Profiles Role will be changed to</string>
-    <string name="YesPleaseCity">Yes,Please!</string>
+    <string name="YesPleaseCity">\u0020 Yes \u0020</string>
 
     <!-- SearchList Fragment -->
     <string name="UpdateList">Updated</string>
@@ -965,10 +966,10 @@
     <string name="check_network">Please check your internet connection and try again</string>
     <string name="retry">Retry</string>
     <string name="coming_soon">Working on it</string>
-    <string name="admin_only">For Admin only</string>
+    <string name="admin_only">For Admin use only</string>
     <string name="contact_number">9427051418</string> <!--9427051418-->
     <string name="fb_url" translatable="false">https://www.facebook.com/kunjanrshah87</string> <!--https://www.facebook.com/kunjanrshah87-->
-    <string name="linkedin_url" translatable="false">""</string> <!--https://www.linkedin.com/in/kunjan-shah-76901b6a/-->
+    <string name="linkedin_url" translatable="false">https://www.linkedin.com/in/kunjan-shah-76901b6a/</string>
 
     <string name="mobile_not_available">Mobile not available</string>
     <string name="email_not_available">Email not available</string>
@@ -1087,7 +1088,7 @@
     <string name="total_female">Total Female</string>
     <string name="unmarried_male">Unmarried Male</string>
 
-    <string name="uploads">Uploads</string>
+    <string name="uploads">Upload</string>
     <string name="fetchingfiles">Fetching uploaded files</string>
     <string name="somethingwrong">Something went wrong!</string>
     <string name="filedownloded">File is downloaded in</string>

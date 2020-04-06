@@ -26,7 +26,6 @@ import com.github.squti.guru.Guru
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.ContactUsActivity
 import com.krs.community.adapter.NavigationDrawerAdapter
@@ -115,7 +114,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
                     .setPositiveBtnBackground("#22b573")
                     .setNegativeBtnText("No")
                     .setNegativeBtnBackground("#c1272d")
-                    .setGifResource(R.drawable.gif_logout)
+                    .setGifResource(R.drawable.gif_dialog)
                     .isCancellable(false)
                     .OnPositiveClicked {
                         if (isNetworkConnected(context as AppCompatActivity)) {
@@ -128,7 +127,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
                     .build()
         }
         val tvVersion = layout.findViewById<TextView>(R.id.tv_version)
-        tvVersion.text = resources.getString(R.string.Version) + " " + BuildConfig.VERSION_NAME
+        tvVersion.text = resources.getString(R.string.Version) + " " + Utility.getAppVersion(AppController.mApplication)
         tvSettings.setOnClickListener { v: View? ->
             mDrawerLayout!!.closeDrawers()
             Utility.movetoFragment(activity, SettingFragment())

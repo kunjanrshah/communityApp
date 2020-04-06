@@ -42,6 +42,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
     private val factory: PasswordViewModelFactory by instance()
     private var passwordViewModel: PasswordViewModel? = null
     private var llScroll: ScrollView? = null
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -71,8 +71,8 @@
                             android:id="@+id/tv_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:hint="Name"
                             android:singleLine="true"
-                            android:text="Kunjan Patel"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -80,8 +80,8 @@
                             android:id="@+id/tv_area"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:hint="Area, City"
                             android:singleLine="true"
-                            android:text="Maninagar, Ahmedabad"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -138,8 +138,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
+                            android:hint="Mobile"
                             android:singleLine="true"
-                            android:text="9825450261"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="12sp" />
 
@@ -162,8 +162,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
+                            android:hint="email address"
                             android:singleLine="true"
-                            android:text="kunjanshah@gmail.com"
                             android:textSize="12sp" />
 
                     </LinearLayout>

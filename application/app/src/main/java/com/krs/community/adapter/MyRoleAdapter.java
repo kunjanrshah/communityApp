@@ -30,7 +30,7 @@ public class MyRoleAdapter extends BaseAdapter {
 
         lstRole = new ArrayList<>();
         lstRole.add(mContext.getString(R.string.select));
-        lstRole.add(mContext.getString(R.string.user));
+        lstRole.add(mContext.getString(R.string.USER));
         lstRole.add(mContext.getString(R.string.localAdmin));
         lstRole.add(mContext.getString(R.string.subAdmin));
         roleAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, lstRole);

@@ -128,8 +128,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semibold"
+                        android:hint="name"
                         android:singleLine="true"
-                        android:text="Kunjan Patel"
                         android:textSize="14sp" />
 
                     <TextView
@@ -137,8 +137,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
+                        android:hint="Area, City"
                         android:singleLine="true"
-                        android:text="Maninagar, Ahmedabad"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -215,8 +215,8 @@
                         android:layout_marginLeft="5dp"
                         android:autoLink="email"
                         android:fontFamily="@font/montserrat_medium"
+                        android:hint="email address"
                         android:singleLine="true"
-                        android:text="kunjanshah@gmail.com"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -250,8 +250,8 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:fontFamily="@font/montserrat_medium"
+                            android:hint="mobile"
                             android:singleLine="true"
-                            android:text="9825450261"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="14sp" />
 
@@ -281,7 +281,7 @@
                     android:layout_gravity="right"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="right"
-                    android:text="12-12-2019"
+                    android:hint="dd-mm-yyyy"
                     android:textSize="14sp" />
 
             </LinearLayout>

@@ -29,7 +29,9 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.RoomMemberListener
@@ -108,6 +110,18 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 holder.tvName.text = member.firstName
                 holder.tvArea.text = member.area
                 holder.tvAddr.text = member.address
+
+                if (member.headId.equals("0")) {
+                    holder.tvRole.text = resources.getString(R.string.Family_Head)
+                } else {
+                    holder.tvRole.text = resources.getString(R.string.Member)
+                }
+
+                var count = member.membersCount
+                if (count != 0) {
+                    count += 1
+                }
+                holder.badge.setNumber(count)
 
                 if (member.status == "2") {
                     holder.ivVerify.visibility = View.VISIBLE
@@ -336,6 +350,9 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var tvCreated: TextView = itemView.findViewById(R.id.tv_created)
+        var tvRole: TextView = itemView.findViewById(R.id.tv_role)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {
@@ -480,6 +497,12 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     private fun onMessageRowClicked(position: Int) {
         if (getSelectedItemCount() > 0) {
             enableActionMode(position)
+        } else {
+            if (lstMembers.get(position).status != "0") {
+                val intent = Intent(activity, ProfileDetailActivity::class.java)
+                intent.putExtra(getString(R.string.member), lstMembers.get(position))
+                startActivity(intent)
+            }
         }
     }
 

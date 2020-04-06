@@ -46,11 +46,8 @@ import com.krs.community.listeners.UpdateListener
 import com.krs.community.model.Member
 import com.krs.community.responses.MasterUpdateResponse
 import com.krs.community.responses.UserStatusResponse
-import com.krs.community.utils.Coroutines
-import com.krs.community.utils.NotificationUtils
+import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
-import com.krs.community.utils.showVersionDialog
-import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
@@ -327,6 +324,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                         menu?.findItem(R.id.action_profile)?.icon = resource
                     }
+
                     override fun onLoadCleared(placeholder: Drawable?) {
 
                     }
@@ -349,6 +347,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 binding.containerBody.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                 true
                 //movetoFragment(this, NotificationListFragment())
+            }
+            R.id.action_share -> {
+                shareApp(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)

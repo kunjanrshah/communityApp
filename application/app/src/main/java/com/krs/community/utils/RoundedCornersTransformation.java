@@ -29,6 +29,7 @@ public class RoundedCornersTransformation implements Transformation<Bitmap> {
     private final CornerType mCornerType;
     private String mColor;
     private int mBorder;
+
     public RoundedCornersTransformation(@NonNull Context context, int radius, int margin, String color, int border) {
         this(context, radius, margin, CornerType.BORDER);
         mColor = color;

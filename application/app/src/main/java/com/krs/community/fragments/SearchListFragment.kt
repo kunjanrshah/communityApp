@@ -320,7 +320,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             override fun onSearchItemRemoved(index: Int) {
                 searchWord = ""
                 if (lstKeyword.size > 0) {
-                    lstKeyword.removeAt(index)
+                    try {
+                        lstKeyword.removeAt(index)
+                    } catch (e: java.lang.Exception) {
+                        e.printStackTrace()
+                    }
                     if (lstKeyword.size > 0) {
                         searchWord = when (lstKeyword.size) {
                             1 -> {
@@ -407,7 +411,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 lstMembers.clear()
                 tvRecords.visibility = View.GONE
                 llLabel.visibility = View.GONE
-                ivExport.visibility = View.VISIBLE
+                if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
+                    ivExport.visibility = View.GONE
+                } else {
+                    ivExport.visibility = View.VISIBLE
+                }
                 rvAdapter.notifyDataSetChanged()
                 DashboardActivity.stop = true
                 val mJSONObject = JSONObject()
@@ -460,7 +468,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 if (Integer.parseInt(response.totalRecords) == 0) {
                     //  Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
 
-                    val gif: Int = R.drawable.gif_no_record
+                    val gif: Int = R.drawable.gif_dialog
                     TTFancyGifDialog.Builder(activity)
                             .setMessage(getString(R.string.noFoundNonActives))
                             .setPositiveBtnText(getString(R.string.ok))
@@ -481,7 +489,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 tvRecords.text = getString(R.string.RecordList) + " " + response.totalRecords
                 tvRecords.visibility = View.VISIBLE
                 llLabel.visibility = View.GONE
-                ivExport.visibility = View.VISIBLE
+                if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
+                    ivExport.visibility = View.GONE
+                } else {
+                    ivExport.visibility = View.VISIBLE
+                }
             } else {
                 llLabel.visibility = View.VISIBLE
                 tvRecords.visibility = View.GONE
@@ -501,7 +513,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             mShimmerViewContainer.visibility = View.GONE
 
             //  val gif: Int = R.drawable.gif_no_record
-            val gif: Int = R.drawable.gif_no_record
+            val gif: Int = R.drawable.gif_dialog
             TTFancyGifDialog.Builder(activity)
                     //.setTitle(getString(R.string.you_sure))
                     .setMessage(getString(R.string.noFoundNonActives))
@@ -781,7 +793,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             val menuDelete = menu.findItem(R.id.action_delete)
             val menuRole = menu.findItem(R.id.action_my_role)
 
-            if (loginMember?.role.equals(getString(R.string.User))) {
+            if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER)) {
                 menuDelete.isVisible = false
                 menuRole.isVisible = false
             } else {
@@ -943,7 +955,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     } else if (role == getString(R.string.Sub_Admin)) {
                         changed = getString(R.string.SUB_ADMIN)
                     } else {
-                        changed = getString(R.string.User)
+                        changed = getString(R.string.USER)
                     }
 
                     jsonObject.put(getString(R.string.role), changed)

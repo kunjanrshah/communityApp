@@ -964,6 +964,15 @@ fun shareFile(context: Context, filePath: String) {
     }
 }
 
+fun shareApp(activity: FragmentActivity?) {
+    val appName = activity?.getString(R.string.app_name)
+    val text = activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.type = "text/plain"
+    intent.putExtra(Intent.EXTRA_TEXT, text)
+    activity?.startActivity(Intent.createChooser(intent, "Choose one"))
+}
+
 fun shareDetails(activity: FragmentActivity?, name: String, mobile: String, email: String, area: String, address: String) {
     val appName = activity?.getString(R.string.app_name)
     val text = activity?.getString(R.string.name) + " : " + name + "\n" +

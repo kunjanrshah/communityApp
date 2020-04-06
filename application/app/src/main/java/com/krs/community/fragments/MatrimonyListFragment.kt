@@ -21,7 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -427,7 +429,14 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         if (response.success) {
             tvRecords.text = getString(R.string.recordfound) + " " + response.totalRecords
             tvRecords.visibility = View.VISIBLE
-            ivExport.visibility = View.VISIBLE
+
+            val loginuser = Guru.getString(getString(R.string.loginMember), "")
+            val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
+                ivExport.visibility = View.GONE
+            } else {
+                ivExport.visibility = View.VISIBLE
+            }
 
             if (response.members.size > 0) {
                 DashboardActivity.stop = false
