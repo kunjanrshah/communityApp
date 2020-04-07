@@ -25,10 +25,10 @@ android {
     compileSdkVersion 29
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "com.krs.community"
+        applicationId "com.krs.medk"
         minSdkVersion 21
-        versionCode 2
-        versionName "2.0"
+        versionCode 1
+        versionName "1.0"
         multiDexEnabled true
         javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
     }
