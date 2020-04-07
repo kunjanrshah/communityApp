@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/ll_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mdtp_white"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center|center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/img_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/left_arrow" />
+
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="@string/my_profile"
+                    android:textColor="@color/black1"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tv_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:padding="3dp"
+                android:text="@string/save"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <FrameLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="75dp"
+                android:layout_marginTop="-7dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_view_family"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/view_family" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/view_family" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="100dp"
+                    android:layout_height="100dp">
+
+                    <com.vaibhavlakhera.circularprogressview.CircularProgressView
+                        android:id="@+id/progressView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:animate="true"
+                        app:animateDuration="600"
+                        app:fillColor="@color/colorPrimary"
+                        app:progressColor="#FFF"
+                        app:progressInterpolator="@android:anim/accelerate_decelerate_interpolator"
+                        app:progressRoundCap="true"
+                        app:progressTextColor="#FFF"
+                        app:progressTextEnabled="true"
+                        app:progressTextSize="32sp"
+                        app:progressTextType="progress"
+                        app:progressWidth="5dp"
+                        app:startAngle="270"
+                        app:totalColor="@color/colorPrimaryDark"
+                        app:totalValue="100"
+                        app:totalWidth="10dp" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_profile"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.0"
+                        android:background="@drawable/user_profile" />
+
+                </FrameLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+                    <com.github.angads25.toggle.widget.LabeledSwitch
+                        android:id="@+id/switch_location"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12sp"
+                        app:colorBorder="@color/colorPrimary"
+                        app:colorOn="@color/colorPrimary"
+                        app:textOff="@string/off"
+                        app:textOn="@string/on" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_work"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/location" />
+
+                        <TextView
+                            android:id="@+id/tv_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:singleLine="true"
+                            android:text="distance"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                    <!--<TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="User Location" />-->
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+        <com.krs.community.utils.ImageSteps
+            android:id="@+id/imageSteps"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            app:default_color="@color/gray_btn_bg_color" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round1_corner_mid_gray"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+
+            android:paddingBottom="5dp"
+            android:visibility="gone">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@drawable/border_color_primary"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/save"
+                android:textColor="@color/browser_actions_title_color"
+                android:textStyle="bold" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/border_bg_color_primary"
+                android:fontFamily="@font/montserrat_semibold"
+                android:padding="10dp"
+                android:text="@string/save_amp_next"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

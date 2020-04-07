@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="550dp"
+    android:background="@drawable/round_corner_white"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <ImageView
+        android:id="@+id/iv_cancel"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right"
+        android:background="@drawable/cancel_popup" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/LocalComDetails"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:gravity="center|bottom"
+        android:textAlignment="center">
+
+        <com.krs.community.jrspinner.JRSpinner
+            android:id="@+id/sp_region"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="@string/select"
+            android:imeOptions="actionNext"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black1"
+            android:textSize="16sp"
+            app:backgroundTint="@color/colorPrimary"
+            app:jrs_icon_tint="@color/colorPrimary"
+            app:jrs_multiple="false"
+            app:jrs_title="@string/LocalComDetails" />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/Community"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:gravity="center|bottom"
+        android:textAlignment="center">
+
+        <com.krs.community.jrspinner.JRSpinner
+            android:id="@+id/sp_committee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="@string/select"
+            android:imeOptions="actionNext"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black1"
+            android:textSize="16sp"
+            app:backgroundTint="@color/colorPrimary"
+            app:jrs_icon_tint="@color/colorPrimary"
+            app:jrs_multiple="false"
+            app:jrs_title="@string/Community" />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/Designation"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:gravity="center|bottom"
+        android:textAlignment="center">
+
+        <com.krs.community.jrspinner.JRSpinner
+            android:id="@+id/sp_designation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="@string/select"
+            android:imeOptions="actionNext"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black1"
+            android:textSize="16sp"
+            app:backgroundTint="@color/colorPrimary"
+            app:jrs_icon_tint="@color/colorPrimary"
+            app:jrs_multiple="false"
+            app:jrs_title="@string/Designation" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/Duration"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/tv_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@string/startEvent"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="-"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/tv_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="@string/endEvent"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/SarchKeyword"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center_vertical"
+        android:imeOptions="actionDone"
+
+        android:paddingLeft="10dp"
+        android:singleLine="true" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/liveo_search_view_search"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</LinearLayout>

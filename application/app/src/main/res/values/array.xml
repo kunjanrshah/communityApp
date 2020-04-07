@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer-array name="main_menu_imgs">
+        <item>@drawable/search_city</item>
+        <item>@drawable/qrcode_search</item>
+        <item>@drawable/search_distance</item>
+        <item>@drawable/search_heart</item>
+        <item>@drawable/ic_rss</item>
+        <item>@drawable/ic_star</item>
+        <item>@drawable/search_admin</item>
+        <item>@drawable/restricted</item>
+        <item>@drawable/search_event</item>
+        <item>@drawable/documents</item>
+        <item>@drawable/ic_paytm</item>
+        <item>@drawable/add_user</item>
+        <item>@drawable/sign</item>
+        <item>@drawable/book</item>
+    </integer-array>
+
+</resources>

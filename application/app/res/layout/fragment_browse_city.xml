@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="browseCityViewModel"
+            type="com.krs.community.viewmodel.BrowseCityViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBG"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/left_arrow" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/browse_by_city"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            shimmer:duration="600">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+                <include layout="@layout/header_row_item_shimmer" />
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.ericliu.asyncexpandablelist.async.AsyncExpandableListView
+            android:id="@+id/asyncExpandableCollectionView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="10dp" />
+    </LinearLayout>
+</layout>

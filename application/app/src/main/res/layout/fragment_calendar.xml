@@ -1,47 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:shimmer="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_drawer"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
-        <com.azurechen.fcalendar.widget.FlexibleCalendar
-            android:id="@+id/calendar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            custom:firstDayOfWeek="sunday"
-            custom:showWeek="true"
-            custom:state="collapsed"
-            custom:style="pink" />
-
-        <ExpandableListView
-            android:id="@+id/lvCustomList"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:childDivider="#00000000"
-            android:divider="#00000000"
-            android:groupIndicator="@null"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_list_calendar" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="120dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            shimmer:duration="800">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/row_list_calendar_shimmer" />
+
+                <include layout="@layout/row_list_calendar_shimmer" />
+
+                <include layout="@layout/row_list_calendar_shimmer" />
+
+                <include layout="@layout/row_list_calendar_shimmer" />
+
+                <include layout="@layout/row_list_calendar_shimmer" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <ImageView
+            android:id="@+id/iv_not_found"
+            android:layout_width="@dimen/no_records"
+            android:layout_height="@dimen/no_records"
+            android:layout_gravity="center"
+            android:background="@drawable/no_record_found"
             android:visibility="gone" />
-    </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-       android:layout_marginBottom="35dp"
-        android:layout_marginRight="70dp"
-        android:src="@drawable/expand"
-
-        android:background="@color/colorPrimaryDark"
-        custom:fabSize="normal" />
-</android.support.design.widget.CoordinatorLayout>
+    </FrameLayout>
+</LinearLayout>

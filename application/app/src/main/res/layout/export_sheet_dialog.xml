@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/exportfilter"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_done"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="5dp"
+            android:text="@string/done"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/cancel_popup"
+            android:padding="5dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.5"
+        android:background="@color/colorGray" />
+
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/flexbox_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        app:alignContent="stretch"
+        app:alignItems="stretch"
+        app:flexWrap="wrap">
+
+        <LinearLayout
+            android:id="@+id/ll_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/photo"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_name"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/name"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_father"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/fathername"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_mother"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/mothername"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/mobilefilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_email"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/email"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/genderfilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_marital"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/marital"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_blood"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/blood_groupfilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_bdate"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/birth_datefilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_address"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/addressfilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_state"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/statefilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_city"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/cityfilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_area"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/areafilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_pincode"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/pincodefilter"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/cancel_popup"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_all"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_corner_primary"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/all_filtersfilter"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+</LinearLayout>

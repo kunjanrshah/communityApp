@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/ll_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/border"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="vertical"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="@string/professionalDetails"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_logo"
+                        android:layout_width="120dp"
+                        android:layout_height="80dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/logo" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="@string/company_namePdetails" />
+
+                        <EditText
+                            android:id="@+id/edt_com_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_color_gray"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingLeft="5dp"
+                            android:singleLine="true" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/work_categorypDetails" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center|bottom"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:gravity="center|bottom"
+                        android:textAlignment="center">
+
+                        <com.krs.community.jrspinner.JRSpinner
+                            android:id="@+id/sp_main_cat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:background="@null"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/selectpDetails"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/fname"
+                            android:paddingRight="10dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black1"
+                            app:backgroundTint="@color/colorPrimary"
+                            app:jrs_icon_tint="@color/colorPrimary"
+                            app:jrs_multiple="false"
+                            app:jrs_title="Select Work Category" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/work_sub_categorypDetails" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center|bottom"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:gravity="center|bottom"
+                        android:textAlignment="center">
+
+                        <com.krs.community.jrspinner.JRSpinner
+                            android:id="@+id/sp_sub_cat"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:background="@null"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/selectpDetails"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/fname"
+                            android:paddingRight="10dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black1"
+                            app:backgroundTint="@color/colorPrimary"
+                            app:jrs_icon_tint="@color/colorPrimary"
+                            app:jrs_multiple="false"
+                            app:jrs_title="Select Work Sub Category" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/occupationpDetails" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center|bottom"
+                        android:layout_weight="1"
+                        android:background="@drawable/border"
+                        android:gravity="center|bottom"
+                        android:textAlignment="center">
+
+                        <com.krs.community.jrspinner.JRSpinner
+                            android:id="@+id/sp_occupation"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:background="@null"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/selectpDetails"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/fname"
+                            android:paddingRight="10dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black1"
+                            app:backgroundTint="@color/colorPrimary"
+                            app:jrs_icon_tint="@color/colorPrimary"
+                            app:jrs_multiple="false"
+                            app:jrs_title="Select Work Sub Category" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/website_urlPdetails" />
+
+                    <EditText
+                        android:id="@+id/edt_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/border_color_gray"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:paddingLeft="5dp"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/work_detailPdetails" />
+
+                    <EditText
+                        android:id="@+id/edt_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_color_gray"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="top|left"
+                        android:inputType="textMultiLine"
+                        android:lines="2"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:padding="5dp"
+                        android:scrollbars="vertical"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/work_addressPdetails" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/edt_addr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_color_gray"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="top|left"
+                            android:inputType="textMultiLine"
+                            android:lines="2"
+                            android:maxLines="2"
+                            android:minLines="2"
+                            android:padding="5dp"
+                            android:scrollbars="vertical"
+                            android:singleLine="true" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_work"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/location" />
+
+                            <TextView
+                                android:id="@+id/tv_distance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:singleLine="true"
+                                android:text="@string/workPdetails"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

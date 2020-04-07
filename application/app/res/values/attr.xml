@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FooterLayout">
+        <attr name="ft_color" format="color" />
+        <attr name="ft_anim_duration" format="integer" />
+        <attr name="ft_container_gravity" format="enum">
+            <enum name="start" value="0" />
+            <enum name="center" value="1" />
+            <enum name="end" value="2" />
+        </attr>
+        <attr name="ft_fab_type" format="enum">
+            <enum name="mini" value="40" />
+            <enum name="normal" value="56" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ImageStep">
+        <attr name="step_size" format="dimension" />
+        <attr name="default_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="JRSpinner">
+        <attr name="jrs_title" format="string" />
+        <attr name="jrs_icon_tint" format="color" />
+        <attr name="jrs_multiple" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SearchLiveo">
+        <attr name="searchLiveoTextColor" format="color" />
+        <attr name="searchLiveoHintColor" format="color" />
+
+        <attr name="searchLiveoHint" format="string" />
+
+        <attr name="searchLiveoColorIcon" format="color" />
+        <attr name="searchLiveoColorArrow" format="color" />
+        <attr name="searchLiveoColorVoice" format="color" />
+        <attr name="searchLiveoColorClose" format="color" />
+
+        <attr name="searchLiveoBackground" format="color" />
+        <attr name="searchLiveoStatusBarShowColor" format="color" />
+        <attr name="searchLiveoStatusBarHideColor" format="color" />
+    </declare-styleable>
+
+</resources>

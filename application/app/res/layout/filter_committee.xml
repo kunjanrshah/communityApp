@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="500dp"
+    android:background="@drawable/round_corner_white"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <ImageView
+        android:id="@+id/iv_cancel"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right"
+        android:background="@drawable/cancel_popup" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/LocalCommnunity"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/sp_region"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/Community"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/sp_committee"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/Designation"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/sp_designation"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/Duration"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/sp_duration"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/SarchKeyword"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:singleLine="true" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|bottom">
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/Search"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</LinearLayout>

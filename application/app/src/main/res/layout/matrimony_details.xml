@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/round_bottom_corner"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_birth_time"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/border"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical"
+                android:hint="@string/birth_timeDetail"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edt_birth_place"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="@string/birth_placedetails"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edt_height_meter"
+                        android:layout_width="100dp"
+                        android:layout_height="45dp"
+                        android:background="@drawable/border"
+                        android:digits="0123456789."
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/HeightDetails"
+                        android:inputType="number"
+                        android:maxLength="8"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="@string/meter"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edt_weight_kg"
+                        android:layout_width="100dp"
+                        android:layout_height="45dp"
+                        android:background="@drawable/border"
+                        android:digits="0123456789."
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/WeghtDetails"
+                        android:inputType="number"
+                        android:maxLength="8"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="@string/kg"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Height (cm)"
+                android:textSize="14sp" />
+
+            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/rangeHeight1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:bar_color="#C0C0C0"
+                app:bar_highlight_color="#A9A9A9"
+                app:corner_radius="10"
+                app:data_type="_integer"
+                app:gap="10"
+                app:left_thumb_color="#808080"
+                app:left_thumb_color_pressed="#696969"
+                app:max_value="200"
+                app:min_value="0"
+                app:right_thumb_color="#808080"
+                app:right_thumb_color_pressed="#696969" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_min_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="0"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_max_height"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:gravity="right"
+                    android:text="200"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="Weight (kg)"
+                android:textSize="14sp" />
+
+            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/rangeWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:bar_color="#C0C0C0"
+                app:bar_highlight_color="#A9A9A9"
+                app:corner_radius="10"
+                app:data_type="_integer"
+                app:gap="10"
+                app:left_thumb_color="#808080"
+                app:left_thumb_color_pressed="#696969"
+                app:max_value="200"
+                app:min_value="0"
+                app:right_thumb_color="#808080"
+                app:right_thumb_color_pressed="#696969" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_min_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="0"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_max_weight"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:gravity="right"
+                    android:text="200"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/chk_is_interested"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/interested"
+                android:textSize="16sp" />
+
+            <CheckBox
+                android:id="@+id/chk_is_spect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/is_spectacles"
+                android:textSize="16sp" />
+
+            <CheckBox
+                android:id="@+id/chk_is_shani"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/is_shaniDetails"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <CheckBox
+                android:id="@+id/chk_is_mangal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="@string/is_mangalDetails"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

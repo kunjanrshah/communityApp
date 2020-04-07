@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:paddingLeft="16dp"
+    android:paddingTop="50dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="60dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_centerHorizontal="true"
+        android:elevation="4dp"
+        android:src="@drawable/user_face"
+        tools:ignore="ContentDescription" />
+
+    <com.kevalpatel.passcodeview.PinView
+        android:id="@+id/pattern_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imageView"
+        app:dividerColor="@color/white"
+        app:fingerprintDefaultText="@string/Unlock"
+        app:fingerprintEnable="true"
+        app:fingerprintTextColor="@color/white"
+        app:fingerprintTextSize="16sp"
+        app:giveTactileFeedback="true"
+        app:titleTextColor="@android:color/white" />
+
+</RelativeLayout>

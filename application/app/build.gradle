@@ -4,31 +4,52 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.26.1'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
-apply plugin: 'realm-android'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 repositories {
+    maven { url "https://jitpack.io" }
+    mavenCentral()
+    google()
+    jcenter()
     maven { url 'https://maven.fabric.io/public' }
 }
+
 android {
-    compileSdkVersion 27
+    compileSdkVersion 29
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "yadav.seva.samaj"
+        applicationId "com.krs.yadav"
         minSdkVersion 21
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 2
+        versionName "2.0"
         multiDexEnabled true
+        javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources false
+            debuggable false
+            proguardFile 'proguard-google-play-services.pro'
+            proguardFile 'proguard-gson.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        /*debug{
+            minifyEnabled true
+            shrinkResources true
+            debuggable true
+            proguardFile 'proguard-google-play-services.pro'
+            proguardFile 'proguard-gson.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }*/
     }
     sourceSets {
         main { res.srcDirs = ['src/main/res', 'src/main/res/values-gu', 'src/main/res/values-hi'] }
@@ -39,63 +60,136 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
-}
 
-repositories {
-    repositories {
-        google()
-        jcenter()
+    compileOptions {
+        targetCompatibility '1.8'
+        sourceCompatibility '1.8'
     }
-    maven {
-        url "https://jitpack.io"
-    }
-    maven { url 'https://maven.fabric.io/public' }
-}
 
-ext {
-    supportLibraryVersion = '26.1.1'
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    dataBinding {
+        enabled = true
+    }
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation files('libs/OvteBase64.jar')
-    implementation 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
 
-    implementation "com.android.support:design:27.1.1"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    //noinspection GradleCompatible
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    def room_version = "1.1.1"
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation project(':easywaylocation')
+    implementation project(':sweetdialoglib')
+    implementation project(':multisearchviewlib')
+    implementation project(':slycalendarview')
+    implementation project(':multiple-images-selector')
+
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
+    implementation('com.github.florent37:androidparallax:1.0.1@aar') {
         transitive = true
     }
-    implementation 'com.google.firebase:firebase-core:16.0.4'
+
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.google.zxing:core:3.3.0'
-    implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.mcxiaoke.volley:library-aar:1.0.1'
+
+    implementation 'com.google.firebase:firebase-core:17.2.3'
+    implementation 'com.google.firebase:firebase-messaging:20.1.3'
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.facebook.android:facebook-android-sdk:5.13.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.3'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.melnykov:floatingactionbutton:1.3.0'
     implementation 'com.weiwangcn.betterspinner:library-material:1.1.0'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    implementation files('libs/jxl.jar')
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
-        transitive = true
-    }
-    configurations.all {
-        exclude group: 'com.android.support', module: 'support-v13'
-    }
-    implementation 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
-    implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    implementation 'com.github.smarteist:autoimageslider:1.2.0'
+
+    implementation 'net.gotev:uploadservice:4.2.0'
+    implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'de.blox:graphview:0.4.2'
-    implementation project(':library')
-    implementation project(':draggabletreeview')
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'com.wdullaer:materialdatetimepicker:3.5.1'
+
+    implementation 'com.facebook.android:facebook-login:5.13.0'
+    implementation 'com.jaredrummler:material-spinner:1.3.1'
+    implementation 'com.crystal:crystalrangeseekbar:1.1.3'
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
+    implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
+    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.core:core-ktx:1.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    implementation 'com.nightonke:boommenu:2.1.1'
+
+    // Fresco
+    implementation "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"
+
+    implementation "com.leinardi.android:speed-dial:3.0.0"
+
+    implementation 'com.ericliu.asyncexpandablelist:asyncexpandablelist:1.1.0'
+
+    debugImplementation 'com.github.kk121:Android-Debug-Tools:1.0'
+
+    implementation 'com.github.angads25:toggle:1.1.0'
+    implementation 'com.github.krokyze:ucropnedit:2.2.4'
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    //Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2"
+
+    //Kodein Dependency Injection
+    implementation "org.kodein.di:kodein-di-generic-jvm:6.2.1"
+    implementation "org.kodein.di:kodein-di-framework-android-x:6.2.1"
+
+    implementation 'com.poovam:pin-edittext-field:1.2.1'
+    implementation 'com.github.squti:Guru:1.0.1'
+
+    //room
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
+    testImplementation "android.arch.persistence.room:testing:$room_version"
+
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
+    implementation 'com.github.philliphsu:numberpadtimepicker:1.1.1'
+    implementation 'com.github.drawers:SpinnerDatePicker:2.0.1'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+    implementation "com.github.VaibhavLakhera:Circular-Progress-View:0.1.2"
+    implementation 'com.budiyev.android:code-scanner:2.1.0'
+    implementation 'me.ydcool.lib:qrmodule:1.0'
+    implementation 'com.uttampanchasara.pdfgenerator:pdfgenerator:1.3'
+    implementation 'com.kevalpatel2106:passcodeview:2.0.0'
+    implementation 'com.github.dewinjm:monthyear-picker:1.0.2'
+    implementation 'com.bestsoft32.tayyab:tt-fancy-gif-dialog:1.0.2'
+
+    implementation 'com.github.judemanutd:autostarter:1.0.8'
+    /*implementation('com.paytm:pgplussdk:1.3.1') {
+        transitive = true
+    }*/
+    implementation 'com.github.lubeast:PullToRefresh:1.0.2'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+
 }
 apply plugin: 'com.google.gms.google-services'

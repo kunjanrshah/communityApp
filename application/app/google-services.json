@@ -1,50 +1,68 @@
 {
   "project_info": {
-    "project_number": "900336668958",
-    "firebase_url": "https://vastipatrak-5e514.firebaseio.com",
-    "project_id": "vastipatrak-5e514",
-    "storage_bucket": "vastipatrak-5e514.appspot.com"
+    "project_number": "685345012359",
+    "firebase_url": "https://vastipatrak-13d75.firebaseio.com",
+    "project_id": "vastipatrak-13d75",
+    "storage_bucket": "vastipatrak-13d75.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:900336668958:android:0f010b4ec4bc6247",
+        "mobilesdk_app_id": "1:685345012359:android:ae4a033026a9bfda39d622",
         "android_client_info": {
-          "package_name": "yadav.seva.samaj"
+          "package_name": "com.krs.medk"
         }
       },
       "oauth_client": [
         {
-          "client_id": "900336668958-av3010hfeu6bpu3e6bcecl7v1v68qf3n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "yadav.seva.samaj",
-            "certificate_hash": "de12b244f93c21617c5650694e13d0c78a3e9700"
-          }
-        },
-        {
-          "client_id": "900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com",
+          "client_id": "685345012359-pbf23s7oh4g2hrh73ie2fk7k9vmi1hhr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCz56UacSMTJKFApD0nR24GPtf1kZWHUSg"
+          "current_key": "AIzaSyBnJsDmbi6ECaX9vwQyLAFZ_KzwYsJvsJM"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "685345012359-pbf23s7oh4g2hrh73ie2fk7k9vmi1hhr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:685345012359:android:9e98efe2b301a6d039d622",
+        "android_client_info": {
+          "package_name": "com.krs.yadav"
         }
       },
-      "admob_app_id": "ca-app-pub-8416782517840563~2944903715"
+      "oauth_client": [
+        {
+          "client_id": "685345012359-pbf23s7oh4g2hrh73ie2fk7k9vmi1hhr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnJsDmbi6ECaX9vwQyLAFZ_KzwYsJvsJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "685345012359-pbf23s7oh4g2hrh73ie2fk7k9vmi1hhr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

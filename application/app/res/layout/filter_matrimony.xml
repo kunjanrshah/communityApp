@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_dialog"
+    android:layout_width="350dp"
+    android:layout_height="600dp"
+    android:background="@drawable/round_corner_white"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_gravity="right"
+        android:background="@drawable/cancel_popup" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.45"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/NameFilter"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_corner_mid_gray"
+                android:digits="@string/restrict_space"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical"
+                android:nextFocusDown="@id/edt_head_name"
+                android:paddingLeft="10dp"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.55"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/SurnameFilter"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center|bottom"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_lname"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="@string/select"
+                    android:imeOptions="actionNext"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/selectsurname" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="@string/HeadFilter"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/edt_head_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/round_corner_mid_gray"
+        android:digits="@string/restrict_space"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center_vertical"
+        android:nextFocusDown="@id/edt_mobile"
+        android:paddingLeft="10dp"
+        android:singleLine="true" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/Mobile"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edt_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_corner_mid_gray"
+                android:digits="0123456789"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical"
+                android:inputType="number"
+                android:maxLength="10"
+                android:nextFocusDown="@id/edt_mail"
+                android:paddingLeft="8dp"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.4"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/MailFilter"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/edt_mail"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_corner_mid_gray"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_vertical"
+                android:inputType="textEmailAddress"
+                android:nextFocusDown="@id/sp_city"
+                android:paddingLeft="5dp"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/genderPopup"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnmale"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/round_corner_white"
+            android:fontFamily="@font/montserrat_semibold"
+            android:gravity="center"
+            android:text="@string/male"
+            android:textColor="@color/black1" />
+
+        <Button
+            android:id="@+id/btnfemale"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:gravity="center"
+            android:text="@string/female"
+            android:textColor="@color/white" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/CityFilter"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="@string/select"
+                    android:imeOptions="actionNext"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/select_city" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/MaritalFilter"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center|bottom"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_marital"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="@string/select"
+                    android:imeOptions="actionNext"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/selectstatus" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!-- <RelativeLayout
+             android:layout_width="match_parent"
+             android:layout_weight="1"
+             android:layout_marginLeft="5dp"
+             android:layout_height="40dp"
+             android:layout_gravity="center"
+             android:background="@drawable/border"
+             android:gravity="center"
+             android:textAlignment="center">
+
+             <Spinner
+                 android:id="@+id/sp_marital"
+                 style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:text="Marital" />
+         </RelativeLayout>-->
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/AgeFilter"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_min"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/AgeFilter"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="100"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
+
+        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+            android:id="@+id/rangeSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:bar_color="@color/dark_color_primary"
+            app:bar_highlight_color="@color/colorPrimary"
+            app:corner_radius="10"
+            app:data_type="_integer"
+            app:gap="10"
+            app:left_thumb_color="@color/colorPrimary"
+            app:left_thumb_color_pressed="@color/colorPrimary"
+            app:max_start_value="100"
+            app:max_value="100"
+            app:min_start_value="0"
+            app:min_value="0"
+            app:right_thumb_color="@color/colorPrimary"
+            app:right_thumb_color_pressed="@color/colorPrimary" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center|bottom"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/ClearFilter"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/SearchFilter"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

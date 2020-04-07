@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edt_yurl"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/round_corner_mid_gray"
+    android:drawableEnd="@drawable/delete"
+    android:drawablePadding="10dp"
+    android:fontFamily="@font/montserrat_semibold"
+    android:gravity="center_vertical"
+    android:hint="Youtube URL"
+    android:paddingStart="10dp"
+    android:paddingRight="5dp"
+    android:singleLine="true"
+    android:textColor="@color/colorPrimary"
+    android:textSize="16sp" />
+
+

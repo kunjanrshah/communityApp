@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/round_corner_itemlist"
+    android:orientation="vertical"
+    android:padding="10dp"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation"
+    app:contentPadding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_location"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/back_image"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:id="@+id/icon_back"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fillAfter="false"
+                            android:fillEnabled="false">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/bg_circle" />
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/ic_done_white_24dp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/icon_front"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fillAfter="false"
+                            android:fillEnabled="false">
+
+                            <ImageView
+                                android:id="@+id/icon_profile"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp" />
+
+                            <TextView
+                                android:id="@+id/icon_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:textColor="@android:color/white"
+                                android:textSize="22sp" />
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/iv_gender"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/male" />
+
+                <com.nightonke.boommenu.BoomMenuButton
+                    android:id="@+id/bmb1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="-15dp"
+                    app:bmb_buttonEnum="textInsideCircle"
+                    app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
+                    app:bmb_inList="true"
+                    app:bmb_piecePlaceEnum="piecePlace_dot_6_1" />
+
+
+                <ImageView
+                    android:id="@+id/icon_star"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="-15dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:tint="@color/icon_tint_normal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:hint="Member Name"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_area"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:hint="Area"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_role"
+                            android:layout_width="wrap_content"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/round_corner_blue"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:gravity="center"
+                            android:hint="Member"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+
+                        <com.krs.community.app.NotificationBadge
+                            android:id="@+id/badge"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_alignTop="@id/tv_role"
+                            android:layout_marginLeft="-16dp"
+                            android:layout_marginTop="-8dp"
+                            android:layout_toRightOf="@id/tv_role"
+                            app:nbBackground="@drawable/badge_bg_with_shadow"
+                            app:nbMaxTextLength="2" />
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:alpha="1"
+                    android:background="@color/colorGray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/ll_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="10dp"
+                            android:autoLink="email"
+                            android:clickable="true"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/iv_email"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/ic_email" />
+
+                            <TextView
+                                android:id="@+id/tv_email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:autoLink="email"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:hint="email address"
+                                android:singleLine="true"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right">
+
+                            <ImageView
+                                android:id="@+id/iv_verify"
+                                android:layout_width="25dp"
+                                android:layout_height="20dp"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/sunglasses"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/ll_mobile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:clickable="true"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/iv_mobile"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/phone" />
+
+                            <TextView
+                                android:id="@+id/tv_mobile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="5dp"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:hint="Mobile number"
+                                android:singleLine="true"
+                                android:textColor="@color/com_facebook_blue"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_update"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/montserrat_light"
+                            android:gravity="right"
+                            android:hint="updated date"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp"
+                        android:alpha="1"
+                        android:background="@color/colorGray"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_region"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="@string/RoleAdmins"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Ahmedabd Jamat"
+                    android:textColor="@color/black2"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_committee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Commitee"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_commitee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Ahmedabd Jamat"
+                    android:textColor="@color/black2"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_designation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="@string/Designation"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_designation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="Ahmedabd Jamat"
+                    android:textColor="@color/black2"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>
