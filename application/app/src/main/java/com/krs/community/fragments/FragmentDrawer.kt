@@ -276,7 +276,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
             intent.putExtra(getString(R.string.id), id)
             startActivity(intent)
             activity?.finish()
-            Utility.fade(activity)
+            //  Utility.fade(activity)
         } else {
             Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
         }

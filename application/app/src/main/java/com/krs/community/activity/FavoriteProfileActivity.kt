@@ -102,7 +102,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             return true
         } else if (id == android.R.id.home) {
             finish()
-            Utility.fade(this)
+            //    Utility.fade(this)
         } else if (id == R.id.action_export) {
             if (Utility.checkExternalStoragePermission(this)) {
                 val adapter = ExportAdapter(this@FavoriteProfileActivity)
@@ -331,7 +331,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                         val intent: Intent = Intent(this@FavoriteProfileActivity, QRCodeActivity::class.java)
                         intent.putExtras(mBundle)
                         startActivity(intent)
-                        Utility.fade(this@FavoriteProfileActivity)
+                        //   Utility.fade(this@FavoriteProfileActivity)
                     } else if (it == 4) {
                         shareDetails(this@FavoriteProfileActivity, viewHolder.tvName.text.toString(), member.mobile.toString(), member.emailAddress.toString(), viewHolder.tvArea.text.toString(), member.address.toString())
                     } else if (it == 5) {

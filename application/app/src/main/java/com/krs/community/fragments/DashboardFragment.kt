@@ -52,7 +52,6 @@ import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Utility
-import com.krs.community.utils.Utility.fade
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
@@ -328,7 +327,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         val intent1 = Intent(activity, QRCodeActivity::class.java)
                         intent1.putExtras(mBundle)
                         startActivity(intent1)
-                        Utility.fade(activity)
+                        //  Utility.fade(activity)
                     }
                     2 -> Utility.movetoFragment(activity, SearchByDistanceFragment())
                     3 -> Utility.movetoFragment(activity, MatrimonyFragment())
@@ -341,7 +340,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     5 -> {
                         val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
                         startActivity(mIntent)
-                        fade(activity)
+                        //  fade(activity)
                     }
                     6 -> Utility.movetoFragment(activity, AdminsFragment())
                     7 -> {
@@ -373,9 +372,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
                             bundle.putBoolean(getString(R.string.is_logged_in), false)
+
                             intent.putExtras(bundle)
                             startActivity(intent)
-                            Utility.fade(activity)
+                            //    Utility.fade(activity)
                         } else {
                             binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
                         }
