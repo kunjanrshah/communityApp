@@ -37,7 +37,8 @@ import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.Utility
-import com.krs.community.utils.Utility.*
+import com.krs.community.utils.Utility.hideSweetProgress
+import com.krs.community.utils.Utility.startSweetProgress
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodel.PasswordViewModel
@@ -258,7 +259,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
-                    fade(this)
+                    //   fade(this)
                 } else {
                     relative.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)
                 }
@@ -282,7 +283,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
-            fade(this)
+            //   fade(this)
         } else {
 
         }

@@ -60,7 +60,7 @@ public class AddRelativeFragment extends Fragment {
                 Intent mIntent = new Intent(getActivity(), FamilyTreeDetailActivity.class);
                 startActivity(mIntent);
                 getActivity().finish();
-                Utility.fade(getActivity());
+                //    Utility.fade(getActivity());
             }
         });
 

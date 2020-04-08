@@ -99,7 +99,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
             startActivity(mIntent)
             finish()
-            fade(this)
+            //    fade(this)
         }
 
         setSupportActionBar(binding.toolbar as Toolbar?)

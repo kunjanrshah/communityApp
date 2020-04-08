@@ -446,13 +446,13 @@ public class Utility {
         return String.format("%.02f", dist)+" KM";
     }*/
 
-    public static void fade(Context context) {
+   /* public static void fade(Context context) {
         ((Activity) context).overridePendingTransition(R.anim.fade_enter, R.anim.fade_exit);
     }
 
     public static void fade1(Context context) {
         ((Activity) context).overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
-    }
+    }*/
 
     public static Bitmap fastblur(Bitmap sentBitmap, float scale, int radius) {
 
@@ -721,7 +721,7 @@ public class Utility {
                     FragmentDrawer.mDrawerLayout.closeDrawers();
                 } else {
                     Exit(activity);
-                    fade(activity);
+                    //    fade(activity);
                 }
                 return;
             } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible()) || expandableFragment != null && expandableFragment.isVisible()) {
@@ -729,14 +729,14 @@ public class Utility {
                 return;
             } else {
                 fragmentManager.popBackStack();
-                fade(activity);
+                //  fade(activity);
             }
         } else {
             if (FragmentDrawer.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 FragmentDrawer.mDrawerLayout.closeDrawers();
             } else {
                 Exit(activity);
-                fade(activity);
+                //   fade(activity);
             }
         }
     }
@@ -781,7 +781,7 @@ public class Utility {
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commit();
-        fade(activity);
+        //  fade(activity);
     }
 
     public static int getRandomMaterialColor(Context context, String typeColor) {

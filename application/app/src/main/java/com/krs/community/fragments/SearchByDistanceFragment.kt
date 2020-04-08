@@ -322,7 +322,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                             val intent: Intent = Intent(activity as AppCompatActivity, QRCodeActivity::class.java)
                             intent.putExtras(mBundle)
                             startActivity(intent)
-                            Utility.fade(activity as AppCompatActivity)
+                            //  Utility.fade(activity as AppCompatActivity)
                         } else if (it == 4) {
                             shareDetails(activity as AppCompatActivity, viewHolder.tvName.text.toString(), member.mobile.toString(), member.emailAddress.toString(), viewHolder.tvArea.text.toString(), member.address.toString())
                         } else if (it == 5) {

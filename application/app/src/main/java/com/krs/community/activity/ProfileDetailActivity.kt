@@ -155,7 +155,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         binding.imgBack.setOnClickListener {
             finish()
             hideKeyboard(this)
-            fade(this)
+            //   fade(this)
         }
 
         binding.imgProfile.setOnClickListener {
@@ -273,7 +273,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
         startActivity(intent)
         finish()
-        fade(this)
+        //   fade(this)
     }
 
     private fun setMemberValues() {

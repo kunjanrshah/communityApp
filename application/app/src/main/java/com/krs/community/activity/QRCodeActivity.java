@@ -227,7 +227,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
         binding.ivCancel.setOnClickListener(v -> {
             finish();
-            Utility.fade(this);
+            //  Utility.fade(this);
         });
     }
 

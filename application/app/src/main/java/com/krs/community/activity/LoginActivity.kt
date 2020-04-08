@@ -286,7 +286,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 val mIntent = Intent(this@LoginActivity, RegisterActivty::class.java)
                 startActivity(mIntent)
 
-                fade(this)
+                //  fade(this)
             }
 
             binding.tvResend.setOnClickListener {
@@ -442,7 +442,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         intent.putExtra(getString(R.string.id), member.id)
         startActivity(intent)
         finish()
-        fade(this)
+        //   fade(this)
     }
 
     override fun onOTPReceivedError(error: String?) {
