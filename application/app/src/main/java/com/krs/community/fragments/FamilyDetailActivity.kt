@@ -65,6 +65,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     lateinit var members: ArrayList<Member>
     var headId: String? = null
     var memId: String? = null
+    var register: Boolean = false
     val TAG = FamilyDetailActivity::class.java.simpleName
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
     private lateinit var rvDetail: RecyclerView
@@ -95,6 +96,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         mainHandler = Handler(Looper.getMainLooper())
         headId = intent.getStringExtra(getString(R.string.id))
+        register = intent.getBooleanExtra("register", false)
         memId = intent.getStringExtra(getString(R.string.member_id))
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
@@ -378,7 +380,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                 val intent = Intent(this@FamilyDetailActivity, QRCodeActivity::class.java)
                                 intent.putExtras(mBundle)
                                 startActivity(intent)
-                                fade(this@FamilyDetailActivity)
+                                //  fade(this@FamilyDetailActivity)
                             } else if (it == 4) {
                                 shareDetails(this@FamilyDetailActivity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, member.area, member.address)
                             } else if (it == 5) {
@@ -432,11 +434,15 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             cancel.visibility = View.INVISIBLE
         }
         cancel.setOnClickListener {
-            val intent = Intent(this, DashboardActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-            fade(this)
+            if (register) {
+                finish()
+            } else {
+                val intent = Intent(this, DashboardActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+                //   fade(this)
+            }
         }
         val member = members[0]
 
@@ -445,7 +451,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             val intent = Intent(this, MapTrackingActivity::class.java)
             intent.putExtra("head_id", headId)
             startActivity(intent)
-            fade(this)
+            //   fade(this)
         }
 
         login.setOnClickListener {
@@ -463,7 +469,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         val intent = Intent(this, SplashActivity::class.java)
                         startActivity(intent)
                         this.finish()
-                        fade(this)
+                        //   fade(this)
                     }
                     .OnNegativeClicked {
                     }
@@ -566,7 +572,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     val intent = Intent(this@FamilyDetailActivity, QRCodeActivity::class.java)
                     intent.putExtras(mBundle)
                     startActivity(intent)
-                    fade(this@FamilyDetailActivity)
+                    //   fade(this@FamilyDetailActivity)
                 } else if (it == 4) {
                     shareDetails(this@FamilyDetailActivity, tvName.text.toString(), member.mobile, member.emailAddress, member.area, member.address)
                 } else if (it == 5) {

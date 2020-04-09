@@ -30,6 +30,7 @@ import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.ActivityRegisterBinding
 import com.krs.community.entities.MasterCounts
+import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.listeners.UpdateListener
@@ -61,7 +62,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var dashboardViewModel: DashboardViewModel
-
     private var resultUri: Uri? = null
     private var isLogin: Boolean = true
 
@@ -124,6 +124,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     fun setScreenLayout() {
         if (isNetworkConnected(this)) {
             logger = Logger(TAG)
+
 
             registerViewModel = ViewModelProvider(this, registerViewModelFactory).get(RegisterViewModel::class.java)
             registerViewModel.iRegisterListener = this
@@ -367,7 +368,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         }
     }
 
-
     override fun getRegisterSuccess(data: RegisterModel) {
         Utility.hideSweetProgress()
         Log.d(TAG, "onRegisterButtonClick")
@@ -382,13 +382,31 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 }
             }
         } else {
-            successResponse(data.message)
+            successResponse(data)
         }
     }
 
     private fun successResponse(message: String) {
-        Utility.startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Register), message)
+        Snackbar.make(binding.rootLayout, message, Snackbar.LENGTH_INDEFINITE).show()
+        // Toast.makeText(AppController.mApplication.applicationContext,message,Toast.LENGTH_SHORT).show()
+    }
+
+    private fun successResponse(data: RegisterModel) {
         clearAll()
+        if (data.message.contains("create")) {
+            goToFamilyDetailActivity(data)
+        } else {
+            root_layout.snackbar(data.message, Snackbar.LENGTH_INDEFINITE)
+        }
+    }
+
+    private fun goToFamilyDetailActivity(data: RegisterModel) {
+        val intent = Intent(this, FamilyDetailActivity::class.java)
+        intent.putExtra(getString(R.string.id), data.userId.toString())
+        intent.putExtra("register", true)
+        startActivity(intent)
+        //finish()
+        //  Utility.fade(this)
     }
 
     private fun clearAll() {
@@ -409,15 +427,24 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     }
 
     override fun onUploadSuccess(jsonObject: JsonObject) {
-        Utility.hideSweetProgress()
-        successResponse(getString(R.string.RequestAdmin))
+        try {
+            clearAll()
+            Utility.hideSweetProgress()
+            successResponse(getString(R.string.RequestAdmin))
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 
     override suspend fun onUploadFail(message: String) {
-        Utility.hideSweetProgress()
-        clearAll()
-        successResponse(getString(R.string.RequestAdmin))
-        root_layout.snackbar("Photo not uploaded because of poor internet speed!", Snackbar.LENGTH_INDEFINITE)
+        try {
+            clearAll()
+            Utility.hideSweetProgress()
+            successResponse(getString(R.string.RequestAdmin))
+            root_layout.snackbar("Photo not uploaded because of poor internet speed!", Snackbar.LENGTH_INDEFINITE)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 
     override suspend fun getFailure(message: String) {
