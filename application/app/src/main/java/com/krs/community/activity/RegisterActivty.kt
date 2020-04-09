@@ -396,7 +396,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         if (data.message.contains("create")) {
             goToFamilyDetailActivity(data)
         } else {
-            Utility.startSweetDialog(AppController.mApplication.applicationContext, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Register), data.message)
+            root_layout.snackbar(data.message, Snackbar.LENGTH_INDEFINITE)
         }
     }
 
