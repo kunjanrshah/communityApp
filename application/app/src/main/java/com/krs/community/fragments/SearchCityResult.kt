@@ -170,7 +170,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
-                if (member.gender.equals("Male")) {
+                if (member.gender == "Male") {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
                 } else {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
@@ -450,8 +450,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     override suspend fun getFailure(message: String) {
         try {
             DashboardActivity.stop = false
-            binding.shimmerViewContainer.stopShimmerAnimation()
-            binding.shimmerViewContainer.visibility = View.GONE
+            Coroutines.main {
+                binding.shimmerViewContainer.stopShimmerAnimation()
+                binding.shimmerViewContainer.visibility = View.GONE
+            }
 
             if (message.toLowerCase().contains("success")) {
                 Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, context?.getString(R.string.app_name), message)
