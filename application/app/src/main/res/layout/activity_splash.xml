@@ -9,7 +9,7 @@
         android:id="@+id/fragmentloginKenBurnsView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/muslim_people2" />
+        android:src="@drawable/muslim_people" />
 
     <View
         android:id="@+id/fragmentloginView1"
