@@ -144,7 +144,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     count += 1
                 }
                 holder.badge.setNumber(count)
-
+                holder.tvCode.text = member.memberCode
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
@@ -578,6 +578,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
 
         init {
             itemView.setOnLongClickListener(this)

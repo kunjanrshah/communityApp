@@ -56,10 +56,10 @@ class SettingFragment : Fragment() {
         switchDialog = root.findViewById<LabeledSwitch>(R.id.switch_dialog)
         val isShow = Guru.getBoolean(getString(R.string.isdialogshow), false)
 
-        val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
+        // val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
         val isShowCallPhone = Utility.checkReadPhoneStatePermission((activity as AppCompatActivity))
 
-        switchDialog?.isOn = isShow && isShowCallLog && isShowCallPhone
+        switchDialog?.isOn = isShow && isShowCallPhone
 
         switchDialog?.setOnClickListener {
 
@@ -67,7 +67,7 @@ class SettingFragment : Fragment() {
                 Guru.putBoolean(getString(R.string.isdialogshow), false)
             } else {
                 Guru.putBoolean(getString(R.string.isdialogshow), true)
-                permissionCheck(isShowCallLog, isShowCallPhone)
+                permissionCheck(isShowCallPhone)
 
                 SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Help")
@@ -90,8 +90,8 @@ class SettingFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun permissionCheck(showCallLog: Boolean, showCallPhone: Boolean) {
-        if (showCallLog && showCallPhone) {
+    private fun permissionCheck(showCallPhone: Boolean) {
+        if (showCallPhone) {
             switchDialog?.isOn = false
         } else {
             switchDialog?.isOn = true

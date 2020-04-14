@@ -119,7 +119,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     count += 1
                 }
                 holder.badge.setNumber(count)
-
+                holder.tvCode.text = member.memberCode
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + contactListViewModel.getLastNameById(member.subCastId.toInt())
@@ -354,6 +354,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {

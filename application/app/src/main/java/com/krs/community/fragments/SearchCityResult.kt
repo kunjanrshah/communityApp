@@ -189,6 +189,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
+
+                holder.tvCode.text = member.memberCode
                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                 val arrayId = loginMember?.sharingId?.split(',')
@@ -635,6 +637,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+
 
         init {
             itemView.setOnLongClickListener(this)
