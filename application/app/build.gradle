@@ -41,14 +41,14 @@ android {
             proguardFile 'proguard-gson.pro'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        /*debug{
-            minifyEnabled true
-            shrinkResources true
+        debug{
+            minifyEnabled false
+            shrinkResources false
             debuggable true
             proguardFile 'proguard-google-play-services.pro'
             proguardFile 'proguard-gson.pro'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }*/
+        }
     }
     sourceSets {
         main { res.srcDirs = ['src/main/res', 'src/main/res/values-gu', 'src/main/res/values-hi'] }

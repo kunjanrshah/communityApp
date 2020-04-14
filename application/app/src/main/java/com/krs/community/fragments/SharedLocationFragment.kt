@@ -33,6 +33,7 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.FragmnetSharedLocationBinding
@@ -112,6 +113,13 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
+
+                var count = member.membersCount
+                if (count != 0) {
+                    count += 1
+                }
+                holder.badge.setNumber(count)
+                holder.tvCode.text = member.memberCode
 
                 if (member.gender.equals("Male")) {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
@@ -503,6 +511,8 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
         var cardViewList: LinearLayout = v.findViewById(R.id.card_view_list)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
 
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)

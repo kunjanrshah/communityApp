@@ -166,6 +166,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                     viewHolder.ivVerify.visibility = View.GONE
                 }
 
+                viewHolder.tvCode.text = member.memberCode
+
                 Coroutines.io {
                     if (!member.head_sub_cast_id.isNullOrEmpty() && !member.head_name.isNullOrEmpty()) {
                         holder.txtHead.text = member.head_name + " " + smartFilterViewModel.getLastNameById(member.head_sub_cast_id.toInt())
@@ -421,6 +423,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     override fun getMembers(response: SmartFilterResponse) {

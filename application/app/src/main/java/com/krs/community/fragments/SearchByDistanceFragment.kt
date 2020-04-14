@@ -42,6 +42,7 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByDistanceListener
 import com.krs.community.listeners.RoomMemberListener
@@ -283,6 +284,13 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
                 }
 
+                var count = member.membersCount
+                if (count != 0) {
+                    count += 1
+                }
+                viewHolder.badge.setNumber(count)
+                viewHolder.tvCode.text = member.memberCode
+
                 if (member.headId.equals("0")) {
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
@@ -482,6 +490,9 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
 
     }
 

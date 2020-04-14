@@ -141,6 +141,8 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     count += 1
                 }
                 holder.badge.setNumber(count)
+                holder.tvCode.text = member.memberCode
+
                 Coroutines.io {
                     val lastname = committeeViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
                     val localComm = committeeViewModel.getLocalCommunityName(Integer.parseInt(member.localCommunityId.toString()))
@@ -649,7 +651,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
-
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     override fun onResume() {
