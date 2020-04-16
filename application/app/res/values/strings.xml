@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Yadav Seva Samaj</string>
+    <string name="app_name">Muslim Ghanchi Samaj</string>
 
     <string name="action_delete">Delete</string>
     <string name="action_disable">Disable</string>
@@ -412,8 +412,8 @@
     <string name="max_age" translatable="false">max_age</string>
     <string name="Select" translatable="false">Select</string>
 
-    <string name="base_url_thumb" translatable="false">https://helixinstruments.com/uploads/users/thumb/</string>
-    <string name="base_url_original" translatable="false">https://helixinstruments.com/uploads/users/original/</string>
+    <string name="base_url_thumb" translatable="false">https://muslimghanchi.org/uploads/users/thumb/</string>
+    <string name="base_url_original" translatable="false">https://muslimghanchi.org/uploads/users/original/</string>
     <string name="scanId" translatable="false">scanId</string>
 
 

@@ -166,7 +166,7 @@ fun promptReadPermission(context: Context) {
             .setContentText(context.getString(R.string.gallrypermission))
             .setConfirmText(context.getString(R.string.YesPleaseCity))
             .setCancelText(context.getString(R.string.no))
-            .setCustomImage(R.drawable.icon_yadav)
+            .setCustomImage(R.drawable.icon_ghanchi)
             .showCancelButton(true)
             .setConfirmClickListener { sDialog ->
                 sDialog.dismiss()
@@ -406,7 +406,7 @@ fun showVersionDialog(activity: FragmentActivity) {
             .setContentText(activity.getString(R.string.thereversion))
             .setConfirmText(activity.getString(R.string.updatenow))
             .setCancelText("Later")
-            .setCustomImage(R.drawable.icon_yadav)
+            .setCustomImage(R.drawable.icon_ghanchi)
             .showCancelButton(true)
             .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                 sweetAlertDialog.dismissWithAnimation()
@@ -911,7 +911,7 @@ fun displayPDFDialog(context: Context, name: String, filePath: String, content: 
     SweetAlertDialog(context, SweetAlertDialog.PDF_TYPE)
             .setTitleText("$name" + context.getString(R.string.Profile))
             .setContentText(context.getString(R.string.youcanshare))
-            .setCustomImage(R.drawable.icon_yadav)
+            .setCustomImage(R.drawable.icon_ghanchi)
             .showCancelButton(true)
             .setNeutralText(context.getString(R.string.print))
             .setNeutralClickListener { sDialog ->

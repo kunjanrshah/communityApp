@@ -17,7 +17,18 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
+    <uses-permission
+        android:name="android.permission.READ_CALL_LOG"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.USE_FINGERPRINT"
+        tools:node="remove" />
+
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        tools:node="remove" />
+
     <!--<uses-permission android:name="android.permission.READ_CALL_LOG" />-->
     <!--<uses-permission android:name="android.permission.WRITE_CALL_LOG" />-->
 
@@ -30,7 +41,7 @@
 
     <application
         android:name=".app.AppController"
-        android:icon="@drawable/icon_yadav"
+        android:icon="@drawable/icon_ghanchi"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/MyMaterialTheme"
@@ -204,7 +215,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.krs.yadav.provider"
+            android:authorities="com.krs.community.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

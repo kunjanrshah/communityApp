@@ -25,10 +25,10 @@ android {
     compileSdkVersion 29
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "com.krs.yadav"
+        applicationId "com.krs.community"
         minSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 8
+        versionName "8.0"
         multiDexEnabled true
         javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
     }

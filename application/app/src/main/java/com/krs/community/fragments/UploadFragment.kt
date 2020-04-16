@@ -125,7 +125,7 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
                                 .setContentText("Do you want to delete ${uploadfile.name}?")
                                 .setConfirmText(activity!!.getString(R.string.YesPleaseCity))
                                 .setCancelText(activity!!.getString(R.string.no))
-                                .setCustomImage(R.drawable.icon_yadav)
+                                .setCustomImage(R.drawable.icon_ghanchi)
                                 .showCancelButton(true)
                                 .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                                     sweetAlertDialog.dismissWithAnimation()
@@ -144,7 +144,7 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
                             .setContentText("Do you want to download ${uploadfile.name}?")
                             .setConfirmText(activity!!.getString(R.string.YesPleaseCity))
                             .setCancelText(activity!!.getString(R.string.no))
-                            .setCustomImage(R.drawable.icon_yadav)
+                            .setCustomImage(R.drawable.icon_ghanchi)
                             .showCancelButton(true)
                             .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                                 sweetAlertDialog.dismissWithAnimation()

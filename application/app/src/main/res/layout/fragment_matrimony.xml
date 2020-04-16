@@ -38,7 +38,7 @@
             android:layout_height="250dp"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
-            android:background="@drawable/couple" />
+            android:background="@drawable/muslim_wedding" />
 
 
         <EditText

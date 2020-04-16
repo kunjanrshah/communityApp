@@ -66,7 +66,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
 
         val ivProfile = findViewById<ImageView>(R.id.iv_profile)
 
-        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.raju))
+        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.mamaji))
                 .thumbnail(0.5f)
                 .transition(withCrossFade())
                 .apply(RequestOptions.circleCropTransform())
@@ -120,7 +120,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
                         .setContentText("Do you want to send message to " + getString(R.string.dev_name) + "?")
                         .setConfirmText("Yes")
                         .setCancelText("No")
-                        .setCustomImage(R.drawable.icon_yadav)
+                        .setCustomImage(R.drawable.icon_ghanchi)
                         .showCancelButton(true)
                         .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                             sweetAlertDialog.dismissWithAnimation()
@@ -137,7 +137,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
                             jsonObject.put("body", body1)
                             jsonObject.put("to_email", getString(R.string.dev_email))
                             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-                            Utility.startSweetProgress(this, getString(R.string.app_name), "Sending your message to Rajkumar Yadav")
+                            Utility.startSweetProgress(this, getString(R.string.app_name), "Sending your message to Mehboob Gogda")
                             passwordViewModel?.sendEmail(updated)
 
                         }

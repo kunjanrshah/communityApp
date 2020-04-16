@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="MissingTranslation">Yadav Seva Samaj</string>
+    <string name="app_name" tools:ignore="MissingTranslation">Muslim Ghanchi Samaj</string>
     <string name="folder_name" translatable="false">community</string>
     <string name="action_disable" translatable="false">Disable</string>
     <string name="action_location" translatable="false">Location</string>
@@ -371,9 +371,9 @@
     <string name="max_age" translatable="false">max_age</string>
 
 
-    <string name="base_url_logo" translatable="false">https://helixinstruments.com/uploads/logos/</string>
-    <string name="base_url_thumb" translatable="false">https://helixinstruments.com/uploads/users/thumb/</string>
-    <string name="base_url_original" translatable="false">https://helixinstruments.com/uploads/users/original/</string>
+    <string name="base_url_logo" translatable="false">https://muslimghanchi.org/uploads/logos/</string>
+    <string name="base_url_thumb" translatable="false">https://muslimghanchi.org/uploads/users/thumb/</string>
+    <string name="base_url_original" translatable="false">https://muslimghanchi.org/uploads/users/original/</string>
     <string name="scanId" translatable="false">scanId</string>
 
 
@@ -725,7 +725,7 @@
     <string name="you_can_contact_us_on_various_platform_and_also_send_your_feedback_with_us">You can contact us on various platform and also send your feedback with us</string>
     <string name="type_your_message">Type Your Message...</string>
     <string name="send_now">Send Now</string>
-    <string name="dev_name">RajKumar Yadav</string>
+    <string name="dev_name">Mehboob Gogda</string>
 
     <!-- DashBoard Fragment -->
     <string name="DevicDont">Your Device Don\'t Support Speech Input</string>
@@ -967,8 +967,8 @@
     <string name="retry">Retry</string>
     <string name="coming_soon">Working on it</string>
     <string name="admin_only">For Admin use only</string>
-    <string name="contact_number">8000974974</string> <!--9427051418-->
-    <string name="fb_url" translatable="false">https://www.facebook.com/rajuyadav1979</string> <!--https://www.facebook.com/kunjanrshah87-->
+    <string name="contact_number">9377133222</string> <!--9427051418-->
+    <string name="fb_url" translatable="false">https://www.facebook.com/MEHBOOBGHANCHI</string> <!--https://www.facebook.com/kunjanrshah87-->
     <string name="linkedin_url" translatable="false">""</string> <!--https://www.linkedin.com/in/kunjan-shah-76901b6a/-->
 
     <string name="mobile_not_available">Mobile not available</string>
@@ -1010,11 +1010,11 @@
     <string name="selectstatus">Select Status</string>
     <string name="selectsurname">Select your Surname</string>
 
-    <string name="kunjanrshah">live:a5eebdadec9a7945_1</string> <!-- kunjanrshah-->
-    <string name="dev_email">rajuyadav79@gmail.com</string>
+    <string name="kunjanrshah">9377133222</string> <!-- kunjanrshah-->
+    <string name="dev_email">saraoffsetprinters@gmail.com</string>
     <string name="dev_gmail_subject">@string/app_name</string>
     <string name="dev_content">Hello</string>
-    <string name="dev_link">https://helixinstruments.com</string>
+    <string name="dev_link">https://muslimghanchi.org</string>
     <string name="expo">Exporting</string>
     <string name="families">Families:</string>
     <string name="mem">Members:</string>
@@ -1153,5 +1153,5 @@
     <string name="todate">todate</string>
     <string name="filter">filter</string>
     <string name="load_more">Searching...</string>
-    <string name="yss">YSS /</string>
+    <string name="yss">msg/</string>
 </resources>

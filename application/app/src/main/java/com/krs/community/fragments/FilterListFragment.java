@@ -168,7 +168,7 @@ public class FilterListFragment extends Fragment {
                         .setContentText("Do you want to clear all Filters?")
                         .setConfirmText(getActivity().getString(R.string.YesPleaseCity))
                         .setCancelText(getActivity().getString(R.string.no))
-                        .setCustomImage(R.drawable.icon_yadav)
+                        .setCustomImage(R.drawable.icon_ghanchi)
                         .showCancelButton(true)
                         .setConfirmClickListener(sweetAlertDialog -> {
                             sweetAlertDialog.dismissWithAnimation();

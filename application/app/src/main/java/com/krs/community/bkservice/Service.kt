@@ -89,7 +89,7 @@ class Service : android.app.Service(), Listener, AddressCallBack {
             Log.i(TAG, "restarting foreground")
             try {
                 val notification = Notification()
-                startForeground(NOTIFICATION_ID, notification.setNotification(this, "You are sharing your location", "Remove your shared users to stop sharing", R.drawable.icon_yadav))
+                startForeground(NOTIFICATION_ID, notification.setNotification(this, "You are sharing your location", "Remove your shared users to stop sharing", R.drawable.icon_ghanchi))
                 Log.i(TAG, "restarting foreground successful")
                 easyWayLocation?.startLocation()
                 // serviceIntent = Intent(this, CallReceiver::class.java)

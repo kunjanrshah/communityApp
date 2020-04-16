@@ -94,6 +94,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:maxLength="5"
                 android:digits="@string/only_numbers"
                 android:fontFamily="@font/montserrat_regular"
                 android:inputType="number"

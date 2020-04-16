@@ -9,7 +9,7 @@
         android:id="@+id/fragmentloginKenBurnsView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/img_splash" />
+        android:src="@drawable/muslim_people" />
 
     <View
         android:id="@+id/fragmentloginView1"
@@ -33,14 +33,14 @@
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_marginTop="40dp"
-            android:src="@drawable/icon_yadav" />
+            android:src="@drawable/icon_ghanchi" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:fontFamily="@font/montserrat_semibold"
             android:gravity="center"
-            android:text="Yadav Seva Samaj"
+            android:text="Muslim Ghanchi Samaj"
             android:textColor="@color/white"
             android:textSize="26dp" />
 

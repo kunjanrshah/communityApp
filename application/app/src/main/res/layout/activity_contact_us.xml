@@ -70,7 +70,7 @@
                             android:layout_marginTop="40dp"
                             android:fontFamily="@font/montserrat_semibold"
                             android:singleLine="true"
-                            android:text="Rajkumar Yadav"
+                            android:text="Mehboob Gogda"
                             android:textColor="@color/black2"
                             android:textSize="20sp" />
 
@@ -81,7 +81,7 @@
                             android:layout_gravity="center_horizontal"
                             android:autoLink="web"
                             android:fontFamily="@font/montserrat_regular"
-                            android:text="helixinstruments.com"
+                            android:text="muslimghanchi.org"
                             android:textSize="14sp" />
 
 

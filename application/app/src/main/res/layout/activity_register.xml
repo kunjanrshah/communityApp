@@ -42,24 +42,11 @@
                 android:gravity="center_horizontal">
 
                 <ImageView
-                    android:layout_width="35dp"
                     android:id="@+id/img_header_logo"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="20dp"
-                    android:background="@drawable/icon_yadav"
+                    android:layout_width="250dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/text_with_logo_ghanchi"
                     tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="Yadav Seva Samaj"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorTree"
-                    android:textSize="20sp" />
-
-
             </LinearLayout>
 
             <ImageView

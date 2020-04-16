@@ -25,7 +25,7 @@
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserrat_medium"
-            android:text="Yadav Seva Samaj"
+            android:text="Muslim Ghanchi Samaj"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
