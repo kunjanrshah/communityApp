@@ -62,7 +62,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
-    private val factory: DashboardViewModelFactory by instance()
+    private val factory: DashboardViewModelFactory by instance<DashboardViewModelFactory>()
     private var menu: Menu? = null
 
 

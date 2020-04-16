@@ -76,8 +76,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private var setLocationDialog: DialogPlus? = null
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance<FamilyDetailViewModelFactory>()
     lateinit var mainHandler: Handler
     private var isShimmer: Boolean = true
     private var loginId: String? = null

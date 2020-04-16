@@ -47,7 +47,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
     private var drawerListener: FragmentDrawerListener? = null
     private var view1: View? = null
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
-    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
+    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance<FamilyDetailViewModelFactory>()
     override val kodein by kodein()
 
     fun setDrawerListener(listener: FragmentDrawerListener?) {

@@ -72,7 +72,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     private var defaultProfiles = ArrayList<Member>()
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var filterViewModel: SmartFilterViewModel
-    private val filterViewModelFactory: SmartFilterViewModelFactory by instance()
+    private val filterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
     private var isTouch = false
     private lateinit var layoutManager: LinearLayoutManager
     private var sharedAdapter: SharedProfileAdapter? = null

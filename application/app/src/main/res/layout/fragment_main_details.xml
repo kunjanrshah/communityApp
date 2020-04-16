@@ -54,14 +54,40 @@
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="@string/memberDetails" />
 
-                        <EditText
-                            android:id="@+id/edt_code"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/border_color_gray"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:paddingLeft="10dp"
-                            android:singleLine="true" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginLeft="5dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="@string/yss"
+                                android:textSize="18sp" />
+
+                            <EditText
+                                android:id="@+id/edt_code"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginLeft="3dp"
+                                android:background="@null"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:hint="00000"
+                                android:inputType="number"
+                                android:maxLength="5"
+                                android:maxLines="1"
+                                android:singleLine="true" />
+
+                            <TextView
+                                android:id="@+id/tv_id"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:textSize="18sp" />
+                        </LinearLayout>
 
                     </LinearLayout>
 

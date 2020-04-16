@@ -57,11 +57,11 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
     private lateinit var tvForgot: TextView
 
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
-    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
+    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance<FamilyDetailViewModelFactory>()
     override val kodein by kodein()
 
     private lateinit var passwordViewModel: PasswordViewModel
-    private val passwordViewModelFactory: PasswordViewModelFactory by instance()
+    private val passwordViewModelFactory: PasswordViewModelFactory by instance<PasswordViewModelFactory>()
 
     companion object {
         private const val ARG_CURRENT_PIN = "current_pin"

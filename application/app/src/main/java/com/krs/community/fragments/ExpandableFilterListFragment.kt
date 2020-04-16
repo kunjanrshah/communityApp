@@ -34,7 +34,7 @@ class ExpandableFilterListFragment : Fragment(), KodeinAware {
 
     private lateinit var expandableListView: ExpandableListView
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     override val kodein by kodein()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

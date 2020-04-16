@@ -75,9 +75,9 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
     private lateinit var filterViewModel: SmartFilterViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
 
-    private val filterViewModelFactory: SmartFilterViewModelFactory by instance()
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
-    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
+    private val filterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
 
     private lateinit var binding: FragmnetSharedLocationBinding
     private var setLocationDialog: DialogPlus? = null
@@ -119,7 +119,14 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     count += 1
                 }
                 holder.badge.setNumber(count)
-                holder.tvCode.text = member.memberCode
+
+                var code = ""
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
 
                 if (member.gender.equals("Male")) {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)

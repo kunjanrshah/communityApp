@@ -65,9 +65,9 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
 
-    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
-    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
 
     private lateinit var tvCount: TextView
     private var loginUserSubCommunityId = ""

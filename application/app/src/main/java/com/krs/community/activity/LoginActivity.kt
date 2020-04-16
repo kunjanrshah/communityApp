@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
 
     override val kodein by kodein()
-    private val factory: LoginViewModelFactory by instance()
+    private val factory: LoginViewModelFactory by instance<LoginViewModelFactory>()
     private var smsReceiver: SMSReceiver? = null
     private val TAG = LoginActivity::class.java.simpleName
     private var mCallbackManager: CallbackManager? = null

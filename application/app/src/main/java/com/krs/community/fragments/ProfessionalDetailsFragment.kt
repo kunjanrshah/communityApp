@@ -55,7 +55,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
     lateinit var binding: FragmentProfessionalDetailsBinding
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val factory: ProfileDetailViewModelFactory by instance()
+    private val factory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     var numberOfLines = 5
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

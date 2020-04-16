@@ -42,7 +42,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
     private lateinit var binding: FragmentPersonalDetailsBinding
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val factory: ProfileDetailViewModelFactory by instance()
+    private val factory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     private var datepicker = SpinnerDatePickerDialogBuilder()
     private var which: Int = 0
     var numberOfLines = 5

@@ -70,7 +70,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     private var bearing = 0f
     private lateinit var mainHandler: Handler
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
-    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
+    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance<FamilyDetailViewModelFactory>()
     private lateinit var headId: String
     private val locations = HashMap<String, Location>()
     private val lstTitle = HashMap<String, String>()

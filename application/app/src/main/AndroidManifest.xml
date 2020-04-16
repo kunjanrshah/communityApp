@@ -204,7 +204,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.krs.community.provider"
+            android:authorities="com.krs.yadav.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

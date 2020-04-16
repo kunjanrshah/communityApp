@@ -86,16 +86,16 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
     private var currLat = MutableLiveData<Double>()
     private var currLng = MutableLiveData<Double>()
     private var isCallAPI = false
-    private var selectedPosition = 0
+    private var snackbar: Snackbar? = null
     private lateinit var distance: ByDistanceModel
 
     internal lateinit var mByDistanceViewModel: ByDistanceViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
 
-    private val byDistanceViewModelFactory: ByDistanceViewModelFactory by instance()
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+    private val byDistanceViewModelFactory: ByDistanceViewModelFactory by instance<ByDistanceViewModelFactory>()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
     var memberId: String? = null
 
     private var byDistanceAdapter: ParallaxRecyclerAdapter<Member>? = null
@@ -289,7 +289,14 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     count += 1
                 }
                 viewHolder.badge.setNumber(count)
-                viewHolder.tvCode.text = member.memberCode
+
+                var code = ""
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
 
                 if (member.headId.equals("0")) {
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
@@ -302,7 +309,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-                            val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+                            val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
                             val profileDetailViewModel = ViewModelProvider(activity as AppCompatActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post {
@@ -431,8 +438,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         byDistanceAdapter?.setOnClickEvent { v, position ->
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMembers.get(position))
-            startActivity(intent)
-            //   Utility.fade(activity)
+            startActivityForResult(intent, 101)
         }
 
         layoutManagerFixed.setHeaderIncrementFixer(header)
@@ -441,7 +447,6 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         byDistanceAdapter?.data = lstMembers
         byDistanceAdapter?.setContext(this)
         recyclerView.adapter = byDistanceAdapter
-
     }
 
     fun getDistance(dist: String): String {
@@ -597,10 +602,15 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                 distance.accessToken = Guru.getString(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
                 distance.lat = currLat.toString()
                 distance.lng = currLng.toString()
-
-                mShimmerViewContainer.startShimmerAnimation()
-                mShimmerViewContainer.visibility = View.VISIBLE
                 imgMap.visibility = View.GONE
+
+                if (AppController.mApplication.start == 0) {
+                    mShimmerViewContainer.startShimmerAnimation()
+                    mShimmerViewContainer.visibility = View.VISIBLE
+                } else {
+                    snackbar = Snackbar.make(recyclerView, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                    snackbar?.show()
+                }
 
                 /*Handler().postDelayed({
                     if (lstMembers.size == 0) {
@@ -632,22 +642,16 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
 
     override fun getMembers(response: ByDistanceResponse) {
         DashboardActivity.stop = false
+        mShimmerViewContainer.stopShimmerAnimation()
+        mShimmerViewContainer.visibility = View.GONE
+        snackbar?.dismiss()
         if (response.success) {
-            lstMembers.clear()
-
-            /*for (item in response.member) {
-                if(item.isLocationEnable=="0" && item.nearBy.toLowerCase() == "user"){
-
-                }else{
-                    lstMembers.add(item)
-                }
-            }*/
+            //  lstMembers.clear()
             lstMembers.addAll(response.member)
             byDistanceAdapter?.notifyDataSetChanged()
-            //recyclerView.layoutManager?.scrollToPosition(selectedPosition)
-            selectedPosition = lstMembers.size - 1
 
-            if (Integer.parseInt(response.totalRecords) <= AppController.mApplication.length) {
+            recyclerView.layoutManager?.scrollToPosition(distance.start.toInt())
+            if (response.member.size < AppController.mApplication.length) {
                 DashboardActivity.stop = true
                 Snackbar.make(llRoot, getString(R.string.EndRecordDistance), Snackbar.LENGTH_LONG).show()
             }
@@ -662,13 +666,9 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                 DashboardActivity.stop = true
             }
         } else {
-            DashboardActivity.stop = true
             tvRecords.visibility = View.GONE
             imgMap.visibility = View.VISIBLE
         }
-
-        mShimmerViewContainer.stopShimmerAnimation()
-        mShimmerViewContainer.visibility = View.GONE
 
         Utility.hideKeyboard(activity)
     }
@@ -676,6 +676,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
     override suspend fun getFailure(message: String) {
         Log.d(TAG, "getFailure: $message")
         activity?.runOnUiThread {
+            snackbar?.dismiss()
             if (mShimmerViewContainer.isAnimationStarted) {
                 mShimmerViewContainer.stopShimmerAnimation()
             }
@@ -693,6 +694,10 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
             easyWayLocation.onActivityResult(resultCode)
+        } else if (requestCode == 101 && resultCode == 102) {
+            isCallAPI = true
+            DashboardActivity.stop = false
+            callDistanceAPI()
         }
     }
 

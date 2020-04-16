@@ -26,10 +26,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/border"
-                android:digits="@string/restrict_space"
+                android:digits="@string/only_numbers"
                 android:fontFamily="@font/montserrat_regular"
                 android:hint="@string/MemberCodeDetails"
-                android:inputType="textCapCharacters"
+                android:inputType="number"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
                 android:textSize="14sp" />

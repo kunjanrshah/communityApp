@@ -56,7 +56,7 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
     private lateinit var btnupload: MovableFloatingActionButton
     private lateinit var rvDocuments: RecyclerView
     private lateinit var documentsListModel: DocumentsListModel
-    private val documentListViewModelFactory: DocumentListViewModelFactory by instance()
+    private val documentListViewModelFactory: DocumentListViewModelFactory by instance<DocumentListViewModelFactory>()
     private val listUpload = ArrayList<UploadedFile>()
     private lateinit var adapter: ParallaxRecyclerAdapter<UploadedFile>
     private var uploadDialog: DialogPlus? = null

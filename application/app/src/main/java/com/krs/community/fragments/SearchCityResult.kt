@@ -74,7 +74,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var dialog: DialogPlus? = null
     }
 
-    private var selectedPosition = 0
+    //   private var selectedPosition = 0
     private lateinit var cityId: String
     private lateinit var cityName: String
     private val members = ArrayList<Member>()
@@ -92,9 +92,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
 
-    private val browseCityViewModelFactory: BrowseCityViewModelFactory by instance()
-    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+    private val browseCityViewModelFactory: BrowseCityViewModelFactory by instance<BrowseCityViewModelFactory>()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
 
     override val kodein by kodein()
     private lateinit var tvCount: TextView
@@ -104,6 +104,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private var setLocationDialog: DialogPlus? = null
     private var exportDialog: DialogPlus? = null
     private lateinit var ivExport: ImageView
+    private var snackbar: Snackbar? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
@@ -190,7 +192,13 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
 
-                holder.tvCode.text = member.memberCode
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                 val arrayId = loginMember?.sharingId?.split(',')
@@ -354,6 +362,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     members.clear()
                     binding.shimmerViewContainer.startShimmerAnimation()
                     binding.shimmerViewContainer.visibility = View.VISIBLE
+                } else {
+                    snackbar = Snackbar.make(binding.lstFilter, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                    snackbar?.show()
                 }
                 browseCityViewModel.fetchRecordsByCity(data)
             }
@@ -376,7 +387,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
     @SuppressLint("SetTextI18n")
     override fun getSearchRecords(data: SearchByCityModel) {
-
+        snackbar?.dismiss()
         DashboardActivity.stop = false
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.GONE
@@ -402,10 +413,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 adapter.notifyDataSetChanged()
                 // binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                selectedPosition = members.size - 1
+                //   selectedPosition = members.size - 1
                 DashboardActivity.stop = false
 
-                if (data.totalHead <= AppController.mApplication.length) {
+                if (data.members.size < AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(binding.llParent, getString(R.string.EndCity) + " " + "$alpha" + " " + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
                 }
@@ -451,8 +462,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
     override suspend fun getFailure(message: String) {
         try {
+
             DashboardActivity.stop = false
             Coroutines.main {
+                Utility.hideSweetProgress()
                 binding.shimmerViewContainer.stopShimmerAnimation()
                 binding.shimmerViewContainer.visibility = View.GONE
             }
@@ -842,8 +855,17 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         } else {
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), members.get(position))
-            startActivity(intent)
+            startActivityForResult(intent, 101)
+            // startActivity(intent)
             //  Utility.fade(activity)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 101 && resultCode == 102) {
+            setupList()
         }
     }
 

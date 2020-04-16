@@ -42,7 +42,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     private lateinit var shimmer_view_container: ShimmerFrameLayout
 
     private var inventory: CollectionView.Inventory<String, City>? = null
-    private val factory: BrowseCityViewModelFactory by instance()
+    private val factory: BrowseCityViewModelFactory by instance<BrowseCityViewModelFactory>()
     internal var browseCityViewModel: BrowseCityViewModel? = null
     override val kodein by kodein()
 

@@ -84,13 +84,14 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private lateinit var smartFilterViewModel: SmartFilterViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
-    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
     private var exportDialog: DialogPlus? = null
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
     private var loginMember: Member? = null
+    private var snackbar: Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_filter_result, container, false)
@@ -120,13 +121,6 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 val member = lstMembers[position]
                 val holder = viewHolder as SmartFilterResult.ViewHolder
 
-                if (lstMembers.size > 0) {
-                    tvCount.visibility = View.VISIBLE
-                    tvCount.text = "${lstMembers.size} members found"
-                } else {
-                    tvCount.visibility = View.GONE
-                }
-
                 holder.tvName.text = member.firstName
                 holder.tvArea.text = member.area
                 if (member.gender.equals("Male")) {
@@ -144,7 +138,14 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     count += 1
                 }
                 holder.badge.setNumber(count)
-                holder.tvCode.text = member.memberCode
+
+                var code = ""
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
@@ -285,8 +286,6 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             } else {
                 Utility.requestStoragePermission(activity as AppCompatActivity)
             }
-
-
         }
 
         adapter.setParallaxHeader(header, rvFilters)
@@ -319,16 +318,13 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             jsonObject.put(getString(R.string.filter_by), jsonObj)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             smartFilterViewModel.smartFilterSearch(updated)
-            Handler().postDelayed({
-                shimmerFrameLayout.stopShimmerAnimation()
-                shimmerFrameLayout.visibility = View.GONE
-            }, 4000)
-            lstMembers.clear()
-            adapter.notifyDataSetChanged()
 
             if (AppController.mApplication.start == 0) {
                 shimmerFrameLayout.startShimmerAnimation()
                 shimmerFrameLayout.visibility = View.VISIBLE
+            } else {
+                snackbar = Snackbar.make(rvFilters, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                snackbar?.show()
             }
             Utility.hideKeyboard(activity)
         }
@@ -337,22 +333,27 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     override fun getMembers(response: SmartFilterResponse) {
         shimmerFrameLayout.stopShimmerAnimation()
         shimmerFrameLayout.visibility = View.GONE
-
+        snackbar?.dismiss()
         if (response.success) {
             if (response.members.size > 0) {
-                lstMembers.clear()
+                tvCount.visibility = View.VISIBLE
+                tvCount.text = "${response.totalRecords} members found"
+
+                // lstMembers.clear()
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
 
+                selectedPosition = AppController.mApplication.start
                 rvFilters.layoutManager?.scrollToPosition(selectedPosition)
-                selectedPosition = lstMembers.size - 1
+
+
                 DashboardActivity.stop = false
                 if (loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
                     ivExport.visibility = View.GONE
                 } else {
                     ivExport.visibility = View.VISIBLE
                 }
-                if (lstMembers.size <= AppController.mApplication.length) {
+                if (response.members.size < AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, getString(R.string.endrecord), Snackbar.LENGTH_LONG).show()
                 }
@@ -365,7 +366,12 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     }
 
     private fun noRecordsFound() {
-        ivExport.visibility = View.GONE
+
+        if (lstMembers.isEmpty()) {
+            tvCount.visibility = View.GONE
+            ivExport.visibility = View.GONE
+        }
+
         DashboardActivity.stop = true
         val gif: Int = R.drawable.gif_dialog
         TTFancyGifDialog.Builder(activity)
@@ -393,15 +399,16 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     }
 
     override fun refreshList() {
+        snackbar?.dismiss()
         adapter.notifyDataSetChanged()
     }
 
     override fun getRoomMembers(response: List<RoomMember>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override suspend fun getFailure(message: String) {
         Coroutines.main {
+            snackbar?.dismiss()
             DashboardActivity.stop = false
             shimmerFrameLayout.stopShimmerAnimation()
             shimmerFrameLayout.visibility = View.GONE
@@ -765,7 +772,6 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         }
     }
 
-
     private fun toggleSelection(position: Int) {
         toggleSelected(position)
         val count = selectedItemCount
@@ -790,10 +796,19 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         } else {
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMembers.get(position))
-            startActivity(intent)
-            //  Utility.fade(activity)
+            DashboardActivity.stop = false
+            startActivityForResult(intent, 101)
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 101 && resultCode == 102) {
+            getFilterMembers()
+        }
+    }
+
 
     private fun onRowLongClicked(position: Int) {
         enableActionMode(position)

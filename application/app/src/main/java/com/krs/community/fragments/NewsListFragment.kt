@@ -50,7 +50,7 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
     override val kodein by kodein()
 
     private lateinit var newsViewModel: NewsViewModel
-    private val factory: NewsModelFactory by instance()
+    private val factory: NewsModelFactory by instance<NewsModelFactory>()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_news, container, false)

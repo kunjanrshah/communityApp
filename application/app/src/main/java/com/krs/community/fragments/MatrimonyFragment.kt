@@ -30,7 +30,7 @@ class MatrimonyFragment : Fragment(), KodeinAware {
 
     private lateinit var binding: FragmentMatrimonyBinding
     override val kodein by kodein()
-    private val factory: SmartFilterViewModelFactory by instance()
+    private val factory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
     private lateinit var smartFilterViewModel: SmartFilterViewModel
 
     @SuppressLint("ClickableViewAccessibility")

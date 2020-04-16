@@ -813,7 +813,7 @@
     <string name="current_activityDetails">Current Activity</string>
     <string name="marital_statusDetails">Marital Status</string>
     <string name="marriage_dateDetails">Marriage Date</string>
-    <string name="local_address_if_anyDetails">Local Address (If any)</string>
+    <string name="local_address_if_anyDetails">Native/Local Address</string>
 
     <!-- PrivancyPolicy Fragment -->
     <string name="privacy_policy">Privacy Policy</string>
@@ -968,7 +968,7 @@
     <string name="coming_soon">Working on it</string>
     <string name="admin_only">For Admin use only</string>
     <string name="contact_number">8000974974</string> <!--9427051418-->
-    <string name="fb_url" translatable="false">https://www.facebook.com/MEHBOOBGHANCHI</string> <!--https://www.facebook.com/kunjanrshah87-->
+    <string name="fb_url" translatable="false">https://www.facebook.com/rajuyadav1979</string> <!--https://www.facebook.com/kunjanrshah87-->
     <string name="linkedin_url" translatable="false">""</string> <!--https://www.linkedin.com/in/kunjan-shah-76901b6a/-->
 
     <string name="mobile_not_available">Mobile not available</string>
@@ -1011,7 +1011,7 @@
     <string name="selectsurname">Select your Surname</string>
 
     <string name="kunjanrshah">live:a5eebdadec9a7945_1</string> <!-- kunjanrshah-->
-    <string name="dev_email">saraoffsetprinters@gmail.com</string>
+    <string name="dev_email">rajuyadav79@gmail.com</string>
     <string name="dev_gmail_subject">@string/app_name</string>
     <string name="dev_content">Hello</string>
     <string name="dev_link">https://helixinstruments.com</string>
@@ -1152,4 +1152,6 @@
     <string name="fromdate">fromdate</string>
     <string name="todate">todate</string>
     <string name="filter">filter</string>
+    <string name="load_more">Searching...</string>
+    <string name="yss">YSS /</string>
 </resources>

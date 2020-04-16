@@ -91,9 +91,9 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     private lateinit var committeeViewModel: CommitteeViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
-    private val commiteeViewModelFactory: CommiteeViewModelFactory by instance()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val commiteeViewModelFactory: CommiteeViewModelFactory by instance<CommiteeViewModelFactory>()
     private var setLocationDialog: DialogPlus? = null
     private var endDate: String? = null
     private var startDate: String? = null
@@ -141,7 +141,13 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     count += 1
                 }
                 holder.badge.setNumber(count)
-                holder.tvCode.text = member.memberCode
+                var code = ""
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
 
                 Coroutines.io {
                     val lastname = committeeViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
