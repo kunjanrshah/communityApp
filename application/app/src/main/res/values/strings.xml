@@ -276,7 +276,7 @@
     <string name="make_strong_pass">Make PIN more than 6 characters</string>
     <string name="_continue">Continue</string>
     <string name="hash_key">hash_key</string>
-    <string name="otp_send">Sending OTP Please wait!!</string>
+    <string name="otp_send">Sending OTP Please wait!</string>
     <string name="seat_back_relax">Seat back &amp; Relax!</string>
     <string name="you_sure">Are you sure?</string>
     <string name="restrict_space" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
@@ -1021,7 +1021,7 @@
     <string name="found">found</string>
     <string name="please_wait">Please Wait...</string>
     <string name="exporting_search_list">Exporting Search List</string>
-    <string name="install_app">"Install the app from play store \n"+ "https://play.google.com/store/apps/details?id=com.krs.community"</string>
+    <string name="install_app">"Install the app from play store \n"+ "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"</string>
     <string name="mobile_not_found">Mobile not found!</string>
     <string name="filter_values" translatable="false">filter_values</string>
     <string name="no_selection">No Selection</string>

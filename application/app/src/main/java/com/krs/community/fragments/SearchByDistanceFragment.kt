@@ -290,7 +290,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                 }
                 viewHolder.badge.setNumber(count)
 
-                var code = ""
+                var code: String? = null
                 code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
                     member.memberCode.substring(0, 5)
                 } else {
@@ -327,7 +327,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
                                 val toNumber = "+91" + member.mobile
-                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"
                                 Utility.sendWhatsAppMessage(activity as AppCompatActivity, toNumber, text)
                             }
 

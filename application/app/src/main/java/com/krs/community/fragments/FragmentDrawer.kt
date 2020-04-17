@@ -127,7 +127,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
                     .build()
         }
         val tvVersion = layout.findViewById<TextView>(R.id.tv_version)
-        tvVersion.text = resources.getString(R.string.Version) + " 1.0"// + Utility.getAppVersion(AppController.mApplication)
+        tvVersion.text = resources.getString(R.string.Version) + " " + Utility.getAppVersion(AppController.mApplication) + ".0"
         tvSettings.setOnClickListener { v: View? ->
             mDrawerLayout!!.closeDrawers()
             Utility.movetoFragment(activity, SettingFragment())

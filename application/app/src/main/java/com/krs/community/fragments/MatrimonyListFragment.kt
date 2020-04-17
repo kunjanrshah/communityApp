@@ -173,7 +173,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                     viewHolder.ivVerify.visibility = View.GONE
                 }
 
-                var code = ""
+                var code: String? = null
                 code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
                     member.memberCode.substring(0, 5)
                 } else {

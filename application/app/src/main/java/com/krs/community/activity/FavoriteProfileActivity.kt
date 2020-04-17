@@ -320,7 +320,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                     } else if (it == 2) {
                         if (!member.mobile.isNullOrEmpty()) {
                             val toNumber = getString(R.string.number) + member.mobile
-                            val text = getString(R.string.InstallApp) + "\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+                            val text = getString(R.string.InstallApp) + "\n" + "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"
                             Utility.sendWhatsAppMessage(this@FavoriteProfileActivity, toNumber, text)
                         }
 

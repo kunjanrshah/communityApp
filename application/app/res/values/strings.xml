@@ -446,7 +446,7 @@
     <string name="sub_community_id" translatable="false">sub_community_id</string>
     <string name="please_wait">Please Wait...</string>
     <string name="exporting_search_list">Exporting Search List</string>
-    <string name="install_app">"Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.community"</string>
+    <string name="install_app">"Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"</string>
     <string name="mobile_not_found">Mobile not found!</string>
     <string name="filter_values" translatable="false">filter_values</string>
     <string name="no_selection">No Selection</string>

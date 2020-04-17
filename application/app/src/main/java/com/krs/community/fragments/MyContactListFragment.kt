@@ -120,7 +120,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 }
                 holder.badge.setNumber(count)
 
-                var code = ""
+                var code: String? = null
                 code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
                     member.memberCode.substring(0, 5)
                 } else {

@@ -966,7 +966,7 @@ fun shareFile(context: Context, filePath: String) {
 
 fun shareApp(activity: FragmentActivity?) {
     val appName = activity?.getString(R.string.app_name)
-    val text = activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+    val text = activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"
     intent.putExtra(Intent.EXTRA_TEXT, text)
@@ -980,7 +980,7 @@ fun shareDetails(activity: FragmentActivity?, name: String, mobile: String, emai
             activity?.getString(R.string.email) + " : " + email + "\n" +
             activity?.getString(R.string.areaDetails) + " : " + area + "\n" +
             activity?.getString(R.string.addressNon) + " : " + address + "\n" +
-            activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+            activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"
     intent.putExtra(Intent.EXTRA_TEXT, text)

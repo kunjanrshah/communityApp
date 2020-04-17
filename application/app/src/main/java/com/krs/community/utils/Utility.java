@@ -192,10 +192,9 @@ public class Utility {
 
     public static void requestPermissions(AppCompatActivity mActivity) {
         if (/*ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED*/
-                /*|| ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED*/
-            /* ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED*/
-                ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
+                ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
         }
     }
 
@@ -1760,7 +1759,7 @@ public class Utility {
         intent.setType("image/*");
 
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Family Tree");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.krs.community \nUpdate your Profile and complete your Family Tree");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.ghanchi.samaj \nUpdate your Profile and complete your Family Tree");
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         try {
             context.startActivity(Intent.createChooser(intent, "Share Family Tree"));

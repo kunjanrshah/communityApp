@@ -698,7 +698,7 @@
     <string name="found">મળી</string>
     <string name="please_wait">મહેરબાની કરી રાહ જુવો...</string>
     <string name="exporting_search_list">નિકાસ શોધ યાદી</string>
-    <string name="install_app">"તમારી સમુદાય એપ્લિકેશન ઇન્સ્ટોલ કરો \n" + "https://play.google.com/store/apps/details?id=com.krs.community"</string>
+    <string name="install_app">"તમારી સમુદાય એપ્લિકેશન ઇન્સ્ટોલ કરો \n" + "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"</string>
     <string name="mobile_not_found">મોબાઇલ મળ્યો નથી!</string>
     <string name="filter_values" translatable="false">filter_values</string>
     <string name="no_selection">કોઈ પસંદગી નથી</string>
