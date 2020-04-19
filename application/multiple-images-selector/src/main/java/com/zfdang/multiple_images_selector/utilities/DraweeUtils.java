@@ -18,7 +18,7 @@ public class DraweeUtils {
     private static String TAG = "DraweeUtils";
 
     // http://www.jianshu.com/p/5364957dcf49
-    public static void showThumb(Uri uri, SimpleDraweeView draweeView){
+    public static void showThumb(Uri uri, SimpleDraweeView draweeView) {
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setAutoRotateEnabled(true)
                 .setResizeOptions(new ResizeOptions(200, 200))

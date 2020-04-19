@@ -63,7 +63,7 @@ import java.io.File
 class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListener, UCropFragmentCallback, Listener, LocationData.AddressCallBack, ImageUploadListener {
 
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val factory: ProfileDetailViewModelFactory by instance()
+    private val factory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     private val listFragments = mutableListOf<Fragment>()
     private var isProfileImage = false
     private var member: Member? = null
@@ -74,7 +74,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private lateinit var request: LocationRequest
     private var scanId: String? = null
     private var headId: String? = null
-
+    private var isSave: Boolean = false
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -153,9 +153,14 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
 
         binding.imgBack.setOnClickListener {
+            if (isSave) {
+                isSave = false
+                setResult(102)
+            }
+
             finish()
             hideKeyboard(this)
-            //  fade(this)
+            //   fade(this)
         }
 
         binding.imgProfile.setOnClickListener {
@@ -247,6 +252,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
     }
 
+    override fun onBackPressed() {
+        if (isSave) {
+            isSave = false
+            setResult(102)
+        }
+        finish()
+        hideKeyboard(this)
+        super.onBackPressed()
+    }
+
+
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -273,7 +289,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
         startActivity(intent)
         finish()
-        // fade(this)
+        //   fade(this)
     }
 
     private fun setMemberValues() {
@@ -361,8 +377,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             val loginMember = Gson().fromJson(memberString, Member::class.java)
             if (loginMember.id == member.id) {
                 Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
+            } else {
+                isSave = true
             }
-
             val percentage = calculatePercentage(member)
             setPercentage(percentage)
             binding.ivVerify.visibility = View.VISIBLE

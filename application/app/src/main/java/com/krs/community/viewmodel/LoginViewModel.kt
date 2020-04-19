@@ -155,7 +155,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
         }
     }
 
-    fun getLoginUser(req_login: AppConstants.LoginRequest) {
+    private fun getLoginUser(req_login: AppConstants.LoginRequest) {
         if (isNetworkConnected(app.applicationContext)) {
             job_login = Job()
             job_login.let { thejob ->

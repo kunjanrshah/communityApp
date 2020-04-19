@@ -71,8 +71,8 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     private lateinit var tvCount: TextView
     private lateinit var contactListViewModel: ContactListViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val contactListViewModelFactory: ContactListViewModelFactory by instance()
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+    private val contactListViewModelFactory: ContactListViewModelFactory by instance<ContactListViewModelFactory>()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     private var setLocationDialog: DialogPlus? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -120,6 +120,13 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 }
                 holder.badge.setNumber(count)
 
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + contactListViewModel.getLastNameById(member.subCastId.toInt())
@@ -198,7 +205,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                             val intent: Intent = Intent(activity, QRCodeActivity::class.java)
                             intent.putExtras(mBundle)
                             startActivity(intent)
-                            //   Utility.fade(activity)
+                            // Utility.fade(activity)
                         } else if (it == 4) {
                             shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
                         } else if (it == 5) {
@@ -354,6 +361,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {
@@ -387,10 +395,15 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
 
         val intent = Intent(activity, ProfileDetailActivity::class.java)
         intent.putExtra(getString(R.string.member), lstMembers.get(position))
-        startActivity(intent)
-        //  Utility.fade(activity)
+        startActivityForResult(intent, 101)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101 && resultCode == 102) {
+            userContactList()
+        }
+    }
 
     fun applyProfilePicture(holder: MyViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {

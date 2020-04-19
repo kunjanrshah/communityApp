@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <declare-styleable name="MaskEditText">
+        <attr name="met_mask" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="FooterLayout">
         <attr name="ft_color" format="color" />
         <attr name="ft_anim_duration" format="integer" />

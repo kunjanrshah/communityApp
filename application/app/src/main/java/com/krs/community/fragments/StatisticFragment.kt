@@ -34,7 +34,7 @@ import org.kodein.di.generic.instance
 class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
 
     private lateinit var statisticsViewModel: StatisticsViewModel
-    private val factory: StatisticsViewModelFactory by instance()
+    private val factory: StatisticsViewModelFactory by instance<StatisticsViewModelFactory>()
     private lateinit var binding: FragmentStatisticsBinding
     private lateinit var snackbar: Snackbar
     override val kodein by kodein()

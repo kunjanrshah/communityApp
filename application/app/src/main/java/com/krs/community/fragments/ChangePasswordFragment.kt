@@ -42,7 +42,7 @@ class ChangePasswordFragment : Fragment(), KodeinAware, ILoginListener {
     override val kodein by kodein()
 
     private lateinit var passwordViewModel: PasswordViewModel
-    private val passwordViewModelFactory: PasswordViewModelFactory by instance()
+    private val passwordViewModelFactory: PasswordViewModelFactory by instance<PasswordViewModelFactory>()
     private var showCurr = true
 
     @SuppressLint("ClickableViewAccessibility")

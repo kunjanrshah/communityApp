@@ -13,8 +13,7 @@
         <FrameLayout
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_weight="0"
-            />
+            android:layout_weight="0" />
 
         <TextView
             android:id="@+id/txtSelectedMonth"
@@ -30,8 +29,7 @@
 
         <FrameLayout
             android:layout_width="48dp"
-            android:layout_height="48dp"
-            />
+            android:layout_height="48dp" />
 
     </LinearLayout>
 
@@ -46,9 +44,9 @@
             android:layout_weight="1"
             android:alpha=".7"
             android:gravity="center"
-            tools:text="Sun"
             android:textColor="@color/slycalendar_defTextColor"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Sun" />
 
         <TextView
             android:id="@+id/day2"
@@ -57,9 +55,9 @@
             android:layout_weight="1"
             android:alpha=".7"
             android:gravity="center"
-            tools:text="Mon"
             android:textColor="@color/slycalendar_defTextColor"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Mon" />
 
         <TextView
             android:id="@+id/day3"
@@ -68,9 +66,9 @@
             android:layout_weight="1"
             android:alpha=".7"
             android:gravity="center"
-            tools:text="Tue"
             android:textColor="@color/slycalendar_defTextColor"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Tue" />
 
         <TextView
             android:id="@+id/day4"
@@ -79,9 +77,9 @@
             android:layout_weight="1"
             android:alpha=".7"
             android:gravity="center"
-            tools:text="Wed"
             android:textColor="@color/slycalendar_defTextColor"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Wed" />
 
         <TextView
             android:id="@+id/day5"
@@ -90,9 +88,9 @@
             android:layout_weight="1"
             android:alpha=".7"
             android:gravity="center"
-            tools:text="Thu"
             android:textColor="@color/slycalendar_defTextColor"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Thu" />
 
         <TextView
             android:id="@+id/day6"
@@ -101,9 +99,9 @@
             android:layout_weight="1"
             android:alpha=".7"
             android:gravity="center"
-            tools:text="Fri"
             android:textColor="@color/slycalendar_defTextColor"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Fri" />
 
         <TextView
             android:id="@+id/day7"
@@ -112,9 +110,9 @@
             android:layout_weight="1"
             android:alpha=".7"
             android:gravity="center"
-            tools:text="Sat"
             android:textColor="@color/slycalendar_defTextColor"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Sat" />
 
     </LinearLayout>
 

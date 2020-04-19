@@ -124,7 +124,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent mIntent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(mIntent);
 
-                    //   Utility.fade(this);
+                    //  Utility.fade(this);
                 }
             });
             btnRegister.setOnClickListener(v -> {
@@ -133,7 +133,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent mIntent = new Intent(SplashActivity.this, RegisterActivty.class);
                     startActivity(mIntent);
 
-                    //   Utility.fade(this);
+                    //    Utility.fade(this);
                 }
             });
 

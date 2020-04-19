@@ -15,8 +15,6 @@ import java.util.Locale;
 
 @Deprecated
 public class AddressHelper {
-    private static final String TAG = AddressHelper.class.getSimpleName();
-
     public static final int ADMIN_AREA = 0;
     public static final int CITY_NAME = 1;
     public static final int COUNTRY_CODE = 2;
@@ -29,7 +27,7 @@ public class AddressHelper {
     public static final int STREET_NAME = 9;
     public static final int SUB_ADMIN_AREA = 10;
     public static final int SUB_THOROUGHFARE = 11;
-
+    private static final String TAG = AddressHelper.class.getSimpleName();
     private Context mContext;
     private Geocoder mGeocoder;
 

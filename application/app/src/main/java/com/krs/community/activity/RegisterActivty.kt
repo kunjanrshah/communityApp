@@ -70,9 +70,9 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     }
 
     override val kodein by kodein()
-    private val registerViewModelFactory: RegisterViewModelFactory by instance()
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
-    private val factory: DashboardViewModelFactory by instance()
+    private val registerViewModelFactory: RegisterViewModelFactory by instance<RegisterViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val factory: DashboardViewModelFactory by instance<DashboardViewModelFactory>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

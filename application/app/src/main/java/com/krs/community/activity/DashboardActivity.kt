@@ -62,7 +62,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
-    private val factory: DashboardViewModelFactory by instance()
+    private val factory: DashboardViewModelFactory by instance<DashboardViewModelFactory>()
     private var menu: Menu? = null
 
 
@@ -99,7 +99,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
             startActivity(mIntent)
             finish()
-            //   fade(this)
+            //    fade(this)
         }
 
         setSupportActionBar(binding.toolbar as Toolbar?)

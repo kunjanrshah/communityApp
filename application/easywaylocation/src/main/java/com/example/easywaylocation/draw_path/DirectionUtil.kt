@@ -18,7 +18,7 @@ import java.net.URL
 
 class DirectionUtil private constructor(builder: Builder) {
     private var directionCallBack: DirectionCallBack?
-    private val allPathPoints:ArrayList<LatLng> = ArrayList()
+    private val allPathPoints: ArrayList<LatLng> = ArrayList()
     private var mMap: GoogleMap?
     private var directionKey: String?
     val TAG = "Location_Sample_Logs"
@@ -26,13 +26,13 @@ class DirectionUtil private constructor(builder: Builder) {
     private var origin: LatLng?
     private var destination: LatLng?
     private var polyLineWidth = 10
-    private var pathAnimation:Boolean
-    private var polyLinePrimaryColor:Int = 0
+    private var pathAnimation: Boolean
+    private var polyLinePrimaryColor: Int = 0
     private var polyLineSecondaryColor = 0
     private var isEnd = false
     private var pathCompletionTime = 2500
     private var pathColorFillAnimationTime = 1800
-    private var polyLineDetails:HashMap<String,PolyLineDataBean> = HashMap()
+    private var polyLineDetails: HashMap<String, PolyLineDataBean> = HashMap()
     private var polyLineDataBean = PolyLineDataBean()
 
     private var primaryLineCompletionTime = 2000
@@ -47,13 +47,13 @@ class DirectionUtil private constructor(builder: Builder) {
         this.origin = builder.origin
         this.polyLineWidth = builder.polyLineWidth
         builder.polyLinePrimaryColor?.let {
-            this.polyLinePrimaryColor =it
-        }?:kotlin.run {
+            this.polyLinePrimaryColor = it
+        } ?: kotlin.run {
             this.polyLinePrimaryColor = Color.BLACK
         }
         builder.polyLineSecondaryColor?.let {
-            this.polyLineSecondaryColor =it
-        }?:kotlin.run {
+            this.polyLineSecondaryColor = it
+        } ?: kotlin.run {
             this.polyLineSecondaryColor = Color.LTGRAY
         }
         this.wayPoints = builder.wayPoints
@@ -70,7 +70,7 @@ class DirectionUtil private constructor(builder: Builder) {
         if (directionKey.isNullOrBlank()) {
             throw Exception("Direction directionKey is not valid")
         }
-        if (allPathPoints.isNotEmpty()){
+        if (allPathPoints.isNotEmpty()) {
             allPathPoints.clear()
         }
 
@@ -84,11 +84,11 @@ class DirectionUtil private constructor(builder: Builder) {
                             isEnd = true
                         }
                         val url = getUrl(wayPoints[i - 1], wayPoints[i])
-                        Log.d(TAG,url)
+                        Log.d(TAG, url)
                         val data = async(Dispatchers.IO + downloadDataFromUrlException) { downloadUrl(url) }
                         Log.d(TAG, data.await())
                         val parseData = async(Dispatchers.IO + parseDataFromUrlException) { doParsingWork(data.await()) }
-                        drawData(parseData.await(),i)
+                        drawData(parseData.await(), i)
                     }
                 }
 
@@ -149,7 +149,7 @@ class DirectionUtil private constructor(builder: Builder) {
 
         }
         // Drawing polyline in the Google Map for the i-th route
-        if (!pathAnimation){
+        if (!pathAnimation) {
             val polyLine = mMap?.addPolyline(lineOptions)
 //            polyLine?.tag = getTag()
         }
@@ -157,7 +157,7 @@ class DirectionUtil private constructor(builder: Builder) {
         if (isEnd) {
             directionCallBack?.pathFindFinish(polyLineDetails)
             isEnd = false
-            if (pathAnimation){
+            if (pathAnimation) {
                 mMap?.let {
                     val mapAnimator = MapAnimator()
                     mapAnimator.setColorFillCompletion(pathColorFillAnimationTime)
@@ -166,7 +166,7 @@ class DirectionUtil private constructor(builder: Builder) {
                     mapAnimator.setSecondaryLineColor(polyLineSecondaryColor)
                     mapAnimator.setCompletionTime(pathCompletionTime)
                     mapAnimator.setPrimaryLineCompletion(primaryLineCompletionTime)
-                    mapAnimator.animateRoute(it, allPathPoints,polyLineDataBean)
+                    mapAnimator.animateRoute(it, allPathPoints, polyLineDataBean)
                 }
             }
         }
@@ -210,7 +210,7 @@ class DirectionUtil private constructor(builder: Builder) {
 
         val sb = StringBuffer()
         val strings = br.readLines()
-        for( i in strings){
+        for (i in strings) {
             sb.append(i)
         }
         data = sb.toString()
@@ -268,9 +268,9 @@ class DirectionUtil private constructor(builder: Builder) {
             private set
         var polyLineWidth = 13
             private set
-        var polyLineSecondaryColor:Int? = null
+        var polyLineSecondaryColor: Int? = null
             private set
-        var polyLinePrimaryColor:Int? = null
+        var polyLinePrimaryColor: Int? = null
             private set
         var pathAnimation = false
             private set
@@ -328,7 +328,7 @@ class DirectionUtil private constructor(builder: Builder) {
             return this
         }
 
-        fun setPathAnimation(boolean:Boolean) = apply { this.pathAnimation = boolean }
+        fun setPathAnimation(boolean: Boolean) = apply { this.pathAnimation = boolean }
 
         fun setCompletionTime(@IntegerRes time: Int) = apply { this.pathCompletionTime = time }
 

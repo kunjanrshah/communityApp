@@ -68,7 +68,7 @@ public class GridAdapter extends ArrayAdapter {
             calendarEnd.set(Calendar.HOUR, 0);
             calendarEnd.set(Calendar.MINUTE, 0);
             calendarEnd.set(Calendar.SECOND, 0);
-            calendarEnd.set(Calendar.MILLISECOND,0);
+            calendarEnd.set(Calendar.MILLISECOND, 0);
         }
 
 
@@ -81,17 +81,16 @@ public class GridAdapter extends ArrayAdapter {
         view.findViewById(R.id.cellView).setBackgroundResource(R.color.slycalendar_defBackgroundColor);
 
 
-
         view.findViewById(R.id.cellView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar selectedDate = Calendar.getInstance();
                 selectedDate.setTime(monthlyDates.get(position));
-                selectedDate.set(Calendar.HOUR,0);
-                selectedDate.set(Calendar.MINUTE,0);
-                selectedDate.set(Calendar.SECOND,0);
-                selectedDate.set(Calendar.MILLISECOND,0);
-                if (listener!=null) listener.dateSelect(selectedDate.getTime());
+                selectedDate.set(Calendar.HOUR, 0);
+                selectedDate.set(Calendar.MINUTE, 0);
+                selectedDate.set(Calendar.SECOND, 0);
+                selectedDate.set(Calendar.MILLISECOND, 0);
+                if (listener != null) listener.dateSelect(selectedDate.getTime());
                 notifyDataSetChanged();
                 gridListener.gridChanged();
             }
@@ -102,11 +101,11 @@ public class GridAdapter extends ArrayAdapter {
             public boolean onLongClick(View v) {
                 Calendar selectedDate = Calendar.getInstance();
                 selectedDate.setTime(monthlyDates.get(position));
-                selectedDate.set(Calendar.HOUR,0);
-                selectedDate.set(Calendar.MINUTE,0);
-                selectedDate.set(Calendar.SECOND,0);
-                selectedDate.set(Calendar.MILLISECOND,0);
-                if (listener!=null) listener.dateLongSelect(monthlyDates.get(position));
+                selectedDate.set(Calendar.HOUR, 0);
+                selectedDate.set(Calendar.MINUTE, 0);
+                selectedDate.set(Calendar.SECOND, 0);
+                selectedDate.set(Calendar.MILLISECOND, 0);
+                if (listener != null) listener.dateLongSelect(monthlyDates.get(position));
                 notifyDataSetChanged();
                 gridListener.gridChanged();
                 return true;

@@ -35,7 +35,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
     private lateinit var member: Member
     private lateinit var loginMem: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val factory: ProfileDetailViewModelFactory by instance()
+    private val factory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     var numberOfLines = 5
 
     override val kodein by kodein()

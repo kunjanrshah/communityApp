@@ -26,7 +26,7 @@ public class ByDistanceModel {
 
     @SerializedName("start")
     @Expose
-    private String start;
+    private String start = "0";
 
     @SerializedName("length")
     @Expose

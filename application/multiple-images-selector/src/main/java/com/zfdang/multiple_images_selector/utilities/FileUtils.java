@@ -17,10 +17,11 @@ public class FileUtils {
     private static final String JPEG_FILE_PREFIX = "IMG";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
     private static final String TAG = "FileUtils";
+    private static final String EXTERNAL_STORAGE_PERMISSION = "android.permission.WRITE_EXTERNAL_STORAGE";
 
-    public static File createTmpFile(Context context) throws IOException{
+    public static File createTmpFile(Context context) throws IOException {
         File dir;
-        if(TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+        if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
             dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             if (!dir.exists()) {
                 dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/Camera");
@@ -28,14 +29,11 @@ public class FileUtils {
                     dir = getCacheDirectory(context, true);
                 }
             }
-        }else{
+        } else {
             dir = getCacheDirectory(context, true);
         }
         return File.createTempFile(JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX, dir);
     }
-
-
-    private static final String EXTERNAL_STORAGE_PERMISSION = "android.permission.WRITE_EXTERNAL_STORAGE";
 
     /**
      * Returns application cache directory. Cache directory will be created on SD card
@@ -90,7 +88,7 @@ public class FileUtils {
      * created on SD card <i>("/Android/data/[app_package_name]/cache/uil-images")</i> if card is mounted and app has
      * appropriate permission. Else - Android defines cache directory on device's file system.
      *
-     * @param context Application context
+     * @param context  Application context
      * @param cacheDir Cache directory path (e.g.: "AppCacheDir", "AppDir/cache/images")
      * @return Cache {@link File directory}
      */

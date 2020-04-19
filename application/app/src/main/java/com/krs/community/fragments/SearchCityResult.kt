@@ -74,7 +74,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var dialog: DialogPlus? = null
     }
 
-    private var selectedPosition = 0
+    //   private var selectedPosition = 0
     private lateinit var cityId: String
     private lateinit var cityName: String
     private val members = ArrayList<Member>()
@@ -92,9 +92,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
 
-    private val browseCityViewModelFactory: BrowseCityViewModelFactory by instance()
-    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+    private val browseCityViewModelFactory: BrowseCityViewModelFactory by instance<BrowseCityViewModelFactory>()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
 
     override val kodein by kodein()
     private lateinit var tvCount: TextView
@@ -104,6 +104,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private var setLocationDialog: DialogPlus? = null
     private var exportDialog: DialogPlus? = null
     private lateinit var ivExport: ImageView
+    private var snackbar: Snackbar? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
@@ -170,7 +172,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     viewHolder.tvMobile.text = member.mobile
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
-                if (member.gender.equals("Male")) {
+                if (member.gender == "Male") {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
                 } else {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
@@ -189,6 +191,14 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
+
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                 val arrayId = loginMember?.sharingId?.split(',')
@@ -236,7 +246,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                             val intent: Intent = Intent(activity, QRCodeActivity::class.java)
                             intent.putExtras(mBundle)
                             startActivity(intent)
-                            // Utility.fade(activity)
+                            //  Utility.fade(activity)
                         } else if (it == 4) {
                             shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
                         } else if (it == 5) {
@@ -352,6 +362,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     members.clear()
                     binding.shimmerViewContainer.startShimmerAnimation()
                     binding.shimmerViewContainer.visibility = View.VISIBLE
+                } else {
+                    snackbar = Snackbar.make(binding.lstFilter, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                    snackbar?.show()
                 }
                 browseCityViewModel.fetchRecordsByCity(data)
             }
@@ -374,7 +387,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
     @SuppressLint("SetTextI18n")
     override fun getSearchRecords(data: SearchByCityModel) {
-
+        snackbar?.dismiss()
         DashboardActivity.stop = false
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.GONE
@@ -400,10 +413,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 adapter.notifyDataSetChanged()
                 // binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
-                selectedPosition = members.size - 1
+                //   selectedPosition = members.size - 1
                 DashboardActivity.stop = false
 
-                if (data.totalHead <= AppController.mApplication.length) {
+                if (data.members.size < AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(binding.llParent, getString(R.string.EndCity) + " " + "$alpha" + " " + getString(R.string.RecordCity), Snackbar.LENGTH_LONG).show()
                 }
@@ -450,8 +463,11 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     override suspend fun getFailure(message: String) {
         try {
             DashboardActivity.stop = false
-            binding.shimmerViewContainer.stopShimmerAnimation()
-            binding.shimmerViewContainer.visibility = View.GONE
+            Coroutines.main {
+                Utility.hideSweetProgress()
+                binding.shimmerViewContainer.stopShimmerAnimation()
+                binding.shimmerViewContainer.visibility = View.GONE
+            }
 
             if (message.toLowerCase().contains("success")) {
                 Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, context?.getString(R.string.app_name), message)
@@ -635,6 +651,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+
 
         init {
             itemView.setOnLongClickListener(this)
@@ -836,8 +854,17 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         } else {
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), members.get(position))
-            startActivity(intent)
+            startActivityForResult(intent, 101)
+            // startActivity(intent)
             //  Utility.fade(activity)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 101 && resultCode == 102) {
+            setupList()
         }
     }
 

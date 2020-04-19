@@ -2,7 +2,6 @@ package ru.slybeaver.slycalendarview;
 
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,14 +87,6 @@ public class SlyCalendarDialog extends DialogFragment implements DialogCompleteL
         this.dismiss();
     }
 
-
-    public interface Callback {
-        void onCancelled();
-
-        void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes);
-    }
-
-
     public SlyCalendarDialog setBackgroundColor(Integer backgroundColor) {
         slyCalendarData.setBackgroundColor(backgroundColor);
         return this;
@@ -124,6 +115,12 @@ public class SlyCalendarDialog extends DialogFragment implements DialogCompleteL
     public SlyCalendarDialog setSelectedTextColor(Integer selectedTextColor) {
         slyCalendarData.setSelectedTextColor(selectedTextColor);
         return this;
+    }
+
+    public interface Callback {
+        void onCancelled();
+
+        void onDataSelected(Calendar firstDate, Calendar secondDate, int hours, int minutes);
     }
 
 

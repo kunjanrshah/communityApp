@@ -17,6 +17,7 @@ public class FolderListContent {
     public static FolderItem getSelectedFolder() {
         return selectedFolder;
     }
+
     public static void setSelectedFolder(FolderItem currentFolder, int index) {
         FolderListContent.selectedFolder = currentFolder;
         FolderListContent.selectedFolderIndex = index;

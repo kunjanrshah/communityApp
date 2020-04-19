@@ -79,9 +79,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
 
-    private val smartSearchViewModelFactory: SmartSearchViewModelFactory by instance()
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+    private val smartSearchViewModelFactory: SmartSearchViewModelFactory by instance<SmartSearchViewModelFactory>()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
 
     override val kodein by kodein()
     private val lstMembers = ArrayList<Member>()
@@ -101,6 +101,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private var actionMode: ActionMode? = null
     private lateinit var actionModeCallback: ActionModeCallback
     private var loginMember: Member? = null
+    private var snackbar: Snackbar? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_list, container, false)
@@ -257,7 +258,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                             val intent: Intent = Intent(activity, QRCodeActivity::class.java)
                             intent.putExtras(mBundle)
                             startActivity(intent)
-                            // Utility.fade(activity)
+                            //  Utility.fade(activity)
                         } else if (it == 4) {
                             shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
                         } else if (it == 5) {
@@ -408,7 +409,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private fun getMembersByKeyword() {
         if (isNetworkConnected(activity as AppCompatActivity)) {
             if (!DashboardActivity.stop) {
-                lstMembers.clear()
+                //  lstMembers.clear()
                 tvRecords.visibility = View.GONE
                 llLabel.visibility = View.GONE
                 if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
@@ -416,19 +417,25 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 } else {
                     ivExport.visibility = View.VISIBLE
                 }
-                rvAdapter.notifyDataSetChanged()
+//                rvAdapter.notifyDataSetChanged()
                 DashboardActivity.stop = true
                 val mJSONObject = JSONObject()
                 mJSONObject.put(getString(R.string.start), AppController.mApplication.start)
                 mJSONObject.put(getString(R.string.length), AppController.mApplication.length)
                 mJSONObject.put(getString(R.string.filter_by), searchWord)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                mShimmerViewContainer.startShimmerAnimation()
-                mShimmerViewContainer.visibility = View.VISIBLE
+                if (AppController.mApplication.start == 0) {
+                    mShimmerViewContainer.startShimmerAnimation()
+                    mShimmerViewContainer.visibility = View.VISIBLE
+                } else {
+                    snackbar = Snackbar.make(rvSearch, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                    snackbar?.show()
+                }
                 smartSearchViewModel.getMemberByKeywords(updated)
             }
         }
     }
+
 
     override fun loadApi() {
         AppController.mApplication.start = (lstMembers.size + 1)
@@ -444,30 +451,28 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     }
 
     override fun getMembers(response: searchByKeywordsResponse) {
-
+        snackbar?.dismiss()
         DashboardActivity.stop = false
         mShimmerViewContainer.stopShimmerAnimation()
         mShimmerViewContainer.visibility = View.GONE
         actionMode?.finish()
         selectedItems.clear()
         cancelDialog()
-        Utility.hideKeyboard(activity)
+        hideKeyboard(activity)
 
         if (response.success) {
-            lstMembers.clear()
+            //lstMembers.clear()
             rvSearch.visibility = View.VISIBLE
-            AppController.mApplication.start = 0
+            // AppController.mApplication.start = 0
             for (item in response.member) {
                 lstMembers.add(item)
             }
-            rvAdapter.notifyDataSetChanged()
+            //  rvAdapter.notifyDataSetChanged()
+            selectedPosition = AppController.mApplication.start
             rvSearch.layoutManager?.scrollToPosition(selectedPosition)
-            selectedPosition = lstMembers.size - 1
-            if (Integer.parseInt(response.totalRecords) <= AppController.mApplication.length) {
-                DashboardActivity.stop = true
-                if (Integer.parseInt(response.totalRecords) == 0) {
-                    //  Snackbar.make(frameRoot, getString(R.string.NoRecordList), Snackbar.LENGTH_LONG).show()
 
+            if (Integer.parseInt(response.totalRecords) == 0) {
+                DashboardActivity.stop = true
                     val gif: Int = R.drawable.gif_dialog
                     TTFancyGifDialog.Builder(activity)
                             .setMessage(getString(R.string.noFoundNonActives))
@@ -480,11 +485,11 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                             }
                             .build()
                     true
-                } else {
+            } else if (response.member.size < AppController.mApplication.length) {
                     Snackbar.make(frameRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
-                }
-
+                DashboardActivity.stop = true
             }
+
             if (lstMembers.size > 0) {
                 tvRecords.text = getString(R.string.RecordList) + " " + response.totalRecords
                 tvRecords.visibility = View.VISIBLE
@@ -532,9 +537,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
     override suspend fun getFailure(message: String) {
         Log.d(TAG, "getFailure: $message")
-
+        DashboardActivity.stop = false
+        snackbar?.dismiss()
         if (message.toLowerCase().contains("successfully")) {
-            DashboardActivity.stop = false
             getMembersByKeyword()
         } else {
             activity?.runOnUiThread {
@@ -546,7 +551,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 llLabel.visibility = View.VISIBLE
                 ivExport.visibility = View.GONE
                 //  rvSearch.visibility = View.GONE
-                DashboardActivity.stop = true
+                //DashboardActivity.stop = true
                 mShimmerViewContainer.stopShimmerAnimation()
                 mShimmerViewContainer.visibility = View.GONE
             }
@@ -608,8 +613,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         } else {
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstMembers.get(position))
-            startActivity(intent)
-            //   Utility.fade(activity)
+            DashboardActivity.stop = false
+            startActivityForResult(intent, 101)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101 && resultCode == 102) {
+            getMembersByKeyword()
         }
     }
 

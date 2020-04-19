@@ -49,7 +49,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     lateinit var binding: FragmentMainDetailsBinding
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     var numberOfLines = 5
     override val kodein by kodein()
 
@@ -80,8 +80,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             binding.edtMobile.isFocusable = true
             binding.edtPassword.isFocusable = true
             binding.edtCpassword.isFocusable = true
-            binding.edtCode.setText(member.memberCode)
-
+            setMemberCode(member.memberCode)
+            binding.tvId.text = "/ ${member.id}"
             binding.spState.isEnabled = true
             binding.spCity.isEnabled = true
             binding.spRelation.isEnabled = !(member.headId == "0" && !member.id.isNullOrEmpty())
@@ -128,10 +128,10 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
             if (member.memberCode.isNullOrEmpty()) {
                 binding.llMcode.visibility = View.GONE
-
             } else {
                 binding.llMcode.visibility = View.VISIBLE
-                binding.edtCode.setText(member.memberCode)
+                setMemberCode(member.memberCode)
+                binding.tvId.text = "/ ${member.id}"
             }
         }
 
@@ -272,6 +272,22 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         return binding.root
     }
 
+    private fun setMemberCode(code: String) {
+        if (code.isEmpty()) {
+            binding.edtCode.setText("00000")
+        } else if (code.length == 1) {
+            binding.edtCode.setText("0000${code}")
+        } else if (code.length == 2) {
+            binding.edtCode.setText("000${code}")
+        } else if (code.length == 3) {
+            binding.edtCode.setText("00${code}")
+        } else if (code.length == 4) {
+            binding.edtCode.setText("0${code}")
+        } else {
+            binding.edtCode.setText(code)
+        }
+    }
+
     private fun setHomeLocation() {
         if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
             ProfileDetailActivity.cur_lat.observeForever {
@@ -312,7 +328,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     fun getSaveData(jsonObject: JSONObject) {
 
         try {
-            jsonObject.put(getString(R.string.member_code), binding.edtCode.text.trim())
+            jsonObject.put(getString(R.string.member_code), binding.edtCode.text?.trim())
             jsonObject.put(getString(R.string.first_name), binding.fname.text.trim())
             jsonObject.put(getString(R.string.father_name), binding.edtFather.text.trim())
             jsonObject.put(getString(R.string.mother_name), binding.edtMother.text.trim())

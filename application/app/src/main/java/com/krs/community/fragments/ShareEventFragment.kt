@@ -48,7 +48,7 @@ import kotlin.collections.ArrayList
 class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     override val kodein by kodein()
     private lateinit var shareEventViewModel: ShareEventViewModel
-    private val shareEventFactory: ShareEventViewModelFactory by instance()
+    private val shareEventFactory: ShareEventViewModelFactory by instance<ShareEventViewModelFactory>()
 
     // class variables
     private val REQUEST_CODE = 123

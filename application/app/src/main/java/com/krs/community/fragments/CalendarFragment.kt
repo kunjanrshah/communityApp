@@ -80,10 +80,10 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private lateinit var calendarSearchViewModel: CalendarSearchViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
-
-    private val calendarSearchViewModelFactory: CalendarSearchViewModelFactory by instance()
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+    private var snackbar: Snackbar? = null
+    private val calendarSearchViewModelFactory: CalendarSearchViewModelFactory by instance<CalendarSearchViewModelFactory>()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
     private var selectedPosition = 0
     private var selectedReminder = ""
     private lateinit var recyclerView: RecyclerView
@@ -175,14 +175,14 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             calendarSearchViewModel.getCalendarSearch(updated)
 
-            lstCalendar.clear()
-            adapter.notifyDataSetChanged()
-
             if (AppController.mApplication.start == 0) {
                 shimmerFrameLayout.startShimmerAnimation()
                 shimmerFrameLayout.visibility = View.VISIBLE
+                tvCount.visibility = View.GONE
+            } else {
+                // snackbar= Snackbar.make(recyclerView, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                // snackbar?.show()
             }
-
             Utility.hideKeyboard(activity)
         }
     }
@@ -190,20 +190,25 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     override fun getMembers(response: SmartFilterResponse) {
         shimmerFrameLayout.stopShimmerAnimation()
         shimmerFrameLayout.visibility = View.GONE
+        //  snackbar?.dismiss()
         if (response.success) {
             if (response.members.size > 0) {
-                lstCalendar.clear()
+                tvCount.visibility = View.VISIBLE
+                tvCount.text = "Members ${response.totalRecords} found"
+                // lstCalendar.clear()
+
                 lstCalendar.addAll(response.members)
                 adapter.data = lstCalendar
                 recyclerView.adapter = adapter
+                recyclerView.layoutManager?.scrollToPosition(AppController.mApplication.start)
                 DashboardActivity.stop = false
-
-                if (lstCalendar.size <= AppController.mApplication.length) {
+                ivNoFound.visibility = View.GONE
+                if (response.members.size < AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
                 }
-                ivNoFound.visibility = View.GONE
             } else {
+                tvCount.visibility = View.GONE
                 DashboardActivity.stop = true
                 Snackbar.make(llRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
             }
@@ -237,6 +242,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
     override suspend fun getFailure(message: String) {
         Coroutines.main {
+            snackbar?.dismiss()
             Utility.hideSweetProgress()
             DashboardActivity.stop = false
             shimmerFrameLayout.stopShimmerAnimation()
@@ -267,6 +273,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             }
             txtDate.text = str
             DashboardActivity.stop = false
+            lstCalendar.clear()
+            adapter.notifyDataSetChanged()
             searchCalendarList(filter)
         }
     }
@@ -289,12 +297,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         adapter = object : ParallaxRecyclerAdapter<Member>(lstCalendar) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, i: Int) {
 
-                if (lstCalendar.size > 0) {
-                    tvCount.visibility = View.VISIBLE
-                    tvCount.text = "Members ${lstCalendar.size} found"
-                } else {
-                    tvCount.visibility = View.GONE
-                }
+
                 val member = lstCalendar[i]
                 (viewHolder as CalendarViewHolder).tvName.text = member.firstName
 
@@ -374,7 +377,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                             val intent: Intent = Intent(activity, QRCodeActivity::class.java)
                             intent.putExtras(mBundle)
                             startActivity(intent)
-                            //  Utility.fade(activity)
+                            //    Utility.fade(activity)
                         } else if (it == 4) {
                             shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
                         } else if (it == 5) {
@@ -470,7 +473,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 return lstCalendar.size
             }
         }
-
+        adapter.setContext(this)
         adapter.setOnClickEvent { v, position ->
             val intent = Intent(activity, ProfileDetailActivity::class.java)
             intent.putExtra(getString(R.string.member), lstCalendar[position])
@@ -802,6 +805,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         filter = ""
                         filterAdapter?.notifyDataSetChanged()
                         DashboardActivity.stop = false
+                        lstCalendar.clear()
+                        adapter.notifyDataSetChanged()
                         searchCalendarList(filter)
                     }
                     lblDeath -> {
@@ -813,6 +818,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         filter = "2"
                         filterAdapter?.notifyDataSetChanged()
                         DashboardActivity.stop = false
+                        lstCalendar.clear()
+                        adapter.notifyDataSetChanged()
                         searchCalendarList(filter)
                     }
                     lblBirthday -> {
@@ -823,6 +830,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         AppController.mApplication.start = 0
                         filter = "0"
                         filterAdapter?.notifyDataSetChanged()
+                        lstCalendar.clear()
+                        adapter.notifyDataSetChanged()
                         DashboardActivity.stop = false
                         searchCalendarList(filter)
                     }
@@ -835,6 +844,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         filter = "1"
                         filterAdapter?.notifyDataSetChanged()
                         DashboardActivity.stop = false
+                        lstCalendar.clear()
+                        adapter.notifyDataSetChanged()
                         searchCalendarList(filter)
                     }
                 }

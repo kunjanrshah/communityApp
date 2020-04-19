@@ -73,14 +73,13 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     private lateinit var ivNotFound: ImageView
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var smartFilterViewModel: SmartFilterViewModel
-
-    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
-    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+    private var snackbar: Snackbar? = null
+    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragment_nonactives, container, false)
-
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, NonActivesFragment::class.simpleName)
         mApp.facebookAnalytics(context, NonActivesFragment::class.simpleName)
@@ -232,6 +231,9 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     shimmerFrameLayout.stopShimmerAnimation()
                     shimmerFrameLayout.visibility = View.GONE
                 }, 10000)
+            } else {
+                snackbar = Snackbar.make(rvSearch, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                snackbar?.show()
             }
             Utility.hideKeyboard(activity)
         }
@@ -242,6 +244,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         shimmerFrameLayout.visibility = View.GONE
         actionMode?.finish()
         selectedItems.clear()
+        snackbar?.dismiss()
+        DashboardActivity.stop = false
         if (response.success) {
             if (response.members.size > 0) {
                 tvCount.visibility = View.VISIBLE
@@ -251,10 +255,9 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 lstMembers.addAll(response.members)
                 adapter.notifyDataSetChanged()
 
-                // rvSearch.layoutManager?.scrollToPosition(selectedPosition)
-                //selectedPosition = lstMembers.size - 1
-                DashboardActivity.stop = false
-                if (response.totalRecords <= AppController.mApplication.length) {
+                selectedPosition = AppController.mApplication.start
+                rvSearch.layoutManager?.scrollToPosition(selectedPosition)
+                if (response.members.size < AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(llRoot, getString(R.string.endNonActives), Snackbar.LENGTH_LONG).show()
                 }
@@ -265,8 +268,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             }
         } else {
             tvCount.visibility = View.GONE
-            DashboardActivity.stop = true
-
         }
         if (lstMembers.isEmpty()) {
             ivNotFound.visibility = View.VISIBLE
@@ -276,6 +277,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     }
 
     override fun refreshList() {
+        snackbar?.dismiss()
         adapter.notifyDataSetChanged()
     }
 
@@ -315,6 +317,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
     override suspend fun getFailure(message: String) {
         Coroutines.main {
+            snackbar?.dismiss()
             if (message.contains("success")) {
                 Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Approved), "${selectedItems.size()} Profiles approved")
                 deleteMessages()

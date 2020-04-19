@@ -20,9 +20,9 @@ import kotlinx.android.synthetic.main.view_item.view.*
 
 
 class MultiSearchContainerView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     var searchTextStyle = 0
@@ -44,20 +44,20 @@ class MultiSearchContainerView @JvmOverloads constructor(
     private var multiSearchViewListener: MultiSearchView.MultiSearchViewListener? = null
 
     private val searchEnterScrollAnimation = ValueAnimator.ofInt()
-        .apply {
-            duration = DEFAULT_ANIM_DURATION
-            interpolator = LinearOutSlowInInterpolator()
-            addUpdateListener {
-                binding.horizontalScrollView.smoothScrollTo(it.animatedValue as Int, 0)
-            }
+            .apply {
+                duration = DEFAULT_ANIM_DURATION
+                interpolator = LinearOutSlowInInterpolator()
+                addUpdateListener {
+                    binding.horizontalScrollView.smoothScrollTo(it.animatedValue as Int, 0)
+                }
 
-            endListener {
-                selectedTab?.let {
-                    it.root.editTextSearch.requestFocus()
-                    KeyboardHelper.showKeyboard(context)
+                endListener {
+                    selectedTab?.let {
+                        it.root.editTextSearch.requestFocus()
+                        KeyboardHelper.showKeyboard(context)
+                    }
                 }
             }
-        }
 
     private val searchCompleteCollapseAnimator = ValueAnimator.ofInt().apply {
         duration = DEFAULT_ANIM_DURATION
@@ -95,10 +95,10 @@ class MultiSearchContainerView @JvmOverloads constructor(
 
     init {
         binding.layoutItemContainer.layoutTransition = LayoutTransition()
-            .apply {
-                disableTransitionType(LayoutTransition.APPEARING)
-                disableTransitionType(LayoutTransition.CHANGE_APPEARING)
-            }
+                .apply {
+                    disableTransitionType(LayoutTransition.APPEARING)
+                    disableTransitionType(LayoutTransition.CHANGE_APPEARING)
+                }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -173,8 +173,8 @@ class MultiSearchContainerView @JvmOverloads constructor(
             searchCompleteCollapseAnimator.setIntValues(startWidthValue, endWidthValue)
             searchCompleteCollapseAnimator.start()
             multiSearchViewListener?.onSearchComplete(
-                binding.layoutItemContainer.childCount - 1,
-                it.root.editTextSearch.text
+                    binding.layoutItemContainer.childCount - 1,
+                    it.root.editTextSearch.text
             )
         }
 
@@ -193,8 +193,8 @@ class MultiSearchContainerView @JvmOverloads constructor(
         viewItem.root.setOnClickListener {
             if (viewItem != selectedTab) {
                 multiSearchViewListener?.onItemSelected(
-                    binding.layoutItemContainer.indexOfChild(viewItem.root),
-                    viewItem.editTextSearch.text
+                        binding.layoutItemContainer.indexOfChild(viewItem.root),
+                        viewItem.editTextSearch.text
                 )
                 changeSelectedTab(viewItem)
             }
@@ -203,8 +203,8 @@ class MultiSearchContainerView @JvmOverloads constructor(
         viewItem.root.editTextSearch.setOnClickListener {
             if (viewItem != selectedTab) {
                 multiSearchViewListener?.onItemSelected(
-                    binding.layoutItemContainer.indexOfChild(viewItem.root),
-                    viewItem.editTextSearch.text
+                        binding.layoutItemContainer.indexOfChild(viewItem.root),
+                        viewItem.editTextSearch.text
                 )
                 changeSelectedTab(viewItem)
             }

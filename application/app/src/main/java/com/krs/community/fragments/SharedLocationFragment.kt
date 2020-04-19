@@ -33,6 +33,7 @@ import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.bkservice.ProcessMainClass
 import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.FragmnetSharedLocationBinding
@@ -74,9 +75,9 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
     private lateinit var filterViewModel: SmartFilterViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
 
-    private val filterViewModelFactory: SmartFilterViewModelFactory by instance()
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
-    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
+    private val filterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
 
     private lateinit var binding: FragmnetSharedLocationBinding
     private var setLocationDialog: DialogPlus? = null
@@ -112,6 +113,20 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
+
+                var count = member.membersCount
+                if (count != 0) {
+                    count += 1
+                }
+                holder.badge.setNumber(count)
+
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
 
                 if (member.gender.equals("Male")) {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
@@ -503,6 +518,8 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
         var cardViewList: LinearLayout = v.findViewById(R.id.card_view_list)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
 
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)

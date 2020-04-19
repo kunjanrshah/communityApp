@@ -81,7 +81,7 @@ fun EditText.onSearchAction(filter: Boolean = true, onSearchClicked: () -> Unit)
  */
 fun EditText.setStyle(context: Context, @StyleRes resId: Int) {
 
-    if (resId == 0){
+    if (resId == 0) {
         return
     }
 
@@ -219,17 +219,17 @@ private fun EditText.applyStyle(editTextAttributes: EditTextAttributes) {
         }
         if (editTextAttributes.padding != -1) {
             setPaddingRelative(
-                editTextAttributes.padding,
-                editTextAttributes.padding,
-                editTextAttributes.padding,
-                editTextAttributes.padding
+                    editTextAttributes.padding,
+                    editTextAttributes.padding,
+                    editTextAttributes.padding,
+                    editTextAttributes.padding
             )
         } else {
             setPaddingRelative(
-                editTextAttributes.paddingLeft,
-                editTextAttributes.paddingTop,
-                editTextAttributes.paddingRight,
-                editTextAttributes.paddingBottom
+                    editTextAttributes.paddingLeft,
+                    editTextAttributes.paddingTop,
+                    editTextAttributes.paddingRight,
+                    editTextAttributes.paddingBottom
             )
         }
         if (editTextAttributes.textColorHint != null) {
@@ -305,28 +305,28 @@ private class EditTextAttributes {
         const val attrFontFamily = android.R.attr.fontFamily
 
         fun getAttributesList(): IntArray = intArrayOf(
-            attrLayoutWidth,
-            attrLayoutHeight,
-            attrFocusable,
-            attrFocusableInTouchMode,
-            attrEnabled,
-            attrPadding,
-            attrHint,
-            attrPaddingTop,
-            attrPaddingBottom,
-            attrPaddingRight,
-            attrPaddingLeft,
-            attrImeOptions,
-            attrMaxLength,
-            attrTextSize,
-            attrTextStyle,
-            attrFontFamily,
-            attrInputType,
-            attrTextColorHint,
-            attrTextColorHighlight,
-            attrTextColor,
-            attrTextColorLink,
-            attrAllCaps
+                attrLayoutWidth,
+                attrLayoutHeight,
+                attrFocusable,
+                attrFocusableInTouchMode,
+                attrEnabled,
+                attrPadding,
+                attrHint,
+                attrPaddingTop,
+                attrPaddingBottom,
+                attrPaddingRight,
+                attrPaddingLeft,
+                attrImeOptions,
+                attrMaxLength,
+                attrTextSize,
+                attrTextStyle,
+                attrFontFamily,
+                attrInputType,
+                attrTextColorHint,
+                attrTextColorHighlight,
+                attrTextColor,
+                attrTextColorLink,
+                attrAllCaps
         ).apply { sort() }
     }
 }

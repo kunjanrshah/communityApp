@@ -6,8 +6,8 @@ import android.widget.RelativeLayout
 import com.iammert.library.ui.multisearchviewlib.databinding.ViewMultiSearchBinding
 import com.iammert.library.ui.multisearchviewlib.extensions.inflate
 
- class MultiSearchView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    RelativeLayout(context, attrs, defStyleAttr) {
+class MultiSearchView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+        RelativeLayout(context, attrs, defStyleAttr) {
 
     interface MultiSearchViewListener {
 

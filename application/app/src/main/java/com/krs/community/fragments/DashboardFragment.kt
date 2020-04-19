@@ -72,7 +72,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     private var defaultProfiles = ArrayList<Member>()
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var filterViewModel: SmartFilterViewModel
-    private val filterViewModelFactory: SmartFilterViewModelFactory by instance()
+    private val filterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
     private var isTouch = false
     private lateinit var layoutManager: LinearLayoutManager
     private var sharedAdapter: SharedProfileAdapter? = null
@@ -327,7 +327,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         val intent1 = Intent(activity, QRCodeActivity::class.java)
                         intent1.putExtras(mBundle)
                         startActivity(intent1)
-                        //  Utility.fade(activity)
+                        //   Utility.fade(activity)
                     }
                     2 -> Utility.movetoFragment(activity, SearchByDistanceFragment())
                     3 -> Utility.movetoFragment(activity, MatrimonyFragment())
@@ -372,7 +372,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
                             bundle.putBoolean(getString(R.string.is_logged_in), false)
-
                             intent.putExtras(bundle)
                             startActivity(intent)
                             //    Utility.fade(activity)

@@ -19,16 +19,14 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
     private static final int DIVIDER_HEIGHT = 6;
     private static final int DIVIDER_WIDTH = 6;
-
-    private int mOrientation;
-
     public final int[] ATTRS = {android.R.attr.listDivider};
+    private int mOrientation;
     private Drawable mDivider;
     private int mHeight;
     private int mWidth;
 
     public DividerItemDecoration(Context context, int orientation, int dividerDrawableRes) {
-        if(dividerDrawableRes == 0){
+        if (dividerDrawableRes == 0) {
             final TypedArray a = context.obtainStyledAttributes(ATTRS);
             mDivider = a.getDrawable(0);
             a.recycle();

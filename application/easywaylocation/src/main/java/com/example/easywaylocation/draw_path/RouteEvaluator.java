@@ -10,6 +10,6 @@ public class RouteEvaluator implements TypeEvaluator<LatLng> {
     public LatLng evaluate(float t, LatLng startPoint, LatLng endPoint) {
         double lat = startPoint.latitude + t * (endPoint.latitude - startPoint.latitude);
         double lng = startPoint.longitude + t * (endPoint.longitude - startPoint.longitude);
-        return new LatLng(lat,lng);
+        return new LatLng(lat, lng);
     }
 }

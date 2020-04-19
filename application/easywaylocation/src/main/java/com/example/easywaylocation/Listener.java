@@ -12,6 +12,7 @@ import android.location.Location;
 
 public interface Listener {
     String TAG = "Location_Sample_Logs";
+
     void locationOn();
 
     void currentLocation(Location location);

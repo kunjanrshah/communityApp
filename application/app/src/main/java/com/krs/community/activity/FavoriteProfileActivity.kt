@@ -50,8 +50,8 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var mBinding: ActivityFavoriteBinding
-    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     private var mAdapter: FavoriteAdapter? = null
     private var locationDialog: DialogPlus? = null
     private var exportDialog: DialogPlus? = null
@@ -299,7 +299,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                 val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
                 builder?.listener {
                     if (it == 0) {
-                        val profileDetailFactory: ProfileDetailViewModelFactory by instance()
+                        val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
                         val profileDetailViewModel = ViewModelProvider(this@FavoriteProfileActivity, profileDetailFactory).get(ProfileDetailViewModel::class.java)
                         createMemberPDF(this@FavoriteProfileActivity, getMemberFromRoomMember(member), profileDetailViewModel)
 
@@ -320,7 +320,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                     } else if (it == 2) {
                         if (!member.mobile.isNullOrEmpty()) {
                             val toNumber = getString(R.string.number) + member.mobile
-                            val text = getString(R.string.InstallApp) + "\n" + "https://play.google.com/store/apps/details?id=com.krs.community"
+                            val text = getString(R.string.InstallApp) + "\n" + "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"
                             Utility.sendWhatsAppMessage(this@FavoriteProfileActivity, toNumber, text)
                         }
 

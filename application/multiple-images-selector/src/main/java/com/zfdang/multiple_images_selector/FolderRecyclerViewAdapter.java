@@ -42,7 +42,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         holder.folderPath.setText(folderItem.path);
         holder.folderSize.setText(folderItem.getNumOfImages());
 
-        if(position == FolderListContent.selectedFolderIndex) {
+        if (position == FolderListContent.selectedFolderIndex) {
             holder.folderIndicator.setVisibility(View.VISIBLE);
         } else {
             holder.folderIndicator.setVisibility(View.GONE);

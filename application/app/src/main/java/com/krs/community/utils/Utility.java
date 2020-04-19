@@ -156,10 +156,10 @@ public class Utility {
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static boolean checkReadCallLogPermission(Context mContext) {
+   /* public static boolean checkReadCallLogPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALL_LOG);
         return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
+    }*/
 
     public static boolean checkReadPhoneStatePermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
@@ -191,11 +191,10 @@ public class Utility {
     }
 
     public static void requestPermissions(AppCompatActivity mActivity) {
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
-                /*|| ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED*/
-                || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
+        if (/*ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED*/
+                ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
         }
     }
 
@@ -446,13 +445,13 @@ public class Utility {
         return String.format("%.02f", dist)+" KM";
     }*/
 
-    public static void fade(Context context) {
+   /* public static void fade(Context context) {
         ((Activity) context).overridePendingTransition(R.anim.fade_enter, R.anim.fade_exit);
     }
 
     public static void fade1(Context context) {
         ((Activity) context).overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
-    }
+    }*/
 
     public static Bitmap fastblur(Bitmap sentBitmap, float scale, int radius) {
 
@@ -721,7 +720,7 @@ public class Utility {
                     FragmentDrawer.mDrawerLayout.closeDrawers();
                 } else {
                     Exit(activity);
-                    //   fade(activity);
+                    //    fade(activity);
                 }
                 return;
             } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible()) || expandableFragment != null && expandableFragment.isVisible()) {
@@ -781,7 +780,7 @@ public class Utility {
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commit();
-        //   fade(activity);
+        //  fade(activity);
     }
 
     public static int getRandomMaterialColor(Context context, String typeColor) {
@@ -1746,7 +1745,7 @@ public class Utility {
         intent.setType("image/*");
 
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Family Tree");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.krs.community \nUpdate your Profile and complete your Family Tree");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.krs.medk \nUpdate your Profile and complete your Family Tree");
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         try {
             context.startActivity(Intent.createChooser(intent, "Share Family Tree"));

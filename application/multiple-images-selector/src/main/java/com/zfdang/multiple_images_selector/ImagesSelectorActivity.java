@@ -48,33 +48,33 @@ import io.reactivex.schedulers.Schedulers;
 import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class ImagesSelectorActivity extends Activity
-        implements OnImageRecyclerViewInteractionListener, OnFolderRecyclerViewInteractionListener, View.OnClickListener{
+        implements OnImageRecyclerViewInteractionListener, OnFolderRecyclerViewInteractionListener, View.OnClickListener {
 
     private static final String TAG = "ImageSelector";
     private static final String ARG_COLUMN_COUNT = "column-count";
 
     private static final int MY_PERMISSIONS_REQUEST_STORAGE_CODE = 197;
     private static final int MY_PERMISSIONS_REQUEST_CAMERA_CODE = 341;
-
+    private static final int CAMERA_REQUEST_CODE = 694;
+    private final String[] projections = {
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATE_ADDED,
+            MediaStore.Images.Media.MIME_TYPE,
+            MediaStore.Images.Media.SIZE,
+            MediaStore.Images.Media._ID};
     private int mColumnCount = 3;
-
     // custom action bars
     private ImageView mButtonBack;
     private Button mButtonConfirm;
-
     private RecyclerView recyclerView;
-
     // folder selecting related
     private View mPopupAnchorView;
     private TextView mFolderSelectButton;
     private FolderPopupWindow mFolderPopupWindow;
-
     private String currentFolderPath;
     private ContentResolver contentResolver;
-
     private File mTempImageFile;
-    private static final int CAMERA_REQUEST_CODE = 694;
-
 
     @Override
     protected void onResume() {
@@ -109,7 +109,7 @@ public class ImagesSelectorActivity extends Activity
 
         ArrayList<String> selected = intent.getStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST);
         ImageListContent.SELECTED_IMAGES.clear();
-        if(selected != null && selected.size() > 0) {
+        if (selected != null && selected.size() > 0) {
             ImageListContent.SELECTED_IMAGES.addAll(selected);
         }
 
@@ -178,12 +178,11 @@ public class ImagesSelectorActivity extends Activity
 
     public void requestReadStorageRuntimePermission() {
         if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ImagesSelectorActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSIONS_REQUEST_STORAGE_CODE);
+            ActivityCompat.requestPermissions(ImagesSelectorActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_STORAGE_CODE);
         } else {
             LoadFolderAndImages();
         }
     }
-
 
     public void requestCameraRuntimePermissions() {
         if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
@@ -230,14 +229,6 @@ public class ImagesSelectorActivity extends Activity
         }
     }
 
-    private final String[] projections = {
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.DATE_ADDED,
-            MediaStore.Images.Media.MIME_TYPE,
-            MediaStore.Images.Media.SIZE,
-            MediaStore.Images.Media._ID};
-
     // this method is to load images and folders for all
     public void LoadFolderAndImages() {
         Log.d(TAG, "Load Folder And Images...");
@@ -269,7 +260,7 @@ public class ImagesSelectorActivity extends Activity
                                 ImageItem item = new ImageItem(name, path, dateTime);
 
                                 // if FolderListContent is still empty, add "All Images" option
-                                if(FolderListContent.FOLDERS.size() == 0) {
+                                if (FolderListContent.FOLDERS.size() == 0) {
                                     // add folder for all image
                                     FolderListContent.selectedFolderIndex = 0;
 
@@ -278,7 +269,7 @@ public class ImagesSelectorActivity extends Activity
                                     FolderListContent.addItem(allImagesFolderItem);
 
                                     // show camera icon ?
-                                    if(SelectorSettings.isShowCamera) {
+                                    if (SelectorSettings.isShowCamera) {
                                         results.add(ImageListContent.cameraItem);
                                         allImagesFolderItem.addImageItem(ImageListContent.cameraItem);
                                     }
@@ -317,7 +308,7 @@ public class ImagesSelectorActivity extends Activity
                     public void onNext(ImageItem imageItem) {
                         // Log.d(TAG, "onNext: " + imageItem.toString());
                         ImageListContent.addItem(imageItem);
-                        recyclerView.getAdapter().notifyItemChanged(ImageListContent.IMAGES.size()-1);
+                        recyclerView.getAdapter().notifyItemChanged(ImageListContent.IMAGES.size() - 1);
                     }
 
                     @Override
@@ -333,7 +324,7 @@ public class ImagesSelectorActivity extends Activity
     }
 
     public void updateDoneButton() {
-        if(ImageListContent.SELECTED_IMAGES.size() == 0) {
+        if (ImageListContent.SELECTED_IMAGES.size() == 0) {
             mButtonConfirm.setEnabled(false);
         } else {
             mButtonConfirm.setEnabled(true);
@@ -347,7 +338,7 @@ public class ImagesSelectorActivity extends Activity
         mFolderPopupWindow.dismiss();
 
         FolderItem folder = FolderListContent.getSelectedFolder();
-        if( !TextUtils.equals(folder.path, this.currentFolderPath) ) {
+        if (!TextUtils.equals(folder.path, this.currentFolderPath)) {
             this.currentFolderPath = folder.path;
             mFolderSelectButton.setText(folder.name);
 
@@ -368,13 +359,13 @@ public class ImagesSelectorActivity extends Activity
 
     @Override
     public void onImageItemInteraction(ImageItem item) {
-        if(ImageListContent.bReachMaxNumber) {
+        if (ImageListContent.bReachMaxNumber) {
             String hint = getResources().getString(R.string.selector_reach_max_image_hint, SelectorSettings.mMaxImageNumber);
             Toast.makeText(ImagesSelectorActivity.this, hint, Toast.LENGTH_SHORT).show();
             ImageListContent.bReachMaxNumber = false;
         }
 
-        if(item.isCamera()) {
+        if (item.isCamera()) {
             requestCameraRuntimePermissions();
         }
 
@@ -435,10 +426,10 @@ public class ImagesSelectorActivity extends Activity
 
     @Override
     public void onClick(View v) {
-        if( v == mButtonBack) {
+        if (v == mButtonBack) {
             setResult(Activity.RESULT_CANCELED);
             finish();
-        } else if(v == mButtonConfirm) {
+        } else if (v == mButtonConfirm) {
             Intent data = new Intent();
             data.putStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS, ImageListContent.SELECTED_IMAGES);
             setResult(Activity.RESULT_OK, data);

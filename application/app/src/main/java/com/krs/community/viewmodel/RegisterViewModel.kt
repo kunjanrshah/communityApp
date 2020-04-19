@@ -195,7 +195,7 @@ class RegisterViewModel(
         mIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(mIntent)
         activity.finish()
-        //  Utility.fade(activity)
+        //Utility.fade(activity)
     }
 
     fun onHowRegisterClicked(activity: Activity) {

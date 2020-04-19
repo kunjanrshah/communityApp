@@ -177,7 +177,7 @@ public class SlyCalendarView extends FrameLayout implements DateSelectListener {
             @Override
             public void onClick(View v) {
                 ViewPager vpager = findViewById(R.id.content);
-                vpager.setCurrentItem(vpager.getCurrentItem()-1);
+                vpager.setCurrentItem(vpager.getCurrentItem() - 1);
             }
         });
 
@@ -185,7 +185,7 @@ public class SlyCalendarView extends FrameLayout implements DateSelectListener {
             @Override
             public void onClick(View v) {
                 ViewPager vpager = findViewById(R.id.content);
-                vpager.setCurrentItem(vpager.getCurrentItem()+1);
+                vpager.setCurrentItem(vpager.getCurrentItem() + 1);
             }
         });
 

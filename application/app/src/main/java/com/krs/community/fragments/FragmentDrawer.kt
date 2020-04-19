@@ -47,7 +47,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
     private var drawerListener: FragmentDrawerListener? = null
     private var view1: View? = null
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
-    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance()
+    private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance<FamilyDetailViewModelFactory>()
     override val kodein by kodein()
 
     fun setDrawerListener(listener: FragmentDrawerListener?) {
@@ -120,7 +120,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
                     .build()
         }
         val tvVersion = layout.findViewById<TextView>(R.id.tv_version)
-        tvVersion.text = resources.getString(R.string.Version) + " " + Utility.getAppVersion(AppController.mApplication)
+        tvVersion.text = resources.getString(R.string.Version) + " " + Utility.getAppVersion(AppController.mApplication) + ".0"
         tvSettings.setOnClickListener { v: View? ->
             mDrawerLayout!!.closeDrawers()
             Utility.movetoFragment(activity, SettingFragment())

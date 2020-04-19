@@ -39,7 +39,7 @@ import org.kodein.di.generic.instance
 class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
 
     override val kodein by kodein()
-    private val factory: PasswordViewModelFactory by instance()
+    private val factory: PasswordViewModelFactory by instance<PasswordViewModelFactory>()
     private var passwordViewModel: PasswordViewModel? = null
     private var llScroll: ScrollView? = null
 
@@ -100,8 +100,8 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
 
         val imgLinkedin = findViewById<ImageView>(R.id.img_linkedin)
         imgLinkedin.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.linkedin_url)))
-            startActivity(browserIntent)
+            /* val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.linkedin_url)))
+             startActivity(browserIntent)*/
         }
 
         val imgGmail = findViewById<ImageView>(R.id.img_gmail)

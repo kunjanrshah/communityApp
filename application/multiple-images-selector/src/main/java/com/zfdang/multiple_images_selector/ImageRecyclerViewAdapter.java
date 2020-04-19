@@ -20,9 +20,9 @@ import java.util.List;
 
 public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecyclerViewAdapter.ViewHolder> {
 
+    private static final String TAG = "ImageAdapter";
     private final List<ImageItem> mValues;
     private final OnImageRecyclerViewInteractionListener mListener;
-    private static final String TAG = "ImageAdapter";
 
     public ImageRecyclerViewAdapter(List<ImageItem> items, OnImageRecyclerViewInteractionListener listener) {
         mValues = items;
@@ -77,10 +77,10 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
             @Override
             public void onClick(View v) {
                 // Log.d(TAG, "onClick: " + holder.mItem.toString());
-                if(!holder.mItem.isCamera()) {
-                    if(!ImageListContent.isImageSelected(imageItem.path)) {
+                if (!holder.mItem.isCamera()) {
+                    if (!ImageListContent.isImageSelected(imageItem.path)) {
                         // just select one new image, make sure total number is ok
-                        if(ImageListContent.SELECTED_IMAGES.size() < SelectorSettings.mMaxImageNumber) {
+                        if (ImageListContent.SELECTED_IMAGES.size() < SelectorSettings.mMaxImageNumber) {
                             ImageListContent.toggleImageSelected(imageItem.path);
                             notifyItemChanged(position);
                         } else {

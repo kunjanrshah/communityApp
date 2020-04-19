@@ -91,9 +91,9 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
     private lateinit var committeeViewModel: CommitteeViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance()
-    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance()
-    private val commiteeViewModelFactory: CommiteeViewModelFactory by instance()
+    private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val commiteeViewModelFactory: CommiteeViewModelFactory by instance<CommiteeViewModelFactory>()
     private var setLocationDialog: DialogPlus? = null
     private var endDate: String? = null
     private var startDate: String? = null
@@ -141,6 +141,14 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     count += 1
                 }
                 holder.badge.setNumber(count)
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+
                 Coroutines.io {
                     val lastname = committeeViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
                     val localComm = committeeViewModel.getLocalCommunityName(Integer.parseInt(member.localCommunityId.toString()))
@@ -234,7 +242,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                             val intent: Intent = Intent(activity, QRCodeActivity::class.java)
                             intent.putExtras(mBundle)
                             startActivity(intent)
-                            //   Utility.fade(activity)
+                            //  Utility.fade(activity)
                         } else if (it == 4) {
                             shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
                         } else if (it == 5) {
@@ -649,7 +657,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
-
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     override fun onResume() {

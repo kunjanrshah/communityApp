@@ -65,9 +65,9 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
     private lateinit var smartFilterViewModel: SmartFilterViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
-    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
-    private val profileDetailFactory: ProfileDetailViewModelFactory by instance()
-    private val roomMemberFactory: RoomMemberViewModelFactory by instance()
+    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
+    private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
     private lateinit var jsonObj: JSONObject
     private lateinit var binding: FragmentMatrimonylistBinding
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
@@ -75,6 +75,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
     private var exportDialog: DialogPlus? = null
     private lateinit var tvRecords: TextView
     private lateinit var ivExport: ImageView
+    private var snackbar: Snackbar? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -147,11 +148,17 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 val member = lstMembers[position]
                 holder.tvName.text = member.firstName
                 Coroutines.io {
-                    holder.tvName.text = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                    val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                    Coroutines.main {
+                        holder.tvName.text = name
+                    }
                 }
                 if (!member.cityId.isNullOrEmpty()) {
                     Coroutines.io {
-                        holder.tvArea.text = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
+                        val area = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
+                        Coroutines.main {
+                            holder.tvArea.text = area
+                        }
                     }
                 }
                 if (member.gender.equals("Male")) {
@@ -166,9 +173,20 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                     viewHolder.ivVerify.visibility = View.GONE
                 }
 
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+
                 Coroutines.io {
                     if (!member.head_sub_cast_id.isNullOrEmpty() && !member.head_name.isNullOrEmpty()) {
-                        holder.txtHead.text = member.head_name + " " + smartFilterViewModel.getLastNameById(member.head_sub_cast_id.toInt())
+                        val name = member.head_name + " " + smartFilterViewModel.getLastNameById(member.head_sub_cast_id.toInt())
+                        Coroutines.main {
+                            holder.txtHead.text = name
+                        }
                     }
                 }
 
@@ -230,7 +248,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                             val intent: Intent = Intent(activity, QRCodeActivity::class.java)
                             intent.putExtras(mBundle)
                             startActivity(intent)
-                            //   Utility.fade(activity)
+                            //  Utility.fade(activity)
                         } else if (it == 4) {
                             shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
                         } else if (it == 5) {
@@ -389,18 +407,24 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             jsonObject.put(getString(R.string.filter_by), jsonObj)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             smartFilterViewModel.smartFilterSearch(updated)
-            Handler().postDelayed({
-                binding.shimmerViewContainer.stopShimmerAnimation()
-                binding.shimmerViewContainer.visibility = View.GONE
-            }, 4000)
-            lstMembers.clear()
-            adapter.notifyDataSetChanged()
+            //   lstMembers.clear()
+//            adapter.notifyDataSetChanged()
             tvRecords.visibility = View.GONE
-            binding.shimmerViewContainer.startShimmerAnimation()
-            binding.shimmerViewContainer.visibility = View.VISIBLE
             Utility.hideKeyboard(activity)
-        }
 
+            if (AppController.mApplication.start == 0) {
+                Handler().postDelayed({
+                    binding.shimmerViewContainer.stopShimmerAnimation()
+                    binding.shimmerViewContainer.visibility = View.GONE
+                }, 10000)
+
+                binding.shimmerViewContainer.startShimmerAnimation()
+                binding.shimmerViewContainer.visibility = View.VISIBLE
+            } else {
+                snackbar = Snackbar.make(binding.listMatrimony, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                snackbar?.show()
+            }
+        }
     }
 
     inner class ListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -421,11 +445,13 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     override fun getMembers(response: SmartFilterResponse) {
         binding.shimmerViewContainer.stopShimmerAnimation()
         binding.shimmerViewContainer.visibility = View.GONE
+        snackbar?.dismiss()
         if (response.success) {
             tvRecords.text = getString(R.string.recordfound) + " " + response.totalRecords
             tvRecords.visibility = View.VISIBLE
@@ -440,14 +466,14 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
             if (response.members.size > 0) {
                 DashboardActivity.stop = false
-                lstMembers.clear()
+                // lstMembers.clear()
                 lstMembers.addAll(response.members)
-
-                if (response.totalRecords <= AppController.mApplication.length) {
+                adapter.notifyDataSetChanged()
+                binding.listMatrimony.layoutManager?.scrollToPosition(AppController.mApplication.start)
+                if (response.members.size < AppController.mApplication.length) {
                     DashboardActivity.stop = true
                     Snackbar.make(binding.listMatrimony, getString(R.string.EndRecordList), Snackbar.LENGTH_LONG).show()
                 }
-                adapter.notifyDataSetChanged()
             } else {
                 tvRecords.visibility = View.GONE
                 DashboardActivity.stop = true
@@ -461,6 +487,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
     }
 
     override fun refreshList() {
+        snackbar?.dismiss()
         adapter.notifyDataSetChanged()
     }
 
@@ -470,6 +497,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
     override suspend fun getFailure(message: String) {
         Coroutines.main {
+            snackbar?.dismiss()
             tvRecords.visibility = View.GONE
             Utility.displaySnackBarWithBottomMargin(binding.listMatrimony, message)
             binding.shimmerViewContainer.stopShimmerAnimation()

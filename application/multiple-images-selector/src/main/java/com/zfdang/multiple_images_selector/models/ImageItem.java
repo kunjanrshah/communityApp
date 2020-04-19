@@ -5,14 +5,13 @@ import android.util.Log;
 import com.zfdang.multiple_images_selector.SelectorSettings;
 
 public class ImageItem {
-    private static final String TAG = "ImageItem";
     public static final String CAMERA_PATH = "Camera";
-
+    private static final String TAG = "ImageItem";
     public String path;
     public String name;
     public long time;
 
-    public ImageItem(String name, String path, long time){
+    public ImageItem(String name, String path, long time) {
         this.name = name;
         this.path = path;
         this.time = time;
@@ -28,7 +27,7 @@ public class ImageItem {
         try {
             ImageItem other = (ImageItem) o;
             return this.path.equalsIgnoreCase(other.path);
-        }catch (ClassCastException e){
+        } catch (ClassCastException e) {
             Log.e(TAG, "equals: " + Log.getStackTraceString(e));
         }
         return super.equals(o);
