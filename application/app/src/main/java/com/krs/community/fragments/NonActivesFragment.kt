@@ -168,7 +168,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()) {
+                if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))

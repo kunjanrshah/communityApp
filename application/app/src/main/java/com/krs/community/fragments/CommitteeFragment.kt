@@ -147,7 +147,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 } else {
                     member.memberCode
                 }
-                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                holder.tvCode.text = code
 
                 Coroutines.io {
                     val lastname = committeeViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
@@ -181,7 +181,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()) {
+                if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))

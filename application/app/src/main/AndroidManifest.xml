@@ -208,7 +208,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.ghanchi.samaj.provider"
+            android:authorities="com.krs.medk.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

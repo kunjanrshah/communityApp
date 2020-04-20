@@ -186,6 +186,43 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 }
                 jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
 
+
+                if (jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()) {
+                    mainDetailsFragment.binding.fname.error = getString(R.string.EnterFirstName)
+                    return@setOnClickListener
+                } else if (jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id)) == "0") {
+                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectYourLastName))
+                    return@setOnClickListener
+                } else if (jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()) {
+                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectYourGender))
+                    return@setOnClickListener
+                } else if (jsonObject.getString(getString(R.string.birth_date)).isNullOrEmpty()) {
+                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_bdate))
+                    return@setOnClickListener
+                }
+
+                if (member?.headId == "0") {
+                    if (jsonObject.getString(getString(R.string.father_name)).isNullOrEmpty()) {
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_father))
+                        return@setOnClickListener
+                    } else if (jsonObject.getString(getString(R.string.address)).isNullOrEmpty()) {
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_home_address))
+                        return@setOnClickListener
+                    } else if (jsonObject.getString(getString(R.string.native_place_id)).isNullOrEmpty()) {
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.select_native))
+                        return@setOnClickListener
+                    } else if (jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty()) { //medk
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectGotra))
+                        return@setOnClickListener
+                    } else if (jsonObject.getString(getString(R.string.mobile)).isNullOrEmpty()) {
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_mobile))
+                        return@setOnClickListener
+                    } else if (jsonObject.getString(getString(R.string.email_address)).isNullOrEmpty()) {
+                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_email))
+                        return@setOnClickListener
+                    }
+                }
+
                 if (binding.tvSave.text.toString().toLowerCase().contains(getString(R.string.save).toLowerCase())) {
 
                     SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
@@ -208,16 +245,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
                 } else {
 
-                    if (jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()) {
-                        mainDetailsFragment.binding.fname.error = getString(R.string.EnterFirstName)
-                        return@setOnClickListener
-                    } else if (jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id)) == "0") {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectYourLastName))
-                        return@setOnClickListener
-                    } else if (jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectYourGender))
-                        return@setOnClickListener
-                    } else if (jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
+                    if (jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
                         return@setOnClickListener
                     } else if (jsonObject.getString(getString(R.string.profile_password)).isNullOrEmpty()) {

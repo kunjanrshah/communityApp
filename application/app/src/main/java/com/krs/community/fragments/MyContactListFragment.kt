@@ -126,17 +126,17 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 } else {
                     member.memberCode
                 }
-                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                holder.tvCode.text = code
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
-                        val name = member.firstName + " " + contactListViewModel.getLastNameById(member.subCastId.toInt())
+                        val name = member.firstName + " " + contactListViewModel.getLastNameById(member.subCastId.trim().toInt())
                         Coroutines.main {
                             viewHolder.tvName.text = name
                         }
                     }
 
                     if (!member.cityId.isNullOrEmpty()) {
-                        val area = member.area + " " + contactListViewModel.getCityNamebyId(member.cityId)
+                        val area = member.area + " " + contactListViewModel.getCityNamebyId(member.cityId.trim())
                         Coroutines.main {
                             holder.tvArea.text = area
                         }
@@ -153,7 +153,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()) {
+                if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
@@ -259,7 +259,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     private fun userContactList() {
         Coroutines.io {
             Coroutines.main {
-                Utility.startSweetProgress(context!!, getString(R.string.app_name), getString(R.string.fetchingcontacts))
+                Utility.startSweetProgress(context!!, getString(R.string.fetchingcontacts), getString(R.string.please_wait_contacts))
             }
             getContactsIntoArrayList()
             val jsonObject = JSONObject()

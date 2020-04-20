@@ -179,7 +179,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 } else {
                     member.memberCode
                 }
-                viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                viewHolder.tvCode.text = code
 
                 Coroutines.io {
                     if (!member.head_sub_cast_id.isNullOrEmpty() && !member.head_name.isNullOrEmpty()) {
@@ -209,7 +209,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()) {
+                if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))

@@ -126,7 +126,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 } else {
                     member.memberCode
                 }
-                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                holder.tvCode.text = code
 
                 if (member.gender.equals("Male")) {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
@@ -143,7 +143,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()) {
+                if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))

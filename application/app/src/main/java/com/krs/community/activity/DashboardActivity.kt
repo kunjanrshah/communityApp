@@ -407,6 +407,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 counts.states = Integer.parseInt(response.countList.states)
                 counts.sub_casts = Integer.parseInt(response.countList.subCasts)
                 counts.sub_community = Integer.parseInt(response.countList.subCommunity)
+                counts.gotra = Integer.parseInt(response.countList.gotra)
                 val dbCount = dashboardViewModel.getMasterCounts()
 
                 if (dbCount == null) {
@@ -480,6 +481,4 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override suspend fun getFailure(msg: String) {
 
     }
-
-
 }

@@ -268,7 +268,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
                 }
 
-                if (member.emailAddress.isEmpty()) {
+                if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
@@ -296,7 +296,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                 } else {
                     member.memberCode
                 }
-                viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                viewHolder.tvCode.text = code
 
                 if (member.headId.equals("0")) {
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)
@@ -327,7 +327,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
                                 val toNumber = "+91" + member.mobile
-                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.ghanchi.samaj"
+                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.medk"
                                 Utility.sendWhatsAppMessage(activity as AppCompatActivity, toNumber, text)
                             }
 

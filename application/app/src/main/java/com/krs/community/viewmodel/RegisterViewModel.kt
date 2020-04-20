@@ -24,6 +24,8 @@ class RegisterViewModel(
         var app: Application) : AndroidViewModel(app) {
 
     var fname: String? = null
+    var father: String? = null
+    var bdate: String? = null
     var email: String? = null
     var pass: String? = null
     var cpass: String? = null
@@ -39,7 +41,6 @@ class RegisterViewModel(
 
     var iRegisterListener: IRegisterListener? = null
     var TAG: String = RegisterViewModel::class.java.simpleName
-    private lateinit var completableJob: CompletableJob
 
     private var jobStates: CompletableJob? = null
     private var jobCities: CompletableJob? = null
@@ -62,6 +63,16 @@ class RegisterViewModel(
 
         if (fname.isNullOrBlank()) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.fname), 1)
+            return
+        }
+
+        if (father.isNullOrBlank()) {
+            iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.father), 13)
+            return
+        }
+
+        if (bdate.isNullOrBlank()) {
+            iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.birthdate), 14)
             return
         }
 
@@ -146,6 +157,8 @@ class RegisterViewModel(
         }
 
         register.first_name = fname
+        register.father = father
+        register.setBirthdate(Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
         register.sub_cast_id = lastnameId.toString()
         register.email_address = email
         register.mobile = mobile
@@ -156,6 +169,7 @@ class RegisterViewModel(
         register.city_id = cityId.toString()
         register.sub_community_id = subCommId.toString()
         register.local_community_id = localCommId.toString()
+
         if (!isLogin) {
             register.isAdmin = "1"
         }

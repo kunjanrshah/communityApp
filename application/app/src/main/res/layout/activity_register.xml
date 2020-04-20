@@ -126,13 +126,35 @@
                     android:hint="@string/hint_name"
                     android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
-                    android:nextFocusDown="@+id/spinnerLname"
+                    android:nextFocusDown="@+id/edt_father_name"
                     android:paddingStart="10dp"
                     android:paddingEnd="0dp"
                     android:singleLine="true"
                     android:text="@={registerviewmodel.fname}"
                     android:textSize="16sp"
                     tools:ignore="Autofill" />
+
+                <EditText
+                    android:id="@+id/edt_father_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/register_field_height"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:digits="@string/only_chars"
+                    android:drawableStart="@drawable/user_name"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="@string/fathername"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapSentences"
+                    android:nextFocusDown="@+id/spinnerLname"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="0dp"
+                    android:singleLine="true"
+                    android:text="@={registerviewmodel.father}"
+                    android:textSize="16sp"
+                    tools:ignore="Autofill" />
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -191,6 +213,42 @@
                         app:jrs_title="@string/selecgender" />
 
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/calendar_gradient_spinner"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/txt_bdate"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical"
+                            android:hint="Birth Date"
+                            android:paddingLeft="30dp"
+                            android:singleLine="true"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|center"
+                            android:fontFamily="@font/montserrat_light"
+                            android:paddingRight="10dp"
+                            android:text="DD/MM/YYYY"
+                            android:textSize="12sp" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/edt_email_id"
@@ -380,7 +438,8 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/community_gradient_spinner">
+                    android:background="@drawable/community_gradient_spinner"
+                    android:visibility="gone">
 
                     <com.krs.community.jrspinner.JRSpinner
                         android:id="@+id/spinnerSub"
@@ -409,7 +468,8 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/community_gradient_spinner">
+                    android:background="@drawable/community_gradient_spinner"
+                    android:visibility="gone">
 
 
                     <com.krs.community.jrspinner.JRSpinner

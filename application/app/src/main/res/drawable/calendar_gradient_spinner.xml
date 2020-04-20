@@ -14,7 +14,7 @@
                 </shape>
             </item>
             <item>
-                <bitmap android:gravity="left|center" android:src="@drawable/gender" />
+                <bitmap android:gravity="left|center" android:src="@drawable/calendary" />
             </item>
         </layer-list>
     </item>

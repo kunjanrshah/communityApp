@@ -177,7 +177,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
                 }
-                if (member.emailAddress.isEmpty()) {
+                if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
@@ -198,7 +198,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     member.memberCode
                 }
-                holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                holder.tvCode.text = code
                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                 val arrayId = loginMember?.sharingId?.split(',')

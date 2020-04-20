@@ -66,6 +66,7 @@
                                 android:layout_marginLeft="5dp"
                                 android:fontFamily="@font/montserrat_semibold"
                                 android:text="@string/yss"
+                                android:visibility="gone"
                                 android:textSize="18sp" />
 
                             <EditText
@@ -83,6 +84,7 @@
 
                             <TextView
                                 android:id="@+id/tv_id"
+                                android:visibility="gone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
                                 android:fontFamily="@font/montserrat_semibold"

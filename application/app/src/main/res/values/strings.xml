@@ -261,6 +261,8 @@
     <string name="intudid" translatable="false">intudid</string>
     <string name="headanimation">headanimation</string>
     <string name="enter_firstname">Please enter your First Name</string>
+    <string name="enter_father">Please enter your Father Name</string>
+    <string name="enter_bdate">Please enter birth date</string>
     <string name="enter_lastname">Please enter your LastName</string>
     <string name="enter_email">Please enter your Email</string>
     <string name="enter_gender">Please select gender</string>
@@ -269,6 +271,7 @@
     <string name="confirm_password">Please enter to confirm PIN</string>
     <string name="password_mismatch">PIN is mismatch</string>
     <string name="enter_home_address">Please enter your home address</string>
+    <string name="enter_native">Please enter your native</string>
     <string name="select_city">Select City</string>
     <string name="select_state">Select State</string>
     <string name="select_sub_comm">Please select Sub Community</string>
@@ -1065,6 +1068,7 @@
     <string name="notification_channel_id" translatable="false">101</string>
     <string name="mycontacts">My Contacts</string>
     <string name="fetchingcontacts">Fetching Your Contacts</string>
+    <string name="please_wait_contacts">Just wait! Give me a minute</string>
     <string name="permissioncontact">Permission Canceled, Now your application cannot access CONTACTS.</string>
     <string name="updated">\"Updated \"</string>
     <string name="members">Member</string>
@@ -1129,7 +1133,7 @@
     <string name="sharedetails">Share File Details</string>
     <string name="install">Install your</string>
     <string name="pleaseclick">Please click BACK again to exit</string>
-
+    <string name="birthdate" translatable="false">birthdate</string>
     <string name="fname" translatable="false">fname</string>
     <string name="lastnameId" translatable="false">lastnameId</string>
     <string name="emailstr" translatable="false">email</string>

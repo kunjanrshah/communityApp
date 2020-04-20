@@ -44,6 +44,9 @@ import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
+import com.tsongkha.spinnerdatepicker.DatePicker
+import com.tsongkha.spinnerdatepicker.DatePickerDialog
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -52,8 +55,11 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.io.File
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
-class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterListener, KodeinAware, ImageUploadListener, UpdateListener {
+class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterListener, KodeinAware, ImageUploadListener, UpdateListener, DatePickerDialog.OnDateSetListener {
 
     private var mShowLoader: Boolean = false
     private val PICK_GALLERY_REQUEST = 1
@@ -64,6 +70,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     private lateinit var dashboardViewModel: DashboardViewModel
     private var resultUri: Uri? = null
     private var isLogin: Boolean = true
+    private var datepicker = SpinnerDatePickerDialogBuilder()
 
     companion object {
         private val TAG = RegisterActivty::class.java.simpleName
@@ -185,14 +192,22 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             }
 
             binding.spinnerSub.setOnItemClickListener {
-                Coroutines.main {
+                Coroutines.io {
                     val subId = profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
                     registerViewModel.subCommId = subId
-                    profileDetailViewModel.getLocalCommunity(subId).observeForever {
-                        binding.spinnerLocal.clear()
-                        registerViewModel.localCommId = null
-                        binding.spinnerLocal.setItems(it.toTypedArray())
-                        binding.spinnerLocal.setExpandTint(R.color.black)
+                    Coroutines.main {
+                        profileDetailViewModel.getLocalCommunity(subId).observeForever {
+                            binding.spinnerLocal.clear()
+                            registerViewModel.localCommId = null
+                            binding.spinnerLocal.setItems(it.toTypedArray())
+                            binding.spinnerLocal.setExpandTint(R.color.black)
+                            if (!it.isNullOrEmpty()) {
+                                binding.spinnerLocal.select(0)
+                                Coroutines.io {
+                                    registerViewModel.localCommId = profileDetailViewModel.getLocalCommunityId(binding.spinnerLocal.text.toString())
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -209,6 +224,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     registerViewModel.cityId = profileDetailViewModel.getCityIdByName(binding.spinnerCities.text.toString())
                     Log.d(TAG, "cityId: " + registerViewModel.cityId)
                 }
+            }
+
+            binding.txtBdate.setOnClickListener {
+                val mem_date = binding.txtBdate.text.toString().trim()
+                setDatePicker(mem_date)
             }
 
             binding.spinnerLocal.setOnItemClickListener { position ->
@@ -245,6 +265,42 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         }
     }
 
+    private fun setDatePicker(mem_date: String) {
+        val year: Int = Calendar.getInstance().get(Calendar.YEAR)
+        val day: Int = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        val month: Int = Calendar.getInstance().get(Calendar.MONTH)
+
+        val format = SimpleDateFormat(Utility.dd_MM_yyyy)
+        var day1: Int = day
+        var month1: Int = month
+        var year1: Int = year
+
+        if (mem_date.isNotBlank() && mem_date.isNotEmpty()) {
+            try {
+                val date: Date = format.parse(mem_date)
+                val c = Calendar.getInstance()
+                c.time = date
+                day1 = c[Calendar.DAY_OF_MONTH]
+                month1 = c[Calendar.MONTH]
+                year1 = c[Calendar.YEAR]
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+        }
+
+        datepicker.context(this)
+                .callback(this)
+                .spinnerTheme(R.style.NumberPickerStyle)
+                .showTitle(true)
+                .showDaySpinner(true)
+                .defaultDate(year1, month1, day1)
+                .maxDate(year, month, day)
+                .minDate(1900, 0, 1)
+                .build().show()
+
+    }
+
+
     private fun setDropDownList() {
         Coroutines.main {
             profileDetailViewModel.lstLastName.await().observe(this, Observer {
@@ -255,6 +311,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
                 binding.spinnerSub.setItems(it.toTypedArray())
                 binding.spinnerSub.setExpandTint(R.color.black)
+                if (!it.isNullOrEmpty()) {
+                    binding.spinnerSub.select(0)
+                    Coroutines.io {
+                        registerViewModel.subCommId = profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
+                    }
+                }
             })
 
             profileDetailViewModel.lstStateName.await().observe(this, Observer {
@@ -281,6 +343,18 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     override fun getRegisterFailure(message: String?, filed: Int) {
         Utility.hideSweetProgress()
+
+
+        if (filed == 13) {
+            root_layout.snackbar(getString(R.string.enter_father), Snackbar.LENGTH_LONG)
+            return
+        }
+
+        if (filed == 14) {
+            root_layout.snackbar(getString(R.string.enter_bdate), Snackbar.LENGTH_LONG)
+            return
+        }
+
         if (message!!.contains(getString(R.string.fname), ignoreCase = true)) {
             root_layout.snackbar(getString(R.string.enter_firstname), Snackbar.LENGTH_LONG)
             return
@@ -364,6 +438,8 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             10 -> binding.spinnerCities.requestFocus()
             11 -> binding.spinnerSub.requestFocus()
             12 -> binding.spinnerLocal.requestFocus()
+            13 -> binding.edtFatherName.requestFocus()
+            14 -> binding.txtBdate.requestFocus()
             else -> ""
         }
     }
@@ -416,8 +492,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         binding.edtEmailId.text.clear()
         binding.edtMobile.text.clear()
         binding.edtPassword.text.clear()
+        binding.txtBdate.text = ""
+        binding.txtBdate.hint = "BirthDate"
+        binding.edtFatherName.text.clear()
         binding.imgProfile.setImageResource(R.drawable.man_reg)
-
         binding.spinnerLname.setText("Select LastName")
         binding.spinnerGender.setText("Select Gender")
         binding.spinnerStates.setText("Select State")
@@ -557,6 +635,21 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 setDropDownList()
             }
         }
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        var month = "${monthOfYear + 1}"
+        var day = "${dayOfMonth}"
+        if (day.length == 1) {
+            day = "0$day"
+        }
+        if (month.length == 1) {
+            month = "0${month}"
+        }
+        val date = "$day-$month-$year"
+        val age = Utility.getAge(date, Utility.dd_MM_yyyy)
+        registerViewModel.bdate = date
+        binding.txtBdate.text = date + "($age)"
     }
 }
 

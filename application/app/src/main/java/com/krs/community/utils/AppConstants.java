@@ -95,6 +95,24 @@ public class AppConstants {
         String sub_community_id;
         String local_community_id;
         String gender;
+        String father_name;
+        String birth_date;
+
+        public String getFather() {
+            return father_name;
+        }
+
+        public void setFather(String father) {
+            this.father_name = father;
+        }
+
+        public String getBirthDate() {
+            return birth_date;
+        }
+
+        public void setBirthdate(String birthdate) {
+            this.birth_date = birthdate;
+        }
 
         public String getSub_cast_id() {
             return sub_cast_id;
