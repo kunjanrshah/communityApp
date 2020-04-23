@@ -12,6 +12,8 @@ import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
+import com.github.squti.guru.BuildConfig;
 import com.github.squti.guru.Guru;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
@@ -32,7 +35,9 @@ import static com.krs.community.utils.Utility.getHashKey;
 public class SplashActivity extends AppCompatActivity {
 
     private KenBurnsView kbv;
-    private View imglogo, darkoverlay, llSpinner;
+    private View darkoverlay, llSpinner;
+    private ImageView imgLogo;
+    private LinearLayout llLogo;
     private Button btnLogin, btnRegister;
     private Spinner splanguage;
     private DisplayMetrics dm;
@@ -76,7 +81,6 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void setScreenLayout() {
 
@@ -201,7 +205,13 @@ public class SplashActivity extends AppCompatActivity {
     private void setAnimation() {
         RandomTransitionGenerator generator = new RandomTransitionGenerator(19000, new AccelerateDecelerateInterpolator());
         kbv.setTransitionGenerator(generator);
-        imglogo.animate().setStartDelay(3000).setDuration(2000).alpha(1).start();
+        if (BuildConfig.FLAVOR == "medk") {
+            imgLogo.setVisibility(View.VISIBLE);
+            imgLogo.animate().setStartDelay(3000).setDuration(2000).alpha(1).start();
+        } else {
+            llLogo.setVisibility(View.VISIBLE);
+            llLogo.animate().setStartDelay(3000).setDuration(2000).alpha(1).start();
+        }
 
         darkoverlay.animate().setStartDelay(3000).setDuration(3000).alpha(0.6f).start();
 
@@ -216,7 +226,8 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void MemoryAllocation() {
-        imglogo = findViewById(R.id.fragmentloginLogo);
+        imgLogo = findViewById(R.id.iv_logo);
+        llLogo = findViewById(R.id.ll_logo);
         dm = getResources().getDisplayMetrics();
         kbv = findViewById(R.id.fragmentloginKenBurnsView1);
         darkoverlay = findViewById(R.id.fragmentloginView1);

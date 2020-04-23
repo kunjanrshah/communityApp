@@ -520,7 +520,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                                     .setContentText("Filter already exist. Do you want to overwrite?")
                                     .setConfirmText(_context.getString(R.string.YesPleaseCity))
                                     .setCancelText(_context.getString(R.string.no))
-                                    .setCustomImage(R.drawable.ic_medk)
+                                    .setCustomImage(R.drawable.ic_app)
                                     .showCancelButton(true)
                                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                                         sweetAlertDialog.dismissWithAnimation()

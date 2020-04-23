@@ -105,7 +105,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
                     .setContentText("Are you interested for Matrimony?")
                     .setConfirmText("Interested")
                     .setCancelText("No,Please")
-                    .setCustomImage(R.drawable.ic_medk)
+                    .setCustomImage(R.drawable.ic_app)
                     .showCancelButton(true)
                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                         sweetAlertDialog.dismissWithAnimation()

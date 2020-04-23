@@ -66,7 +66,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
 
         val ivProfile = findViewById<ImageView>(R.id.iv_profile)
 
-        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.kunjan))
+        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.dev_photo))
                 .thumbnail(0.5f)
                 .transition(withCrossFade())
                 .apply(RequestOptions.circleCropTransform())
@@ -76,7 +76,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
         val imgCall = findViewById<ImageView>(R.id.img_call)
         imgCall.setOnClickListener { v: View? ->
             val intent = Intent(Intent.ACTION_DIAL)
-            intent.data = Uri.parse("tel:" + getString(R.string.contact_number))
+            intent.data = Uri.parse("tel:" + getString(R.string.dev_contact))
             startActivity(intent)
         }
 
@@ -90,12 +90,12 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
         val llScroll = findViewById<ScrollView>(R.id.ll_scroll)
 
         imgTwitter.setOnClickListener {
-            Utility.displaySnackBarWithBottomMargin(llScroll, "mobile: 9427051418")
+            // Utility.displaySnackBarWithBottomMargin(llScroll, "mobile: 9427051418")
         }
 
         val imgSkype = findViewById<ImageView>(R.id.img_skype)
         imgSkype.setOnClickListener {
-            Utility.skype(getString(R.string.kunjanrshah), this)
+            Utility.skype(getString(R.string.skype_id), this)
         }
 
         val imgLinkedin = findViewById<ImageView>(R.id.img_linkedin)
@@ -120,7 +120,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
                         .setContentText("Do you want to send message to " + getString(R.string.dev_name) + "?")
                         .setConfirmText("Yes")
                         .setCancelText("No")
-                        .setCustomImage(R.drawable.ic_medk)
+                        .setCustomImage(R.drawable.ic_app)
                         .showCancelButton(true)
                         .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                             sweetAlertDialog.dismissWithAnimation()
@@ -149,7 +149,7 @@ class ContactUsActivity : AppCompatActivity(), KodeinAware, ILoginListener {
 
         val imgWhatsapp = findViewById<ImageView>(R.id.img_whatsapp)
         imgWhatsapp.setOnClickListener {
-            Utility.sendWhatsAppMessage(this, getString(R.string.contact_number), "Hi \n" + edtMessage.text.toString())
+            Utility.sendWhatsAppMessage(this, getString(R.string.dev_contact), "Hi \n" + edtMessage.text.toString())
         }
 
         val tvLink = findViewById<TextView>(R.id.tv_link)

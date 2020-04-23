@@ -34,6 +34,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.*
 import com.krs.community.adapter.AddFamilyHeadAdapter
@@ -328,7 +329,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                  startActivity(intent)*/
                             } else if (it == 2) {
                                 if (!member.mobile.isNullOrEmpty()) {
-                                    sendWhatsAppMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
+                                    sendWhatsAppMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app) + BuildConfig.APPLICATION_ID)
                                 } else {
                                     Toast.makeText(this@FamilyDetailActivity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                                 }
@@ -520,7 +521,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                      startActivity(intent)*/
                 } else if (it == 2) {
                     if (!member.mobile.isNullOrEmpty()) {
-                        sendWhatsAppMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app))
+                        sendWhatsAppMessage(this@FamilyDetailActivity, member.mobile, getString(R.string.install_app) + BuildConfig.APPLICATION_ID)
                     } else {
                         Toast.makeText(this@FamilyDetailActivity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                     }
@@ -614,7 +615,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .setContentText("Do you want to add new member?")
                     .setConfirmText("Add New")
                     .setCancelText("Add Live")
-                    .setCustomImage(R.drawable.ic_medk)
+                    .setCustomImage(R.drawable.ic_app)
                     .showCancelButton(true)
                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                         sweetAlertDialog.dismissWithAnimation()
@@ -752,7 +753,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         .setContentText("Do you want to remove ${member.firstName} as ${holder.tvSubtext.text} of ${members[0].firstName} And become a Family Head? \n Make sure you have fillup all the mandatory fields!")
                         .setConfirmText("Yes,Please")
                         .setCancelText(getString(R.string.no))
-                        .setCustomImage(R.drawable.ic_medk)
+                        .setCustomImage(R.drawable.ic_app)
                         .showCancelButton(true)
                         .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                             if (isValidFamilyHead(member)) {

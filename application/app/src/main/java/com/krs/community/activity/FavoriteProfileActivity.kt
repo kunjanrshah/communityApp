@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
@@ -319,8 +320,6 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                         Handler().postDelayed({
                             Utility.hideSweetProgress()
                         }, 5000)
-
-
                     } else if (it == 1) {
                         Toast.makeText(this@FavoriteProfileActivity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
                         return@listener
@@ -330,7 +329,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                     } else if (it == 2) {
                         if (!member.mobile.isNullOrEmpty()) {
                             val toNumber = getString(R.string.number) + member.mobile
-                            val text = getString(R.string.InstallApp) + "\n" + "https://play.google.com/store/apps/details?id=com.krs.medk"
+                            val text = getString(R.string.install_app) + BuildConfig.APPLICATION_ID
                             Utility.sendWhatsAppMessage(this@FavoriteProfileActivity, toNumber, text)
                         }
 

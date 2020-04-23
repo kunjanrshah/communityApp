@@ -143,7 +143,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                         .setContentText(getString(R.string.WithGoogle))
                         .setConfirmText(getString(R.string.View))
                         .setNeutralText(getString(R.string.set))
-                        .setCustomImage(R.drawable.ic_medk)
+                        .setCustomImage(R.drawable.ic_app)
                         .setConfirmClickListener {
                             it.dismiss()
                             showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Work")

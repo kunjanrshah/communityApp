@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
@@ -166,7 +167,7 @@ fun promptReadPermission(context: Context) {
             .setContentText(context.getString(R.string.gallrypermission))
             .setConfirmText(context.getString(R.string.YesPleaseCity))
             .setCancelText(context.getString(R.string.no))
-            .setCustomImage(R.drawable.ic_medk)
+            .setCustomImage(R.drawable.ic_app)
             .showCancelButton(true)
             .setConfirmClickListener { sDialog ->
                 sDialog.dismiss()
@@ -406,7 +407,7 @@ fun showVersionDialog(activity: FragmentActivity) {
             .setContentText(activity.getString(R.string.thereversion))
             .setConfirmText(activity.getString(R.string.updatenow))
             .setCancelText("Later")
-            .setCustomImage(R.drawable.ic_medk)
+            .setCustomImage(R.drawable.ic_app)
             .showCancelButton(true)
             .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                 sweetAlertDialog.dismissWithAnimation()
@@ -911,7 +912,7 @@ fun displayPDFDialog(context: Context, name: String, filePath: String, content: 
     SweetAlertDialog(context, SweetAlertDialog.PDF_TYPE)
             .setTitleText("$name" + context.getString(R.string.Profile))
             .setContentText(context.getString(R.string.youcanshare))
-            .setCustomImage(R.drawable.ic_medk)
+            .setCustomImage(R.drawable.ic_app)
             .showCancelButton(true)
             .setNeutralText(context.getString(R.string.print))
             .setNeutralClickListener { sDialog ->
@@ -966,7 +967,7 @@ fun shareFile(context: Context, filePath: String) {
 
 fun shareApp(activity: FragmentActivity?) {
     val appName = activity?.getString(R.string.app_name)
-    val text = activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=com.krs.medk"
+    val text = activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"
     intent.putExtra(Intent.EXTRA_TEXT, text)
@@ -980,7 +981,7 @@ fun shareDetails(activity: FragmentActivity?, name: String, mobile: String, emai
             activity?.getString(R.string.email) + " : " + email + "\n" +
             activity?.getString(R.string.areaDetails) + " : " + area + "\n" +
             activity?.getString(R.string.addressNon) + " : " + address + "\n" +
-            activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=com.krs.medk"
+            activity?.getString(R.string.install) + " " + appName + " App \n" + "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"
     intent.putExtra(Intent.EXTRA_TEXT, text)

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "147166615323",
+    "firebase_url": "https://yadav-samaj-26dba.firebaseio.com",
+    "project_id": "yadav-samaj-26dba",
+    "storage_bucket": "yadav-samaj-26dba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147166615323:android:11c21dc33eb4ca84a325be",
+        "android_client_info": {
+          "package_name": "com.yadav.samaj"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOE-YNeTgISK5P77rHZ7UxIu17f3vPY7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

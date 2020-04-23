@@ -34,7 +34,7 @@
 
     <application
         android:name=".app.AppController"
-        android:icon="@drawable/ic_medk"
+        android:icon="@drawable/ic_app"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/MyMaterialTheme"
@@ -208,7 +208,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.krs.medk.provider"
+            android:authorities="@string/authorities"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

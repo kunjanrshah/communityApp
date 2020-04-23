@@ -1,5 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="MissingTranslation">Vastipatrak</string>
+<resources>
     <string name="folder_name" translatable="false">community</string>
     <string name="action_disable" translatable="false">Disable</string>
     <string name="action_location" translatable="false">Location</string>
@@ -374,13 +373,7 @@
     <string name="head_name" translatable="false">head_name</string>
     <string name="min_age" translatable="false">min_age</string>
     <string name="max_age" translatable="false">max_age</string>
-
-
-    <string name="base_url_logo" translatable="false">https://medkapp.org/uploads/logos/</string>
-    <string name="base_url_thumb" translatable="false">https://medkapp.org/uploads/users/thumb/</string>
-    <string name="base_url_original" translatable="false">https://medkapp.org/uploads/users/original/</string>
     <string name="scanId" translatable="false">scanId</string>
-
 
     <string name="liveo_search_view_search">Search</string>
     <string name="liveo_search_view_arrow">Exit Search</string>
@@ -422,9 +415,7 @@
     <string name="enter_pin">Please enter your PIN</string>
     <string name="went_wrong">Something went wrong!</string>
 
-
     <!-- Login Sccren -->
-
     <string name="welcome">Welcome !</string>
     <string name="_10_digit_number">10 digit number</string>
     <string name="_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number">4 digit OTP will be sent via SMS to verify your mobile number!</string>
@@ -433,7 +424,6 @@
     <string name="pleaseEnterValidPhone">Please enter a valid phone</string>
     <string name="Authenticationfailed">Authentication Failed.</string>
     <string name="SmsExternalStorage">Permission denied to SMS your External storage</string>
-
 
     <!-- Register Sccren -->
     <string name="code">Code</string>
@@ -447,7 +437,6 @@
     <string name="RequestAdmin">Your request will be approved within 24 hours by your Admin</string>
     <string name="CannotImage">Cannot retrieve selected image</string>
 
-
     <!-- DashBoard Sccren -->
     <string name="home">Home</string>
     <string name="Calendar">Calendar</string>
@@ -456,13 +445,9 @@
     <string name="LocationOff">GPS Off</string>
     <string name="LocationOn">GPS On</string>
 
-
     <!-- FamilyTreeDetail Sccren -->
     <string name="TimeLine">TimeLine</string>
-
-
     <string name="SetOptionall">setOptionalIconsVisible</string>
-
 
     <!-- FamilyTreeList Sccren -->
     <string name="GotoFamilyTree">Go to Family tree</string>
@@ -481,16 +466,13 @@
     <!-- FavoriteProfile Sccren -->
     <string name="Search">Search</string>
     <string name="Updated">Updated</string>
-    <string name="InstallApp">Install your Community App</string>
     <string name="number">+91</string>
     <string name="tel">tel:</string>
-
 
     <!-- PinView Sccren -->
     <string name="EnterThePin">Enter the PIN</string>
     <string name="enter">Happy to see you!</string>
     <string name="Exit">See you again!</string>
-
 
     <!-- ProfileDetail Sccren -->
     <string name="Finding">Finding</string>
@@ -733,7 +715,6 @@
     <string name="you_can_contact_us_on_various_platform_and_also_send_your_feedback_with_us">You can contact us on various platform and also send your feedback with us</string>
     <string name="type_your_message">Type Your Message...</string>
     <string name="send_now">Send Now</string>
-    <string name="dev_name">Kunjan Shah</string>
 
     <!-- DashBoard Fragment -->
     <string name="DevicDont">Your Device Don\'t Support Speech Input</string>
@@ -957,7 +938,6 @@
     <string name="RestrictedProfile">Restricted Profiles</string>
     <string name="FindRecord">Find Records</string>
 
-
     <string name="backmatrimony">Back to Matrimony</string>
     <string name="AllNotification">All Notifications</string>
     <string name="AllFilter">All Filters</string>
@@ -968,16 +948,11 @@
     <string name="SarchKeyword">SEARCH KEYWORD</string>
     <string name="Commi">Committee</string>
 
-    // 22-02-2020
-
     <string name="no_internet">No internet connection!</string>
     <string name="check_network">Please check your internet connection and try again</string>
     <string name="retry">Retry</string>
     <string name="coming_soon">Working on it</string>
     <string name="admin_only">For Admin use only</string>
-    <string name="contact_number">9427051418</string> <!--9427051418-->
-    <string name="fb_url" translatable="false">https://www.facebook.com/kunjanrshah87</string> <!--https://www.facebook.com/kunjanrshah87-->
-    <string name="linkedin_url" translatable="false">https://www.linkedin.com/in/kunjan-shah-76901b6a/</string>
 
     <string name="mobile_not_available">Mobile not available</string>
     <string name="email_not_available">Email not available</string>
@@ -1018,18 +993,16 @@
     <string name="selectstatus">Select Status</string>
     <string name="selectsurname">Select your Surname</string>
 
-    <string name="kunjanrshah">kunjanrshah</string>
-    <string name="dev_email">kunjanrshah@gmail.com</string>
     <string name="dev_gmail_subject">@string/app_name</string>
     <string name="dev_content">Hello</string>
-    <string name="dev_link">https://medkapp.org</string>
+
     <string name="expo">Exporting</string>
     <string name="families">Families:</string>
     <string name="mem">Members:</string>
     <string name="found">found</string>
     <string name="please_wait">Please Wait...</string>
     <string name="exporting_search_list">Exporting Search List</string>
-    <string name="install_app">"Install the app from play store \n"+ "https://play.google.com/store/apps/details?id=com.krs.medk"</string>
+    <string name="install_app">"Install the app from play store \n"+ "https://play.google.com/store/apps/details?id="</string>
     <string name="mobile_not_found">Mobile not found!</string>
     <string name="filter_values" translatable="false">filter_values</string>
     <string name="no_selection">No Selection</string>

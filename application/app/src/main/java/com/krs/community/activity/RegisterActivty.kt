@@ -25,6 +25,7 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -89,6 +90,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         val mApp = applicationContext as AppController
         mApp.firebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
         mApp.facebookAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
+
+        if (BuildConfig.FLAVOR == "yadav") {
+            binding.llHeader.visibility = View.VISIBLE
+        } else {
+            binding.imgHeader.visibility = View.VISIBLE
+        }
 
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
             val newToken = instanceIdResult.token
@@ -256,7 +263,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                         .setContentText("Do you have good internet speed?")
                         .setConfirmText("Upload")
                         .setCancelText("Later")
-                        .setCustomImage(R.drawable.ic_medk)
+                        .setCustomImage(R.drawable.ic_app)
                         .showCancelButton(true)
                         .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                             sweetAlertDialog.dismissWithAnimation()

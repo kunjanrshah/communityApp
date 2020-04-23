@@ -50,6 +50,65 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "1.0"
+    productFlavors {
+        ghanchi {
+            applicationId "com.ghanchi.samaj"
+            versionCode 1
+            versionName "1.0"
+            resValue "string", "app_name", "Muslim Ghanchi Samaj"
+            resValue "string", "dev_name", "Mehboob Gogda"
+            resValue "string", "dev_contact", "9377133222"
+            resValue "string", "skype_id", "9377133222"
+            resValue "string", "fb_url", "https://www.facebook.com/MEHBOOBGHANCHI"
+            resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
+            resValue "string", "dev_email", "saraoffsetprinters@gmail.com"
+            resValue "string", "dev_link", "https://muslimghanchi.org"
+            resValue "string", "authorities", "com.ghanchi.samaj.provider"
+            resValue "string", "base_url_logo", "https://muslimghanchi.org/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://muslimghanchi.org/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://muslimghanchi.org/uploads/users/original/"
+            buildConfigField "String", "BASE_URL", '"https://www.muslimghanchi.org/API/"'
+        }
+        medk {
+            applicationId "com.medk.samaj"
+            versionCode 1
+            versionName "1.0"
+            resValue "string", "app_name", "MEDK Vastipatrak"
+            resValue "string", "dev_name", "Kunjan Shah"
+            resValue "string", "dev_contact", "9427051418"
+            resValue "string", "skype_id", "kunjanrshah"
+            resValue "string", "fb_url", "https://www.facebook.com/kunjanrshah87"
+            resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
+            resValue "string", "dev_email", "rajuyadav79@gmail.com"
+            resValue "string", "dev_link", "https://helixinstruments.com"
+            resValue "string", "authorities", "com.medk.samaj.provider"
+            resValue "string", "base_url_logo", "https://medkapp.org/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://medkapp.org/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://medkapp.org/uploads/users/original/"
+            buildConfigField "String", "BASE_URL", '"https://www.medkapp.org/API/"'
+        }
+        yadav {
+            applicationId "com.yadav.samaj"
+            versionCode 1
+            versionName "1.0"
+            resValue "string", "app_name", "Yadav Seva Samaj"
+            resValue "string", "dev_name", "RajKumar Yadav"
+            resValue "string", "dev_contact", "8000974974"
+            resValue "string", "skype_id", "8000974974"
+            resValue "string", "fb_url", "https://www.facebook.com/rajuyadav1979"
+            resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
+            resValue "string", "dev_email", "rajuyadav79@gmail.com"
+            resValue "string", "dev_link", "https://helixinstruments.com"
+            resValue "string", "authorities", "com.yadav.samaj.provider"
+            resValue "string", "base_url_logo", "https://helixinstruments.com/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://helixinstruments.com/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://helixinstruments.com/uploads/users/original/"
+            buildConfigField "String", "BASE_URL", '"https://helixinstruments.com/API/"'
+        }
+    }
+
     sourceSets {
         main { res.srcDirs = ['src/main/res', 'src/main/res/values-gu', 'src/main/res/values-hi'] }
     }

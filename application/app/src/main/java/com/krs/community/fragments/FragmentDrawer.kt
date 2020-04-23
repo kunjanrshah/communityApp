@@ -10,7 +10,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,10 +20,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.ContactUsActivity
 import com.krs.community.adapter.NavigationDrawerAdapter
@@ -45,7 +50,6 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
 
     var containerView: View? = null
     private var drawerListener: FragmentDrawerListener? = null
-    private var view1: View? = null
     private lateinit var familyDetailViewModel: FamilyDetailViewModel
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance<FamilyDetailViewModelFactory>()
     override val kodein by kodein()
@@ -91,6 +95,16 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
         val tvSettings = layout.findViewById<TextView>(R.id.tv_settings)
         val tvContactUs = layout.findViewById<TextView>(R.id.tv_contact_us)
         val llChangeLan = layout.findViewById<LinearLayout>(R.id.ll_change_lan)
+        val llFoundation = layout.findViewById<LinearLayout>(R.id.ll_foundation)
+
+        if (BuildConfig.FLAVOR == "ghanchi") {
+            llFoundation.visibility = View.VISIBLE
+            val ivLogo = layout.findViewById<AppCompatImageView>(R.id.iv_logo)
+            Glide.with(this).load(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.sara_foundation)).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(ivLogo)
+        } else {
+            llFoundation.visibility = View.GONE
+        }
+
 
         llChangeLan.setOnClickListener { v: View? ->
             mDrawerLayout!!.closeDrawers()

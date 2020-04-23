@@ -29,6 +29,7 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
@@ -142,7 +143,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                         }
                     }
 
-                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                    if (!member.nativePlaceId.isNullOrEmpty()) {
                         val native = contactListViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                         Coroutines.main {
                             holder.tvNative.text = "Native: $native"
@@ -202,7 +203,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app) + BuildConfig.APPLICATION_ID)
                             } else {
                                 Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                             }

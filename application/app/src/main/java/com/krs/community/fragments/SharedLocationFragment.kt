@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
@@ -109,10 +110,10 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 Coroutines.io {
                     var native = ""
                     var lastname = ""
-                    if (!member.subCastId.trim().isNullOrEmpty()) {
+                    if (!member.subCastId.isNullOrEmpty()) {
                         lastname = filterViewModel.getLastNameById(Integer.parseInt(member.subCastId.toString()))
                     }
-                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                    if (!member.nativePlaceId.isNullOrEmpty()) {
                         native = filterViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                     }
                     Coroutines.main {
@@ -218,7 +219,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app))
+                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app) + BuildConfig.APPLICATION_ID)
                             } else {
                                 Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
                             }

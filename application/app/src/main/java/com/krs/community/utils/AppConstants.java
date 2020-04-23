@@ -1,5 +1,7 @@
 package com.krs.community.utils;
 
+import com.krs.community.BuildConfig;
+
 public class AppConstants {
 
     public static final String TRANSITION_CARD = "card_transition_";
@@ -9,7 +11,7 @@ public class AppConstants {
     public static final String INSERT = "insert";
     public static final String VERSION = "version";
     //public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
-    public static final String APPLICATION_BASE_URL = "https://www.medkapp.org/API/";
+    public static final String APPLICATION_BASE_URL = BuildConfig.BASE_URL;
     public static final String UPLOAD_DOCUMENT = APPLICATION_BASE_URL + "UploadFiles";
 
     public interface UrlPath {

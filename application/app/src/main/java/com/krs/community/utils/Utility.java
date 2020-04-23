@@ -65,6 +65,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.squti.guru.Guru;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.krs.community.BuildConfig;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
 import com.krs.community.fragments.CalendarFragment;
@@ -1745,7 +1746,7 @@ public class Utility {
         intent.setType("image/*");
 
         intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Family Tree");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.krs.medk \nUpdate your Profile and complete your Family Tree");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, context.getString(R.string.install_app) + BuildConfig.APPLICATION_ID + " \nUpdate your Profile and complete your Family Tree");
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         try {
             context.startActivity(Intent.createChooser(intent, "Share Family Tree"));

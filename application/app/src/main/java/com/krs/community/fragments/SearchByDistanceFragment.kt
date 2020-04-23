@@ -35,6 +35,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
@@ -256,7 +257,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                 }
 
                 Coroutines.io {
-                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                    if (!member.nativePlaceId.isNullOrEmpty()) {
                         val native = mByDistanceViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                         Coroutines.main {
                             viewHolder.tvNative.text = "Native: $native"
@@ -336,7 +337,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
                                 val toNumber = "+91" + member.mobile
-                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=com.krs.medk"
+                                val text = "Install your Community App\n" + "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
                                 Utility.sendWhatsAppMessage(activity as AppCompatActivity, toNumber, text)
                             }
 

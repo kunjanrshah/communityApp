@@ -182,7 +182,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                         .setContentText(getString(R.string.withGoogleMap))
                         .setConfirmText(getString(R.string.View))
                         .setNeutralText(getString(R.string.set))
-                        .setCustomImage(R.drawable.ic_medk)
+                        .setCustomImage(R.drawable.ic_app)
                         .setConfirmClickListener {
                             it.dismiss()
                             Utility.showDirections(activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}" + getString(R.string.homeDetail))
