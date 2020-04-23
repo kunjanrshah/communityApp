@@ -30,6 +30,10 @@ class RoomMemberViewModel(
         return mRoomMemberRepository.getLastName(id)
     }
 
+    suspend fun getNativeById(id: Int): String {
+        return mRoomMemberRepository.getNativeById(id)
+    }
+
     fun getCityNamebyId(id: String): LiveData<String> {
         return mRoomMemberRepository.getCityName(id)
     }

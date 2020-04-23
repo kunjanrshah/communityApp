@@ -5,12 +5,20 @@ import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class SmartSearchRepository(private val api: ApiServices, private val db: AppDatabase) : SafeApiRequest() {
 
     suspend fun searchByKeyword(jsonObject: JsonObject): searchByKeywordsResponse {
         return apiRequest {
             api.getSearchByKeywords(jsonObject)
+        }
+    }
+
+    suspend fun getNativeById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getNativeDao().getNative(id)
         }
     }
 

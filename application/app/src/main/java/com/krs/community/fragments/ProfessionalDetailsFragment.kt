@@ -72,7 +72,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         member = arguments?.getSerializable(getString(R.string.member)) as Member
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         val loginMem = Gson().fromJson(loginMember, Member::class.java)
-        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString().toLowerCase() != "user") {
+        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
             binding.imgLogo.isEnabled = true
             binding.edtComName.isFocusable = true
             binding.spMainCat.isClickable = true

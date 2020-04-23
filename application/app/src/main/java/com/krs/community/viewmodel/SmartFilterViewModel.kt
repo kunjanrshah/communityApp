@@ -47,6 +47,10 @@ class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterReposi
         return mSmartFilterRepository.getLastNameById(id)
     }
 
+    suspend fun getNativeById(id: Int): String {
+        return mSmartFilterRepository.getNativeById(id)
+    }
+
     fun getIdByLastName(name: String): Int {
         return mSmartFilterRepository.getIdByLastName(name)
     }

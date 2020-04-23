@@ -39,10 +39,9 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         val mInflater = _context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         if (convertView == null) {
-
+            //  val binding=   DataBindingUtil.inflate<ListSmartPopupBinding>(mInflater, R.layout.list_smart_popup, convertView,false)
             convertView = mInflater.inflate(R.layout.list_smart_popup, null)
             viewHolder = PopUpViewHolder(convertView)
-
             convertView.tag = viewHolder
 
             for ((key, value1) in mapChildValues) {
@@ -62,6 +61,16 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                     if (value.isNotEmpty()) {
                         viewHolder.llMember.visibility = View.VISIBLE
                         viewHolder.edtMember.setText(value1)
+                    }
+                } else if (key.equals(_context.resources.getString(R.string.ss_father_name), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.llMemFather.visibility = View.VISIBLE
+                        viewHolder.edtMemFather.setText(value1)
+                    }
+                } else if (key.equals(_context.resources.getString(R.string.ss_mother_name), ignoreCase = true)) {
+                    if (value.isNotEmpty()) {
+                        viewHolder.llMemMother.visibility = View.VISIBLE
+                        viewHolder.edtMother.setText(value1)
                     }
                 } else if (key.equals(_context.resources.getString(R.string.ss_sp_surname), ignoreCase = true)) {
                     if (value.isNotEmpty() && !value.equals(_context.getString(R.string.ss_surname), ignoreCase = true)) {
@@ -422,6 +431,8 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         viewHolder.imgAgeClose.setOnClickListener { v: View? -> viewHolder.llAge.visibility = View.GONE }
         viewHolder.imgHeadClose.setOnClickListener { v: View? -> viewHolder.llHead.visibility = View.GONE }
         viewHolder.imgMemberClose.setOnClickListener { v: View? -> viewHolder.llMember.visibility = View.GONE }
+        viewHolder.imgMemFatherClose.setOnClickListener { v: View? -> viewHolder.llMemFather.visibility = View.GONE }
+        viewHolder.imgMemMotherClose.setOnClickListener { v: View? -> viewHolder.llMemMother.visibility = View.GONE }
         viewHolder.imgSurnameClose.setOnClickListener { v: View? -> viewHolder.llSurname.visibility = View.GONE }
         viewHolder.imgSamajClose.setOnClickListener { v: View? -> viewHolder.llSamaj.visibility = View.GONE }
         viewHolder.imgGenderClose.setOnClickListener { v: View? -> viewHolder.llGender.visibility = View.GONE }
@@ -657,7 +668,12 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
             if (viewHolder.llMember.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_mem_name), viewHolder.edtMember.text.toString().trim { it <= ' ' })
             }
-
+            if (viewHolder.llMemFather.isShown) {
+                lstValues.put(_context.resources.getString(R.string.ss_father_name), viewHolder.edtMemFather.text.toString().trim { it <= ' ' })
+            }
+            if (viewHolder.llMemMother.isShown) {
+                lstValues.put(_context.resources.getString(R.string.ss_mother_name), viewHolder.edtMother.text.toString().trim { it <= ' ' })
+            }
             if (viewHolder.llGender.isShown) {
                 lstValues.put(_context.resources.getString(R.string.ss_sp_gender), viewHolder.spGender.text.toString().trim { it <= ' ' })
             }
@@ -822,6 +838,12 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var llFamilyCode: LinearLayout = view.findViewById(R.id.ll_family_code)
         var llHead: LinearLayout = view.findViewById(R.id.ll_head)
         var llMember: LinearLayout = view.findViewById(R.id.ll_member)
+        var llMemFather: LinearLayout = view.findViewById(R.id.ll_mem_father)
+        var edtMemFather: EditText = view.findViewById(R.id.edt_mem_father)
+        var imgMemFatherClose: ImageView = view.findViewById(R.id.img_mem_father_close)
+        var llMemMother: LinearLayout = view.findViewById(R.id.ll_mem_mother)
+        var edtMother: EditText = view.findViewById(R.id.edt_mem_mother)
+        var imgMemMotherClose: ImageView = view.findViewById(R.id.img_mem_mother_close)
         var llSurname: LinearLayout = view.findViewById(R.id.ll_surname)
         var llSamaj: LinearLayout = view.findViewById(R.id.ll_samaj)
         var llGender: LinearLayout = view.findViewById(R.id.ll_gender)

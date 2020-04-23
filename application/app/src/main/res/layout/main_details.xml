@@ -61,6 +61,32 @@
                 android:singleLine="true"
                 android:textSize="14sp" />
 
+            <EditText
+                android:id="@+id/edt_father"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:digits="@string/restrict_space"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="@string/fathername"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edt_mother"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:digits="@string/restrict_space"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="@string/mothername"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"

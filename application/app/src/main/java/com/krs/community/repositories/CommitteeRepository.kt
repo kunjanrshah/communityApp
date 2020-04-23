@@ -18,6 +18,12 @@ class CommitteeRepository(
         }
     }
 
+    suspend fun getNativeById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getNativeDao().getNative(id)
+        }
+    }
+
     suspend fun getLastnameById(id: Int): String {
         return withContext(Dispatchers.IO) {
             db.getLastNameDao().getLastName(id)

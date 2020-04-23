@@ -68,7 +68,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         val loginMem = Gson().fromJson(loginMember, Member::class.java)
 
-        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString().toLowerCase() != "user") {
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
 
             binding.fname.isFocusable = true
             binding.edtArea.isFocusable = true
@@ -154,11 +154,20 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.edtFather.setText(member.fatherName)
         binding.edtMother.setText(member.motherName)
         binding.edtMobile.setText(member.mobile)
-        binding.edtAddr.setText(member.address)
         binding.spGender.setText(member.gender)
+
+        binding.edtAddr.setText(member.address)
         binding.edtArea.setText(member.area)
         binding.edtPincode.setText(member.pincode)
         binding.chkRented.isChecked = member.isRented.equals("1")
+
+        getMasterList()
+        setMemberRelation()
+        setMemberLastname()
+        setMemberState()
+        setMemberCity()
+        setHomeLocation()
+
 
         binding.llHome.setOnClickListener {
 
@@ -263,12 +272,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             }
         }
 
-        setMemberRelation()
-        setMemberLastname()
-        setMemberState()
-        setMemberCity()
-        getMasterList()
-        setHomeLocation()
+
         return binding.root
     }
 
@@ -360,7 +364,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
     private fun setMemberRelation() = Coroutines.main {
         if (member.relationId.isNotEmpty()) {
-            if (!member.relationId.equals("0")) {
+            if (member.relationId != "0") {
                 profileDetailViewModel.selectedRelationId = Integer.parseInt(member.relationId)
                 profileDetailViewModel.relationName.await().observeForever {
                     binding.spRelation.setText(it)

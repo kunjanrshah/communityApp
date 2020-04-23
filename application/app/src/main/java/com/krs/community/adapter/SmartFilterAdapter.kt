@@ -38,6 +38,8 @@ class SmartFilterAdapter(private val _context: Context,
     private var edtHeadName: EditText? = null
     private var edtFamilyCode: EditText? = null
     private var edtMemberName: EditText? = null
+    private var edtFatherName: EditText? = null
+    private var edtMotherName: EditText? = null
     private var edtEmail: EditText? = null
     private var edtMobile: EditText? = null
     private var edtLocalAdd: EditText? = null
@@ -202,12 +204,29 @@ class SmartFilterAdapter(private val _context: Context,
             } else {
                 mapChildValues[_context.resources.getString(R.string.ss_head_name)] = ""
             }
+
             val mem_name = edtMemberName?.text.toString().trim { it <= ' ' }
             if (mem_name.isNotEmpty()) {
                 mapChildValues[_context.getString(R.string.ss_mem_name)] = mem_name
             } else {
                 mapChildValues[_context.getString(R.string.ss_mem_name)] = ""
             }
+
+            val fatherName = edtFatherName?.text.toString().trim { it <= ' ' }
+            if (fatherName.isNotEmpty()) {
+                mapChildValues[_context.getString(R.string.ss_father_name)] = fatherName
+            } else {
+                mapChildValues[_context.getString(R.string.ss_father_name)] = ""
+            }
+
+            val motherName = edtMotherName?.text.toString().trim { it <= ' ' }
+            if (motherName.isNotEmpty()) {
+                mapChildValues[_context.getString(R.string.ss_mother_name)] = motherName
+            } else {
+                mapChildValues[_context.getString(R.string.ss_mother_name)] = ""
+            }
+
+
             val surname = spSurname.text.toString().trim { it <= ' ' }
             if (surname.isNotEmpty() && !surname.equals("Surname", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_surname)] = surname
@@ -503,6 +522,14 @@ class SmartFilterAdapter(private val _context: Context,
                 if (memName != null && memName.isNotEmpty()) {
                     edtMemberName?.setText(memName)
                 }
+                val fatherName = mapChildValues[_context.resources.getString(R.string.ss_father_name)]
+                if (fatherName != null && fatherName.isNotEmpty()) {
+                    edtFatherName?.setText(fatherName)
+                }
+                val motherName = mapChildValues[_context.resources.getString(R.string.ss_mother_name)]
+                if (motherName != null && motherName.isNotEmpty()) {
+                    edtMotherName?.setText(motherName)
+                }
                 val surname = mapChildValues[_context.resources.getString(R.string.ss_sp_surname)]
                 if ((surname != null) && surname.isNotEmpty() && !surname.equals("Surname", ignoreCase = true)) {
                     spSurname.setText(surname)
@@ -714,6 +741,8 @@ class SmartFilterAdapter(private val _context: Context,
                 edtFamilyCode = convertView!!.findViewById(R.id.edt_family_code)
                 edtHeadName = convertView.findViewById(R.id.edt_head_name)
                 edtMemberName = convertView.findViewById(R.id.edt_member_name)
+                edtFatherName = convertView.findViewById(R.id.edt_father)
+                edtMotherName = convertView.findViewById(R.id.edt_mother)
                 spSurname = convertView.findViewById(R.id.sp_surname)
                 spLocalComm = convertView.findViewById(R.id.sp_samaj)
                 spCity = convertView.findViewById(R.id.sp_city)
@@ -1102,6 +1131,8 @@ class SmartFilterAdapter(private val _context: Context,
             edtFamilyCode?.text?.clear()
             edtHeadName?.text?.clear()
             edtMemberName?.text?.clear()
+            edtFatherName?.text?.clear()
+            edtMotherName?.text?.clear()
             spSurname.text?.clear()
             spLocalComm.text?.clear()
             spGender.text?.clear()

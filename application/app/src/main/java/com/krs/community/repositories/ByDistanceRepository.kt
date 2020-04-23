@@ -5,6 +5,8 @@ import com.krs.community.app.AppDatabase
 import com.krs.community.model.ByDistanceModel
 import com.krs.community.responses.ByDistanceResponse
 import com.krs.community.retrofit.ApiServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ByDistanceRepository(private val api: ApiServices, private val db: AppDatabase) : SafeApiRequest() {
     suspend fun byDistance(distance: ByDistanceModel): ByDistanceResponse {
@@ -19,5 +21,11 @@ class ByDistanceRepository(private val api: ApiServices, private val db: AppData
 
     fun getLastName(id: String): LiveData<String> {
         return db.getLastNameDao().getLastNameById(Integer.parseInt(id))
+    }
+
+    suspend fun getNativeById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getNativeDao().getNative(id)
+        }
     }
 }

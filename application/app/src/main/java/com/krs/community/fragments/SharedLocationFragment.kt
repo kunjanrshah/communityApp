@@ -107,8 +107,18 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 val holder = viewHolder as ListViewHolder
                 val name = member.firstName
                 Coroutines.io {
-                    val lastname = filterViewModel.getLastNameById(Integer.parseInt(member.subCastId.toString()))
-                    holder.tvName.text = "$name $lastname"
+                    var native = ""
+                    var lastname = ""
+                    if (!member.subCastId.trim().isNullOrEmpty()) {
+                        lastname = filterViewModel.getLastNameById(Integer.parseInt(member.subCastId.toString()))
+                    }
+                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                        native = filterViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                    }
+                    Coroutines.main {
+                        holder.tvNative.text = "Native: $native"
+                        holder.tvName.text = "$name $lastname"
+                    }
                 }
                 holder.iconText.text = name.substring(0, 1)
                 holder.itemView.isActivated = selectedItems.get(position, false)
@@ -520,6 +530,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         var cardViewList: LinearLayout = v.findViewById(R.id.card_view_list)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
 
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)

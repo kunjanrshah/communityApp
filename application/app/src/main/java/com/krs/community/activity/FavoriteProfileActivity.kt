@@ -226,6 +226,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
             var badge: NotificationBadge = itemView.findViewById(R.id.badge)
             var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
+            var tvNative: TextView = itemView.findViewById(R.id.tv_native)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -242,6 +243,15 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             var count = member.memberCount
             if (count != 0) {
                 count += 1
+            }
+
+            Coroutines.io {
+                if (!member.nativePlaceId.isNullOrEmpty()) {
+                    val native = roomMemberViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                    Coroutines.main {
+                        viewHolder.tvNative.text = "Native: $native"
+                    }
+                }
             }
             viewHolder.badge.setNumber(count)
             viewHolder.tvName.text = member.firstName

@@ -201,11 +201,15 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                             registerViewModel.localCommId = null
                             binding.spinnerLocal.setItems(it.toTypedArray())
                             binding.spinnerLocal.setExpandTint(R.color.black)
-                            if (!it.isNullOrEmpty()) {
-                                binding.spinnerLocal.select(0)
-                                Coroutines.io {
-                                    registerViewModel.localCommId = profileDetailViewModel.getLocalCommunityId(binding.spinnerLocal.text.toString())
+                            try {
+                                if (!it.isNullOrEmpty()) {
+                                    binding.spinnerLocal.select(0)
+                                    Coroutines.io {
+                                        registerViewModel.localCommId = profileDetailViewModel.getLocalCommunityId(binding.spinnerLocal.text.toString())
+                                    }
                                 }
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
                             }
                         }
                     }
@@ -311,11 +315,15 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
                 binding.spinnerSub.setItems(it.toTypedArray())
                 binding.spinnerSub.setExpandTint(R.color.black)
-                if (!it.isNullOrEmpty()) {
-                    binding.spinnerSub.select(0)
-                    Coroutines.io {
-                        registerViewModel.subCommId = profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
+                try {
+                    if (!it.isNullOrEmpty()) {
+                        binding.spinnerSub.select(0)
+                        Coroutines.io {
+                            registerViewModel.subCommId = profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             })
 

@@ -255,6 +255,15 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     viewHolder.tvArea.text = member.area + " " + it
                 }
 
+                Coroutines.io {
+                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                        val native = mByDistanceViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                        Coroutines.main {
+                            viewHolder.tvNative.text = "Native: $native"
+                        }
+                    }
+                }
+
                 /*viewHolder.tvEmail.text = member.emailAddress
                 viewHolder.tvMobile.text = member.mobile*/
 
@@ -498,7 +507,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
 
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
-
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
     }
 
     private fun applyImportant(holder: DistanceViewHolder, member: Member) {

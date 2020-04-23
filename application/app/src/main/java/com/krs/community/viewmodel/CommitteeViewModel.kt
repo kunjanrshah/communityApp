@@ -54,6 +54,10 @@ class CommitteeViewModel(
         }
     }
 
+    suspend fun getNativeById(id: Int): String {
+        return committeeRepository.getNativeById(id)
+    }
+
     suspend fun getLastName(id: Int): String {
         return committeeRepository.getLastnameById(id)
     }

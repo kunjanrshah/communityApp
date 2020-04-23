@@ -34,6 +34,10 @@ class BrowseCityViewModel(
         return browsCityRepository.getCityByStateId(id)
     }
 
+    suspend fun getNativeById(id: Int): String {
+        return browsCityRepository.getNativeById(id)
+    }
+
     fun fetchRecordsByCity(data: SearchByCityData) {
         if (isNetworkConnected(app.applicationContext)) {
             job_users = Job()

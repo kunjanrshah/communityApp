@@ -136,12 +136,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginRight="10dp"
                         android:fontFamily="@font/montserrat_light"
                         android:text="@string/_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number"
                         android:textColor="@color/black2"
-                        android:textSize="14sp" />
+                        android:textSize="10sp" />
 
                 </LinearLayout>
 
@@ -301,7 +302,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="- - - - - -  - - - - -" />
+                    android:text="- - - - " />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -314,7 +315,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="- - - - - - - - - - - -" />
+                    android:text="- - - - " />
 
             </LinearLayout>
 

@@ -32,6 +32,12 @@ class BrowseCityRepository(private val api: ApiServices, private val db: AppData
         }
     }
 
+    suspend fun getNativeById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getNativeDao().getNative(id)
+        }
+    }
+
 
     suspend fun userRecords(data: SearchByCityData): SearchByCityModel {
         return apiRequest {

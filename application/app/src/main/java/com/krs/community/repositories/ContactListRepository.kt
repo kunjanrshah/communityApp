@@ -4,6 +4,8 @@ import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ContactListRepository(
         private val api: ApiServices, private val db: AppDatabase?
@@ -11,6 +13,12 @@ class ContactListRepository(
     suspend fun getContactList(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest {
             api.getUserByMobile(jsonObject)
+        }
+    }
+
+    suspend fun getNativeById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db!!.getNativeDao().getNative(id)
         }
     }
 

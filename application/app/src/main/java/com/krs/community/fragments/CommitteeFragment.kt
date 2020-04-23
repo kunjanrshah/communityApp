@@ -150,15 +150,20 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 holder.tvCode.text = code
 
                 Coroutines.io {
+                    var native = ""
                     val lastname = committeeViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
                     val localComm = committeeViewModel.getLocalCommunityName(Integer.parseInt(member.localCommunityId.toString()))
                     val committeeName = committeeViewModel.getCommitteeName(Integer.parseInt(member.committeeId.toString()))
                     val desigName = committeeViewModel.getDesignationName(Integer.parseInt(member.designationId.toString()))
+                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                        native = committeeViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                    }
                     Coroutines.main {
                         holder.tvName.text = "$name $lastname"
                         holder.tvRegion.text = localComm
                         holder.tvCommitee.text = committeeName
                         holder.tvDesignation.text = desigName
+                        holder.tvNative.text = "Native: $native"
                     }
                 }
 
@@ -658,6 +663,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         var messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
     }
 
     override fun onResume() {

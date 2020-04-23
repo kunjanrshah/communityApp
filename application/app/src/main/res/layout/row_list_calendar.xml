@@ -134,13 +134,22 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/tv_native"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:hint="Native"
+                        android:singleLine="true"
+                        android:textSize="12sp" />
+
+                    <TextView
                         android:id="@+id/tv_area"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
                         android:hint="Area, City"
                         android:singleLine="true"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 

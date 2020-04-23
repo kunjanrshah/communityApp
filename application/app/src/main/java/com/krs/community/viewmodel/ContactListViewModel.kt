@@ -27,6 +27,10 @@ class ContactListViewModel(
         return contactListRepository.getCityName(id)
     }
 
+    suspend fun getNativeById(id: Int): String {
+        return contactListRepository.getNativeById(id)
+    }
+
     fun getContactList(jsonObject: JsonObject) {
         if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()

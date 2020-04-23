@@ -186,6 +186,8 @@
     <string name="ss_head_name" translatable="false">@string/head_name</string>
     <string name="ss_family_code" translatable="false">@string/member_code</string>
     <string name="ss_mem_name" translatable="false">@string/member_name</string>
+    <string name="ss_father_name" translatable="false">@string/father_name</string>
+    <string name="ss_mother_name" translatable="false">@string/mother_name</string>
     <string name="ss_sp_surname" translatable="false">@string/sub_cast_id</string>
     <string name="ss_sp_samaj" translatable="false">@string/local_community_id</string>
     <string name="ss_sp_marital" translatable="false">@string/marital_status</string>
@@ -598,6 +600,7 @@
 
     <string name="subAdmin">Sub Admin</string>
     <string name="my_role">My Role</string>
+    <string name="add_member">Add Member</string>
     <string name="select_role">Select Role</string>
     <string name="change_role">Change Role</string>
 
@@ -613,6 +616,8 @@
     <string name="apply">Apply</string>
     <string name="head">Head :</string>
     <string name="membar">Member :</string>
+    <string name="father_">Father :</string>
+    <string name="mother_">Mother :</string>
     <string name="lastname">LastName :</string>
     <string name="samaj">Samaj :</string>
     <string name="samajSecond">Samaj</string>
@@ -906,7 +911,7 @@
 
     <string name="first_nameDetails">First Name</string>
     <string name="last_nameDetails">Last Name</string>
-    <string name="fatherDetails">Father</string>
+    <string name="fatherDetails">Father/Husband</string>
     <string name="motherDetails">Mother</string>
     <string name="mobileDetails">Mobile</string>
     <string name="genderDetails">Gender</string>
@@ -1109,7 +1114,7 @@
     <string name="done">Done</string>
     <string name="photo">Photo</string>
     <string name="name">Name</string>
-    <string name="fathername">Father Name</string>
+    <string name="fathername">Father/Husband Name</string>
     <string name="mothername">Mother Name</string>
     <string name="mobilefilter">Mobile</string>
     <string name="genderfilter">Gender</string>

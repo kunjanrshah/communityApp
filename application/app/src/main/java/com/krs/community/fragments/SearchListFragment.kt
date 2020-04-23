@@ -185,6 +185,14 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                         viewHolder.tvArea.text = member.area + " " + it
                     }
                 }
+                Coroutines.io {
+                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                        val native = smartSearchViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                        Coroutines.main {
+                            viewHolder.tvNative.text = "Native: $native"
+                        }
+                    }
+                }
 
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
@@ -764,7 +772,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
-
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
         init {
             view.setOnLongClickListener(this)
         }

@@ -6,6 +6,8 @@ import com.krs.community.app.AppDatabase
 import com.krs.community.model.LoginResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class SmartFilterRepository(private val api: ApiServices, private val db: AppDatabase) : SafeApiRequest() {
 
@@ -30,6 +32,12 @@ class SmartFilterRepository(private val api: ApiServices, private val db: AppDat
     suspend fun getInActiveRecords(jsonObject: JsonObject): SmartFilterResponse {
         return apiRequest {
             api.getInActiveUsers(jsonObject)
+        }
+    }
+
+    suspend fun getNativeById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getNativeDao().getNative(id)
         }
     }
 

@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -35,6 +36,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.*
+import com.krs.community.adapter.AddFamilyHeadAdapter
+import com.krs.community.adapter.AddMemberAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -83,6 +86,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private var loginId: String? = null
     private var textMsg: String? = null
     var family: MutableList<Member>? = null
+
+    companion object {
+        var addMemberDialog: DialogPlus? = null
+        var addHeadDialog: DialogPlus? = null
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -257,57 +266,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         Glide.with(AppController.mApplication).load(imgStatus).thumbnail(0.5f).into(viewHolder.imgState)
                     } catch (e: Exception) {
                         e.message
-                    }
-
-                    viewHolder.frontLayout.setOnClickListener {
-                        if (!loginId.isNullOrEmpty()) {
-                            val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
-                            intent.putExtra(getString(R.string.member), member)
-                            startActivity(intent)
-                            // fade(this@FamilyDetailActivity)
-                        } else {
-                            if (!member.profilePassword.isNullOrEmpty()) {
-
-                                if (loginId == member.id) {
-                                    textMsg = "Exit"
-                                } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
-                                    textMsg = "Exit"
-                                } else if (member.loginStatus == 0) {
-                                    textMsg = "Enter"
-                                } else if (member.onlineStatus == 1) {
-                                    textMsg = "Exit"
-                                }
-
-                                var title = ""
-                                if (textMsg == getString(R.string.exitDetails)) {
-                                    title = "Hey " + member.firstName + ", You haven't logout properly"
-                                } else {
-                                    title = "Hey " + member.firstName + ", Welcome"
-                                }
-                                TTFancyGifDialog.Builder(this@FamilyDetailActivity)
-                                        .setTitle(title)
-                                        .setMessage("To $textMsg Please type your PIN")
-                                        .setPositiveBtnText(getString(R.string.yes))
-                                        .setPositiveBtnBackground("#22b573")
-                                        .setNegativeBtnText(getString(R.string.no))
-                                        .setNegativeBtnBackground("#c1272d")
-                                        .setGifResource(R.drawable.gif_dialog)
-                                        .isCancellable(false)
-                                        .OnPositiveClicked {
-                                            val intent = Intent(this@FamilyDetailActivity, PinViewActivity::class.java)
-                                            intent.putExtra(getString(R.string.member), member)
-                                            startActivity(intent)
-                                        }
-                                        .OnNegativeClicked {
-
-                                        }
-                                        .build()
-                                true
-
-                            } else {
-                                llRoot.snackbar(getString(R.string.pinFoundDetail), Snackbar.LENGTH_LONG)
-                            }
-                        }
                     }
 
                     val loginuser = Guru.getString(getString(R.string.loginMember), "")
@@ -612,9 +570,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         textMsg = getString(R.string.exitDetails)
                     }
                     var gif: Int = R.drawable.gif_dialog
-                    /* if (textMsg!!.contains(getString(R.string.exitDetails))) {
-                         gif = R.drawable.gif_dialog
-                     }*/
                     var title = ""
                     if (textMsg == getString(R.string.exitDetails)) {
                         title = "Hey " + member.firstName + ", You haven't logout properly"
@@ -646,6 +601,53 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             }
         }
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
+
+        if (!loginId.isNullOrEmpty() && member.id == loginId || isAdmin()) {
+            tvAdd.visibility = View.VISIBLE
+        } else {
+            tvAdd.visibility = View.GONE
+        }
+        tvAdd.setOnClickListener {
+
+            SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText("Add Member")
+                    .setContentText("Do you want to add new member?")
+                    .setConfirmText("Add New")
+                    .setCancelText("Add Live")
+                    .setCustomImage(R.drawable.ic_medk)
+                    .showCancelButton(true)
+                    .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                        sweetAlertDialog.dismissWithAnimation()
+                        val intent = Intent(this, ProfileDetailActivity::class.java)
+                        intent.putExtra(getString(R.string.member), Member())
+                        intent.putExtra(getString(R.string.head_id), members[0].id)
+                        startActivity(intent)
+                    }.setCancelClickListener {
+                        it.dismissWithAnimation()
+                        if (isAdmin()) {
+                            val adapter: AddMemberAdapter = AddMemberAdapter(this, profileDetailViewModel)
+                            addMemberDialog = DialogPlus.newDialog(this)
+                                    .setAdapter(adapter)
+                                    .setGravity(Gravity.CENTER)
+                                    .setCancelable(false)
+                                    .setExpanded(true, 800)
+                                    .setContentBackgroundResource(R.drawable.popup_corner)
+                                    .create()
+                            addMemberDialog?.show()
+                        } else {
+                            Snackbar.make(llRoot, R.string.admin_only, Snackbar.LENGTH_LONG).show()
+                        }
+                    }
+                    .show()
+        }
+        layoutManagerFixed.setHeaderIncrementFixer(header)
+        adapter.isShouldClipView = false
+        adapter.setParallaxHeader(header, rvDetail)
+        adapter.data = family
+        rvDetail.adapter = adapter
+    }
+
+    private fun isAdmin(): Boolean {
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
         var isAdmin = false
         if (!loginuser.isNullOrEmpty()) {
@@ -654,25 +656,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 isAdmin = true
             }
         }
-
-        if (!loginId.isNullOrEmpty() && member.id == loginId || isAdmin) {
-            tvAdd.visibility = View.VISIBLE
-        } else {
-            tvAdd.visibility = View.GONE
-        }
-        tvAdd.setOnClickListener {
-            val intent = Intent(this, ProfileDetailActivity::class.java)
-            intent.putExtra(getString(R.string.member), Member())
-            intent.putExtra(getString(R.string.head_id), members[0].id)
-            startActivity(intent)
-            // fade(this)
-        }
-        layoutManagerFixed.setHeaderIncrementFixer(header)
-        adapter.isShouldClipView = false
-        adapter.setParallaxHeader(header, rvDetail)
-        adapter.data = family
-        rvDetail.adapter = adapter
+        return isAdmin
     }
+
 
     @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: FamilyDetailViewHolder, member: Member) {
@@ -707,6 +693,123 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 e.message
             }
         }
+
+        holder.llContent.setOnClickListener {
+            if (!loginId.isNullOrEmpty()) {
+                val intent = Intent(this@FamilyDetailActivity, ProfileDetailActivity::class.java)
+                intent.putExtra(getString(R.string.member), member)
+                startActivity(intent)
+                // fade(this@FamilyDetailActivity)
+            } else {
+                if (!member.profilePassword.isNullOrEmpty()) {
+
+                    if (loginId == member.id) {
+                        textMsg = "Exit"
+                    } else if (member.loginStatus == 1 && member.onlineStatus == 0) {
+                        textMsg = "Exit"
+                    } else if (member.loginStatus == 0) {
+                        textMsg = "Enter"
+                    } else if (member.onlineStatus == 1) {
+                        textMsg = "Exit"
+                    }
+
+                    var title = ""
+                    if (textMsg == getString(R.string.exitDetails)) {
+                        title = "Hey " + member.firstName + ", You haven't logout properly"
+                    } else {
+                        title = "Hey " + member.firstName + ", Welcome"
+                    }
+                    TTFancyGifDialog.Builder(this@FamilyDetailActivity)
+                            .setTitle(title)
+                            .setMessage("To $textMsg Please type your PIN")
+                            .setPositiveBtnText(getString(R.string.yes))
+                            .setPositiveBtnBackground("#22b573")
+                            .setNegativeBtnText(getString(R.string.no))
+                            .setNegativeBtnBackground("#c1272d")
+                            .setGifResource(R.drawable.gif_dialog)
+                            .isCancellable(false)
+                            .OnPositiveClicked {
+                                val intent = Intent(this@FamilyDetailActivity, PinViewActivity::class.java)
+                                intent.putExtra(getString(R.string.member), member)
+                                startActivity(intent)
+                            }
+                            .OnNegativeClicked {
+
+                            }
+                            .build()
+                    true
+
+                } else {
+                    llRoot.snackbar(getString(R.string.pinFoundDetail), Snackbar.LENGTH_LONG)
+                }
+            }
+        }
+
+        holder.llContent.setOnLongClickListener {
+            if (isAdmin()) {
+                SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                        .setTitleText("Make Family Head")
+                        .setContentText("Do you want to remove ${member.firstName} as ${holder.tvSubtext.text} of ${members[0].firstName} And become a Family Head? \n Make sure you have fillup all the mandatory fields!")
+                        .setConfirmText("Yes,Please")
+                        .setCancelText(getString(R.string.no))
+                        .setCustomImage(R.drawable.ic_medk)
+                        .showCancelButton(true)
+                        .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                            if (isValidFamilyHead(member)) {
+                                sweetAlertDialog.dismissWithAnimation()
+                                val adapter: AddFamilyHeadAdapter = AddFamilyHeadAdapter(this, profileDetailViewModel)
+                                addHeadDialog = DialogPlus.newDialog(this)
+                                        .setAdapter(adapter)
+                                        .setGravity(Gravity.CENTER)
+                                        .setCancelable(false)
+                                        .setExpanded(true, 800)
+                                        .setContentBackgroundResource(R.drawable.popup_corner)
+                                        .create()
+                                addHeadDialog?.show()
+                            } else {
+                                sweetAlertDialog.dismissWithAnimation()
+                            }
+                        }.setCancelClickListener {
+                            it.dismissWithAnimation()
+                        }
+                        .show()
+
+            }
+            return@setOnLongClickListener true
+        }
+    }
+
+    private fun isValidFamilyHead(member: Member): Boolean {
+        if (member.mobile.length < 10) {
+            Snackbar.make(llRoot, R.string.mobile_not_found, Snackbar.LENGTH_LONG).show()
+            return false
+        } else if (member.emailAddress.isNullOrEmpty() || !isEmailValid(member.emailAddress)) {
+            Snackbar.make(llRoot, R.string.email_not_available, Snackbar.LENGTH_LONG).show()
+            return false
+        } else if (member.cityId.isNullOrEmpty() || member.cityId == "0") {
+            Snackbar.make(llRoot, "Select City", Snackbar.LENGTH_LONG).show()
+            return false
+        } else if (member.stateId.isNullOrEmpty() || member.stateId == "0") {
+            Snackbar.make(llRoot, "Select State", Snackbar.LENGTH_LONG).show()
+            return false
+        } else if (member.nativePlaceId.isNullOrEmpty() || member.nativePlaceId == "0") {
+            Snackbar.make(llRoot, "Select Native", Snackbar.LENGTH_LONG).show()
+            return false
+        } else if (member.address.isNullOrEmpty()) {
+            Snackbar.make(llRoot, "Enter Address", Snackbar.LENGTH_LONG).show()
+            return false
+        } else if (member.birthDate.isNullOrEmpty()) {
+            Snackbar.make(llRoot, "Enter BirthDate", Snackbar.LENGTH_LONG).show()
+            return false
+        } else if (member.gotraId.isNullOrEmpty() || member.gotraId == "0") {
+            Snackbar.make(llRoot, "Select Gotra", Snackbar.LENGTH_LONG).show()
+            return false
+        } else if (member.gender.isNullOrEmpty()) {
+            Snackbar.make(llRoot, "Select Gender", Snackbar.LENGTH_LONG).show()
+            return false
+        } else {
+            return true
+        }
     }
 
     internal class FamilyDetailViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -723,11 +826,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
         val imgState: ImageView = v.findViewById(R.id.img_state)
-
-        // val tvLogin: TextView = v.findViewById(R.id.tv_login)
         var ll_email: LinearLayout = v.findViewById(R.id.ll_email)
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
+        var llContent: LinearLayout = v.findViewById(R.id.ll_content)
     }
 
     override fun getMessage(response: DeleteProfileResponse) {

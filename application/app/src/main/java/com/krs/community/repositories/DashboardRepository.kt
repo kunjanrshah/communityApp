@@ -634,8 +634,12 @@ class DashboardRepository(
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.city))
-                if (!date.isNullOrEmpty()) {
-                    date = (Integer.parseInt(date) + 1).toString()
+                try {
+                    if (!date.isNullOrEmpty()) {
+                        date = (Integer.parseInt(date) + 1).toString()
+                    }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
                 }
                 val mJSONObject = JSONObject()
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)

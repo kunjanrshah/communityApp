@@ -320,6 +320,13 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                             viewHolder.tvArea.text = area
                         }
                     }
+
+                    if (!member.nativePlaceId.isNullOrEmpty()) {
+                        val native = roomMemberViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                        Coroutines.main {
+                            viewHolder.tvNative.text = "Native: $native"
+                        }
+                    }
                 }
 
                 if (member.mobile.isEmpty()) {
@@ -672,6 +679,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var badge: NotificationBadge = v.findViewById(R.id.badge)
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
     }
 
     internal inner class FilterViewHolder(v: View) : RecyclerView.ViewHolder(v) {

@@ -6,6 +6,8 @@ import com.krs.community.app.AppDatabase
 import com.krs.community.entities.RoomMember
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RoomMemberRepository(private val api: ApiServices, private val db: AppDatabase
 ) : SafeApiRequest() {
@@ -14,6 +16,12 @@ class RoomMemberRepository(private val api: ApiServices, private val db: AppData
 
     fun getLastName(id: Int): LiveData<String> {
         return db.getLastNameDao().getLastNameById(id)
+    }
+
+    suspend fun getNativeById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getNativeDao().getNative(id)
+        }
     }
 
     fun getCityName(id: String): LiveData<String> {

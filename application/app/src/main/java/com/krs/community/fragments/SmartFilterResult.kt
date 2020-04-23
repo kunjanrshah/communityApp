@@ -154,6 +154,13 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                         }
                     }
 
+                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                        val native = smartFilterViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                        Coroutines.main {
+                            holder.tvNative.text = "Native: $native"
+                        }
+                    }
+
                     if (!member.cityId.isNullOrEmpty()) {
                         val area = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
                         Coroutines.main {
@@ -586,6 +593,8 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+
 
         init {
             itemView.setOnLongClickListener(this)

@@ -29,6 +29,7 @@ import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
+import kotlinx.android.synthetic.main.fragment_personal_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -64,13 +65,14 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
 
         loginMem = Gson().fromJson(loginMember, Member::class.java)
-        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString().toLowerCase() != "user") {
+        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
             binding.edtRole.isFocusable = true
             binding.spNative.isClickable = true
             binding.chkExpired.isEnabled = true
             binding.chkIsDonor.isFocusable = true
             binding.chkIsDonor.isClickable = true
             binding.txtBdate.isClickable = true
+            binding.txtBdate.isEnabled = true
             binding.txtExpire.isClickable = true
             binding.txtBdate.isFocusable = true
             binding.txtExpire.isFocusable = true
@@ -88,6 +90,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.chkIsDonor.isFocusable = false
             binding.chkIsDonor.isClickable = false
             binding.txtBdate.isClickable = false
+            binding.txtBdate.isEnabled = false
             binding.txtBdate.isFocusable = false
             binding.txtExpire.isClickable = false
             binding.txtExpire.isFocusable = false
@@ -271,6 +274,9 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         }
 
         binding.txtExpire.setOnClickListener {
+            if (!chkExpired.isChecked) {
+                return@setOnClickListener
+            }
             which = 2
             val mem_date = binding.txtExpire.text.toString().trim()
             setDatePicker(mem_date)
@@ -402,7 +408,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             }
         }
 
-        if (member.id == loginMem.id || member.headId == loginMem.id) {
+        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
             datepicker.context(activity)
                     .callback(this)
                     .spinnerTheme(R.style.NumberPickerStyle)

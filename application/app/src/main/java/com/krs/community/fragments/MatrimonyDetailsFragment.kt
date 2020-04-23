@@ -51,7 +51,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         loginMem = Gson().fromJson(loginMember, Member::class.java)
-        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString().toLowerCase() != "user") {
+        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
             binding.chkInterested.isClickable = true
             binding.chkGlass.isClickable = true
             binding.chkIsMangal.isClickable = true
@@ -117,7 +117,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
                     .show()
         }
         binding.txtBtime.setOnClickListener {
-            if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString().toLowerCase() != "user") {
+            if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
                 NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.supportFragmentManager, getString(R.string.bottomSheet))
             }
         }

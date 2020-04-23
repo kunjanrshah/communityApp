@@ -33,7 +33,7 @@ public class Member implements Serializable {
 
     @SerializedName("sharing_id")
     @Expose
-    private String sharingId = "";
+    private String sharingId = "0";
 
     @SerializedName("matched")
     @Expose
@@ -63,14 +63,14 @@ public class Member implements Serializable {
 
     @SerializedName("head_sub_cast_id")
     @Expose
-    private String head_sub_cast_id = "";
+    private String head_sub_cast_id = "0";
     @SerializedName("head_name")
     @Expose
     private String head_name = "";
 
     @SerializedName("id")
     @Expose
-    private String id = "";
+    private String id = "0";
     @SerializedName("role")
     @Expose
     private String role = "";
@@ -94,7 +94,7 @@ public class Member implements Serializable {
     private String password = "";
     @SerializedName("relation_id")
     @Expose
-    private String relationId = "";
+    private String relationId = "0";
 
     @SerializedName("relation")
     @Expose
@@ -102,16 +102,16 @@ public class Member implements Serializable {
 
     @SerializedName("sub_community_id")
     @Expose
-    private String subCommunityId = "";
+    private String subCommunityId = "0";
     @SerializedName("local_community_id")
     @Expose
-    private String localCommunityId = "";
+    private String localCommunityId = "0";
     @SerializedName("committee_id")
     @Expose
-    private String committeeId = "";
+    private String committeeId = "0";
     @SerializedName("designation_id")
     @Expose
-    private String designationId = "";
+    private String designationId = "0";
     @SerializedName("first_name")
     @Expose
     private String firstName = "";
@@ -126,7 +126,7 @@ public class Member implements Serializable {
     private String motherName = "";
     @SerializedName("sub_cast_id")
     @Expose
-    private String subCastId = "";
+    private String subCastId = "0";
     @SerializedName("status")
     @Expose
     private String status = "";
@@ -141,13 +141,13 @@ public class Member implements Serializable {
     private String localAddress = "";
     @SerializedName("city_id")
     @Expose
-    private String cityId = "";
+    private String cityId = "0";
     @SerializedName("city")
     @Expose
     private String city = "";
     @SerializedName("state_id")
     @Expose
-    private String stateId = "";
+    private String stateId = "0";
     @SerializedName("area")
     @Expose
     private String area = "";
@@ -174,7 +174,7 @@ public class Member implements Serializable {
     private String distinctId = "";
     @SerializedName("native_place_id")
     @Expose
-    private String nativePlaceId = "";
+    private String nativePlaceId = "0";
     @SerializedName("blood_group")
     @Expose
     private String bloodGroup = "";
@@ -207,10 +207,10 @@ public class Member implements Serializable {
     private String expectation = "";
     @SerializedName("mosaad_id")
     @Expose
-    private String mosaadId = "";
+    private String mosaadId = "0";
     @SerializedName("current_activity_id")
     @Expose
-    private String currentActivityId = "";
+    private String currentActivityId = "0";
     @SerializedName("marital_status")
     @Expose
     private String maritalStatus = "";
@@ -219,7 +219,7 @@ public class Member implements Serializable {
     private String marriageDate = "";
     @SerializedName("gotra_id")
     @Expose
-    private String gotraId = "";
+    private String gotraId = "0";
     @SerializedName("profile_pic")
     @Expose
     private String profilePic = "";
@@ -240,10 +240,10 @@ public class Member implements Serializable {
     private String isDonor = "0";
     @SerializedName("business_category_id")
     @Expose
-    private String businessCategoryId = "";
+    private String businessCategoryId = "0";
     @SerializedName("business_sub_category_id")
     @Expose
-    private String businessSubCategoryId = "";
+    private String businessSubCategoryId = "0";
     @SerializedName("work_details")
     @Expose
     private String workDetails = "";
@@ -261,10 +261,10 @@ public class Member implements Serializable {
     private String website = "";
     @SerializedName("education_id")
     @Expose
-    private String educationId = "";
+    private String educationId = "0";
     @SerializedName("occupation_id")
     @Expose
-    private String occupationId = "";
+    private String occupationId = "0";
     @SerializedName("user_lat")
     @Expose
     private String userLat = "";

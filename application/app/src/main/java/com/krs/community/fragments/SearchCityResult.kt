@@ -145,17 +145,25 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 val member = members[position]
                 val holder = viewHolder as SearchCityResult.ViewHolder
                 val name = member.firstName
+                holder.iconText.text = name.substring(0, 1)
+                holder.tvArea.text = member.area
+                holder.itemView.isActivated = selectedItems.get(position, false)
+
                 Coroutines.io {
                     var lastname = ""
-                    lastname = browseCityViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
+                    var native = ""
+                    if (!member.subCastId.isNullOrEmpty()) {
+                        lastname = browseCityViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
+                    }
+                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                        Log.d("SearchCityResult", "member.nativePlaceId: " + member.nativePlaceId.trim())
+                        native = browseCityViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                    }
                     Coroutines.main {
                         holder.tvName.text = "$name $lastname"
+                        holder.tvNative.text = "Native: $native"
                     }
                 }
-
-                holder.iconText.text = name.substring(0, 1)
-                holder.itemView.isActivated = selectedItems.get(position, false)
-                holder.tvArea.text = member.area
 
                 var count = member.membersCount
                 if (count != 0) {
@@ -652,7 +660,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
-
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
 
         init {
             itemView.setOnLongClickListener(this)

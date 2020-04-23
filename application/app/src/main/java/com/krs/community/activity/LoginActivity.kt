@@ -194,19 +194,24 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                     if (checkReadPhoneStatePermission(this)) {
-                        val subscriptionManager: SubscriptionManager = SubscriptionManager.from(applicationContext)
-                        val subsInfoList: List<SubscriptionInfo> = subscriptionManager.activeSubscriptionInfoList
+                        try {
+                            val subscriptionManager: SubscriptionManager = SubscriptionManager.from(applicationContext)
+                            val subsInfoList: List<SubscriptionInfo> = subscriptionManager.activeSubscriptionInfoList
 
-                        for (subscriptionInfo in subsInfoList) {
-                            var number: String = subscriptionInfo.number
-                            val carrier: String = subscriptionInfo.carrierName.toString()
-                            if (number.isNotEmpty()) {
-                                if (number.length > 10) {
-                                    number = number.substring((number.length - 10), number.length)
+                            for (subscriptionInfo in subsInfoList) {
+                                var number: String = subscriptionInfo.number
+                                val carrier: String = subscriptionInfo.carrierName.toString()
+                                if (number.isNotEmpty()) {
+                                    if (number.length > 10) {
+                                        number = number.substring((number.length - 10), number.length)
+                                    }
+                                    lstNumber.add(number)
+                                    lstCarrier.add(carrier)
                                 }
-                                lstNumber.add(number)
-                                lstCarrier.add(carrier)
                             }
+                        } catch (e: java.lang.Exception) {
+                            Toast.makeText(this, "Feature not supported!", Toast.LENGTH_SHORT).show()
+                            Snackbar.make(findViewById(R.id.ll_login), "Feature not supported!", Snackbar.LENGTH_LONG).show()
                         }
                     } else {
                         requestPermissions(this@LoginActivity)
@@ -256,6 +261,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                                 //val url = `object`.getJSONObject("picture").getJSONObject("data").getString("url")
                                 loginViewModel?.loginWithFB(email)
                             } catch (e: JSONException) {
+                                hideProgressDialog()
                                 Toast.makeText(this@LoginActivity, "Error while getting records from Facebook", Toast.LENGTH_SHORT).show()
                                 e.printStackTrace()
                             }
@@ -420,11 +426,15 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
         member = response.data
         if (!response.otp.isNullOrBlank()) {
-            card_view_mobile.visibility = View.GONE
-            card_view_otp.visibility = View.VISIBLE
-            tv_otp.text = loginViewModel?.mobile
-            startSMSListener()
-            ReceviedOTP = response.otp
+            if (response.otp != "FAILED") {
+                card_view_mobile.visibility = View.GONE
+                card_view_otp.visibility = View.VISIBLE
+                tv_otp.text = loginViewModel?.mobile
+                startSMSListener()
+                ReceviedOTP = response.otp
+            } else {
+                Snackbar.make(findViewById(R.id.ll_login), "OTP sending fail!", Snackbar.LENGTH_LONG).show()
+            }
         } else {
             if (response.success) {
                 goToFamilyDetailScreen()

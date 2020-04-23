@@ -19,6 +19,9 @@ interface NativeDao {
     @Query("SELECT name FROM Native WHERE id == :id")
     fun getNativeById(id: Int): LiveData<String>
 
+    @Query("SELECT name FROM Native WHERE id == :id")
+    fun getNative(id: Int): String
+
     @Query("SELECT id FROM Native WHERE name == :name")
     fun getNativeIdByName(name: String): Int
 

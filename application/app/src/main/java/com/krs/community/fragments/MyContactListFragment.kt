@@ -141,6 +141,13 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                             holder.tvArea.text = area
                         }
                     }
+
+                    if (!member.nativePlaceId.trim().isNullOrEmpty()) {
+                        val native = contactListViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                        Coroutines.main {
+                            holder.tvNative.text = "Native: $native"
+                        }
+                    }
                 }
 
                 if (member.mobile.isEmpty()) {
@@ -362,6 +369,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {
