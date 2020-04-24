@@ -207,7 +207,12 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     member.memberCode
                 }
-                holder.tvCode.text = code
+                if (BuildConfig.FLAVOR == "yadav") {
+                    holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    holder.tvCode.text = getString(R.string.code) + " " + code
+                }
+
                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                 val arrayId = loginMember?.sharingId?.split(',')

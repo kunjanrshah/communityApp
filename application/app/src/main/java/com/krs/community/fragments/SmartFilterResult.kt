@@ -146,7 +146,13 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 } else {
                     member.memberCode
                 }
-                holder.tvCode.text = code
+
+                if (BuildConfig.FLAVOR == "yadav") {
+                    holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    holder.tvCode.text = getString(R.string.code) + " " + code
+                }
+
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())

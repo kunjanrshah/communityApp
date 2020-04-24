@@ -426,7 +426,7 @@
     <string name="SmsExternalStorage">Permission denied to SMS your External storage</string>
 
     <!-- Register Sccren -->
-    <string name="code">Code</string>
+    <string name="code">code</string>
     <string name="select_sub_community">Select Sub Community</string>
     <string name="select_local_community">Select Local Community</string>
     <string name="RegisterFamily">Registering your family details</string>
@@ -1135,5 +1135,5 @@
     <string name="todate">todate</string>
     <string name="filter">filter</string>
     <string name="load_more">Searching...</string>
-    <string name="yss">medk/</string>
+    <string name="yss">yss/</string>
 </resources>

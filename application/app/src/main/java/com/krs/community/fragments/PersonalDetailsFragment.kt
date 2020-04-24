@@ -211,10 +211,10 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             profileDetailViewModel.selectedGotraId = Integer.parseInt(member.gotraId)
         }
 
-        if (BuildConfig.FLAVOR == "medk") {
-            binding.llGotra.visibility = View.VISIBLE
-        } else {
+        if (BuildConfig.FLAVOR == "ghanchi") {
             binding.llGotra.visibility = View.GONE
+        } else {
+            binding.llGotra.visibility = View.VISIBLE
         }
 
         binding.spGotra.setOnItemClickListener {

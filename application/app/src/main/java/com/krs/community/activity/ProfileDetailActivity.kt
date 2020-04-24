@@ -209,7 +209,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     } else if (!jsonObject.has(getString(R.string.native_place_id)) || jsonObject.getString(getString(R.string.native_place_id)).isNullOrEmpty()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.select_native))
                         return@setOnClickListener
-                    } else if (BuildConfig.FLAVOR == "medk" && (!jsonObject.has(getString(R.string.gotra_id)) || jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty())) {
+                    } else if (BuildConfig.FLAVOR != "ghanchi" && (!jsonObject.has(getString(R.string.gotra_id)) || jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty())) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectGotra))
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.mobile)) || jsonObject.getString(getString(R.string.mobile)).isNullOrEmpty()) {

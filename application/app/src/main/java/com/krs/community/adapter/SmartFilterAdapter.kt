@@ -887,10 +887,10 @@ class SmartFilterAdapter(private val _context: Context,
                 spEducation = convertView.findViewById(R.id.sp_education)
                 spGotra = convertView.findViewById(R.id.sp_gotra)
                 rlGotra = convertView.findViewById(R.id.rl_gotra)
-                if (BuildConfig.FLAVOR == "medk") {
-                    rlGotra.visibility = View.VISIBLE
-                } else {
+                if (BuildConfig.FLAVOR == "ghanchi") {
                     rlGotra.visibility = View.GONE
+                } else {
+                    rlGotra.visibility = View.VISIBLE
                 }
                 spBg = convertView.findViewById(R.id.sp_bg)
                 chkIsDonor = convertView.findViewById(R.id.chk_is_donor)
@@ -1061,12 +1061,12 @@ class SmartFilterAdapter(private val _context: Context,
                 tvMinHeight = convertView.findViewById(R.id.tv_min_height)
                 tvMaxHeight = convertView.findViewById(R.id.tv_max_height)
 
-                if (BuildConfig.FLAVOR == "medk") {
-                    chkIsShani?.visibility = View.VISIBLE
-                    chkIsMangal?.visibility = View.VISIBLE
-                } else {
+                if (BuildConfig.FLAVOR == "ghanchi") {
                     chkIsShani?.visibility = View.GONE
                     chkIsMangal?.visibility = View.GONE
+                } else {
+                    chkIsShani?.visibility = View.VISIBLE
+                    chkIsMangal?.visibility = View.VISIBLE
                 }
 
                 tvBirthTime?.setOnClickListener {

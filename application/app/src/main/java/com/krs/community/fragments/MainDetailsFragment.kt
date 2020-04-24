@@ -103,6 +103,14 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                 member.isRented = loginMem.isRented
             }
 
+            if (loginMem.role.toString() != getString(R.string.USER)) {
+                binding.edtCode.isFocusable = true
+                binding.edtCode.isClickable = true
+            } else {
+                binding.edtCode.isFocusable = false
+                binding.edtCode.isClickable = false
+            }
+
         } else {
             binding.fname.isFocusable = false
             binding.edtEmail.isFocusable = false
@@ -278,7 +286,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
     private fun setMemberCode(code: String?) {
         if (code.isNullOrEmpty()) {
-            binding.edtCode.setText("00000")
+            binding.llMcode.visibility = View.GONE
         } else if (code.length == 1) {
             binding.edtCode.setText("0000${code}")
         } else if (code.length == 2) {

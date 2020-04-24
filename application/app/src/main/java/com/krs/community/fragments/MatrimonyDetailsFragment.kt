@@ -47,12 +47,12 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         mApp.firebaseAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
         mApp.facebookAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
 
-        if (BuildConfig.FLAVOR == "medk") {
-            binding.chkIsMangal.visibility = View.VISIBLE
-            binding.chkIsShani.visibility = View.VISIBLE
-        } else {
+        if (BuildConfig.FLAVOR == "ghanchi") {
             binding.chkIsMangal.visibility = View.GONE
             binding.chkIsShani.visibility = View.GONE
+        } else {
+            binding.chkIsMangal.visibility = View.VISIBLE
+            binding.chkIsShani.visibility = View.VISIBLE
         }
 
         profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)

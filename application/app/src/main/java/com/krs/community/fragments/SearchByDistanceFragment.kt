@@ -306,7 +306,11 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                 } else {
                     member.memberCode
                 }
-                viewHolder.tvCode.text = code
+                if (BuildConfig.FLAVOR == "yadav") {
+                    viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    viewHolder.tvCode.text = getString(R.string.code) + " " + code
+                }
 
                 if (member.headId.equals("0")) {
                     viewHolder.tvRole.text = resources.getString(R.string.Family_Head)

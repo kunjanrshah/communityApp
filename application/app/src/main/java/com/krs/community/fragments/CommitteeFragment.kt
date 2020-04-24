@@ -148,7 +148,11 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 } else {
                     member.memberCode
                 }
-                holder.tvCode.text = code
+                if (BuildConfig.FLAVOR == "yadav") {
+                    holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    holder.tvCode.text = getString(R.string.code) + " " + code
+                }
 
                 Coroutines.io {
                     var native = ""

@@ -180,7 +180,11 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 } else {
                     member.memberCode
                 }
-                viewHolder.tvCode.text = code
+                if (BuildConfig.FLAVOR == "yadav") {
+                    holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    holder.tvCode.text = getString(R.string.code) + " " + code
+                }
 
                 Coroutines.io {
                     if (!member.head_sub_cast_id.isNullOrEmpty() && !member.head_name.isNullOrEmpty()) {

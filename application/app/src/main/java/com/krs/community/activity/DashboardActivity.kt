@@ -426,7 +426,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     dashboardViewModel.fetchOccupation(counts.occupation)
                     dashboardViewModel.fetchCommittee(counts.committees)
                     dashboardViewModel.fetchDesignation(counts.designations)
-                    if (BuildConfig.FLAVOR == "medk") {
+                    if (BuildConfig.FLAVOR != "ghanchi") {
                         dashboardViewModel.fetchGotra(counts.gotra)
                     }
 
@@ -474,7 +474,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     if (dbCount.designations != counts.designations) {
                         dashboardViewModel.fetchDesignation(counts.designations)
                     }
-                    if (BuildConfig.FLAVOR == "medk") {
+                    if (BuildConfig.FLAVOR != "ghanchi") {
                         if (dbCount.gotra != counts.gotra) {
                             dashboardViewModel.fetchGotra(counts.gotra)
                         }
