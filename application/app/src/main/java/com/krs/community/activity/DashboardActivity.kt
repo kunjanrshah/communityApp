@@ -35,6 +35,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -425,7 +426,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     dashboardViewModel.fetchOccupation(counts.occupation)
                     dashboardViewModel.fetchCommittee(counts.committees)
                     dashboardViewModel.fetchDesignation(counts.designations)
-                    dashboardViewModel.fetchGotra(counts.gotra)
+                    if (BuildConfig.FLAVOR == "medk") {
+                        dashboardViewModel.fetchGotra(counts.gotra)
+                    }
+
                     dashboardViewModel.insertMasterCounts(counts)
                 } else {
                     if (dbCount.business_categories != counts.business_categories) {
@@ -470,8 +474,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                     if (dbCount.designations != counts.designations) {
                         dashboardViewModel.fetchDesignation(counts.designations)
                     }
-                    if (dbCount.gotra != counts.gotra) {
-                        dashboardViewModel.fetchGotra(counts.gotra)
+                    if (BuildConfig.FLAVOR == "medk") {
+                        if (dbCount.gotra != counts.gotra) {
+                            dashboardViewModel.fetchGotra(counts.gotra)
+                        }
                     }
                 }
             }

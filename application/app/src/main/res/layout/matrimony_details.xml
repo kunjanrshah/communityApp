@@ -239,8 +239,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:text="@string/is_shaniDetails"
-                android:textSize="16sp"
-                android:visibility="gone" />
+                android:textSize="16sp" />
 
             <CheckBox
                 android:id="@+id/chk_is_mangal"
@@ -250,8 +249,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:text="@string/is_mangalDetails"
-                android:textSize="16sp"
-                android:visibility="gone" />
+                android:textSize="16sp" />
 
 
         </LinearLayout>

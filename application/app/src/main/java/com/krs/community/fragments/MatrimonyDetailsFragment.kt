@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentMatrimonyDetailsBinding
@@ -45,6 +46,14 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
         mApp.facebookAnalytics(context, MatrimonyDetailsFragment::class.simpleName)
+
+        if (BuildConfig.FLAVOR == "medk") {
+            binding.chkIsMangal.visibility = View.VISIBLE
+            binding.chkIsShani.visibility = View.VISIBLE
+        } else {
+            binding.chkIsMangal.visibility = View.GONE
+            binding.chkIsShani.visibility = View.GONE
+        }
 
         profileDetailViewModel = ViewModelProvider(this, factory).get(ProfileDetailViewModel::class.java)
         member = arguments?.getSerializable(getString(R.string.member)) as Member

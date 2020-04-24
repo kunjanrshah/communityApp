@@ -35,6 +35,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
@@ -154,10 +155,8 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
         binding.imgBack.setOnClickListener {
             if (isSave) {
-                isSave = false
                 setResult(102)
             }
-
             finish()
             hideKeyboard(this)
             //   fade(this)
@@ -186,7 +185,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 }
                 jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
 
-
                 if (!jsonObject.has(getString(R.string.first_name)) || jsonObject.getString(getString(R.string.first_name)).isNullOrEmpty()) {
                     mainDetailsFragment.binding.fname.error = getString(R.string.EnterFirstName)
                     return@setOnClickListener
@@ -211,7 +209,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     } else if (!jsonObject.has(getString(R.string.native_place_id)) || jsonObject.getString(getString(R.string.native_place_id)).isNullOrEmpty()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.select_native))
                         return@setOnClickListener
-                    } else if (!jsonObject.has(getString(R.string.gotra_id)) || jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty()) { //medk
+                    } else if (BuildConfig.FLAVOR == "medk" && (!jsonObject.has(getString(R.string.gotra_id)) || jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty())) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectGotra))
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.mobile)) || jsonObject.getString(getString(R.string.mobile)).isNullOrEmpty()) {
@@ -286,7 +284,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override fun onBackPressed() {
         if (isSave) {
-            isSave = false
             setResult(102)
         }
         finish()

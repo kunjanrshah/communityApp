@@ -873,6 +873,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 101 && resultCode == 102) {
+            DashboardActivity.stop = false
             setupList()
         }
     }

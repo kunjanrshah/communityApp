@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentPersonalDetailsBinding
@@ -209,6 +210,13 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         if (!member.gotraId.isNullOrEmpty()) {
             profileDetailViewModel.selectedGotraId = Integer.parseInt(member.gotraId)
         }
+
+        if (BuildConfig.FLAVOR == "medk") {
+            binding.llGotra.visibility = View.VISIBLE
+        } else {
+            binding.llGotra.visibility = View.GONE
+        }
+
         binding.spGotra.setOnItemClickListener {
             Coroutines.io {
                 profileDetailViewModel.selectedGotraId = profileDetailViewModel.getGotraIdByName(binding.spGotra.text.toString())

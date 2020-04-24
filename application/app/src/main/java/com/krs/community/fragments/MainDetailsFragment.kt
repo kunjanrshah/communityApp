@@ -276,8 +276,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         return binding.root
     }
 
-    private fun setMemberCode(code: String) {
-        if (code.isEmpty()) {
+    private fun setMemberCode(code: String?) {
+        if (code.isNullOrEmpty()) {
             binding.edtCode.setText("00000")
         } else if (code.length == 1) {
             binding.edtCode.setText("0000${code}")

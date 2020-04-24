@@ -31,6 +31,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
+import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
@@ -410,6 +411,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 101 && resultCode == 102) {
+            DashboardActivity.stop = false
             userContactList()
         }
     }

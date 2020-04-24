@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.adapter.SmartPopUpAdapter.ICloseDialog
 import com.krs.community.jrspinner.JRSpinner
@@ -83,7 +84,7 @@ class SmartFilterAdapter(private val _context: Context,
     private lateinit var spSubCat: JRSpinner
     private lateinit var spOccupation: JRSpinner
     private lateinit var spActivity: JRSpinner
-
+    private lateinit var rlGotra: RelativeLayout
     private var rangeAgeBar: CrystalRangeSeekbar? = null
     private var rangeUpdationBar: CrystalRangeSeekbar? = null
     private var rangeHeightBar1: CrystalRangeSeekbar? = null
@@ -885,6 +886,12 @@ class SmartFilterAdapter(private val _context: Context,
                 tvExpired = convertView.findViewById(R.id.tv_edate)
                 spEducation = convertView.findViewById(R.id.sp_education)
                 spGotra = convertView.findViewById(R.id.sp_gotra)
+                rlGotra = convertView.findViewById(R.id.rl_gotra)
+                if (BuildConfig.FLAVOR == "medk") {
+                    rlGotra.visibility = View.VISIBLE
+                } else {
+                    rlGotra.visibility = View.GONE
+                }
                 spBg = convertView.findViewById(R.id.sp_bg)
                 chkIsDonor = convertView.findViewById(R.id.chk_is_donor)
                 chkIsRented = convertView.findViewById(R.id.chk_is_rented)
@@ -1053,6 +1060,14 @@ class SmartFilterAdapter(private val _context: Context,
                 tvMaxWeight = convertView.findViewById(R.id.tv_max_weight)
                 tvMinHeight = convertView.findViewById(R.id.tv_min_height)
                 tvMaxHeight = convertView.findViewById(R.id.tv_max_height)
+
+                if (BuildConfig.FLAVOR == "medk") {
+                    chkIsShani?.visibility = View.VISIBLE
+                    chkIsMangal?.visibility = View.VISIBLE
+                } else {
+                    chkIsShani?.visibility = View.GONE
+                    chkIsMangal?.visibility = View.GONE
+                }
 
                 tvBirthTime?.setOnClickListener {
                     NumberPadTimePickerDialogFragment.newInstance(mListener).show((_context as AppCompatActivity).supportFragmentManager, "birth_time")

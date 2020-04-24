@@ -354,8 +354,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/montserrat_regular"
                         android:text="@string/mangal"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
+                        android:textSize="16sp" />
 
                     <CheckBox
                         android:id="@+id/chk_is_shani"
@@ -365,8 +364,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/montserrat_regular"
                         android:text="@string/shani"
-                        android:textSize="16sp"
-                        android:visibility="gone" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
