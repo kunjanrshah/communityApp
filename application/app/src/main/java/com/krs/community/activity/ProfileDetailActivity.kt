@@ -244,7 +244,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                                 profileDetailViewModel.updateProfile(profile, true)
                             }
                             .show()
-
                 } else {
 
                     if (!jsonObject.has(getString(R.string.relation_id)) || jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
@@ -310,6 +309,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)
+        intent.putExtra(getString(R.string.is_finish), true)
         if (member?.headId == "0") {
             intent.putExtra(getString(R.string.member_id), member?.id)
             intent.putExtra(getString(R.string.id), member?.id)

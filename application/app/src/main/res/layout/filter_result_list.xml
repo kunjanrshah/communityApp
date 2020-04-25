@@ -218,7 +218,6 @@
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="sdfsdf"
                             android:textColor="@color/colorPrimary"
                             android:textSize="12sp" />
 

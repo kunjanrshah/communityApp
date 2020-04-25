@@ -91,12 +91,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         mApp.firebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
         mApp.facebookAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
 
-        if (BuildConfig.FLAVOR == "yadav") {
-            binding.llHeader.visibility = View.VISIBLE
-        } else {
-            binding.imgHeader.visibility = View.VISIBLE
-        }
-
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
             val newToken = instanceIdResult.token
             Log.e("newToken", newToken)
@@ -157,6 +151,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 Utility.changeStatusbarColor(this, R.color.colorBG, false)
             }
 
+            if (BuildConfig.FLAVOR == "yadav") {
+                binding.llHeader.visibility = View.VISIBLE
+            } else {
+                binding.imgHeader.visibility = View.VISIBLE
+            }
+
             if (isLogin) {
                 val str = resources.getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>"
                 binding.txtAlready.text = Html.fromHtml(str)
@@ -208,15 +208,17 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                             registerViewModel.localCommId = null
                             binding.spinnerLocal.setItems(it.toTypedArray())
                             binding.spinnerLocal.setExpandTint(R.color.black)
-                            try {
-                                if (!it.isNullOrEmpty()) {
-                                    binding.spinnerLocal.select(0)
-                                    Coroutines.io {
-                                        registerViewModel.localCommId = profileDetailViewModel.getLocalCommunityId(binding.spinnerLocal.text.toString())
+                            if (BuildConfig.FLAVOR == "medk") {
+                                try {
+                                    if (!it.isNullOrEmpty()) {
+                                        binding.spinnerLocal.select(0)
+                                        Coroutines.io {
+                                            registerViewModel.localCommId = profileDetailViewModel.getLocalCommunityId(binding.spinnerLocal.text.toString())
+                                        }
                                     }
+                                } catch (e: java.lang.Exception) {
+                                    e.printStackTrace()
                                 }
-                            } catch (e: java.lang.Exception) {
-                                e.printStackTrace()
                             }
                         }
                     }
@@ -311,7 +313,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     }
 
-
     private fun setDropDownList() {
         Coroutines.main {
             profileDetailViewModel.lstLastName.await().observe(this, Observer {
@@ -322,15 +323,17 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
                 binding.spinnerSub.setItems(it.toTypedArray())
                 binding.spinnerSub.setExpandTint(R.color.black)
-                try {
-                    if (!it.isNullOrEmpty()) {
-                        binding.spinnerSub.select(0)
-                        Coroutines.io {
-                            registerViewModel.subCommId = profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
+                if (BuildConfig.FLAVOR == "medk") {
+                    try {
+                        if (!it.isNullOrEmpty()) {
+                            binding.spinnerSub.select(0)
+                            Coroutines.io {
+                                registerViewModel.subCommId = profileDetailViewModel.getSubCommIdByName(binding.spinnerSub.text.toString())
+                            }
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             })
 
@@ -494,7 +497,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     private fun goToFamilyDetailActivity(data: RegisterModel) {
         val intent = Intent(this, FamilyDetailActivity::class.java)
         intent.putExtra(getString(R.string.id), data.userId.toString())
-        intent.putExtra("register", true)
+        intent.putExtra(getString(R.string.is_finish), true)
         startActivity(intent)
         //finish()
         //  Utility.fade(this)

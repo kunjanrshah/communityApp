@@ -481,6 +481,8 @@
     <string name="update">Update</string>
     <string name="no">\u0020 No \u0020</string>
     <string name="updatingProfile">Updating your profile</string>
+    <string name="removingProfile">Removing profile</string>
+    <string name="addingProfile">Adding profile</string>
     <string name="pleaseWait">Please wait...</string>
     <string name="EnterFirstName">Enter FirstName</string>
     <string name="selectYourLastName">Select LastName</string>
@@ -1136,4 +1138,5 @@
     <string name="filter">filter</string>
     <string name="load_more">Searching...</string>
     <string name="yss">yss/</string>
+    <string name="is_finish">is_finish</string>
 </resources>

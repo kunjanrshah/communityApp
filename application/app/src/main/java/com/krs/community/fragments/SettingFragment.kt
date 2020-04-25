@@ -56,10 +56,10 @@ class SettingFragment : Fragment() {
         switchDialog = root.findViewById<LabeledSwitch>(R.id.switch_dialog)
         val isShow = Guru.getBoolean(getString(R.string.isdialogshow), false)
 
-        // val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
-        // val isShowCallPhone = Utility.checkReadPhoneStatePermission((activity as AppCompatActivity))
+        val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
+        val isShowCallPhone = Utility.checkReadPhoneStatePermission((activity as AppCompatActivity))
 
-        // switchDialog?.isOn = isShow && isShowCallPhone
+        switchDialog?.isOn = isShow && isShowCallPhone && isShowCallLog
 
         switchDialog?.setOnClickListener {
 
@@ -71,7 +71,7 @@ class SettingFragment : Fragment() {
 
                 SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Help")
-                        .setContentText("To enjoy this feature some mobile need to enable AutoStart mode")
+                        .setContentText("To enjoy this feature some mobile need to ON AutoStart mode")
                         .setConfirmText("Yes,Please")
                         .setConfirmClickListener {
                             it.dismissWithAnimation()

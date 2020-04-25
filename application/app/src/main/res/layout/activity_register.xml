@@ -467,8 +467,7 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/community_gradient_spinner"
-                    android:visibility="gone">
+                    android:background="@drawable/community_gradient_spinner">
 
                     <com.krs.community.jrspinner.JRSpinner
                         android:id="@+id/spinnerSub"
@@ -497,8 +496,7 @@
                     android:layout_height="@dimen/register_field_height"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/community_gradient_spinner"
-                    android:visibility="gone">
+                    android:background="@drawable/community_gradient_spinner">
 
 
                     <com.krs.community.jrspinner.JRSpinner

@@ -43,6 +43,7 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.IFamilyMembersListener
+import com.krs.community.listeners.RefreshListListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -64,12 +65,12 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
 
-class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersListener, LocationAdapter.SetLocationListner {
+class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersListener, LocationAdapter.SetLocationListner, RefreshListListener {
 
     lateinit var members: ArrayList<Member>
     var headId: String? = null
     var memId: String? = null
-    var register: Boolean = false
+    var isFinish: Boolean = false
     val TAG = FamilyDetailActivity::class.java.simpleName
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
     private lateinit var rvDetail: RecyclerView
@@ -82,7 +83,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     private val familyDetailViewModelFactory: FamilyDetailViewModelFactory by instance<FamilyDetailViewModelFactory>()
-    lateinit var mainHandler: Handler
+
     private var isShimmer: Boolean = true
     private var loginId: String? = null
     private var textMsg: String? = null
@@ -91,8 +92,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     companion object {
         var addMemberDialog: DialogPlus? = null
         var addHeadDialog: DialogPlus? = null
+        lateinit var mainHandler: Handler
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +107,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         mainHandler = Handler(Looper.getMainLooper())
         headId = intent.getStringExtra(getString(R.string.id))
-        register = intent.getBooleanExtra("register", false)
+        isFinish = intent.getBooleanExtra(getString(R.string.is_finish), false)
         memId = intent.getStringExtra(getString(R.string.member_id))
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
@@ -171,7 +172,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
     }
 
-    private fun getFamilyDetails() {
+    fun getFamilyDetails() {
         if (isShimmer) {
             isShimmer = false
             mShimmerViewContainer?.visibility = View.VISIBLE
@@ -283,6 +284,38 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         viewHolder.swipe.setLockDrag(true)
                     }
 
+                    viewHolder.llMake.setOnClickListener {
+                        if (isAdmin()) {
+                            SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                                    .setTitleText("Make Family Head")
+                                    .setContentText("Do you want to remove ${member.firstName} from ${members[0].firstName} Family? \n Make sure you have fillup all the mandatory fields!")
+                                    .setConfirmText("Yes,Please")
+                                    .setCancelText(getString(R.string.no))
+                                    .setCustomImage(R.drawable.ic_app)
+                                    .showCancelButton(true)
+                                    .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                                        if (isValidFamilyHead(member)) {
+                                            sweetAlertDialog.dismissWithAnimation()
+                                            val adapter: AddFamilyHeadAdapter = AddFamilyHeadAdapter(this@FamilyDetailActivity, profileDetailViewModel, member)
+                                            addHeadDialog = DialogPlus.newDialog(this@FamilyDetailActivity)
+                                                    .setAdapter(adapter)
+                                                    .setGravity(Gravity.CENTER)
+                                                    .setCancelable(false)
+                                                    .setExpanded(false, 700)
+                                                    .setContentBackgroundResource(R.drawable.popup_corner)
+                                                    .create()
+                                            addHeadDialog?.show()
+                                        } else {
+                                            sweetAlertDialog.dismissWithAnimation()
+                                        }
+                                    }.setCancelClickListener {
+                                        it.dismissWithAnimation()
+                                    }
+                                    .show()
+
+                        }
+                    }
+
                     viewHolder.llDelete.setOnClickListener {
                         if (!loginId.isNullOrEmpty()) {
                             TTFancyGifDialog.Builder(this@FamilyDetailActivity)
@@ -304,8 +337,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         } else {
                             llRoot.snackbar(getString(R.string.enter_pin), Snackbar.LENGTH_LONG)
                         }
-
                     }
+
                     viewHolder.boomMenuButton.clearBuilders()
                     for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
                         val builder: TextInsideCircleButton.Builder? = getTextInsideCircleButtonBuilder()
@@ -393,7 +426,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             cancel.visibility = View.INVISIBLE
         }
         cancel.setOnClickListener {
-            if (register) {
+            if (isFinish) {
                 finish()
             } else {
                 val intent = Intent(this, DashboardActivity::class.java)
@@ -626,7 +659,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     }.setCancelClickListener {
                         it.dismissWithAnimation()
                         if (isAdmin()) {
-                            val adapter: AddMemberAdapter = AddMemberAdapter(this, profileDetailViewModel)
+                            val adapter: AddMemberAdapter = AddMemberAdapter(this, profileDetailViewModel, member.id)
                             addMemberDialog = DialogPlus.newDialog(this)
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.CENTER)
@@ -745,39 +778,6 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 }
             }
         }
-
-        holder.llContent.setOnLongClickListener {
-            if (isAdmin()) {
-                SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                        .setTitleText("Make Family Head")
-                        .setContentText("Do you want to remove ${member.firstName} as ${holder.tvSubtext.text} of ${members[0].firstName} And become a Family Head? \n Make sure you have fillup all the mandatory fields!")
-                        .setConfirmText("Yes,Please")
-                        .setCancelText(getString(R.string.no))
-                        .setCustomImage(R.drawable.ic_app)
-                        .showCancelButton(true)
-                        .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
-                            if (isValidFamilyHead(member)) {
-                                sweetAlertDialog.dismissWithAnimation()
-                                val adapter: AddFamilyHeadAdapter = AddFamilyHeadAdapter(this, profileDetailViewModel)
-                                addHeadDialog = DialogPlus.newDialog(this)
-                                        .setAdapter(adapter)
-                                        .setGravity(Gravity.CENTER)
-                                        .setCancelable(false)
-                                        .setExpanded(true, 800)
-                                        .setContentBackgroundResource(R.drawable.popup_corner)
-                                        .create()
-                                addHeadDialog?.show()
-                            } else {
-                                sweetAlertDialog.dismissWithAnimation()
-                            }
-                        }.setCancelClickListener {
-                            it.dismissWithAnimation()
-                        }
-                        .show()
-
-            }
-            return@setOnLongClickListener true
-        }
     }
 
     private fun isValidFamilyHead(member: Member): Boolean {
@@ -802,7 +802,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         } else if (member.birthDate.isNullOrEmpty()) {
             Snackbar.make(llRoot, "Enter BirthDate", Snackbar.LENGTH_LONG).show()
             return false
-        } else if (member.gotraId.isNullOrEmpty() || member.gotraId == "0") {
+        } else if (BuildConfig.FLAVOR != "ghanchi" && (member.gotraId.isNullOrEmpty() || member.gotraId == "0")) {
             Snackbar.make(llRoot, "Select Gotra", Snackbar.LENGTH_LONG).show()
             return false
         } else if (member.gender.isNullOrEmpty()) {
@@ -823,6 +823,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         var frontLayout: FrameLayout = v.findViewById(R.id.front_layout)
         var iconText: TextView = v.findViewById(R.id.icon_text1)
         var llDelete: LinearLayout = v.findViewById(R.id.ll_delete)
+        var llMake: LinearLayout = v.findViewById(R.id.ll_make)
         var swipe: SwipeRevealLayout = v.findViewById(R.id.swipe)
         var llMobile: LinearLayout = v.findViewById(R.id.llMobile)
         var imgProfile: ImageView = v.findViewById(R.id.icon_profile1)
@@ -894,5 +895,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         familyDetailViewModel.cancelAllJobs()
     }
 
+    override fun refreshList() {
+        getFamilyDetails()
+    }
 
 }
