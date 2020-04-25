@@ -27,6 +27,7 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.ProfileDetailActivity
@@ -121,6 +122,17 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     count += 1
                 }
                 holder.badge.setNumber(count)
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+                if (BuildConfig.FLAVOR == "yadav") {
+                    holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    holder.tvCode.text = getString(R.string.code) + " " + code
+                }
 
                 if (member.status == "2") {
                     holder.ivVerify.visibility = View.VISIBLE
@@ -355,7 +367,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvCreated: TextView = itemView.findViewById(R.id.tv_created)
         var tvRole: TextView = itemView.findViewById(R.id.tv_role)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
-
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {

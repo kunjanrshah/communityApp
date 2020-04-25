@@ -177,8 +177,10 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 } else {
                     holder.ivVerify.visibility = View.GONE
                 }
+                if (!name.isNullOrEmpty()) {
+                    holder.iconText.text = name.substring(0, 1)
+                }
 
-                holder.iconText.text = name.substring(0, 1)
                 holder.tvArea.text = member.area
 
                 if (member.mobile.isEmpty()) {

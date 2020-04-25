@@ -146,7 +146,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 val member = members[position]
                 val holder = viewHolder as SearchCityResult.ViewHolder
                 val name = member.firstName
-                holder.iconText.text = name.substring(0, 1)
+                if (!name.isNullOrEmpty()) {
+                    holder.iconText.text = name.substring(0, 1)
+                }
                 holder.tvArea.text = member.area
                 holder.itemView.isActivated = selectedItems.get(position, false)
 

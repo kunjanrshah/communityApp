@@ -23,8 +23,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
-import com.github.squti.guru.BuildConfig;
 import com.github.squti.guru.Guru;
+import com.krs.community.BuildConfig;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
 import com.krs.community.app.ConnectionLiveData;

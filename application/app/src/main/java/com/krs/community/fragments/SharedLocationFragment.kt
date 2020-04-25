@@ -121,7 +121,10 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                         holder.tvName.text = "$name $lastname"
                     }
                 }
-                holder.iconText.text = name.substring(0, 1)
+                if (!name.isNullOrEmpty()) {
+                    holder.iconText.text = name.substring(0, 1)
+                }
+
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
 

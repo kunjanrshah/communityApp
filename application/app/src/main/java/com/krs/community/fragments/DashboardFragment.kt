@@ -409,7 +409,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         override fun onBindViewHolder(holder: SharedLocationViewHolder, position: Int) {
             val member = list[position]
             holder.tvName.text = member.firstName
-            holder.iconText.text = member.firstName.substring(0, 1)
+            if (!holder.tvName.text.isNullOrEmpty()) {
+                holder.iconText.text = member.firstName.substring(0, 1)
+            }
+
             applyProfilePicture(holder, member)
 
             val arrayId = member.sharingId?.split(',')
