@@ -39,10 +39,7 @@ import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.utils.Coroutines
-import com.krs.community.utils.FlipAnimator
-import com.krs.community.utils.Utility
-import com.krs.community.utils.openImageDialog
+import com.krs.community.utils.*
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
@@ -131,7 +128,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 if (BuildConfig.FLAVOR == "yadav") {
                     holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 } else {
-                    holder.tvCode.text = getString(R.string.code) + " " + code
+                    holder.tvCode.text = getMemberCode(code)
                 }
 
                 if (member.status == "2") {

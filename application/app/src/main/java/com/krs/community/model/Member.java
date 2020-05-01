@@ -70,13 +70,13 @@ public class Member implements Serializable {
 
     @SerializedName("id")
     @Expose
-    private String id = "0";
+    private String id = "";
     @SerializedName("role")
     @Expose
     private String role = "";
     @SerializedName("head_id")
     @Expose
-    private String headId = "0";
+    private String headId = "";
     @SerializedName("member_code")
     @Expose
     private String memberCode = "";
@@ -94,7 +94,7 @@ public class Member implements Serializable {
     private String password = "";
     @SerializedName("relation_id")
     @Expose
-    private String relationId = "0";
+    private String relationId = "";
 
     @SerializedName("relation")
     @Expose

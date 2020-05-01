@@ -25,7 +25,7 @@ android {
     compileSdkVersion 29
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "com.krs.medk"
+        applicationId "com.krs.community"
         minSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -55,8 +55,8 @@ android {
     productFlavors {
         ghanchi {
             applicationId "com.ghanchi.samaj"
-            versionCode 1
-            versionName "1.0"
+            versionCode 5
+            versionName "5.0"
             resValue "string", "app_name", "Muslim Ghanchi Samaj"
             resValue "string", "dev_name", "Mehboob Gogda"
             resValue "string", "dev_contact", "9377133222"
@@ -66,9 +66,12 @@ android {
             resValue "string", "dev_email", "saraoffsetprinters@gmail.com"
             resValue "string", "dev_link", "https://muslimghanchi.org"
             resValue "string", "authorities", "com.ghanchi.samaj.provider"
+            resValue "string", "privacy_policy_url", "https://www.muslimghanchi.org/ghanchi_privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://www.muslimghanchi.org/terms_and_conditions.html"
             resValue "string", "base_url_logo", "https://muslimghanchi.org/uploads/logos/"
             resValue "string", "base_url_thumb", "https://muslimghanchi.org/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://muslimghanchi.org/uploads/users/original/"
+            resValue "string", "web_client_id", "317054014432-jm52j188960tkcbrflb9qq5l9jpfs9o4.apps.googleusercontent.com"
             buildConfigField "String", "BASE_URL", '"https://www.muslimghanchi.org/API/"'
         }
         medk {
@@ -84,9 +87,12 @@ android {
             resValue "string", "dev_email", "kunjanrshah@gmail.com"
             resValue "string", "dev_link", "https://medkapp.org"
             resValue "string", "authorities", "com.medk.samaj.provider"
+            resValue "string", "privacy_policy_url", "https://www.muslimghanchi.org/ghanchi_privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://www.muslimghanchi.org/terms_and_conditions.html"
             resValue "string", "base_url_logo", "https://medkapp.org/uploads/logos/"
             resValue "string", "base_url_thumb", "https://medkapp.org/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://medkapp.org/uploads/users/original/"
+            resValue "string", "web_client_id", "317054014432-jm52j188960tkcbrflb9qq5l9jpfs9o4.apps.googleusercontent.com"
             buildConfigField "String", "BASE_URL", '"https://www.medkapp.org/API/"'
         }
         yadav {
@@ -102,9 +108,12 @@ android {
             resValue "string", "dev_email", "rajuyadav79@gmail.com"
             resValue "string", "dev_link", "https://helixinstruments.com"
             resValue "string", "authorities", "com.yadav.samaj.provider"
+            resValue "string", "privacy_policy_url", "https://www.muslimghanchi.org/ghanchi_privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://www.muslimghanchi.org/terms_and_conditions.html"
             resValue "string", "base_url_logo", "https://helixinstruments.com/uploads/logos/"
             resValue "string", "base_url_thumb", "https://helixinstruments.com/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://helixinstruments.com/uploads/users/original/"
+            resValue "string", "web_client_id", "317054014432-jm52j188960tkcbrflb9qq5l9jpfs9o4.apps.googleusercontent.com"
             buildConfigField "String", "BASE_URL", '"https://helixinstruments.com/API/"'
         }
     }

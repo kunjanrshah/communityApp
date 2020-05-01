@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
+import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,6 +15,12 @@ import okhttp3.RequestBody
 
 class ProfileDetailRepository(private val api: ApiServices, private val db: AppDatabase
 ) : SafeApiRequest() {
+
+    suspend fun changeStatus(jsonObject: JsonObject): searchByKeywordsResponse {
+        return apiRequest {
+            api.changeStatus(jsonObject)
+        }
+    }
 
     suspend fun updateProfile(profile: JsonObject): UpdateProfileResponse {
         return apiRequest {

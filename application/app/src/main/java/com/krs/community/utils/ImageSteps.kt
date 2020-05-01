@@ -103,6 +103,30 @@ class ImageSteps : RelativeLayout {
             root?.addView(view)
         }
 
+        root?.getChildAt(0)?.setOnClickListener {
+            if (it.tag != "null") {
+                // goToStep(Integer.parseInt(it.tag.toString()))
+                viewPager.currentItem = 0
+            }
+        }
+        root?.getChildAt(2)?.setOnClickListener {
+            if (it.tag != "null") {
+                //goToStep(Integer.parseInt(it.tag.toString()))
+                viewPager.currentItem = 1
+            }
+        }
+        root?.getChildAt(4)?.setOnClickListener {
+            if (it.tag != "null") {
+                //goToStep(Integer.parseInt(it.tag.toString()))
+                viewPager.currentItem = 2
+            }
+        }
+        root?.getChildAt(6)?.setOnClickListener {
+            if (it.tag != "null") {
+                // goToStep(Integer.parseInt(it.tag.toString()))
+                viewPager.currentItem = 3
+            }
+        }
     }
 
     private fun setStepColorStatus(view: View) {
@@ -157,16 +181,10 @@ class ImageSteps : RelativeLayout {
         scaleUp.play(scaleUpX).with(scaleUpY)
         scaleUp.start()
 
-        if (stepNumber > START_STEP) {
-            val previousView = root?.findViewWithTag<ImageView>(stepNumber - 1)
-            previousView?.setImageDrawable(null)
-            val scaleDownX = ObjectAnimator.ofFloat(previousView, "scaleX", 1.0f)
-            val scaleDownY = ObjectAnimator.ofFloat(previousView, "scaleY", 1.0f)
-            scaleDownX.duration = animationDuration
-            scaleDownY.duration = animationDuration
-            val scaleDown = AnimatorSet()
-            scaleDown.play(scaleDownX).with(scaleDownY)
-            scaleDown.start()
+        for (i in 0..3) {
+            if (i != stepNumber) {
+                clearNumber(i)
+            }
         }
 
         if (stepNumber < stepsImages.lastIndex) {
@@ -182,6 +200,18 @@ class ImageSteps : RelativeLayout {
         }
 
         stepView?.setImageResource(stepsImages[stepNumber])
+    }
+
+    fun clearNumber(number: Int) {
+        val previousView = root?.findViewWithTag<ImageView>(number)
+        previousView?.setImageDrawable(null)
+        val scaleDownX = ObjectAnimator.ofFloat(previousView, "scaleX", 1.0f)
+        val scaleDownY = ObjectAnimator.ofFloat(previousView, "scaleY", 1.0f)
+        scaleDownX.duration = animationDuration
+        scaleDownY.duration = animationDuration
+        val scaleDown = AnimatorSet()
+        scaleDown.play(scaleDownX).with(scaleDownY)
+        scaleDown.start()
     }
 
     fun setupWithViewPager(viewPager: ViewPager) {
@@ -208,7 +238,7 @@ class ImageSteps : RelativeLayout {
                     if (stepsImages.lastIndex == selectedStep) return
                     selectedStep++
 
-                    goToStep(selectedStep)
+                    goToStep(position) //position
 
                     lastPosition = position
 
@@ -216,7 +246,7 @@ class ImageSteps : RelativeLayout {
 
                     if (selectedStep == START_STEP) return
                     selectedStep--
-                    goToStep(selectedStep)
+                    goToStep(position)
 
                     lastPosition = position
                 }

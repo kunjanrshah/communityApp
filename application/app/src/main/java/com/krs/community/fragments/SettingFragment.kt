@@ -3,6 +3,7 @@ package com.krs.community.fragments
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,15 +18,21 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.krs.community.R
+import com.krs.community.adapter.PolicyAdapter
 import com.krs.community.app.AppController
 import com.krs.community.utils.Utility
-import com.krs.community.utils.snackbar
+import com.orhanobut.dialogplus.DialogPlus
 
 
 class SettingFragment : Fragment() {
     private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
-    private val PERMISSION_REQUEST_READ_PHONE_STATE_CALL = 2
     protected var switchDialog: LabeledSwitch? = null
+    var polictyDialog: DialogPlus? = null
+
+    companion object {
+        var polictyDialog: DialogPlus? = null
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,18 +55,29 @@ class SettingFragment : Fragment() {
 
         val llPrivacy = root.findViewById<LinearLayout>(R.id.ll_privacy)
         llPrivacy.setOnClickListener { v: View? ->
-            llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+
+            val adapter = PolicyAdapter(activity as AppCompatActivity)
+            polictyDialog = DialogPlus.newDialog(activity)
+                    .setAdapter(adapter)
+                    .setGravity(Gravity.CENTER)
+                    .setCancelable(false)
+                    .setExpanded(false, 800)
+                    .setContentBackgroundResource(R.drawable.popup_corner)
+                    .create()
+            polictyDialog?.show()
+
+            /*llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
             return@setOnClickListener
-            Utility.movetoFragment(activity, PrivacyPolicyFragment())
+            Utility.movetoFragment(activity, PrivacyPolicyFragment())*/
         }
 
         switchDialog = root.findViewById<LabeledSwitch>(R.id.switch_dialog)
         val isShow = Guru.getBoolean(getString(R.string.isdialogshow), false)
 
-        val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
+        // val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
         val isShowCallPhone = Utility.checkReadPhoneStatePermission((activity as AppCompatActivity))
 
-        switchDialog?.isOn = isShow && isShowCallPhone && isShowCallLog
+        switchDialog?.isOn = isShow && isShowCallPhone //&& isShowCallLog
 
         switchDialog?.setOnClickListener {
 
@@ -67,7 +85,6 @@ class SettingFragment : Fragment() {
                 Guru.putBoolean(getString(R.string.isdialogshow), false)
             } else {
                 Guru.putBoolean(getString(R.string.isdialogshow), true)
-                //  permissionCheck(isShowCallPhone)
 
                 SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Help")
@@ -89,15 +106,15 @@ class SettingFragment : Fragment() {
         return root
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun permissionCheck(showCallPhone: Boolean) {
-        if (showCallPhone) {
-            switchDialog?.isOn = false
-        } else {
-            switchDialog?.isOn = true
-            Utility.requestPermissions(activity as AppCompatActivity)
-        }
-    }
+    /* @RequiresApi(Build.VERSION_CODES.M)
+     private fun permissionCheck(showCallPhone: Boolean) {
+         if (showCallPhone) {
+             switchDialog?.isOn = false
+         } else {
+             switchDialog?.isOn = true
+             Utility.requestPermissions(activity as AppCompatActivity)
+         }
+     }*/
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

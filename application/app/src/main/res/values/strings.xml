@@ -71,7 +71,7 @@
         <item>NewEvent \u0020</item>
         <item>Uploads \u0020</item>
         <item>Paytm \u0020 \u0020</item>
-        <item>Register \u0020 \u0020</item>
+        <item>Add Family \u0020 \u0020</item>
         <item>Guide \u0020 \u0020</item>
         <item>Contacts \u0020 \u0020</item>
     </string-array>
@@ -137,12 +137,7 @@
     <string name="facebook_app_id" translatable="false">2264814596961704</string>//1749295805152367
     <string name="fb_login_protocol_scheme" translatable="false">fb2264814596961704</string>
 
-    <!-- <string name="web_client_id" translatable="false">900336668958-vvfkmbdu8eem6ru4tla5f92n4vdv343e.apps.googleusercontent.com</string>-->
-    <string name="web_client_id" translatable="false">317054014432-ns6e6r26hvd1jju005tu35bab6r7460p.apps.googleusercontent.com</string>
     <string name="map_api_key" translatable="false">AIzaSyDci3uC0jldqqy0I4g4D1QpEauiVONXa1Y</string>
-
-    <!--Splash screen -->
-
 
     <!--Choose Language screen -->
     <string name="choose_language" translatable="false">Change Language</string>
@@ -359,6 +354,8 @@
     <string name="_native" translatable="false">native</string>
     <string name="business_sub_category" translatable="false">business_sub_category</string>
     <string name="id" translatable="false">id</string>
+    <string name="extra_info" translatable="false">extra_info</string>
+
     <string name="profile_password" translatable="false">profile_password</string>
     <string name="is_location_enable" translatable="false">is_location_enable</string>
     <string name="user_lat" translatable="false">user_lat</string>
@@ -426,7 +423,7 @@
     <string name="SmsExternalStorage">Permission denied to SMS your External storage</string>
 
     <!-- Register Sccren -->
-    <string name="code">code</string>
+    <string name="code"></string>
     <string name="select_sub_community">Select Sub Community</string>
     <string name="select_local_community">Select Local Community</string>
     <string name="RegisterFamily">Registering your family details</string>
@@ -807,7 +804,7 @@
     <string name="local_address_if_anyDetails">Native/Local Address</string>
 
     <!-- PrivancyPolicy Fragment -->
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy">Terms &amp; Privacy</string>
     <string name="photoPolicy">Photo</string>
     <string name="all_communityPolicy">All Community</string>
     <string name="my_communityPolicy">My Community</string>

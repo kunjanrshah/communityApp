@@ -99,6 +99,23 @@ fun startCrop(uri: Uri, context: Context) {
     uCrop.start(context as Activity)
 }
 
+fun getMemberCode(code: String?): String {
+    if (code.isNullOrEmpty()) {
+        return "00000"
+    } else if (code.length == 1) {
+        return "0000${code}"
+    } else if (code.length == 2) {
+        return "000${code}"
+    } else if (code.length == 3) {
+        return "00${code}"
+    } else if (code.length == 4) {
+        return "0${code}"
+    } else {
+        return code
+    }
+}
+
+
 fun advancedConfig(uCrop: UCrop, context: Context): UCrop {
     val options = UCrop.Options()
     options.setCompressionFormat(Bitmap.CompressFormat.JPEG)

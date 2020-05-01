@@ -66,7 +66,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
 
         loginMem = Gson().fromJson(loginMember, Member::class.java)
-        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
             binding.edtRole.isFocusable = true
             binding.spNative.isClickable = true
             binding.chkExpired.isEnabled = true
@@ -416,7 +416,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             }
         }
 
-        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
             datepicker.context(activity)
                     .callback(this)
                     .spinnerTheme(R.style.NumberPickerStyle)

@@ -196,6 +196,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     return@setOnClickListener
                 } else if (!jsonObject.has(getString(R.string.birth_date)) || jsonObject.getString(getString(R.string.birth_date)).isNullOrEmpty()) {
                     displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_bdate))
+                    binding.viewpager.currentItem = 1
                     return@setOnClickListener
                 }
 
@@ -208,9 +209,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.native_place_id)) || jsonObject.getString(getString(R.string.native_place_id)).isNullOrEmpty()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.select_native))
+                        binding.viewpager.currentItem = 1
                         return@setOnClickListener
                     } else if (BuildConfig.FLAVOR != "ghanchi" && (!jsonObject.has(getString(R.string.gotra_id)) || jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty())) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectGotra))
+                        binding.viewpager.currentItem = 1
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.mobile)) || jsonObject.getString(getString(R.string.mobile)).isNullOrEmpty()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_mobile))
@@ -316,10 +319,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         } else {
             intent.putExtra(getString(R.string.id), member?.headId)
         }
-        startActivity(intent)
+        startActivityForResult(intent, 101)
         finish()
         //   fade(this)
     }
+
 
     private fun setMemberValues() {
 

@@ -176,6 +176,22 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     count += 1
                 }
                 viewHolder.badge.setNumber(count)
+
+
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+
+                if (BuildConfig.FLAVOR == "yadav") {
+                    viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    viewHolder.tvCode.text = getMemberCode(code)
+                }
+
+
                 viewHolder.tvName.text = member.firstName
                 smartSearchViewModel.getLastName(member.subCastId.toInt()).observeForever {
                     viewHolder.tvName.text = member.firstName + " " + it
@@ -775,6 +791,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+
         init {
             view.setOnLongClickListener(this)
         }

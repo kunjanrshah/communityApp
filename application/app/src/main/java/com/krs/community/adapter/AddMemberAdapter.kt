@@ -18,16 +18,15 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.jrspinner.JRSpinner
-import com.krs.community.listeners.EditMemberListener
+import com.krs.community.listeners.ByKeywordListener
 import com.krs.community.listeners.RefreshListListener
-import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.responses.UpdateProfileResponse
+import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import org.json.JSONObject
 
-class AddMemberAdapter(private val mContext: Context, val profileDetailViewModel: ProfileDetailViewModel, val head_id: String) : BaseAdapter(), EditMemberListener {
+class AddMemberAdapter(private val mContext: Context, val profileDetailViewModel: ProfileDetailViewModel, val head_id: String) : BaseAdapter(), ByKeywordListener {
 
     private val mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var refreshListListener: RefreshListListener? = null
@@ -50,7 +49,7 @@ class AddMemberAdapter(private val mContext: Context, val profileDetailViewModel
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.add_member_bottom_sheet, parent, false)
             viewHolder = ViewHolder(convertView)
-            profileDetailViewModel.mEditMemberListener = this
+            profileDetailViewModel.keywordListener = this
             refreshListListener = (mContext as FamilyDetailActivity)
             convertView.tag = viewHolder
         } else {
@@ -92,11 +91,14 @@ class AddMemberAdapter(private val mContext: Context, val profileDetailViewModel
                     jsonObject.put(mContext.getString(R.string.access_token), Guru.getString(mContext.getString(R.string.access_token), ""))
                     jsonObject.put(mContext.getString(R.string.profile_password), viewHolder.edtPassword.text)
                     jsonObject.put(mContext.getString(R.string.head_id), head_id)
-                    jsonObject.put(mContext.getString(R.string.id), viewHolder.edtCode.text.trim())
+                    jsonObject.put(mContext.getString(R.string.id), Guru.getString(mContext.getString(R.string.user_id), ""))
+                    jsonObject.put(mContext.getString(R.string.idList), viewHolder.edtCode.text.trim())
                     jsonObject.put(mContext.getString(R.string.relation_id), id)
+                    jsonObject.put(mContext.getString(R.string.extra_info), "1")
+                    jsonObject.put(mContext.getString(R.string.status), "1")
                     Utility.startSweetProgress(mContext, mContext.getString(R.string.addingProfile), mContext.getString(R.string.pleaseWait))
                     val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                    profileDetailViewModel.updateProfile(profile, true)
+                    profileDetailViewModel.changeFamilyHead(profile)
 
                     Coroutines.main {
                         Utility.hideKeyboard(mContext as AppCompatActivity)
@@ -121,15 +123,11 @@ class AddMemberAdapter(private val mContext: Context, val profileDetailViewModel
         var ivCancel: ImageView = view.findViewById(R.id.iv_cancel)
     }
 
-    override fun getScanResult(response: SmartFilterResponse) {
-
-    }
-
-    override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
+    override fun getMembers(response: searchByKeywordsResponse) {
         Utility.hideSweetProgress()
-        if (response.message.toString().toLowerCase().contains("updated")) {
+        if (response.success) {
             refreshListListener?.refreshList()
-            Utility.startSweetDialog(mContext, SweetAlertDialog.SUCCESS_TYPE, "Success", "${response.member.firstName} added")
+            Utility.startSweetDialog(mContext, SweetAlertDialog.SUCCESS_TYPE, "Success", "Members added")
         }
     }
 

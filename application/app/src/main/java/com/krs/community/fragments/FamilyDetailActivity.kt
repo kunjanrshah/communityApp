@@ -39,6 +39,7 @@ import com.krs.community.R
 import com.krs.community.activity.*
 import com.krs.community.adapter.AddFamilyHeadAdapter
 import com.krs.community.adapter.AddMemberAdapter
+import com.krs.community.adapter.ChangeFamilyHeadAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -68,8 +69,9 @@ import org.kodein.di.generic.instance
 class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersListener, LocationAdapter.SetLocationListner, RefreshListListener {
 
     lateinit var members: ArrayList<Member>
-    var headId: String? = null
+
     var memId: String? = null
+
     var isFinish: Boolean = false
     val TAG = FamilyDetailActivity::class.java.simpleName
     private var mShimmerViewContainer: ShimmerFrameLayout? = null
@@ -90,6 +92,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     var family: MutableList<Member>? = null
 
     companion object {
+        var newHeadId: String? = null
+        var headId: String? = null
         var addMemberDialog: DialogPlus? = null
         var addHeadDialog: DialogPlus? = null
         lateinit var mainHandler: Handler
@@ -210,6 +214,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
         if (data.success) {
             members = data.member as ArrayList<Member>
+
             if (members.size > 0) {
                 family = members.subList(1, members.size)
             }
@@ -284,18 +289,43 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         viewHolder.swipe.setLockDrag(true)
                     }
 
+                    var code: String? = null
+                    code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                        member.memberCode.substring(0, 5)
+                    } else {
+                        member.memberCode
+                    }
+                    if (BuildConfig.FLAVOR == "yadav") {
+                        viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                    } else {
+                        viewHolder.tvCode.text = getMemberCode(code)
+                    }
+
                     viewHolder.llMake.setOnClickListener {
                         if (isAdmin()) {
                             SweetAlertDialog(this@FamilyDetailActivity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                                     .setTitleText("Make Family Head")
-                                    .setContentText("Do you want to remove ${member.firstName} from ${members[0].firstName} Family? \n Make sure you have fillup all the mandatory fields!")
-                                    .setConfirmText("Yes,Please")
-                                    .setCancelText(getString(R.string.no))
+                                    .setContentText("Make sure you have fillup all the mandatory fields!")
+                                    .setConfirmText("This Family")
+                                    .setCancelText("New Family")
                                     .setCustomImage(R.drawable.ic_app)
                                     .showCancelButton(true)
                                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
+                                        sweetAlertDialog.dismissWithAnimation()
                                         if (isValidFamilyHead(member)) {
-                                            sweetAlertDialog.dismissWithAnimation()
+                                            val adapter: ChangeFamilyHeadAdapter = ChangeFamilyHeadAdapter(this@FamilyDetailActivity, profileDetailViewModel, member)
+                                            addHeadDialog = DialogPlus.newDialog(this@FamilyDetailActivity)
+                                                    .setAdapter(adapter)
+                                                    .setGravity(Gravity.CENTER)
+                                                    .setCancelable(false)
+                                                    .setExpanded(false, 700)
+                                                    .setContentBackgroundResource(R.drawable.popup_corner)
+                                                    .create()
+                                            addHeadDialog?.show()
+                                        }
+                                    }.setCancelClickListener {
+                                        it.dismissWithAnimation()
+                                        if (isValidFamilyHead(member)) {
                                             val adapter: AddFamilyHeadAdapter = AddFamilyHeadAdapter(this@FamilyDetailActivity, profileDetailViewModel, member)
                                             addHeadDialog = DialogPlus.newDialog(this@FamilyDetailActivity)
                                                     .setAdapter(adapter)
@@ -305,14 +335,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                                                     .setContentBackgroundResource(R.drawable.popup_corner)
                                                     .create()
                                             addHeadDialog?.show()
-                                        } else {
-                                            sweetAlertDialog.dismissWithAnimation()
                                         }
-                                    }.setCancelClickListener {
-                                        it.dismissWithAnimation()
                                     }
                                     .show()
-
+                        } else {
+                            llRoot.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
                         }
                     }
 
@@ -406,12 +433,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 }
             }
         }
+
         val layoutManagerFixed = HeaderLayoutManagerFixed(this)
         rvDetail.layoutManager = layoutManagerFixed
         val header = layoutInflater.inflate(R.layout.header_detail, rvDetail, false)
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
         val login = header.findViewById<ImageView>(R.id.login)
         val imgMap = header.findViewById<ImageView>(R.id.img_map)
+        var tvCode: TextView = header.findViewById(R.id.tv_code)
         if (!loginId.isNullOrEmpty()) {
             cancel.visibility = View.VISIBLE
             if (!memId.isNullOrEmpty() && memId.equals(loginId)) {
@@ -425,6 +454,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             login.visibility = View.VISIBLE
             cancel.visibility = View.INVISIBLE
         }
+
         cancel.setOnClickListener {
             if (isFinish) {
                 finish()
@@ -433,10 +463,21 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
-                //   fade(this)
             }
         }
         val member = members[0]
+
+        var code: String? = null
+        code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+            member.memberCode.substring(0, 5)
+        } else {
+            member.memberCode
+        }
+        if (BuildConfig.FLAVOR == "yadav") {
+            tvCode.text = getString(R.string.yss) + code + "/" + member.id
+        } else {
+            tvCode.text = getMemberCode(code)
+        }
 
         imgMap.setOnClickListener {
             //displaySnackBarWithBottomMargin(rvDetail, getString(R.string.coming_soon))
@@ -693,6 +734,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         return isAdmin
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (!newHeadId.isNullOrEmpty()) {
+            setResult(102)
+        }
+        finish()
+    }
 
     @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: FamilyDetailViewHolder, member: Member) {
@@ -832,6 +880,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var llContent: LinearLayout = v.findViewById(R.id.ll_content)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     override fun getMessage(response: DeleteProfileResponse) {

@@ -92,7 +92,6 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             binding.chkRented.isFocusable = false
             binding.chkRented.isClickable = true
 
-            binding.llMcode.visibility = View.VISIBLE
             if (member.id == loginMem.id || member.headId == loginMem.id) {
                 member.stateId = loginMem.stateId
                 member.cityId = loginMem.cityId
@@ -109,6 +108,19 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             } else {
                 binding.edtCode.isFocusable = false
                 binding.edtCode.isClickable = false
+            }
+
+            if (member.id.isNullOrEmpty()) {
+                binding.llPin.visibility = View.VISIBLE
+                binding.llAreaPin.visibility = View.GONE
+                binding.llHomeRent.visibility = View.GONE
+                binding.llStateCity.visibility = View.GONE
+            } else {
+                binding.llPin.visibility = View.GONE
+                binding.llAreaPin.visibility = View.VISIBLE
+                binding.llHomeRent.visibility = View.VISIBLE
+                binding.llStateCity.visibility = View.VISIBLE
+                binding.chkRented.visibility = View.VISIBLE
             }
 
         } else {
@@ -143,11 +155,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             }
         }
 
-        if (member.id.isNullOrEmpty()) {
-            binding.llPin.visibility = View.VISIBLE
-        } else {
-            binding.llPin.visibility = View.GONE
-        }
+
         if (!member.emailAddress.isNullOrEmpty()) {
             val spannable: Spannable = SpannableString(member.emailAddress)
             Linkify.addLinks(spannable, Linkify.WEB_URLS)
@@ -372,7 +380,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
     private fun setMemberRelation() = Coroutines.main {
         if (member.relationId.isNotEmpty()) {
-            if (member.relationId != "0") {
+            if (member.headId != "0") {
                 profileDetailViewModel.selectedRelationId = Integer.parseInt(member.relationId)
                 profileDetailViewModel.relationName.await().observeForever {
                     binding.spRelation.setText(it)
@@ -421,12 +429,11 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.spGender.setExpandTint(R.color.black)
 
         profileDetailViewModel.lstRelationName.await().observe(viewLifecycleOwner, Observer {
-            if (member.relationId != "0") {
+            if (member.headId != "0") {
                 if (it.isNotEmpty()) {
                     binding.spRelation.setItems(it.subList(1, it.size).toTypedArray())
                     binding.spRelation.setExpandTint(R.color.black)
                 }
-
             }
         })
 

@@ -60,7 +60,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         loginMem = Gson().fromJson(loginMember, Member::class.java)
-        if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
             binding.chkInterested.isClickable = true
             binding.chkGlass.isClickable = true
             binding.chkIsMangal.isClickable = true

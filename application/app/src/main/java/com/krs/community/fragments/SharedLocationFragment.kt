@@ -143,7 +143,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 if (BuildConfig.FLAVOR == "yadav") {
                     holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 } else {
-                    holder.tvCode.text = getString(R.string.code) + " " + code
+                    holder.tvCode.text = getMemberCode(code)
                 }
 
                 if (member.gender.equals("Male")) {

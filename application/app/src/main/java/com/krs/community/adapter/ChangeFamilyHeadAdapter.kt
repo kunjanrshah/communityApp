@@ -12,20 +12,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.squti.guru.Guru
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.fragments.FamilyDetailActivity
-import com.krs.community.listeners.EditMemberListener
+import com.krs.community.listeners.ByKeywordListener
 import com.krs.community.listeners.RefreshListListener
 import com.krs.community.model.Member
-import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.responses.UpdateProfileResponse
+import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import org.json.JSONObject
 
-class AddFamilyHeadAdapter(private val mContext: Context, val profileDetailViewModel: ProfileDetailViewModel, val member: Member) : BaseAdapter(), EditMemberListener {
+class ChangeFamilyHeadAdapter(private val mContext: Context, val profileDetailViewModel: ProfileDetailViewModel, val member: Member) : BaseAdapter(), ByKeywordListener {
 
     private val mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var refreshListListener: RefreshListListener? = null
@@ -46,7 +46,7 @@ class AddFamilyHeadAdapter(private val mContext: Context, val profileDetailViewM
         var convertView = convertView
         val viewHolder: ViewHolder
         if (convertView == null) {
-            profileDetailViewModel.mEditMemberListener = this
+            profileDetailViewModel.keywordListener = this
             refreshListListener = (mContext as FamilyDetailActivity)
             convertView = mLayoutInflater.inflate(R.layout.add_head_bottom_sheet, parent, false)
             viewHolder = ViewHolder(convertView)
@@ -67,24 +67,26 @@ class AddFamilyHeadAdapter(private val mContext: Context, val profileDetailViewM
             Utility.hideKeyboard(mContext as AppCompatActivity)
             FamilyDetailActivity.addHeadDialog?.dismiss()
             SweetAlertDialog(mContext, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                    .setTitleText("New Family Head")
-                    .setContentText("${member.firstName} will remove from this family?")
+                    .setTitleText("Change Family Head")
+                    .setContentText("${member.firstName} will Change to Family Head")
                     .setConfirmText(mContext.getString(R.string.YesPleaseCity))
                     .setCancelText(mContext.getString(R.string.no))
                     .setCustomImage(R.drawable.ic_app)
                     .showCancelButton(true)
                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                         sweetAlertDialog.dismissWithAnimation()
+
                         val jsonObject = JSONObject()
                         jsonObject.put(mContext.getString(R.string.user_id), Guru.getString(mContext.getString(R.string.user_id), ""))
                         jsonObject.put(mContext.getString(R.string.access_token), Guru.getString(mContext.getString(R.string.access_token), ""))
-                        jsonObject.put(mContext.getString(R.string.id), member.id)
+                        jsonObject.put(mContext.getString(R.string.extra_info), "2")
+                        jsonObject.put(mContext.getString(R.string.id), member.headId)
+                        jsonObject.put(mContext.getString(R.string.head_id), member.id)
                         jsonObject.put(mContext.getString(R.string.profile_password), viewHolder.edtPassword.text)
-                        jsonObject.put(mContext.getString(R.string.head_id), "0")
-                        jsonObject.put(mContext.getString(R.string.relation_id), "1")
-                        Utility.startSweetProgress(mContext, mContext.getString(R.string.removingProfile), mContext.getString(R.string.pleaseWait))
+                        FamilyDetailActivity.newHeadId = member.id
+                        Utility.startSweetProgress(mContext, "Change Family Head", mContext.getString(R.string.pleaseWait))
                         val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                        profileDetailViewModel.updateProfile(profile, true)
+                        profileDetailViewModel.changeFamilyHead(profile)
                     }
                     .show()
         }
@@ -103,15 +105,21 @@ class AddFamilyHeadAdapter(private val mContext: Context, val profileDetailViewM
         var ivCancel: ImageView = view.findViewById(R.id.iv_cancel)
     }
 
-    override fun getScanResult(response: SmartFilterResponse) {
-
-    }
-
-    override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
+    override fun getMembers(response: searchByKeywordsResponse) {
         Utility.hideSweetProgress()
-        if (response.message.toString().toLowerCase().contains("updated")) {
+        if (response.success) {
             refreshListListener?.refreshList()
-            Utility.startSweetDialog(mContext, SweetAlertDialog.SUCCESS_TYPE, "Success", "${member.firstName} removed")
+            Utility.startSweetDialog(mContext, SweetAlertDialog.SUCCESS_TYPE, "Success", "${member.firstName} changed to FamilyHead")
+        }
+
+        if (response.success) {
+            FamilyDetailActivity.headId = FamilyDetailActivity.newHeadId
+            val loginuser = Guru.getString(mContext.getString(R.string.loginMember), "")
+            val loginMember = Gson().fromJson(loginuser, Member::class.java)
+            loginMember.headId = FamilyDetailActivity.newHeadId
+            Guru.putString(mContext.getString(R.string.loginMember), Gson().toJson(loginMember))
+            refreshListListener?.refreshList()
+            Utility.startSweetDialog(mContext, SweetAlertDialog.SUCCESS_TYPE, "Success", "FamilyHead Changed")
         }
     }
 

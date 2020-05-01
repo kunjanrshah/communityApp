@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -27,6 +28,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import com.krs.community.BuildConfig
 import com.krs.community.R
+import com.krs.community.adapter.PolicyAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.ActivityRegisterBinding
@@ -45,6 +47,7 @@ import com.krs.community.viewmodel.RegisterViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RegisterViewModelFactory
+import com.orhanobut.dialogplus.DialogPlus
 import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
@@ -75,6 +78,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     companion object {
         private val TAG = RegisterActivty::class.java.simpleName
+        var polictyDialog: DialogPlus? = null
     }
 
     override val kodein by kodein()
@@ -274,6 +278,20 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                         .show()
 
             }
+            val policy = Guru.getBoolean("policy", false)
+            if (!policy) {
+                val adapter = PolicyAdapter(this)
+                polictyDialog = DialogPlus.newDialog(this)
+                        .setAdapter(adapter)
+                        .setGravity(Gravity.CENTER)
+                        .setCancelable(false)
+                        .setExpanded(false, 800)
+                        .setContentBackgroundResource(R.drawable.popup_corner)
+                        .create()
+                polictyDialog?.show()
+            }
+
+
             setDropDownList()
         }
     }

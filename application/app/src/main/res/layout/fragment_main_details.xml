@@ -447,6 +447,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_state_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -537,6 +538,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:id="@+id/ll_area_pin"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -595,6 +597,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_home_rent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"

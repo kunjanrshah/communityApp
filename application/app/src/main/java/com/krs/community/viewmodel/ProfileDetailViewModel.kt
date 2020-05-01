@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.lazyDeferred
+import com.krs.community.listeners.ByKeywordListener
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.repositories.ProfileDetailRepository
@@ -30,6 +31,7 @@ class ProfileDetailViewModel(
     var TAG: String = ProfileDetailViewModel::class.java.simpleName
     lateinit var mEditMemberListener: EditMemberListener
     lateinit var mImageUploadListener: ImageUploadListener
+    lateinit var keywordListener: ByKeywordListener
 
     var selectedRelationId = 0
     val relationName by lazyDeferred {
@@ -202,6 +204,41 @@ class ProfileDetailViewModel(
 
     suspend fun getIdByRelation(name: String): Int {
         return mProfileDetailRepository.getIdByRelation(name)
+    }
+
+
+    fun changeFamilyHead(jsonObject: JsonObject) {
+        if (isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
+
+                CoroutineScope(Dispatchers.IO + thejob).launch {
+                    try {
+                        val response = mProfileDetailRepository.changeStatus(jsonObject)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                keywordListener.getMembers(response)
+                                thejob.complete()
+                            }
+                            return@launch
+                        }
+                    } catch (e: ApiException) {
+                        e.message?.let {
+                            keywordListener.getFailure(it)
+                        }
+                    } catch (e: NoInternetException) {
+                        e.message?.let {
+                            keywordListener.getFailure(it)
+                        }
+                    } catch (e: Exception) {
+                        e.message?.let {
+                            keywordListener.getFailure(it)
+                        }
+                    }
+                    thejob.complete()
+                }
+            }
+        }
     }
 
     fun getMemberByFilters(jsonObject: JsonObject) {

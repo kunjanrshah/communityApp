@@ -183,7 +183,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 if (BuildConfig.FLAVOR == "yadav") {
                     holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 } else {
-                    holder.tvCode.text = getString(R.string.code) + " " + code
+                    holder.tvCode.text = getMemberCode(code)
                 }
 
                 Coroutines.io {
