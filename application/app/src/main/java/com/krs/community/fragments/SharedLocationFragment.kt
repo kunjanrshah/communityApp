@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
@@ -256,7 +257,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 }
 
                 holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
-
+                holder.swipe.setLockDrag(true)
                 applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
                 applyClickEvents(holder, position)
@@ -539,6 +540,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+        var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
 
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)

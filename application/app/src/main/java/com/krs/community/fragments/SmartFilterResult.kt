@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
@@ -259,7 +260,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 }
 
                 holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
-
+                holder.swipe.setLockDrag(true)
                 holder.iconText.text = holder.tvName.text.substring(0, 1)
                 holder.itemView.isActivated = selectedItems[position, false]
                 applyIconAnimation(holder, position)
@@ -601,7 +602,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
-
+        var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
 
         init {
             itemView.setOnLongClickListener(this)

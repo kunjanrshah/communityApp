@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByDocumentListener
-import com.krs.community.listeners.DeleteListener
+import com.krs.community.listeners.DeleteFileListener
 import com.krs.community.repositories.DocumentListRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
@@ -22,7 +22,7 @@ class DocumentsListModel(
     private lateinit var completableJob: CompletableJob
     private lateinit var job_by_update: CompletableJob
     lateinit var byDocumentListener: ByDocumentListener
-    lateinit var mDeleteListener: DeleteListener
+    lateinit var mDeleteListener: DeleteFileListener
 
     fun getUploadedFiles(jsonObject: JsonObject) {
         if (isNetworkConnected(app.applicationContext)) {

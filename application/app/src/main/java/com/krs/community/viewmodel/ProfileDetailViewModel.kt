@@ -8,6 +8,7 @@ import com.google.gson.JsonObject
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.lazyDeferred
 import com.krs.community.listeners.ByKeywordListener
+import com.krs.community.listeners.DeleteRecordListener
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.repositories.ProfileDetailRepository
@@ -32,6 +33,8 @@ class ProfileDetailViewModel(
     lateinit var mEditMemberListener: EditMemberListener
     lateinit var mImageUploadListener: ImageUploadListener
     lateinit var keywordListener: ByKeywordListener
+    lateinit var deleteListener: DeleteRecordListener
+
 
     var selectedRelationId = 0
     val relationName by lazyDeferred {
@@ -206,6 +209,32 @@ class ProfileDetailViewModel(
         return mProfileDetailRepository.getIdByRelation(name)
     }
 
+    fun deleteMember(data: JsonObject) {
+        if (isNetworkConnected(app.applicationContext)) {
+            completableJob = Job()
+            completableJob.let { thejob ->
+                CoroutineScope(Dispatchers.IO + thejob!!).launch {
+                    try {
+                        val response = mProfileDetailRepository.deleteMember(data)
+                        response.let {
+                            withContext(Dispatchers.Main) {
+                                deleteListener.getResponse(response)
+                                thejob.complete()
+                            }
+                            return@launch
+                        }
+                    } catch (e: ApiException) {
+                        e.message?.let { deleteListener.getFailure(it) }
+                    } catch (e: NoInternetException) {
+                        e.message?.let { deleteListener.getFailure(it) }
+                    } catch (e: Exception) {
+                        e.message?.let { deleteListener.getFailure(it) }
+                    }
+                    thejob.complete()
+                }
+            }
+        }
+    }
 
     fun changeFamilyHead(jsonObject: JsonObject) {
         if (isNetworkConnected(app.applicationContext)) {

@@ -75,22 +75,24 @@ class ChangeFamilyHeadAdapter(private val mContext: Context, val profileDetailVi
                     .showCancelButton(true)
                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                         sweetAlertDialog.dismissWithAnimation()
-
-                        val jsonObject = JSONObject()
-                        jsonObject.put(mContext.getString(R.string.user_id), Guru.getString(mContext.getString(R.string.user_id), ""))
-                        jsonObject.put(mContext.getString(R.string.access_token), Guru.getString(mContext.getString(R.string.access_token), ""))
-                        jsonObject.put(mContext.getString(R.string.extra_info), "2")
-                        jsonObject.put(mContext.getString(R.string.id), member.headId)
-                        jsonObject.put(mContext.getString(R.string.head_id), member.id)
-                        jsonObject.put(mContext.getString(R.string.profile_password), viewHolder.edtPassword.text)
-                        FamilyDetailActivity.newHeadId = member.id
-                        Utility.startSweetProgress(mContext, "Change Family Head", mContext.getString(R.string.pleaseWait))
-                        val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                        profileDetailViewModel.changeFamilyHead(profile)
+                        if (member.headId != "0") {
+                            val jsonObject = JSONObject()
+                            jsonObject.put(mContext.getString(R.string.user_id), Guru.getString(mContext.getString(R.string.user_id), ""))
+                            jsonObject.put(mContext.getString(R.string.access_token), Guru.getString(mContext.getString(R.string.access_token), ""))
+                            jsonObject.put(mContext.getString(R.string.extra_info), "2")
+                            jsonObject.put(mContext.getString(R.string.id), member.headId)
+                            jsonObject.put(mContext.getString(R.string.head_id), member.id)
+                            jsonObject.put(mContext.getString(R.string.profile_password), viewHolder.edtPassword.text)
+                            FamilyDetailActivity.headId = member.id
+                            Utility.startSweetProgress(mContext, "Change Family Head", mContext.getString(R.string.pleaseWait))
+                            val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
+                            profileDetailViewModel.changeFamilyHead(profile)
+                        } else {
+                            Toast.makeText(mContext, "Something went wrong!", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     .show()
         }
-
         viewHolder.ivCancel.setOnClickListener {
             FamilyDetailActivity.addHeadDialog?.dismiss()
             Utility.hideKeyboard(mContext as AppCompatActivity)
@@ -113,11 +115,28 @@ class ChangeFamilyHeadAdapter(private val mContext: Context, val profileDetailVi
         }
 
         if (response.success) {
-            FamilyDetailActivity.headId = FamilyDetailActivity.newHeadId
+            var isMyFamily = false
             val loginuser = Guru.getString(mContext.getString(R.string.loginMember), "")
             val loginMember = Gson().fromJson(loginuser, Member::class.java)
-            loginMember.headId = FamilyDetailActivity.newHeadId
-            Guru.putString(mContext.getString(R.string.loginMember), Gson().toJson(loginMember))
+            for (member in FamilyDetailActivity.members) {
+                if (loginMember.id == member.id) {
+                    isMyFamily = true
+                    break
+                }
+            }
+
+            if (isMyFamily) {
+
+                if (loginMember.id == FamilyDetailActivity.headId) {
+                    loginMember.headId = "0"
+                    Guru.putString(mContext.getString(R.string.loginMember), Gson().toJson(loginMember))
+                } else {
+                    loginMember.headId = FamilyDetailActivity.headId
+                    Guru.putString(mContext.getString(R.string.loginMember), Gson().toJson(loginMember))
+                }
+            }
+
+
             refreshListListener?.refreshList()
             Utility.startSweetDialog(mContext, SweetAlertDialog.SUCCESS_TYPE, "Success", "FamilyHead Changed")
         }

@@ -211,7 +211,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.select_native))
                         binding.viewpager.currentItem = 1
                         return@setOnClickListener
-                    } else if (BuildConfig.FLAVOR != "ghanchi" && (!jsonObject.has(getString(R.string.gotra_id)) || jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty())) {
+                    } else if (BuildConfig.FLAVOR == "medk" && (!jsonObject.has(getString(R.string.gotra_id)) || jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty())) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectGotra))
                         binding.viewpager.currentItem = 1
                         return@setOnClickListener

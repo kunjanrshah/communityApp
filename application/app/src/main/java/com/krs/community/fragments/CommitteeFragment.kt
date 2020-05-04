@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.dewinjm.monthyearpicker.MonthFormat
 import com.github.dewinjm.monthyearpicker.MonthYearPickerDialogFragment
@@ -273,7 +274,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     viewHolder.boomMenuButton.addBuilder(builder)
                 }
                 holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
-
+                holder.swipe.setLockDrag(true)
                 applyProfilePicture(holder, member)
                 applyClickEvents(holder, position)
                 applyImportant(viewHolder, member)
@@ -671,6 +672,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+        var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
     }
 
     override fun onResume() {

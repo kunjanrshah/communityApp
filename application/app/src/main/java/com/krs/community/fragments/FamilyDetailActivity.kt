@@ -68,7 +68,7 @@ import org.kodein.di.generic.instance
 
 class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersListener, LocationAdapter.SetLocationListner, RefreshListListener {
 
-    lateinit var members: ArrayList<Member>
+
 
     var memId: String? = null
 
@@ -92,7 +92,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     var family: MutableList<Member>? = null
 
     companion object {
-        var newHeadId: String? = null
+        lateinit var members: ArrayList<Member>
         var headId: String? = null
         var addMemberDialog: DialogPlus? = null
         var addHeadDialog: DialogPlus? = null
@@ -688,7 +688,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .setTitleText("Add Member")
                     .setContentText("Do you want to add new member?")
                     .setConfirmText("Add New")
-                    .setCancelText("Add Live")
+                    .setCancelText("Add Exist")
                     .setCustomImage(R.drawable.ic_app)
                     .showCancelButton(true)
                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
@@ -734,13 +734,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         return isAdmin
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if (!newHeadId.isNullOrEmpty()) {
-            setResult(102)
-        }
-        finish()
-    }
+    /* override fun onBackPressed() {
+         super.onBackPressed()
+         if (!newHeadId.isNullOrEmpty()) {
+             setResult(102)
+         }
+         finish()
+     }*/
 
     @SuppressLint("CheckResult")
     private fun applyProfilePicture(holder: FamilyDetailViewHolder, member: Member) {
@@ -850,7 +850,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         } else if (member.birthDate.isNullOrEmpty()) {
             Snackbar.make(llRoot, "Enter BirthDate", Snackbar.LENGTH_LONG).show()
             return false
-        } else if (BuildConfig.FLAVOR != "ghanchi" && (member.gotraId.isNullOrEmpty() || member.gotraId == "0")) {
+        } else if (BuildConfig.FLAVOR == "medk" && (member.gotraId.isNullOrEmpty() || member.gotraId == "0")) {
             Snackbar.make(llRoot, "Select Gotra", Snackbar.LENGTH_LONG).show()
             return false
         } else if (member.gender.isNullOrEmpty()) {

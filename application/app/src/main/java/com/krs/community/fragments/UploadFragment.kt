@@ -31,7 +31,7 @@ import com.krs.community.adapter.UploadDialogAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByDocumentListener
-import com.krs.community.listeners.DeleteListener
+import com.krs.community.listeners.DeleteFileListener
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.UploadedFile
 import com.krs.community.responses.UploadedFilesResponse
@@ -50,7 +50,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner, DeleteListener {
+class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialogAdapter.UploadFileListner, DeleteFileListener {
     override val kodein by kodein()
 
     private lateinit var btnupload: MovableFloatingActionButton

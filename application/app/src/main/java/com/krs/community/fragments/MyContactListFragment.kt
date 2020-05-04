@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.facebook.FacebookSdk
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
@@ -237,7 +238,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     viewHolder.boomMenuButton.addBuilder(builder)
                 }
                 holder.boomMenuButton.setOnClickListener { v: View? -> holder.boomMenuButton.boom() }
-
+                holder.swipe.setLockDrag(true)
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 applyProfilePicture(holder, member)
                 applyClickEvents(holder, position, member)
@@ -376,6 +377,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+        var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {

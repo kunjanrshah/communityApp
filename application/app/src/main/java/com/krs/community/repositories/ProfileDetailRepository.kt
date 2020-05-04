@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
+import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.responses.searchByKeywordsResponse
@@ -286,6 +287,12 @@ class ProfileDetailRepository(private val api: ApiServices, private val db: AppD
     suspend fun getSubCommName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getSubCommunityDao().getSubCommName()
+        }
+    }
+
+    suspend fun deleteMember(data: JsonObject): DeleteProfileResponse {
+        return apiRequest {
+            api.deleteMember(data)
         }
     }
 }

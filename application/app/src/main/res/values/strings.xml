@@ -970,7 +970,8 @@
     <string name="exitDetails">Exit</string>
     <string name="EnterDetails">Enter</string>
     <string name="LogoutComApp">Logout the </string>
-    <string name="wontbeRecover">Won\'t be able to recover this Profile!</string>
+    <string name="wontbeRecover">Permanent Delete Profile!</string>
+    <string name="delete_head">Permanent Delete Family! \n All Members will be deleted</string>
     <string name="yesdelete">Yes,delete it!</string>
 
     <string name="selctNative">Select Native</string>

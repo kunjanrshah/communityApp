@@ -308,7 +308,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="right"
                     android:hint="dd-mm-yyyy"
-                    android:textSize="14sp" />
+                    android:textSize="10sp" />
 
             </LinearLayout>
 

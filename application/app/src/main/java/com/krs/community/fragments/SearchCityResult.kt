@@ -20,8 +20,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -42,6 +44,7 @@ import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.NotificationBadge
 import com.krs.community.databinding.FragmentFilterResultBinding
 import com.krs.community.entities.RoomMember
+import com.krs.community.listeners.DeleteRecordListener
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.IbrowseCityRecordsListener
 import com.krs.community.listeners.RoomMemberListener
@@ -50,6 +53,7 @@ import com.krs.community.model.Member
 import com.krs.community.model.SearchByCityData
 import com.krs.community.model.SearchByCityModel
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
@@ -68,7 +72,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore, AtoZBottomAdapter.ISortingRecords, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner, EditMemberListener, ExportAdapter.exportPdfListener {
+class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCityRecordsListener, ParallaxRecyclerAdapter.OnLoadMore, AtoZBottomAdapter.ISortingRecords, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner, EditMemberListener, ExportAdapter.exportPdfListener, DeleteRecordListener {
 
     companion object {
         var alpha: String = ""
@@ -76,6 +80,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     }
 
     //   private var selectedPosition = 0
+    private var deletedId = ""
     private lateinit var cityId: String
     private lateinit var cityName: String
     private val members = ArrayList<Member>()
@@ -100,7 +105,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     override val kodein by kodein()
     private lateinit var tvCount: TextView
     lateinit var binding: FragmentFilterResultBinding
-    private lateinit var loginMem: Member
+    private var loginMem: Member? = null
     private var changeRoleDialog: DialogPlus? = null
     private var setLocationDialog: DialogPlus? = null
     private var exportDialog: DialogPlus? = null
@@ -133,6 +138,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         browseCityViewModel.ibrowseCityRecordsListener = this
         roomMemberViewModel.mRoomMemberListener = this
         profileDetailViewModel.mEditMemberListener = this
+        profileDetailViewModel.deleteListener = this
 
         if (this.arguments != null) {
             cityName = this.arguments!!.getString("city_name").toString()
@@ -288,6 +294,33 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     holder.ivVerify.visibility = View.GONE
                 }
+                holder.swipe.close(true)
+                if (loginMem?.role == "SUPERADMIN") {
+                    holder.swipe.setLockDrag(false)
+                } else {
+                    holder.swipe.setLockDrag(true)
+                }
+
+                holder.frameDelete.setOnClickListener {
+
+                    TTFancyGifDialog.Builder(activity)
+                            .setTitle(getString(R.string.you_sure))
+                            .setMessage(getString(R.string.delete_head))
+                            .setPositiveBtnText(getString(R.string.yesdelete))
+                            .setPositiveBtnBackground("#22b573")
+                            .setNegativeBtnText(getString(R.string.no))
+                            .setNegativeBtnBackground("#c1272d")
+                            .setGifResource(R.drawable.gif_dialog)
+                            .isCancellable(false)
+                            .OnPositiveClicked {
+                                deleteFamilyMember(member.id)
+                            }
+                            .OnNegativeClicked {
+
+                            }
+                            .build()
+
+                }
 
                 applyIconAnimation(holder, position)
                 applyProfilePicture(holder, member)
@@ -313,7 +346,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         ivCancel.setOnClickListener { v -> Utility.backNavigation(activity) }
 
         ivExport = header.findViewById(R.id.iv_export)
-        if (loginMem.role.isNullOrEmpty() || loginMem.role == getString(R.string.USER) || loginMem.role == getString(R.string.LOCAL_ADMIN)) {
+        if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER) || loginMem?.role == getString(R.string.LOCAL_ADMIN)) {
             ivExport.visibility = View.GONE
         } else {
             ivExport.visibility = View.VISIBLE
@@ -359,11 +392,23 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         adapter.setContext(this)
         DashboardActivity.stop = false
         alpha = ""
-        setupList()
+        setupList(false)
         return binding.root
     }
 
-    private fun setupList() {
+    private fun deleteFamilyMember(id: String) {
+        binding.shimmerViewContainer.startShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.VISIBLE
+        val mJSONObject = JSONObject()
+        mJSONObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+        mJSONObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        mJSONObject.put(getString(R.string.member_id), id)
+        deletedId = id
+        val records = JsonParser().parse(mJSONObject.toString()) as JsonObject
+        profileDetailViewModel.deleteMember(records)
+    }
+
+    private fun setupList(isDeleted: Boolean) {
         if (isNetworkConnected(activity as AppCompatActivity)) {
             if (!DashboardActivity.stop) {
                 DashboardActivity.stop = true
@@ -379,8 +424,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     binding.shimmerViewContainer.startShimmerAnimation()
                     binding.shimmerViewContainer.visibility = View.VISIBLE
                 } else {
-                    snackbar = Snackbar.make(binding.lstFilter, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
-                    snackbar?.show()
+                    if (!isDeleted) {
+                        snackbar = Snackbar.make(binding.lstFilter, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                        snackbar?.show()
+                    }
                 }
                 browseCityViewModel.fetchRecordsByCity(data)
             }
@@ -391,13 +438,13 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         members.clear()
         DashboardActivity.stop = false
         AppController.mApplication.start = 0
-        setupList()
+        setupList(false)
     }
 
     override fun loadApi() {
         if (!DashboardActivity.stop) {
             AppController.mApplication.start = (members.size + 1)
-            setupList()
+            setupList(false)
         }
     }
 
@@ -418,7 +465,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 val count = data.totalHead + data.totalMem
                 tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " $count"
 
-                if (loginMem.role.isNullOrEmpty() || loginMem.role == getString(R.string.USER) || loginMem.role == getString(R.string.LOCAL_ADMIN)) {
+                if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER) || loginMem?.role == getString(R.string.LOCAL_ADMIN)) {
                     ivExport.visibility = View.GONE
                 } else {
                     ivExport.visibility = View.VISIBLE
@@ -669,6 +716,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var ivGender: ImageView = itemView.findViewById(R.id.iv_gender)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+        var frameDelete: FrameLayout = itemView.findViewById(R.id.frame_delete)
+        var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
 
         init {
             itemView.setOnLongClickListener(this)
@@ -703,7 +752,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             val menuDelete = menu.findItem(R.id.action_delete)
             val menuRole = menu.findItem(R.id.action_my_role)
 
-            if (loginMem.role.isNullOrEmpty() || loginMem.role == getString(R.string.USER)) {
+            if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER)) {
                 menuDelete.isVisible = false
                 menuRole.isVisible = false
             } else {
@@ -881,7 +930,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         if (requestCode == 101 && resultCode == 102) {
             DashboardActivity.stop = false
-            setupList()
+            setupList(false)
         }
     }
 
@@ -965,5 +1014,28 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         changeRoleDialog?.dismiss()
         setLocationDialog?.dismiss()
         exportDialog?.dismiss()
+    }
+
+    override fun getResponse(respose: DeleteProfileResponse) {
+        //binding.shimmerViewContainer.stopShimmerAnimation()
+        // binding.shimmerViewContainer.visibility = View.GONE
+        DashboardActivity.stop = false
+        setupList(true)
+        binding.llParent.snackbar(respose.message, Snackbar.LENGTH_LONG)
+
+
+        /* if (respose.success) {
+             var member1: Member? = null
+             for (member in members) {
+                 if (member.id == deletedId) {
+                     member1 = member
+                     break
+                 }
+             }
+             if (member1 != null) {
+                 members.remove(member1)
+                 adapter.notifyDataSetChanged()
+             }
+         }*/
     }
 }

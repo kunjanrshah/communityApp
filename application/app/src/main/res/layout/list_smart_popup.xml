@@ -1768,7 +1768,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center_vertical"
                     android:singleLine="true"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/img_updated_close"
