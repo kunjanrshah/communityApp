@@ -24,6 +24,7 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
@@ -80,7 +81,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
     private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
-
+    private var loginMem: Member? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragment_nonactives, container, false)
@@ -105,7 +106,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         shimmerFrameLayout = root.findViewById(R.id.shimmer_view_container)
         llRoot = root.findViewById(R.id.ll_root)
         (activity as AppCompatActivity).supportActionBar!!.title = ""
-
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        loginMem = Gson().fromJson(loginMember, Member::class.java)
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
 
@@ -115,6 +117,13 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 holder.tvName.text = member.firstName
                 holder.tvArea.text = member.area
                 holder.tvAddr.text = member.address
+
+                holder.swipe.close(true)
+                if (loginMem?.role == "SUPERADMIN") {
+                    holder.swipe.setLockDrag(false)
+                } else {
+                    holder.swipe.setLockDrag(true)
+                }
 
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
@@ -133,6 +142,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 } else {
                     member.memberCode
                 }
+
                 if (BuildConfig.FLAVOR == "yadav") {
                     holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 } else {
