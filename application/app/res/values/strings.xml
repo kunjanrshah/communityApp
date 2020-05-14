@@ -763,7 +763,7 @@
 
 
     <!-- BrowseByCity Fragment -->
-    <string name="browse_by_city">Browse by city</string>
+    <string name="browse_by_city">Search city with Members</string>
 
     <!-- Calendar Fragment -->
     <string name="endRecord">End of Records</string>

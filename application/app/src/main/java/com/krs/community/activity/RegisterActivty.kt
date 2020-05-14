@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -28,7 +27,6 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import com.krs.community.BuildConfig
 import com.krs.community.R
-import com.krs.community.adapter.PolicyAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.ActivityRegisterBinding
@@ -137,7 +135,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         if (isNetworkConnected(this)) {
             logger = Logger(TAG)
 
-
             registerViewModel = ViewModelProvider(this, registerViewModelFactory).get(RegisterViewModel::class.java)
             registerViewModel.iRegisterListener = this
 
@@ -153,6 +150,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(this, R.color.colorBG, false)
+            }
+
+            if (BuildConfig.FLAVOR == "medk") {
+                binding.rlNative.visibility = View.VISIBLE
+            } else {
+                binding.rlNative.visibility = View.GONE
             }
 
             if (BuildConfig.FLAVOR == "yadav") {
@@ -236,6 +239,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 }
             }
 
+            binding.spinnerNative.setOnItemClickListener {
+                Coroutines.io {
+                    registerViewModel.nativeId = profileDetailViewModel.getNativeIdByName(binding.spinnerNative.text.toString())
+                    Log.d(TAG, "lname id: " + registerViewModel.nativeId)
+                }
+            }
+
+
             binding.spinnerCities.setOnItemClickListener { position ->
                 Coroutines.io {
                     registerViewModel.cityId = profileDetailViewModel.getCityIdByName(binding.spinnerCities.text.toString())
@@ -278,20 +289,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                         .show()
 
             }
-            val policy = Guru.getBoolean("policy", false)
-            if (!policy) {
-                val adapter = PolicyAdapter(this)
-                polictyDialog = DialogPlus.newDialog(this)
-                        .setAdapter(adapter)
-                        .setGravity(Gravity.CENTER)
-                        .setCancelable(false)
-                        .setExpanded(false, 800)
-                        .setContentBackgroundResource(R.drawable.popup_corner)
-                        .create()
-                polictyDialog?.show()
-            }
-
-
             setDropDownList()
         }
     }
@@ -359,6 +356,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 binding.spinnerStates.setItems(it.toTypedArray())
                 binding.spinnerStates.setExpandTint(R.color.black)
             })
+
+            profileDetailViewModel.lstNativeName.await().observe(this, Observer {
+                binding.spinnerNative.setItems(it.toTypedArray())
+                binding.spinnerNative.setExpandTint(R.color.black)
+            })
         }
     }
 
@@ -388,6 +390,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
         if (filed == 14) {
             root_layout.snackbar(getString(R.string.enter_bdate), Snackbar.LENGTH_LONG)
+            return
+        }
+
+        if (filed == 15) {
+            root_layout.snackbar(getString(R.string.enter_native), Snackbar.LENGTH_LONG)
             return
         }
 
@@ -476,6 +483,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             12 -> binding.spinnerLocal.requestFocus()
             13 -> binding.edtFatherName.requestFocus()
             14 -> binding.txtBdate.requestFocus()
+            15 -> binding.spinnerNative.requestFocus()
             else -> ""
         }
     }
@@ -531,10 +539,15 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         binding.txtBdate.text = ""
         binding.txtBdate.hint = "BirthDate"
         binding.edtFatherName.text.clear()
+        registerViewModel.nativeId = null
+        registerViewModel.lastnameId = null
+        registerViewModel.stateId = null
+        registerViewModel.cityId = null
         binding.imgProfile.setImageResource(R.drawable.man_reg)
         binding.spinnerLname.setText("Select LastName")
         binding.spinnerGender.setText("Select Gender")
         binding.spinnerStates.setText("Select State")
+        binding.spinnerNative.setText("Select Native")
         binding.spinnerCities.setText("Select City")
         binding.spinnerSub.setText("Select Sub Community")
         binding.spinnerLocal.setText("Select Local Community")
@@ -642,6 +655,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     dashboardViewModel.fetchSubCommunities(counts.sub_community)
                     dashboardViewModel.fetchLocalCommunities(counts.local_community)
                     dashboardViewModel.fetchLastName(counts.sub_casts)
+                    dashboardViewModel.fetchNative(counts.native_place)
                 } else {
                     val statesCount = dashboardViewModel.getStatesCount()
                     if (dbCount.states != counts.states || statesCount == 0) {
@@ -666,6 +680,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     val lnameCount = dashboardViewModel.getLastNameCount()
                     if (dbCount.sub_casts != counts.sub_casts || lnameCount == 0) {
                         dashboardViewModel.fetchLastName(counts.sub_casts)
+                    }
+
+                    val nativeCount = dashboardViewModel.getNativeCount()
+                    if (dbCount.native_place != counts.native_place || nativeCount == 0) {
+                        dashboardViewModel.fetchNative(counts.native_place)
                     }
                 }
                 setDropDownList()

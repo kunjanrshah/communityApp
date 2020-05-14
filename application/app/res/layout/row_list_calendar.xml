@@ -57,6 +57,7 @@
 
                     <ImageView
                         android:id="@+id/icon_profile1"
+                        android:background="@drawable/user_profile2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"

@@ -36,6 +36,7 @@ import com.krs.community.activity.QRCodeActivity
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
+import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.RoomMemberListener
@@ -123,9 +124,17 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                 val member = lstAdmins[i]
                 holder.tvName.text = member.firstName
                 viewHolder.tvArea.text = member.area
+
+
+                var count = member.membersCount
+                if (count != 0) {
+                    count += 1
+                }
+                viewHolder.badge.setNumber(count)
+
                 val strRole = member.role
-                when {
-                    strRole == resources.getString(R.string.LOCAL_ADMIN) -> {
+                when (strRole) {
+                    resources.getString(R.string.LOCAL_ADMIN) -> {
                         holder.tvRole.text = resources.getString(R.string.Local_Admin)
                         Coroutines.io {
                             val name = smartFilterViewModel.getLocalCommunity(member.localCommunityId)
@@ -134,7 +143,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                             }
                         }
                     }
-                    strRole == resources.getString(R.string.SUB_ADMIN) -> {
+                    resources.getString(R.string.SUB_ADMIN) -> {
                         holder.tvRole.text = resources.getString(R.string.Sub_Admin)
                         Coroutines.io {
                             val name = smartFilterViewModel.getSubCommunity(member.subCommunityId)
@@ -149,7 +158,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
 
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
-                        val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        val name = member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                         Coroutines.main {
                             viewHolder.tvName.text = name
                         }
@@ -159,6 +168,13 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                         val area = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
                         Coroutines.main {
                             viewHolder.tvArea.text = area
+                        }
+                    }
+
+                    if (!member.nativePlaceId.isNullOrEmpty()) {
+                        val native = smartFilterViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
+                        Coroutines.main {
+                            holder.tvNative.text = "Native: $native"
                         }
                     }
                 }
@@ -376,6 +392,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
+        var badge: NotificationBadge = itemView.findViewById(R.id.badge)
+        var tvNative: TextView = itemView.findViewById(R.id.tv_native)
     }
 
     private fun resetIconYAxis(view: View) {

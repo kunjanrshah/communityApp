@@ -31,7 +31,7 @@
             android:fontFamily="@font/montserrat_semibold"
             android:text="@string/browse_by_city"
             android:textColor="@color/black"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"

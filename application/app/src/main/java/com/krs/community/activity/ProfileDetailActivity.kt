@@ -268,7 +268,44 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.password_mismatch))
                         return@setOnClickListener
                     }
-                    jsonObject.remove(getString(R.string.confPin))
+                    if (jsonObject.has(getString(R.string.confPin))) {
+                        jsonObject.remove(getString(R.string.confPin))
+                    }
+
+                    if (jsonObject.has(getString(R.string.local_address))) {
+                        jsonObject.remove(getString(R.string.local_address))
+                    }
+                    if (jsonObject.has(getString(R.string.native_place_id))) {
+                        jsonObject.remove(getString(R.string.native_place_id))
+                    }
+
+                    if (jsonObject.has(getString(R.string.address))) {
+                        jsonObject.remove(getString(R.string.address))
+                    }
+
+                    if (jsonObject.has(getString(R.string.area))) {
+                        jsonObject.remove(getString(R.string.area))
+                    }
+
+                    if (jsonObject.has(getString(R.string.pincode))) {
+                        jsonObject.remove(getString(R.string.pincode))
+                    }
+
+                    if (jsonObject.has(getString(R.string.state_id))) {
+                        jsonObject.remove(getString(R.string.state_id))
+                    }
+
+                    if (jsonObject.has(getString(R.string.city_id))) {
+                        jsonObject.remove(getString(R.string.city_id))
+                    }
+
+                    if (jsonObject.has(getString(R.string.is_rented))) {
+                        jsonObject.remove(getString(R.string.is_rented))
+                    }
+
+                    if (jsonObject.has(getString(R.string.gotra_id))) {
+                        jsonObject.remove(getString(R.string.gotra_id))
+                    }
 
                     jsonObject.put(getString(R.string.id), headId)
                     jsonObject.put(getString(R.string.role), getString(R.string.USER))
@@ -348,13 +385,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             binding.imgProfile.isEnabled = false
             binding.tvSave.visibility = View.GONE
         }
-
-        /*  if (!member?.isLocationEnable.isNullOrEmpty() && member?.isLocationEnable.equals("1")) {
-              binding.switchLocation.isOn = true
-          } else {
-              binding.tvDistance.text = getString(R.string.Distance)
-              binding.switchLocation.isOn = false
-          }*/
 
         if (member?.status == "2") {
             binding.ivVerify.visibility = View.VISIBLE
@@ -530,7 +560,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
 
-    class MyPagerAdapter(val listFragments: List<Fragment>, fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
+    internal class MyPagerAdapter(val listFragments: List<Fragment>, fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
         override fun getItem(position: Int): Fragment {
             return listFragments[position]
         }

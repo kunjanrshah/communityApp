@@ -147,10 +147,12 @@ class AppController : Application(), KodeinAware {
 
     private val mHandlerTask = object : Runnable {
         override fun run() {
-            if (isNetworkConnected(this@AppController)) {
-                updateUserStatus()
+            if (Guru.getBoolean(getString(R.string.policy), false)) {
+                if (isNetworkConnected(this@AppController)) {
+                    updateUserStatus()
+                }
+                mHandler.postDelayed(this, INTERVAL.toLong())
             }
-            mHandler.postDelayed(this, INTERVAL.toLong())
         }
     }
 

@@ -279,7 +279,7 @@
                             android:background="@drawable/border_color_gray"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="top|left"
-                            android:inputType="textMultiLine|textCapSentences"
+                            android:inputType="textMultiLine|textCapWords"
                             android:lines="2"
                             android:maxLines="2"
                             android:minLines="2"

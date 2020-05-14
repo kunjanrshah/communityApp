@@ -624,7 +624,7 @@
                             android:drawablePadding="10dp"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="top|left"
-                            android:inputType="textMultiLine|textCapSentences"
+                            android:inputType="textMultiLine|textCapWords"
                             android:lines="3"
                             android:maxLines="3"
                             android:minLines="3"

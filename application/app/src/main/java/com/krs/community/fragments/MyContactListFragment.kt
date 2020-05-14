@@ -136,7 +136,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 }
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
-                        val name = member.firstName + " " + contactListViewModel.getLastNameById(member.subCastId.trim().toInt())
+                        val name = member.firstName + " " + member.fatherName + " " + contactListViewModel.getLastNameById(member.subCastId.trim().toInt())
                         Coroutines.main {
                             viewHolder.tvName.text = name
                         }

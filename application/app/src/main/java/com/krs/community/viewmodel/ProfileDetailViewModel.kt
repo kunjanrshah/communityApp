@@ -40,6 +40,8 @@ class ProfileDetailViewModel(
     val relationName by lazyDeferred {
         mProfileDetailRepository.getRelationById(selectedRelationId)
     }
+
+
     val lstRelationName by lazyDeferred {
         mProfileDetailRepository.getRelations()
     }
@@ -51,6 +53,10 @@ class ProfileDetailViewModel(
 
     suspend fun getLastNameById(id: Int): String {
         return mProfileDetailRepository.getLastNameById(id)
+    }
+
+    suspend fun getRelationNameById(id: Int): String {
+        return mProfileDetailRepository.getRelationNameById(id)
     }
 
     val lstLastName by lazyDeferred {

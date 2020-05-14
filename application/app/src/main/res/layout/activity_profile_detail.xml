@@ -151,7 +151,7 @@
         <com.krs.community.utils.ImageSteps
             android:id="@+id/imageSteps"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:background="@color/white"
             app:default_color="@color/gray_btn_bg_color" />
 

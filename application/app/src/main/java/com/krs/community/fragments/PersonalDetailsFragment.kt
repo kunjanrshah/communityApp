@@ -41,7 +41,9 @@ import java.util.*
 
 class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDateSetListener {
 
-    private lateinit var binding: FragmentPersonalDetailsBinding
+    companion object {
+        lateinit var binding: FragmentPersonalDetailsBinding
+    }
     private lateinit var member: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
@@ -163,7 +165,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         }
         if (!member.maritalStatus.isNullOrEmpty()) {
             binding.spMarital.setText(member.maritalStatus)
-            if (member.maritalStatus.equals("Married")) {
+            if (member.maritalStatus == "Married") {
                 binding.txtMdate.isClickable = true
                 binding.txtMdate.isEnabled = true
                 if (!member.marriageDate.isNullOrEmpty()) {
@@ -178,6 +180,19 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.txtMdate.text = ""
             binding.txtMdate.isClickable = false
             binding.txtMdate.isEnabled = false
+        }
+
+        Coroutines.main {
+            try {
+                profileDetailViewModel.selectedRelationId = Integer.parseInt(member.relationId)
+                profileDetailViewModel.relationName.await().observeForever {
+                    if (it == "Wife") {
+                        binding.spMarital.setText("Married")
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         if (!member.nativePlaceId.isNullOrEmpty()) {
@@ -211,12 +226,6 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             profileDetailViewModel.selectedGotraId = Integer.parseInt(member.gotraId)
         }
 
-        if (BuildConfig.FLAVOR == "ghanchi") {
-            binding.llGotra.visibility = View.GONE
-        } else {
-            binding.llGotra.visibility = View.VISIBLE
-        }
-
         binding.spGotra.setOnItemClickListener {
             Coroutines.io {
                 profileDetailViewModel.selectedGotraId = profileDetailViewModel.getGotraIdByName(binding.spGotra.text.toString())
@@ -235,16 +244,6 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.chkExpired.isChecked = false
             binding.txtExpire.text = ""
         }
-
-        /*if(!binding.chkExpired.isChecked){
-            binding.txtExpire.isEnabled=false
-            binding.txtExpire.isClickable=false
-            binding.txtExpire.text = ""
-        }else
-        {
-            binding.txtExpire.isEnabled=true
-            binding.txtExpire.isClickable=true
-        }*/
 
         binding.chkExpired.setOnClickListener {
             if (binding.chkExpired.isChecked) {
@@ -296,13 +295,30 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             setDatePicker(mem_date)
         }
 
+        if (member.id.isNullOrEmpty()) {
+            binding.llNative.visibility = View.GONE
+            binding.llGotra.visibility = View.GONE
+            binding.llLocalAdd.visibility = View.GONE
+
+        } else {
+            binding.llNative.visibility = View.VISIBLE
+            binding.llGotra.visibility = View.VISIBLE
+            binding.llLocalAdd.visibility = View.VISIBLE
+        }
+
+        if (BuildConfig.FLAVOR == "ghanchi") {
+            binding.llGotra.visibility = View.GONE
+        } else {
+            binding.llGotra.visibility = View.VISIBLE
+        }
+
         getMasterList()
         return binding.root
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         if (isVisibleToUser) {
-            Handler().postDelayed(Runnable {
+            Handler().postDelayed({
                 binding.scroll.fullScroll(ScrollView.FOCUS_UP)
                 binding.scroll.isSmoothScrollingEnabled = true
             }, 1000)

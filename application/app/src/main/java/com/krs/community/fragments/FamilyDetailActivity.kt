@@ -230,7 +230,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
                     val member = family!![i]
 
-                    (viewHolder as FamilyDetailViewHolder).tvName.text = "${member.firstName} ${member.lastName}"
+                    (viewHolder as FamilyDetailViewHolder).tvName.text = "${member.firstName} ${member.fatherName} ${member.lastName}"
                     viewHolder.tvSubtext.text = member.relation
 
                     if (member.mobile.isNullOrEmpty()) {
@@ -287,6 +287,16 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         viewHolder.swipe.setLockDrag(false)
                     } else {
                         viewHolder.swipe.setLockDrag(true)
+                    }
+
+                    if (!member.isExpired.isNullOrEmpty() && member.isExpired == "1") {
+                        viewHolder.ll_data.visibility = View.GONE
+                        viewHolder.imgexpired.visibility = View.VISIBLE
+                        viewHolder.swipe.setBackgroundResource(R.drawable.round_corner_gray)
+                    } else {
+                        viewHolder.ll_data.visibility = View.VISIBLE
+                        viewHolder.imgexpired.visibility = View.GONE
+                        viewHolder.swipe.setBackgroundResource(R.drawable.round_corner_itemlist)
                     }
 
                     var code: String? = null
@@ -499,6 +509,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .isCancellable(false)
                     .OnPositiveClicked {
                         Guru.clear()
+                        Guru.putBoolean(getString(R.string.policy), true)
                         val intent = Intent(this, SplashActivity::class.java)
                         startActivity(intent)
                         this.finish()
@@ -510,7 +521,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             true
         }
         val tvName: TextView = header.findViewById(R.id.tv_name1)
-        tvName.text = member.firstName + " " + member.lastName
+        tvName.text = member.firstName + " " + member.fatherName + " " + member.lastName
         //  val mApp = applicationContext as AppController
         // val strDemo =  mApp.stringTranslateAPI(member.firstName);
         val iconText: TextView = header.findViewById(R.id.icon_text1)
@@ -694,7 +705,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                         sweetAlertDialog.dismissWithAnimation()
                         val intent = Intent(this, ProfileDetailActivity::class.java)
-                        intent.putExtra(getString(R.string.member), Member())
+                        val member = Member()
+                        member.subCastId = members[0].subCastId
+                        member.gotraId = members[0].gotraId
+                        member.fatherName = members[0].firstName
+                        member.nativePlaceId = members[0].nativePlaceId
+                        intent.putExtra(getString(R.string.member), member)
                         intent.putExtra(getString(R.string.head_id), members[0].id)
                         startActivity(intent)
                     }.setCancelClickListener {
@@ -880,7 +896,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         var ivMobile: ImageView = v.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var llContent: LinearLayout = v.findViewById(R.id.ll_content)
-        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var tvCode: TextView = v.findViewById(R.id.tv_code)
+        var ll_data: LinearLayout = v.findViewById(R.id.ll_data)
+        var imgexpired: ImageView = v.findViewById(R.id.imgexpired)
     }
 
     override fun getMessage(response: DeleteProfileResponse) {

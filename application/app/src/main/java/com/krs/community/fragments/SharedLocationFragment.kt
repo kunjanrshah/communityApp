@@ -119,7 +119,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     }
                     Coroutines.main {
                         holder.tvNative.text = "Native: $native"
-                        holder.tvName.text = "$name $lastname"
+                        holder.tvName.text = "$name ${member.fatherName} $lastname"
                     }
                 }
                 if (!name.isNullOrEmpty()) {

@@ -12,7 +12,6 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -40,7 +39,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.krs.community.R
-import com.krs.community.adapter.PolicyAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -56,7 +54,6 @@ import com.krs.community.utils.Utility.*
 import com.krs.community.utils.toast
 import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodelfactory.LoginViewModelFactory
-import com.orhanobut.dialogplus.DialogPlus
 import kotlinx.android.synthetic.main.activity_loginwith.*
 import org.json.JSONException
 import org.kodein.di.KodeinAware
@@ -80,7 +77,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     companion object {
         private val RC_SIGN_IN = 9001
-        var polictyDialog: DialogPlus? = null
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -294,10 +290,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             binding.haveAcc.setOnClickListener { v ->
                 val mIntent = Intent(this@LoginActivity, RegisterActivty::class.java)
                 startActivity(mIntent)
-
                 //  fade(this)
             }
-
             binding.tvResend.setOnClickListener {
                 ReceviedOTP = ""
                 btnContinue.performClick()
@@ -352,25 +346,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                     Snackbar.make(findViewById(R.id.ll_login), getString(R.string.Authenticationfailed), Snackbar.LENGTH_LONG).show()
                 }
             })
-
-            val policy = Guru.getBoolean("policy", false)
-            if (!policy) {
-                val adapter = PolicyAdapter(this)
-                polictyDialog = DialogPlus.newDialog(this)
-                        .setAdapter(adapter)
-                        .setGravity(Gravity.CENTER)
-                        .setOnDismissListener {
-                            requestPermissions(this@LoginActivity)
-                        }
-                        .setCancelable(false)
-                        .setExpanded(false, 800)
-                        .setContentBackgroundResource(R.drawable.popup_corner)
-                        .create()
-                polictyDialog?.show()
-            } else {
-                requestPermissions(this@LoginActivity)
-            }
-
+            requestPermissions(this@LoginActivity)
         }
     }
 

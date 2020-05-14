@@ -423,7 +423,7 @@
     <string name="SmsExternalStorage">Permission denied to SMS your External storage</string>
 
     <!-- Register Sccren -->
-    <string name="code"></string>
+    <string name="code">Code</string>
     <string name="select_sub_community">Select Sub Community</string>
     <string name="select_local_community">Select Local Community</string>
     <string name="RegisterFamily">Registering your family details</string>
@@ -690,7 +690,7 @@
 
 
     <!-- BrowseByCity Fragment -->
-    <string name="browse_by_city">Browse by city</string>
+    <string name="browse_by_city">Search city with Members</string>
 
     <!-- Calendar Fragment -->
     <string name="endRecord">End of Records</string>
@@ -963,6 +963,7 @@
     <string name="selecgender">Select Gender</string>
     <string name="satetList">State List</string>
     <string name="cityList">City List</string>
+    <string name="nativeList">Native List</string>
     <string name="sCommunity">Sub Community</string>
     <string name="localCom">Local Community</string>
     <string name="fmilyList">Family Members</string>
@@ -1137,4 +1138,5 @@
     <string name="load_more">Searching...</string>
     <string name="yss">yss/</string>
     <string name="is_finish">is_finish</string>
+    <string name="policy">policy</string>
 </resources>

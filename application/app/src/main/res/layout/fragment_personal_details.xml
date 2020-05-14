@@ -93,6 +93,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/ll_native"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -540,6 +541,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_local_add"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -557,7 +559,7 @@
                         android:background="@drawable/border_color_gray"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="top|left"
-                        android:inputType="textMultiLine|textCapSentences"
+                        android:inputType="textMultiLine|textCapWords"
                         android:lines="2"
                         android:maxLines="2"
                         android:minLines="2"

@@ -193,6 +193,12 @@ class ProfileDetailRepository(private val api: ApiServices, private val db: AppD
         }
     }
 
+    suspend fun getRelationNameById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getRelationsDao().getRelationNameById(id)
+        }
+    }
+
     suspend fun getIdByRelation(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getRelationsDao().getIdByRelation(name)

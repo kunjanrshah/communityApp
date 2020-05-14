@@ -1,11 +1,13 @@
 package com.krs.community.repositories
 
 import androidx.lifecycle.LiveData
+import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
 import com.krs.community.entities.City
 import com.krs.community.entities.States
 import com.krs.community.model.SearchByCityData
 import com.krs.community.model.SearchByCityModel
+import com.krs.community.responses.CityResponse
 import com.krs.community.retrofit.ApiServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -38,6 +40,11 @@ class BrowseCityRepository(private val api: ApiServices, private val db: AppData
         }
     }
 
+    suspend fun cityByState(request: JsonObject): CityResponse {
+        return apiRequest {
+            api.getUserCities(request)
+        }
+    }
 
     suspend fun userRecords(data: SearchByCityData): SearchByCityModel {
         return apiRequest {

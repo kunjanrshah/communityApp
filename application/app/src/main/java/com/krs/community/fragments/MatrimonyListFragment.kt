@@ -149,7 +149,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 val member = lstMembers[position]
                 holder.tvName.text = member.firstName
                 Coroutines.io {
-                    val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                    val name = member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                     Coroutines.main {
                         holder.tvName.text = name
                     }

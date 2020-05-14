@@ -249,7 +249,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                 viewHolder.tvName.text = member.firstName
 
                 mByDistanceViewModel.getLastNamebyId(member.subCastId).observeForever {
-                    viewHolder.tvName.text = member.firstName + " " + it
+                    viewHolder.tvName.text = member.firstName + " " + member.fatherName + " " + it
                 }
 
                 mByDistanceViewModel.getCityNamebyId(member.cityId).observeForever {

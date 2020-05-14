@@ -9,10 +9,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,8 +17,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.chauthai.swipereveallayout.SwipeRevealLayout
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
@@ -35,13 +34,17 @@ import com.krs.community.app.AppController
 import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
+import com.krs.community.listeners.DeleteRecordListener
 import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.*
+import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import org.json.JSONObject
@@ -50,7 +53,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore {
+class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, DeleteRecordListener {
 
     private lateinit var rvSearch: RecyclerView
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
@@ -71,9 +74,12 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
     private lateinit var ivNotFound: ImageView
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var smartFilterViewModel: SmartFilterViewModel
+    private lateinit var profileDetailViewModel: ProfileDetailViewModel
+
     private var snackbar: Snackbar? = null
     private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
     private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
+    private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -84,6 +90,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
         smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
+        profileDetailViewModel.deleteListener = this
         roomMemberViewModel.mRoomMemberListener = this
         smartFilterViewModel.mByFilterListener = this
         AppController.mApplication.start = 0
@@ -153,7 +161,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
-                        val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        val name = member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                         Coroutines.main {
                             viewHolder.tvName.text = name
                         }
@@ -186,6 +194,28 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
+
+                holder.frameDelete.setOnClickListener {
+
+                    TTFancyGifDialog.Builder(activity)
+                            .setTitle(getString(R.string.you_sure))
+                            .setMessage(getString(R.string.delete_head))
+                            .setPositiveBtnText(getString(R.string.yesdelete))
+                            .setPositiveBtnBackground("#22b573")
+                            .setNegativeBtnText(getString(R.string.no))
+                            .setNegativeBtnBackground("#c1272d")
+                            .setGifResource(R.drawable.gif_dialog)
+                            .isCancellable(false)
+                            .OnPositiveClicked {
+                                deleteFamilyMember(member.id)
+                            }
+                            .OnNegativeClicked {
+
+                            }
+                            .build()
+
+                }
+
 
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 viewHolder.itemView.isActivated = selectedItems.get(position, false)
@@ -221,6 +251,19 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
         return root
     }
+
+    private fun deleteFamilyMember(id: String) {
+        shimmerFrameLayout.startShimmerAnimation()
+        shimmerFrameLayout.visibility = View.VISIBLE
+        rvSearch.visibility = View.GONE
+        val mJSONObject = JSONObject()
+        mJSONObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+        mJSONObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        mJSONObject.put(getString(R.string.member_id), id)
+        val records = JsonParser().parse(mJSONObject.toString()) as JsonObject
+        profileDetailViewModel.deleteMember(records)
+    }
+
 
     private fun getNonActivesUsers() {
         if (!DashboardActivity.stop) {
@@ -324,9 +367,24 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         resetCurrentIndex()
     }
 
+    override fun getResponse(respose: DeleteProfileResponse) {
+        rvSearch.visibility = View.VISIBLE
+        shimmerFrameLayout.stopShimmerAnimation()
+        shimmerFrameLayout.visibility = View.GONE
+        if (respose.success) {
+            Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, "Deleted", "${selectedItems.size()} Profiles approved")
+            deleteMessages()
+            clearSelections()
+            actionMode?.finish()
+        }
+    }
+
     override suspend fun getFailure(message: String) {
         Coroutines.main {
             snackbar?.dismiss()
+            rvSearch.visibility = View.VISIBLE
+            shimmerFrameLayout.stopShimmerAnimation()
+            shimmerFrameLayout.visibility = View.GONE
             if (message.contains("success")) {
                 Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Approved), "${selectedItems.size()} Profiles approved")
                 deleteMessages()
@@ -365,6 +423,8 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvRole: TextView = itemView.findViewById(R.id.tv_role)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var frameDelete: FrameLayout = itemView.findViewById(R.id.frame_delete)
+        var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {

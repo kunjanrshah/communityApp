@@ -8,7 +8,8 @@ data class City(
         @PrimaryKey(autoGenerate = false)
         var id: Int,
         var name: String,
-        var parent_id: Int
+        var parent_id: Int,
+        var count: Int
 ) {
-    constructor() : this(0, "", 0)
+    constructor() : this(0, "", 0, 0)
 }

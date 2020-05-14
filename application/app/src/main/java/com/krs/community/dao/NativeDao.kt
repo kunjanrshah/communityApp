@@ -13,6 +13,9 @@ interface NativeDao {
     @Query("SELECT name FROM Native ORDER BY name ASC")
     fun getNative(): LiveData<List<String>>
 
+    @Query("SELECT COUNT(id) FROM Native")
+    fun getNativeCount(): Int
+
     @Query("SELECT id FROM Native")
     fun getNativeIds(): LiveData<List<Int>>
 

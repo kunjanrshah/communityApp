@@ -42,6 +42,8 @@ import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
@@ -52,7 +54,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     var numberOfLines = 5
     override val kodein by kodein()
-
+    var headName = ""
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -65,6 +67,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         profileDetailViewModel = ViewModelProvider(this, profileDetailViewModelFactory).get(ProfileDetailViewModel::class.java)
         profileDetailViewModel.mEditMemberListener = this
         member = arguments?.getSerializable(getString(R.string.member)) as Member
+        headName = member.fatherName
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         val loginMem = Gson().fromJson(loginMember, Member::class.java)
 
@@ -170,7 +173,9 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.edtFather.setText(member.fatherName)
         binding.edtMother.setText(member.motherName)
         binding.edtMobile.setText(member.mobile)
-        binding.spGender.setText(member.gender)
+
+
+
 
         binding.edtAddr.setText(member.address)
         binding.edtArea.setText(member.area)
@@ -183,7 +188,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         setMemberState()
         setMemberCity()
         setHomeLocation()
-
+        setGender()
 
         binding.llHome.setOnClickListener {
 
@@ -261,11 +266,11 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     binding.spCity.clear()
                     binding.spCity.setText(getString(R.string.select))
                     profileDetailViewModel.selectedCityId = 0
+                    Collections.sort(cities)
                     binding.spCity.setItems(cities.toTypedArray())
                     binding.spCity.setExpandTint(R.color.black)
                 }
             }
-
         }
 
         binding.spCity.setOnItemClickListener {
@@ -279,6 +284,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.spRelation.setOnItemClickListener {
             Coroutines.io {
                 profileDetailViewModel.selectedRelationId = profileDetailViewModel.getIdByRelation(binding.spRelation.text.toString())
+                setGender()
             }
         }
 
@@ -290,6 +296,40 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
 
         return binding.root
+    }
+
+    private fun setGender() {
+        Coroutines.main {
+            try {
+                val relation = sp_relation.text
+                if (!relation.isNullOrEmpty()) {
+                    val rel = relation.toString()
+                    if (rel == "Wife" || rel == "Son" || rel == "Daughter") {
+                        binding.edtFather.setText(headName)
+                    } else {
+                        if (member.id.isNullOrEmpty()) {
+                            binding.edtFather.setText("")
+                        }
+                    }
+
+                    if (rel.contains("Wife") || rel.contains("Daughter") || rel.contains("Mother")) {
+                        binding.spGender.setText("Female")
+                        if (rel == "Wife") {
+                            PersonalDetailsFragment.binding.spMarital.setText("Married")
+                        }
+                    } else if (rel.contains("Son") || rel.contains("Father") || rel.contains("Husband")) {
+                        binding.spGender.setText("Male")
+                    } else {
+                        binding.spGender.setText(member.gender)
+                    }
+                } else {
+                    binding.spGender.setText(member.gender)
+                }
+            } catch (e: Exception) {
+                binding.spGender.setText(member.gender)
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun setMemberCode(code: String?) {
@@ -386,6 +426,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     binding.spRelation.setText(it)
                 }
             } else {
+                profileDetailViewModel.selectedRelationId = 0
                 binding.spRelation.setText(resources.getString(R.string.Family_Head))
             }
         }
@@ -431,7 +472,23 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         profileDetailViewModel.lstRelationName.await().observe(viewLifecycleOwner, Observer {
             if (member.headId != "0") {
                 if (it.isNotEmpty()) {
-                    binding.spRelation.setItems(it.subList(1, it.size).toTypedArray())
+                    val list = it.subList(1, it.size)
+                    Collections.sort(list)
+                    val lstRelation = ArrayList<String>()
+                    lstRelation.add("Wife")
+                    lstRelation.add("Son")
+                    lstRelation.add("Daughter")
+                    lstRelation.add("Daughter-In-Law")
+                    lstRelation.add("Father")
+                    lstRelation.add("Mother")
+                    lstRelation.add("Grand Son")
+                    lstRelation.add("Grand Daughter")
+                    for (relation in list) {
+                        if (!lstRelation.contains(relation)) {
+                            lstRelation.add(relation)
+                        }
+                    }
+                    binding.spRelation.setItems(lstRelation.toTypedArray())
                     binding.spRelation.setExpandTint(R.color.black)
                 }
             }
@@ -448,6 +505,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         })
 
         val cities = profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
+        Collections.sort(cities)
         binding.spCity.setItems(cities.toTypedArray())
         binding.spCity.setExpandTint(R.color.black)
 

@@ -370,6 +370,10 @@ class DashboardRepository(
         return db.getLastNameDao().getLastNameCount()
     }
 
+    suspend fun getNativeCount(): Int {
+        return db.getNativeDao().getNativeCount()
+    }
+
     suspend fun getSubCommCount(): Int {
         return db.getSubCommunityDao().getSubCommunityCount()
     }

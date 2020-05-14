@@ -10,7 +10,7 @@ public class AppConstants {
     public static final String PREF_NAME = "Vastipatrak";
     public static final String INSERT = "insert";
     public static final String VERSION = "version";
-    //public static final String APPLICATION_BASE_URL = "https://www.muslimghanchisamaj.in/API/";
+    //public static final String APPLICATION_BASE_URL = "https://www.muslimghanchi.org/API/";
     public static final String APPLICATION_BASE_URL = BuildConfig.BASE_URL;
     public static final String UPLOAD_DOCUMENT = APPLICATION_BASE_URL + "UploadFiles";
 
@@ -93,12 +93,14 @@ public class AppConstants {
         String plain_password;
         String state_id;
         String city_id;
+        String native_place_id;
         String address;
         String sub_community_id;
         String local_community_id;
         String gender;
         String father_name;
         String birth_date;
+        String head_id;
 
         public String getFather() {
             return father_name;
@@ -122,6 +124,22 @@ public class AppConstants {
 
         public void setSub_cast_id(String sub_cast_id) {
             this.sub_cast_id = sub_cast_id;
+        }
+
+        public String getHeadId() {
+            return head_id;
+        }
+
+        public void setHeadId(String head_id) {
+            this.head_id = head_id;
+        }
+
+        public String getNativePlaceId() {
+            return native_place_id;
+        }
+
+        public void setNativePlaceId(String native_place_id) {
+            this.native_place_id = native_place_id;
         }
 
         public String getIsAdmin() {

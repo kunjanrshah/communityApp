@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.LoginActivity
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -33,9 +34,11 @@ class RegisterViewModel(
     var address: String? = null
     var mobile: String? = null
     var lastnameId: Int? = null
+    var nativeId: Int? = null
     var stateId: Int? = null
     var countryCode: String? = null
     var cityId: Int? = null
+
     var localCommId: Int? = null
     var subCommId: Int? = null
 
@@ -75,6 +78,14 @@ class RegisterViewModel(
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.birthdate), 14)
             return
         }
+
+        if (BuildConfig.FLAVOR == "medk") {
+            if (nativeId == null) {
+                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_native), 15)
+                return
+            }
+        }
+
 
         if (lastnameId == null) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.lastnameId), 2)
@@ -157,6 +168,7 @@ class RegisterViewModel(
         }
 
         register.first_name = fname
+        register.nativePlaceId = nativeId?.toString()
         register.father = father
         register.setBirthdate(Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
         register.sub_cast_id = lastnameId.toString()
@@ -169,6 +181,7 @@ class RegisterViewModel(
         register.city_id = cityId.toString()
         register.sub_community_id = subCommId.toString()
         register.local_community_id = localCommId.toString()
+        // register.headId="0"
 
         if (!isLogin) {
             register.isAdmin = "1"

@@ -431,7 +431,7 @@
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="@string/select_city"
                         android:imeOptions="actionNext"
-                        android:nextFocusDown="@+id/edt_address"
+                        android:nextFocusDown="@+id/spinnerNative"
                         android:paddingRight="15dp"
                         android:singleLine="true"
                         android:textColor="@color/black1"
@@ -440,6 +440,35 @@
                         app:jrs_icon_tint="@color/colorPrimary"
                         app:jrs_multiple="false"
                         app:jrs_title="@string/cityList" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_native"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/register_field_height"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/gradient_spinner">
+
+                    <com.krs.community.jrspinner.JRSpinner
+                        android:id="@+id/spinnerNative"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/register_field_height"
+                        android:layout_marginStart="30dp"
+                        android:background="@null"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:hint="@string/select_native"
+                        android:imeOptions="actionNext"
+                        android:nextFocusDown="@+id/edt_address"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black1"
+                        android:textSize="16sp"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:jrs_icon_tint="@color/colorPrimary"
+                        app:jrs_multiple="false"
+                        app:jrs_title="@string/nativeList" />
 
                 </RelativeLayout>
 

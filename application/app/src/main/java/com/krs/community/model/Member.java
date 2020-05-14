@@ -94,7 +94,7 @@ public class Member implements Serializable {
     private String password = "";
     @SerializedName("relation_id")
     @Expose
-    private String relationId = "";
+    private String relationId = "0";
 
     @SerializedName("relation")
     @Expose

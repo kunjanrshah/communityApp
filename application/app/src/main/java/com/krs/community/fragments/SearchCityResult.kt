@@ -53,6 +53,7 @@ import com.krs.community.model.Member
 import com.krs.community.model.SearchByCityData
 import com.krs.community.model.SearchByCityModel
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.responses.CityResponse
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
@@ -66,7 +67,6 @@ import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -165,11 +165,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                         lastname = browseCityViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
                     }
                     if (!member.nativePlaceId.isNullOrEmpty()) {
-                        Log.d("SearchCityResult", "member.nativePlaceId: " + member.nativePlaceId.trim())
                         native = browseCityViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                     }
                     Coroutines.main {
-                        holder.tvName.text = "$name $lastname"
+                        holder.tvName.text = "$name ${member.fatherName} $lastname"
                         holder.tvNative.text = "Native: $native"
                     }
                 }
@@ -287,7 +286,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     viewHolder.boomMenuButton.addBuilder(builder)
                 }
 
-                holder.boomMenuButton.setOnClickListener({ v -> holder.boomMenuButton.boom() })
+                holder.boomMenuButton.setOnClickListener { v -> holder.boomMenuButton.boom() }
 
                 if (member.status == "2") {
                     holder.ivVerify.visibility = View.VISIBLE
@@ -446,6 +445,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             AppController.mApplication.start = (members.size + 1)
             setupList(false)
         }
+    }
+
+    override fun getCitiesByState(response: CityResponse) {
+
     }
 
     @SuppressLint("SetTextI18n")

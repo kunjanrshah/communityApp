@@ -165,7 +165,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                         native = committeeViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                     }
                     Coroutines.main {
-                        holder.tvName.text = "$name $lastname"
+                        holder.tvName.text = "$name ${member.fatherName} $lastname"
                         holder.tvRegion.text = localComm
                         holder.tvCommitee.text = committeeName
                         holder.tvDesignation.text = desigName

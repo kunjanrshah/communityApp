@@ -102,6 +102,7 @@
                             android:id="@+id/icon_profile1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="@drawable/user_profile2"
                             android:adjustViewBounds="true"
                             android:scaleType="fitXY" />
 
@@ -163,7 +164,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semibold"
                             android:singleLine="true"
-                            android:textSize="18sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tv_area"
@@ -217,7 +218,6 @@
                             android:id="@+id/tv_code"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
                             android:singleLine="true"
@@ -225,9 +225,10 @@
                             android:textSize="10sp" />
                         <ImageView
                             android:id="@+id/img_map"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
                             android:background="@drawable/world_map" />
                     </LinearLayout>
                 </LinearLayout>

@@ -101,6 +101,9 @@ class DashboardViewModel(
         return mDashboardRepository.getLastNameCount()
     }
 
+    suspend fun getNativeCount(): Int {
+        return mDashboardRepository.getNativeCount()
+    }
 
     suspend fun getSubCommCount(): Int {
         return mDashboardRepository.getSubCommCount()

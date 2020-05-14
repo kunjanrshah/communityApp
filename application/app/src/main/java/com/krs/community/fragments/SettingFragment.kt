@@ -56,7 +56,7 @@ class SettingFragment : Fragment() {
         val llPrivacy = root.findViewById<LinearLayout>(R.id.ll_privacy)
         llPrivacy.setOnClickListener { v: View? ->
 
-            val adapter = PolicyAdapter(activity as AppCompatActivity)
+            val adapter = PolicyAdapter(activity as AppCompatActivity, "setting")
             polictyDialog = DialogPlus.newDialog(activity)
                     .setAdapter(adapter)
                     .setGravity(Gravity.CENTER)

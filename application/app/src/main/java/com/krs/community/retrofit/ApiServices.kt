@@ -48,7 +48,7 @@ interface ApiServices {
     suspend fun getUserState(@Body request: JsonObject): Response<StateResponse>
 
     @POST(AppConstants.UrlPath.GET_CITIES)
-    suspend fun getUserCities(@Body request: JsonObject): Response<ResponseModel>
+    suspend fun getUserCities(@Body request: JsonObject): Response<CityResponse>
 
     @POST(AppConstants.UrlPath.GET_NATIVE)
     suspend fun getNative(@Body request: JsonObject): Response<NativeResponse>

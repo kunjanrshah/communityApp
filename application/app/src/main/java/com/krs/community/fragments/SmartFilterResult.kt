@@ -156,7 +156,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
-                        val name = member.firstName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                        val name = member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                         Coroutines.main {
                             viewHolder.tvName.text = name
                         }
