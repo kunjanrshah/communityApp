@@ -89,7 +89,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
     private var isShimmer: Boolean = true
     private var loginId: String? = null
     private var textMsg: String? = null
-    var family: MutableList<Member>? = null
+    var family = ArrayList<Member>()
 
     companion object {
         lateinit var members: ArrayList<Member>
@@ -216,7 +216,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             members = data.member as ArrayList<Member>
 
             if (members.size > 0) {
-                family = members.subList(1, members.size)
+                family.clear()
+                family.addAll(members.subList(1, members.size))
+                if (family.size > 0) {
+                    if (family[0].headId == "0") {
+                        family.removeAt(0)
+                    }
+                }
             }
             createCardAdapter()
         }
@@ -283,6 +289,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                             canDelete = true
                         }
                     }
+
+                    if (member.headId == "0") {
+                        canDelete = false
+                    }
+
                     if (canDelete) {
                         viewHolder.swipe.setLockDrag(false)
                     } else {
@@ -914,7 +925,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             if (member1 != null) {
                 members.remove(member1)
                 if (members.size > 0) {
-                    family = members.subList(1, members.size)
+                    family.clear()
+                    family.addAll(members.subList(1, members.size))
+                    if (family.size > 0) {
+                        if (family[0].headId == "0") {
+                            family.removeAt(0)
+                        }
+                    }
                 }
                 adapter.notifyDataSetChanged()
                 createCardAdapter()

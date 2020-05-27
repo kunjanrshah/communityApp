@@ -122,6 +122,26 @@
 
     </string-array>
 
+    <string-array name="lst_relative">
+        <item>@string/other</item>
+        <item>@string/wife</item>
+        <item>@string/husband</item>
+        <item>@string/son</item>
+        <item>@string/daughter</item>
+        <item>@string/daughter_in_law</item>
+        <item>@string/father</item>
+        <item>@string/mother</item>
+        <item>@string/grand_son</item>
+        <item>@string/grand_daughter</item>
+    </string-array>
+
+    <string name="wife" translatable="false">Wife</string>
+    <string name="husband" translatable="false">Husband</string>
+    <string name="daughter_in_law" translatable="false">Daughter-In-Law</string>
+    <string name="grand_son" translatable="false">Grand Son</string>
+    <string name="grand_daughter" translatable="false">Grand Daughter</string>
+
+
     <string name="partner" translatable="false">Partner</string>
     <string name="father" translatable="false">Father</string>
     <string name="mother" translatable="false">Mother</string>
@@ -410,7 +430,9 @@
     <string name="head_name" translatable="false">head_name</string>
     <string name="min_age" translatable="false">min_age</string>
     <string name="max_age" translatable="false">max_age</string>
-    <string name="Select" translatable="false">Select</string>
+    <string name="select" translatable="false">Select</string>
+
+    <string name="other" translatable="false">Other</string>
 
     <string name="base_url_thumb" translatable="false">https://medkapp.org/uploads/users/thumb/</string>
     <string name="base_url_original" translatable="false">https://medkapp.org/uploads/users/original/</string>
@@ -434,7 +456,6 @@
     <string name="LOCAL_ADMIN" translatable="false">LOCAL_ADMIN</string>
     <string name="Sub_Admin" translatable="false">Sub Admin</string>
     <string name="SUB_ADMIN" translatable="false">SUB_ADMIN</string>
-    <string name="User" translatable="false">User</string>
     <string name="Family_Head" translatable="false">Family Head</string>
     <string name="Member" translatable="false">Member</string>
     <string name="idList" translatable="false">idList</string>
@@ -651,9 +672,6 @@
     <string name="office">Office</string>
 
     <!-- MyRole Adapter -->
-
-    <string name="select">Select</string>
-
 
     <string name="subAdmin">Sub Admin</string>
     <string name="my_role">My Role</string>

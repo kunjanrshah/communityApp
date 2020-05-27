@@ -329,24 +329,67 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
 
     private fun getMasterList() = Coroutines.main {
         profileDetailViewModel.lstBusinessCategoryName.await().observe(viewLifecycleOwner, Observer {
-            binding.spMainCat.setItems(it.toTypedArray())
-            binding.spMainCat.setExpandTint(R.color.black)
+
+            if (!it.isNullOrEmpty()) {
+
+                val lst = ArrayList<String>()
+                lst.addAll(it)
+                lst.remove(getString(R.string.select))
+                lst.remove(getString(R.string.other))
+                val lstMainCateName = ArrayList<String>()
+                lstMainCateName.add(getString(R.string.select))
+                lstMainCateName.add(getString(R.string.other))
+                lst.sort()
+                lstMainCateName.addAll(lst)
+
+                binding.spMainCat.setItems(lstMainCateName.toTypedArray())
+                binding.spMainCat.setExpandTint(R.color.black)
+            }
         })
         profileDetailViewModel.businessCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spMainCat.setText(it)
         })
 
         profileDetailViewModel.lstBusinessSubCategoryName.await().observe(viewLifecycleOwner, Observer {
-            binding.spSubCat.setItems(it.toTypedArray())
-            binding.spSubCat.setExpandTint(R.color.black)
+
+            if (!it.isNullOrEmpty()) {
+
+                val lst = ArrayList<String>()
+                lst.addAll(it)
+                lst.remove(getString(R.string.select))
+                lst.remove(getString(R.string.other))
+                val lstSubCateName = ArrayList<String>()
+                lstSubCateName.add(getString(R.string.select))
+                lstSubCateName.add(getString(R.string.other))
+                lst.sort()
+                lstSubCateName.addAll(lst)
+
+                binding.spSubCat.setItems(lstSubCateName.toTypedArray())
+                binding.spSubCat.setExpandTint(R.color.black)
+            }
         })
         profileDetailViewModel.businessSubCategoryName.await().observe(viewLifecycleOwner, Observer {
             binding.spSubCat.setText(it)
         })
 
         profileDetailViewModel.lstOccupationName.await().observe(viewLifecycleOwner, Observer {
-            binding.spOccupation.setItems(it.toTypedArray())
-            binding.spOccupation.setExpandTint(R.color.black)
+
+            if (!it.isNullOrEmpty()) {
+
+                val lst = ArrayList<String>()
+                lst.addAll(it)
+                lst.remove(getString(R.string.select))
+                lst.remove(getString(R.string.other))
+
+                val lstOccupationName = ArrayList<String>()
+                lstOccupationName.add(getString(R.string.select))
+                lstOccupationName.add(getString(R.string.other))
+                lst.sort()
+                lstOccupationName.addAll(lst)
+
+                binding.spOccupation.setItems(lstOccupationName.toTypedArray())
+                binding.spOccupation.setExpandTint(R.color.black)
+            }
         })
         profileDetailViewModel.occupationName.await().observe(viewLifecycleOwner, Observer {
             binding.spOccupation.setText(it)

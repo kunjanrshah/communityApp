@@ -470,7 +470,6 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
                 holder.iconText.visibility = View.VISIBLE
             }
-
         }
     }
 

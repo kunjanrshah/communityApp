@@ -1435,7 +1435,7 @@ public class Utility {
             dialog = null;
         }
         dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText(message);
-        dialog.getProgressHelper().setBarColor(Color.parseColor("#843f52"));
+        dialog.getProgressHelper().setBarColor(context.getColor(R.color.colorPrimary));
         dialog.setTitleText(title);
         dialog.setCancelable(false);
         dialog.show();
@@ -1447,7 +1447,7 @@ public class Utility {
             dialog = null;
         }
         dialog = new SweetAlertDialog(context, type).setContentText(message);
-        dialog.getProgressHelper().setBarColor(Color.parseColor("#843f52"));
+        dialog.getProgressHelper().setBarColor(context.getColor(R.color.colorPrimary));
 
         dialog.setTitleText(title);
         dialog.setCancelable(false);

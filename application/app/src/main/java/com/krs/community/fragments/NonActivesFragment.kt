@@ -386,6 +386,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             deleteMessages()
             clearSelections()
             actionMode?.finish()
+            adapter.notifyDataSetChanged()
         }
     }
 
@@ -400,6 +401,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 deleteMessages()
                 clearSelections()
                 actionMode?.finish()
+                adapter.notifyDataSetChanged()
             } else {
                 Utility.startSweetDialog(activity, SweetAlertDialog.ERROR_TYPE, getString(R.string.Restricted), message)
             }

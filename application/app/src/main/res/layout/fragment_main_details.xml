@@ -517,7 +517,7 @@
                                 android:layout_marginLeft="10dp"
                                 android:background="@null"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:hint="Select"
+                                android:hint="@string/select"
                                 android:imeOptions="actionNext"
                                 android:nextFocusDown="@+id/fname"
                                 android:paddingRight="10dp"

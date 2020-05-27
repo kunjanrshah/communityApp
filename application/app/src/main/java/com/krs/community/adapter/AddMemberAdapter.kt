@@ -25,6 +25,8 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AddMemberAdapter(private val mContext: Context, val profileDetailViewModel: ProfileDetailViewModel, val head_id: String) : BaseAdapter(), ByKeywordListener {
 
@@ -59,7 +61,16 @@ class AddMemberAdapter(private val mContext: Context, val profileDetailViewModel
         Coroutines.main {
             profileDetailViewModel.lstRelationName.await().observe(mContext as AppCompatActivity, Observer {
                 if (it.isNotEmpty()) {
-                    viewHolder.spRelation.setItems(it.subList(1, it.size).toTypedArray())
+                    val list = it.subList(1, it.size)
+                    Collections.sort(list)
+                    val lstRelation = ArrayList<String>()
+                    lstRelation.addAll(mContext.resources.getStringArray(R.array.lst_relative))
+                    for (relation in list) {
+                        if (!lstRelation.contains(relation)) {
+                            lstRelation.add(relation)
+                        }
+                    }
+                    viewHolder.spRelation.setItems(lstRelation.toTypedArray())
                     viewHolder.spRelation.setExpandTint(R.color.black)
                 }
             })

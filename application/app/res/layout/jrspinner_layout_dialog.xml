@@ -121,7 +121,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="#3897F0"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="Select"
+                android:text="@string/select"
                 android:textColor="#ffffff"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"

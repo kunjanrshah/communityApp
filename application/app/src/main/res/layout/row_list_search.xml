@@ -24,56 +24,75 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/icon_container1"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/img_location"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/back_image"
+                    android:visibility="gone" />
 
                 <RelativeLayout
-                    android:id="@+id/icon_back1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fillAfter="false"
-                    android:fillEnabled="false">
+                    android:id="@+id/icon_container1"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                    <ImageView
+                    <RelativeLayout
+                        android:id="@+id/icon_back1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/bg_circle" />
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_done_white_24dp" />
-                </RelativeLayout>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/bg_circle" />
 
-                <RelativeLayout
-                    android:id="@+id/icon_front1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fillAfter="false"
-                    android:fillEnabled="false">
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_done_white_24dp" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/icon_profile1"
-                        android:background="@drawable/user_profile2"
+                    <RelativeLayout
+                        android:id="@+id/icon_front1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY" />
+                        android:fillAfter="false"
+                        android:fillEnabled="false">
 
-                    <TextView
-                        android:id="@+id/icon_text1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp" />
+                        <ImageView
+                            android:id="@+id/icon_profile1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/user_profile2"
+                            android:scaleType="fitXY" />
+
+                        <TextView
+                            android:id="@+id/icon_text1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp" />
+                    </RelativeLayout>
+
                 </RelativeLayout>
 
-            </RelativeLayout>
+            </FrameLayout>
+
 
             <ImageView
                 android:id="@+id/iv_gender"
@@ -112,28 +131,31 @@
             android:focusable="true"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/tv_name1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:hint="name"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_name1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:hint="name"
-                        android:singleLine="true"
-                        android:textSize="14sp" />
-
-                    <TextView
+                        android:layout_marginStart="2dp"
                         android:id="@+id/tv_native"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -211,6 +233,7 @@
                 android:background="@color/colorGray" />
 
             <LinearLayout
+                android:id="@+id/ll_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -224,7 +247,6 @@
                     android:id="@+id/ll_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -257,7 +279,6 @@
                         android:id="@+id/ll_mobile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
                         android:layout_weight="1"
                         android:orientation="horizontal">
@@ -313,6 +334,15 @@
 
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/img_expired"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/expired"
+                android:visibility="gone" />
 
         </LinearLayout>
 

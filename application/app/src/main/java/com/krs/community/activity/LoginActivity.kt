@@ -4,10 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.telephony.SubscriptionInfo
-import android.telephony.SubscriptionManager
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -25,7 +22,6 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -60,7 +56,6 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.util.*
-import kotlin.collections.ArrayList
 
 class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener {
 
@@ -186,7 +181,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 loginViewModel?.cancelTimer()
             }
 
-            binding.fabLogin.setOnClickListener {
+            /*binding.fabLogin.setOnClickListener {
 
                 val lstNumber = ArrayList<String>()
                 val lstCarrier = ArrayList<String>()
@@ -242,7 +237,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                             }
                             .build()
                 }
-            }
+            }*/
 
             binding.btnLoginFb.setOnClickListener { v ->
 
@@ -487,6 +482,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        Log.e(TAG, "Google sign requestCode: $requestCode")
+
         if (requestCode == RC_SIGN_IN && resultCode != 0) {
             try {
                 startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))

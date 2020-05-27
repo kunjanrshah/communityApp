@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -270,17 +271,23 @@ public class AtoZBottomAdapter extends BaseAdapter {
             }
         });
 
+        viewHolder.iv_cancel.setOnClickListener(v -> {
+            mISortingRecords.closed();
+        });
+
         return convertView;
     }
 
     public interface ISortingRecords {
         void getRecords();
+
+        void closed();
     }
 
     private class AtoZViewHolder {
         TextView tv_a, tv_b, tv_c, tv_d, tv_e, tv_f, tv_g, tv_h, tv_i, tv_j, tv_k, tv_l,
                 tv_m, tv_n, tv_o, tv_p, tv_q, tv_r, tv_s, tv_t, tv_u, tv_v, tv_w, tv_x, tv_y, tv_z, tv_all;
-
+        ImageView iv_cancel;
         AtoZViewHolder(View view) {
             tv_a = view.findViewById(R.id.tv_a);
             tv_b = view.findViewById(R.id.tv_b);
@@ -309,6 +316,7 @@ public class AtoZBottomAdapter extends BaseAdapter {
             tv_y = view.findViewById(R.id.tv_y);
             tv_z = view.findViewById(R.id.tv_z);
             tv_all = view.findViewById(R.id.tv_all);
+            iv_cancel = view.findViewById(R.id.iv_cancel);
         }
     }
 

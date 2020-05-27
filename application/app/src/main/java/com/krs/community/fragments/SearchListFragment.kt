@@ -46,9 +46,12 @@ import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByKeywordListener
+import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
+import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.*
 import com.krs.community.utils.Utility.hideKeyboard
@@ -67,7 +70,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, RoomMemberListener, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
+class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxRecyclerAdapter.OnLoadMore, MyRoleAdapter.iChangeRoleListner, RoomMemberListener, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener, EditMemberListener {
 
     private lateinit var rvSearch: RecyclerView
     private lateinit var frameRoot: FrameLayout
@@ -103,6 +106,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private lateinit var actionModeCallback: ActionModeCallback
     private var loginMember: Member? = null
     private var snackbar: Snackbar? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_search_list, container, false)
@@ -118,7 +122,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         smartSearchViewModel = ViewModelProvider(this, smartSearchViewModelFactory).get(SmartSearchViewModel::class.java)
         roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
         profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
-
+        profileDetailViewModel.mEditMemberListener = this
         smartSearchViewModel.mByKeywordListener = this
         roomMemberViewModel.mRoomMemberListener = this
 
@@ -194,20 +198,24 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
                 viewHolder.tvName.text = member.firstName
                 smartSearchViewModel.getLastName(member.subCastId.toInt()).observeForever {
-                    viewHolder.tvName.text = member.firstName + " " + it
+                    viewHolder.tvName.text = member.firstName + " " + member.fatherName + " " + it
                 }
 
-                if (!member.cityId.isNullOrEmpty()) {
+                if (!member.cityId.isNullOrEmpty() && member.cityId != "0") {
                     smartSearchViewModel.getCityNamebyId(member.cityId).observeForever {
                         viewHolder.tvArea.text = member.area + " " + it
                     }
+                } else {
+                    viewHolder.tvArea.text = ""
                 }
                 Coroutines.io {
-                    if (!member.nativePlaceId.isNullOrEmpty()) {
+                    if (!member.nativePlaceId.isNullOrEmpty() && member.nativePlaceId != "0") {
                         val native = smartSearchViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                         Coroutines.main {
                             viewHolder.tvNative.text = "Native: $native"
                         }
+                    } else {
+                        viewHolder.tvNative.text = "Native:"
                     }
                 }
 
@@ -252,6 +260,25 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     } else {
                         viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     }
+                }
+
+                val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+                val arrayId = loginMember?.sharingId?.split(',')
+                if (arrayId != null) {
+                    if (arrayId.contains(member.id)) {
+                        viewHolder.imgLocation.visibility = View.VISIBLE
+                    } else {
+                        viewHolder.imgLocation.visibility = View.GONE
+                    }
+                }
+
+                if (!member.isExpired.isNullOrEmpty() && member.isExpired == "1") {
+                    viewHolder.llData.visibility = View.GONE
+                    viewHolder.imgExpired.visibility = View.VISIBLE
+                } else {
+                    viewHolder.llData.visibility = View.VISIBLE
+                    viewHolder.imgExpired.visibility = View.GONE
                 }
 
                 viewHolder.boomMenuButton.clearBuilders()
@@ -489,9 +516,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             //lstMembers.clear()
             rvSearch.visibility = View.VISIBLE
             // AppController.mApplication.start = 0
-            for (item in response.member) {
-                lstMembers.add(item)
-            }
+            lstMembers.addAll(response.member)
+            // lstMembers.sortWith(Comparator { lhs, rhs -> lhs.firstName.compareTo(rhs.firstName) })
             //  rvAdapter.notifyDataSetChanged()
             selectedPosition = AppController.mApplication.start
             rvSearch.layoutManager?.scrollToPosition(selectedPosition)
@@ -558,6 +584,26 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
             //  Snackbar.make(frameRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
         }
+    }
+
+    override fun getScanResult(response: SmartFilterResponse) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
+        rvSearch.visibility = View.VISIBLE
+        mShimmerViewContainer.stopShimmerAnimation()
+        mShimmerViewContainer.visibility = View.GONE
+        clearSelections()
+        actionMode?.finish()
+        if (response.success) {
+            if (response.member != null) {
+                Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
+                rvAdapter.notifyDataSetChanged()
+            }
+            frameRoot.snackbar(getString(R.string.LocationCity), Snackbar.LENGTH_LONG)
+        }
+
     }
 
     override suspend fun getFailure(message: String) {
@@ -792,6 +838,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var imgLocation: ImageView = itemView.findViewById(R.id.img_location)
+        var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
+        var imgExpired: ImageView = itemView.findViewById(R.id.img_expired)
 
         init {
             view.setOnLongClickListener(this)
@@ -939,6 +988,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                                     val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                                     mShimmerViewContainer.startShimmerAnimation()
                                     mShimmerViewContainer.visibility = View.VISIBLE
+                                    rvSearch.visibility = View.GONE
                                     profileDetailViewModel.updateProfile(updated, true)
 
                                 }

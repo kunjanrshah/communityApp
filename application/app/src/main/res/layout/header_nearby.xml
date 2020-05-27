@@ -102,7 +102,7 @@
                 android:buttonTint="@color/white"
                 android:checked="false"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="@string/User"
+                android:text="User"
                 android:textColor="@color/white"
                 android:visibility="gone" />
 

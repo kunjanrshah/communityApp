@@ -59,7 +59,7 @@ class AppController : Application(), KodeinAware {
     lateinit var retrofitBase: RetrofitBase
     lateinit var connectionLiveData: ConnectionLiveData
     var start: Int = 0
-    val length: Int = 30
+    val length: Int = 50
     val mHandler: Handler = Handler()
 
 

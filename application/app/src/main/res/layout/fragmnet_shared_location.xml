@@ -14,15 +14,37 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="@dimen/no_records"
-                android:layout_height="@dimen/no_records"
-                android:layout_gravity="center"
-                android:background="@drawable/no_record_found" />
+                android:id="@+id/iv_cancel"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/left_arrow" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Shared Profiles"
+                android:textColor="@color/black"
+                android:textSize="25sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/no_records"
+                    android:layout_height="@dimen/no_records"
+                    android:layout_gravity="center"
+                    android:background="@drawable/no_record_found" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <com.facebook.shimmer.ShimmerFrameLayout

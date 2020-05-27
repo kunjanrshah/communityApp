@@ -38,6 +38,7 @@ import org.kodein.di.generic.instance
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDateSetListener {
 
@@ -368,8 +369,17 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
 
     private fun getMasterList() = Coroutines.main {
         profileDetailViewModel.lstNativeName.await().observe(viewLifecycleOwner, Observer {
-            binding.spNative.setItems(it.toTypedArray())
-            binding.spNative.setExpandTint(R.color.black)
+            if (!it.isNullOrEmpty()) {
+                val lst = ArrayList<String>()
+                lst.addAll(it)
+                lst.remove(getString(R.string.other))
+                val lstNativeName = ArrayList<String>()
+                lstNativeName.add(getString(R.string.other))
+                lst.sort()
+                lstNativeName.addAll(lst)
+                binding.spNative.setItems(lstNativeName.toTypedArray())
+                binding.spNative.setExpandTint(R.color.black)
+            }
         })
 
         profileDetailViewModel.nativeName.await().observe(viewLifecycleOwner, Observer {
@@ -377,24 +387,63 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         })
 
         profileDetailViewModel.lstEducationName.await().observe(viewLifecycleOwner, Observer {
-            binding.spEducation.setItems(it.toTypedArray())
-            binding.spEducation.setExpandTint(R.color.black)
+            if (!it.isNullOrEmpty()) {
+
+                val lst = ArrayList<String>()
+                lst.addAll(it)
+                lst.remove(getString(R.string.select))
+                lst.remove(getString(R.string.other))
+
+                val lstEducationName = ArrayList<String>()
+                lstEducationName.add(getString(R.string.select))
+                lstEducationName.add(getString(R.string.other))
+                lst.sort()
+                lstEducationName.addAll(lst)
+                binding.spEducation.setItems(lstEducationName.toTypedArray())
+                binding.spEducation.setExpandTint(R.color.black)
+            }
         })
         profileDetailViewModel.educationName.await().observe(viewLifecycleOwner, Observer {
             binding.spEducation.setText(it)
         })
 
         profileDetailViewModel.lstActivityName.await().observe(viewLifecycleOwner, Observer {
-            binding.spCurrentActivity.setItems(it.toTypedArray())
-            binding.spCurrentActivity.setExpandTint(R.color.black)
+
+            if (!it.isNullOrEmpty()) {
+
+                val lst = ArrayList<String>()
+                lst.addAll(it)
+                lst.remove(getString(R.string.select))
+                lst.remove(getString(R.string.other))
+
+                val lstActivityName = ArrayList<String>()
+                lstActivityName.add(getString(R.string.select))
+                lstActivityName.add(getString(R.string.other))
+                lst.sort()
+                lstActivityName.addAll(lst)
+                binding.spCurrentActivity.setItems(lstActivityName.toTypedArray())
+                binding.spCurrentActivity.setExpandTint(R.color.black)
+            }
         })
         profileDetailViewModel.activityName.await().observe(viewLifecycleOwner, Observer {
             binding.spCurrentActivity.setText(it)
         })
 
         profileDetailViewModel.lstGotraName.await().observe(viewLifecycleOwner, Observer {
-            binding.spGotra.setItems(it.toTypedArray())
-            binding.spGotra.setExpandTint(R.color.black)
+
+            if (!it.isNullOrEmpty()) {
+                val lst = ArrayList<String>()
+                lst.addAll(it)
+                lst.remove(getString(R.string.select))
+
+                val lstGotraName = ArrayList<String>()
+                lstGotraName.add(getString(R.string.select))
+                lst.sort()
+                lstGotraName.addAll(lst)
+                binding.spGotra.setItems(lstGotraName.toTypedArray())
+                binding.spGotra.setExpandTint(R.color.black)
+
+            }
         })
         profileDetailViewModel.gotraName.await().observe(viewLifecycleOwner, Observer {
             binding.spGotra.setText(it)

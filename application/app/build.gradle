@@ -73,15 +73,14 @@ android {
             resValue "string", "base_url_logo", "https://muslimghanchisamaj.in/uploads/logos/"
             resValue "string", "base_url_thumb", "https://muslimghanchisamaj.in/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://muslimghanchisamaj.in/uploads/users/original/"
-            resValue "string", "web_client_id", "317054014432-jm52j188960tkcbrflb9qq5l9jpfs9o4.apps.googleusercontent.com"
+            resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
             buildConfigField "String", "BASE_URL", '"https://www.muslimghanchisamaj.in/API/"'
         }
 
-
         ghanchi {
             applicationId "com.ghanchi.samaj"
-            versionCode 6
-            versionName "6.0"
+            versionCode 9
+            versionName "1.0.1"
             resValue "string", "app_name", "Muslim Ghanchi Samaj"
             resValue "string", "dev_name", "Mehboob Gogda"
             resValue "string", "dev_contact", "9377133222"
@@ -97,13 +96,13 @@ android {
             resValue "string", "base_url_logo", "https://muslimghanchi.org/uploads/logos/"
             resValue "string", "base_url_thumb", "https://muslimghanchi.org/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://muslimghanchi.org/uploads/users/original/"
-            resValue "string", "web_client_id", "317054014432-jm52j188960tkcbrflb9qq5l9jpfs9o4.apps.googleusercontent.com"
+            resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
             buildConfigField "String", "BASE_URL", '"https://www.muslimghanchi.org/API/"'
         }
         medk {
             applicationId "com.medk.samaj"
             versionCode 1
-            versionName "1.0"
+            versionName "1.0.0"
             resValue "string", "app_name", "Vastipatrak"
             resValue "string", "dev_name", "Kunjan Shah"
             resValue "string", "dev_contact", "9427051418"
@@ -125,7 +124,7 @@ android {
         yadav {
             applicationId "com.yadav.samaj"
             versionCode 1
-            versionName "1.0"
+            versionName "1.0.0"
             resValue "string", "app_name", "Yadav Seva Samaj"
             resValue "string", "dev_name", "RajKumar Yadav"
             resValue "string", "dev_contact", "8000974974"

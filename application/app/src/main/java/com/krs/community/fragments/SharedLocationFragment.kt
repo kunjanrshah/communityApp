@@ -282,7 +282,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         val imgMap = header.findViewById<ImageView>(R.id.img_map)
 
-        ivCancel.setOnClickListener { v: View? -> Utility.movetoFragment(activity, DashboardFragment()) }
+        ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
 
         imgMap.setOnClickListener { v: View? ->
             Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_LONG).show()
@@ -291,6 +291,12 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
             startActivity(intent)
             Utility.fade(activity)*/
         }
+
+        binding.ivCancel.setOnClickListener {
+            Utility.backNavigation(activity)
+            //Utility.movetoFragment(activity, DashboardFragment())
+        }
+
         adapter.setParallaxHeader(header, binding.rvLocation)
         binding.rvLocation.adapter = adapter
         getSharedProfiles()
@@ -326,15 +332,17 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
     private fun toggleSelected(pos: Int) {
         currentSelectedIndex = pos
-        if (selectedItems[pos, false]) {
+        if (selectedItems.get(pos, false)) {
             selectedItems.delete(pos)
             animationItemsIndex.delete(pos)
         } else {
             selectedItems.put(pos, true)
             animationItemsIndex.put(pos, true)
         }
+
         adapter.notifyItemChanged(pos + 1)
     }
+
 
     private fun applyImportant(holder: ListViewHolder, member: Member) {
 
@@ -475,12 +483,13 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
 
     private fun toggleSelection(position: Int) {
         toggleSelected(position)
-        val count = selectedItemCount
-        if (count == 0) {
-            actionMode!!.finish()
+        val count = selectedItems.size()
+
+        if (count <= 0) {
+            actionMode?.finish()
         } else {
-            actionMode!!.title = count.toString()
-            actionMode!!.invalidate()
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
         }
     }
 

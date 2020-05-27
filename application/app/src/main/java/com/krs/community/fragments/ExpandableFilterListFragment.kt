@@ -48,7 +48,7 @@ class ExpandableFilterListFragment : Fragment(), KodeinAware {
         val lp = fab.layoutParams as CoordinatorLayout.LayoutParams
         fab.coordinatorLayout = lp
         fab.setOnClickListener {
-            Utility.hideKeyboard(activity)
+            Handler().postDelayed({ Utility.hideKeyboard(activity) }, 250)
             Handler().postDelayed({ adapter?.openBottomSheetDailog() }, 250)
         }
         val mApp = (activity as AppCompatActivity).applicationContext as AppController

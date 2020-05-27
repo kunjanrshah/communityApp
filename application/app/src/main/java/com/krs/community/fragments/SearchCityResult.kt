@@ -111,6 +111,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private var exportDialog: DialogPlus? = null
     private lateinit var ivExport: ImageView
     private var snackbar: Snackbar? = null
+    private var isSimmerOn = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -373,10 +374,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         val ivAtoz = header.findViewById<ImageView>(R.id.iv_atoz)
         ivAtoz.visibility = View.VISIBLE
         ivAtoz.setOnClickListener { v ->
-            val adapter = AtoZBottomAdapter(context)
-            adapter.setmISortingRecords(this)
+            val atoZBottomAdapter = AtoZBottomAdapter(context)
+            atoZBottomAdapter.setmISortingRecords(this)
             dialog = DialogPlus.newDialog(context!!)
-                    .setAdapter(adapter)
+                    .setAdapter(atoZBottomAdapter)
                     .setGravity(Gravity.BOTTOM)
                     .setCancelable(true)
                     .setExpanded(true, 900)
@@ -422,6 +423,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     members.clear()
                     binding.shimmerViewContainer.startShimmerAnimation()
                     binding.shimmerViewContainer.visibility = View.VISIBLE
+                } else if (isSimmerOn) {
+                    isSimmerOn = false
+                    binding.shimmerViewContainer.startShimmerAnimation()
+                    binding.shimmerViewContainer.visibility = View.VISIBLE
                 } else {
                     if (!isDeleted) {
                         snackbar = Snackbar.make(binding.lstFilter, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
@@ -438,6 +443,10 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         DashboardActivity.stop = false
         AppController.mApplication.start = 0
         setupList(false)
+    }
+
+    override fun closed() {
+        dialog?.dismiss()
     }
 
     override fun loadApi() {
@@ -536,7 +545,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             }
 
             if (message.toLowerCase().contains("success")) {
-                Utility.startSweetDialog(activity, SweetAlertDialog.SUCCESS_TYPE, context?.getString(R.string.app_name), message)
+                isSimmerOn = true
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
                 /*if (message.toLowerCase().contains("role")) {
 
                 } else {

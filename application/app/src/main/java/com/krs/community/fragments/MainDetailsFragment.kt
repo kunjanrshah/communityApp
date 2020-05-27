@@ -266,9 +266,18 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     binding.spCity.clear()
                     binding.spCity.setText(getString(R.string.select))
                     profileDetailViewModel.selectedCityId = 0
-                    Collections.sort(cities)
-                    binding.spCity.setItems(cities.toTypedArray())
-                    binding.spCity.setExpandTint(R.color.black)
+                    if (cities.isNotEmpty()) {
+                        val lst = ArrayList<String>()
+                        lst.addAll(cities)
+                        lst.remove(getString(R.string.other))
+
+                        val lstcityName = ArrayList<String>()
+                        lstcityName.add(getString(R.string.other))
+                        lst.sort()
+                        lstcityName.addAll(lst)
+                        binding.spCity.setItems(lstcityName.toTypedArray())
+                        binding.spCity.setExpandTint(R.color.black)
+                    }
                 }
             }
         }
@@ -475,14 +484,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     val list = it.subList(1, it.size)
                     Collections.sort(list)
                     val lstRelation = ArrayList<String>()
-                    lstRelation.add("Wife")
-                    lstRelation.add("Son")
-                    lstRelation.add("Daughter")
-                    lstRelation.add("Daughter-In-Law")
-                    lstRelation.add("Father")
-                    lstRelation.add("Mother")
-                    lstRelation.add("Grand Son")
-                    lstRelation.add("Grand Daughter")
+                    lstRelation.addAll(resources.getStringArray(R.array.lst_relative))
                     for (relation in list) {
                         if (!lstRelation.contains(relation)) {
                             lstRelation.add(relation)
@@ -494,9 +496,18 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             }
         })
 
-        profileDetailViewModel.lstLastName.await().observe(viewLifecycleOwner, Observer {
-            binding.spLastname.setItems(it.toTypedArray())
-            binding.spLastname.setExpandTint(R.color.black)
+        profileDetailViewModel.lstLastName.await().observe(viewLifecycleOwner, Observer { it ->
+            if (it.isNotEmpty()) {
+                val lst = ArrayList<String>()
+                lst.addAll(it)
+                lst.remove(getString(R.string.other))
+                val lstLastName = ArrayList<String>()
+                lstLastName.add(getString(R.string.other))
+                lst.sort()
+                lstLastName.addAll(lst)
+                binding.spLastname.setItems(lstLastName.toTypedArray())
+                binding.spLastname.setExpandTint(R.color.black)
+            }
         })
 
         profileDetailViewModel.lstStateName.await().observe(viewLifecycleOwner, Observer {
@@ -505,10 +516,19 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         })
 
         val cities = profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
-        Collections.sort(cities)
-        binding.spCity.setItems(cities.toTypedArray())
-        binding.spCity.setExpandTint(R.color.black)
+        if (cities.isNotEmpty()) {
 
+            val lst = ArrayList<String>()
+            lst.addAll(cities)
+            lst.remove(getString(R.string.other))
+
+            val lstcityName = ArrayList<String>()
+            lstcityName.add(getString(R.string.other))
+            lst.sort()
+            lstcityName.addAll(lst)
+            binding.spCity.setItems(lstcityName.toTypedArray())
+            binding.spCity.setExpandTint(R.color.black)
+        }
     }
 
     override fun getScanResult(response: SmartFilterResponse) {

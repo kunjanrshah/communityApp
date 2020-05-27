@@ -445,9 +445,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             }
             val percentage = calculatePercentage(member)
             setPercentage(percentage)
-            binding.ivVerify.visibility = View.VISIBLE
-            startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Success), getString(R.string.profileUpdate))
 
+            if ((loginMember.role == getString(R.string.USER))) {
+                binding.ivVerify.visibility = View.VISIBLE
+            }
+            startSweetDialog(this, SweetAlertDialog.SUCCESS_TYPE, getString(R.string.Success), getString(R.string.profileUpdate))
         } else {
             val member = response.member
             if (!member.mobile.isNullOrEmpty()) {
