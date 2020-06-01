@@ -286,7 +286,6 @@
                 android:src="@drawable/rocket"
                 app:borderWidth="0dp"
                 app:elevation="6dp"
-                android:visibility="gone"
                 app:fabSize="normal"
                 app:maxImageSize="40dp" />
 

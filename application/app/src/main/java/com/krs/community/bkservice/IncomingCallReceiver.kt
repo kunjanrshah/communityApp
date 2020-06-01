@@ -1,6 +1,4 @@
 package com.krs.community.bkservice
-
-
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -20,7 +18,6 @@ import com.krs.community.utils.NoInternetException
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
-
 
 class IncomingCallReceiver : BroadcastReceiver() {
 

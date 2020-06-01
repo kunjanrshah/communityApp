@@ -474,7 +474,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     override fun onUploadSuccess(jsonObject: JsonObject) {
         hideSweetProgress()
         member?.profilePic = jsonObject.get("profile").asString
-        Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
+        val memberString = Guru.getString(getString(R.string.loginMember), "")
+        val loginMember = Gson().fromJson(memberString, Member::class.java)
+        if (loginMember.id == member?.id) {
+            Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
+        }
         displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.profileUpdate))
     }
 

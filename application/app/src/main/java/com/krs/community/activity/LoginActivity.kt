@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.telephony.SubscriptionInfo
+import android.telephony.SubscriptionManager
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -22,6 +25,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -181,63 +185,25 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 loginViewModel?.cancelTimer()
             }
 
-            /*binding.fabLogin.setOnClickListener {
+            binding.fabLogin.setOnClickListener {
 
-                val lstNumber = ArrayList<String>()
-                val lstCarrier = ArrayList<String>()
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    if (checkReadPhoneStatePermission(this)) {
-                        try {
-                            val subscriptionManager: SubscriptionManager = SubscriptionManager.from(applicationContext)
-                            val subsInfoList: List<SubscriptionInfo> = subscriptionManager.activeSubscriptionInfoList
-
-                            for (subscriptionInfo in subsInfoList) {
-                                var number: String = subscriptionInfo.number
-                                val carrier: String = subscriptionInfo.carrierName.toString()
-                                if (number.isNotEmpty()) {
-                                    if (number.length > 10) {
-                                        number = number.substring((number.length - 10), number.length)
-                                    }
-                                    lstNumber.add(number)
-                                    lstCarrier.add(carrier)
-                                }
-                            }
-                        } catch (e: java.lang.Exception) {
-                            Toast.makeText(this, "Feature not supported!", Toast.LENGTH_SHORT).show()
-                            Snackbar.make(findViewById(R.id.ll_login), "Feature not supported!", Snackbar.LENGTH_LONG).show()
+                TTFancyGifDialog.Builder(this@LoginActivity)
+                        .setTitle("Are you sure?")
+                        .setMessage("This App will detect your sim card number for authentication purpose only")
+                        .setPositiveBtnText("Agree")
+                        .setPositiveBtnBackground("#22b573")
+                        .setNegativeBtnText("No,Please")
+                        .setNegativeBtnBackground("#c1272d")
+                        .setGifResource(R.drawable.gif_dialog)
+                        .isCancellable(true)
+                        .OnPositiveClicked {
+                            getNumber(binding)
                         }
-                    } else {
-                        requestPermissions(this@LoginActivity)
-                    }
-                }
+                        .OnNegativeClicked {
 
-                if (lstNumber.size == 0) {
-                    displaySnackBarWithBottomMargin(binding.llLogin, "SIMCard not found!")
-                } else if (lstNumber.size == 1) {
-                    startSweetProgress(this@LoginActivity, "Login with ${lstNumber[0]}", getString(R.string.loading))
-                    loginViewModel?.loginWithMobile(lstNumber[0])
-                } else if (lstNumber.size > 1) {
-                    TTFancyGifDialog.Builder(this@LoginActivity)
-                            .setTitle("Choose SIM")
-                            .setMessage("Family Head Device Login")
-                            .setPositiveBtnText(lstCarrier[0])
-                            .setPositiveBtnBackground("#22b573")
-                            .setNegativeBtnText(lstCarrier[1])
-                            .setNegativeBtnBackground("#c1272d")
-                            .setGifResource(R.drawable.gif_dialog)
-                            .isCancellable(true)
-                            .OnPositiveClicked {
-                                startSweetProgress(this@LoginActivity, "Login with ${lstNumber[0]}", getString(R.string.loading))
-                                loginViewModel?.loginWithMobile(lstNumber.get(0))
-                            }
-                            .OnNegativeClicked {
-                                startSweetProgress(this@LoginActivity, "Login with ${lstNumber[1]}", getString(R.string.loading))
-                                loginViewModel?.loginWithMobile(lstNumber.get(1))
-                            }
-                            .build()
-                }
-            }*/
+                        }
+                        .build()
+            }
 
             binding.btnLoginFb.setOnClickListener { v ->
 
@@ -342,6 +308,63 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 }
             })
             requestPermissions(this@LoginActivity)
+        }
+    }
+
+    private fun getNumber(binding: ActivityLoginwithBinding) {
+        val lstNumber = ArrayList<String>()
+        val lstCarrier = ArrayList<String>()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            if (checkReadPhoneStatePermission(this)) {
+                try {
+                    val subscriptionManager: SubscriptionManager = SubscriptionManager.from(applicationContext)
+                    val subsInfoList: List<SubscriptionInfo> = subscriptionManager.activeSubscriptionInfoList
+
+                    for (subscriptionInfo in subsInfoList) {
+                        var number: String = subscriptionInfo.number
+                        val carrier: String = subscriptionInfo.carrierName.toString()
+                        if (number.isNotEmpty()) {
+                            if (number.length > 10) {
+                                number = number.substring((number.length - 10), number.length)
+                            }
+                            lstNumber.add(number)
+                            lstCarrier.add(carrier)
+                        }
+                    }
+                } catch (e: java.lang.Exception) {
+                    Toast.makeText(this, "Feature not supported!", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(findViewById(R.id.ll_login), "Feature not supported!", Snackbar.LENGTH_LONG).show()
+                }
+            } else {
+                requestPermissions(this@LoginActivity)
+            }
+        }
+
+        if (lstNumber.size == 0) {
+            displaySnackBarWithBottomMargin(binding.llLogin, "SIMCard not found!")
+        } else if (lstNumber.size == 1) {
+            startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[0]}", getString(R.string.loading))
+            loginViewModel?.loginWithMobile(lstNumber[0])
+        } else if (lstNumber.size > 1) {
+            TTFancyGifDialog.Builder(this@LoginActivity)
+                    .setTitle("Choose Your SIM")
+                    .setMessage("Family Head Authentication")
+                    .setPositiveBtnText(lstCarrier[0])
+                    .setPositiveBtnBackground("#22b573")
+                    .setNegativeBtnText(lstCarrier[1])
+                    .setNegativeBtnBackground("#c1272d")
+                    .setGifResource(R.drawable.gif_dialog)
+                    .isCancellable(true)
+                    .OnPositiveClicked {
+                        startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[0]}", getString(R.string.loading))
+                        loginViewModel?.loginWithMobile(lstNumber.get(0))
+                    }
+                    .OnNegativeClicked {
+                        startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[1]}", getString(R.string.loading))
+                        loginViewModel?.loginWithMobile(lstNumber.get(1))
+                    }
+                    .build()
         }
     }
 

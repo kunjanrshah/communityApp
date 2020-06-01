@@ -131,22 +131,27 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
             binding.tvDistance.text = "Work"
         }
         binding.llWork.setOnClickListener {
-
-            if (binding.tvDistance.text.toString() != "Work") {
-                val memberId = Guru.getString(getString(R.string.member_id), "")
+            val memberId = Guru.getString(getString(R.string.member_id), "")
+            if (binding.tvDistance.text.toString() != "Work" || memberId == member.id) {
+                var msg = "Please stay at your work place to set accurate your work location with Google Map"
                 if (memberId == member.id) {
                     SweetAlertDialog(activity, SweetAlertDialog.FORGOT_TYPE)
                 } else {
+                    msg = "App will open GMaps App to navigate you"
                     SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                 }
                         .setTitleText(getString(R.string.OfficeLocation))
-                        .setContentText(getString(R.string.WithGoogle))
-                        .setConfirmText(getString(R.string.View))
-                        .setNeutralText(getString(R.string.set))
+                        .setContentText(msg)
+                        .setConfirmText(getString(R.string.View) + " " + getString(R.string.OfficeLocation))
+                        .setNeutralText(getString(R.string.set) + " " + getString(R.string.OfficeLocation))
                         .setCustomImage(R.drawable.ic_app)
                         .setConfirmClickListener {
                             it.dismiss()
-                            showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Work")
+                            if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
+                                showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Work")
+                            } else {
+                                Utility.displaySnackBarWithBottomMargin(binding.llMain, "Please set work location")
+                            }
                         }
                         .setNeutralClickListener {
                             it.dismiss()
@@ -166,7 +171,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                         }
                         .show()
             } else {
-                binding.llMain.snackbar("Office location not set", Snackbar.LENGTH_SHORT)
+                Utility.displaySnackBarWithBottomMargin(binding.llMain, "Work location not set")
             }
 
         }

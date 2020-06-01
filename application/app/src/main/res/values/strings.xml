@@ -831,7 +831,7 @@
 
     <!-- PRofessionDetail Fragment -->
     <string name="kmPDetail">%.2f KM</string>
-    <string name="OfficeLocation">Office Location</string>
+    <string name="OfficeLocation">Work Location</string>
     <string name="WithGoogle">With Google Map</string>
     <string name="updatingLocationDetail">Updating your office location</string>
     <string name="PleasWaitDetails">Please wait...</string>

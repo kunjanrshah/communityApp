@@ -157,10 +157,10 @@ public class Utility {
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-   /* public static boolean checkReadCallLogPermission(Context mContext) {
+    public static boolean checkReadCallLogPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALL_LOG);
         return permissionState == PackageManager.PERMISSION_GRANTED;
-    }*/
+    }
 
     public static boolean checkReadPhoneStatePermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
@@ -1755,18 +1755,30 @@ public class Utility {
         }
     }
 
-    public static int getAppVersion(Context context) {
+    public static int getAppVersionCode(Context context) {
         int verCode = 0;
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            String version = pInfo.versionName;
             verCode = pInfo.versionCode;
-            Log.d("getAppVersion", "version: " + version + " verCode:" + verCode);
+            Log.d("getAppVersion", " verCode:" + verCode);
             return verCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return verCode;
+    }
+
+    public static String getAppVersionName(Context context) {
+        String verName = "1.0";
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            verName = pInfo.versionName;
+            Log.d("getAppVersion", "version: " + verName);
+            return verName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return verName;
     }
 
     public static String getHashKey(Context context) {

@@ -185,7 +185,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             JsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
             JsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
             JsonObj.put("insert", "")
-            JsonObj.put("version", getAppVersion(this))
+            JsonObj.put("version", getAppVersionCode(this))
             val updated = JsonParser().parse(JsonObj.toString()) as JsonObject
             dashboardViewModel.getUpdatedVersion(updated)
         }
@@ -200,8 +200,19 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         loadProfile()
         NotificationUtils.clearNotifications(applicationContext)
         hideSweetProgress()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(this)
+
+        val locale = Guru.getString(resources.getString(R.string.locale_sp), resources.getString(R.string._english))
+        Log.e("Lang", "" + locale)
+        when {
+            locale.equals(resources.getString(R.string._gujarati), ignoreCase = true) -> {
+                changeLang(applicationContext, "ગુજરાતી")
+            }
+            locale.equals(resources.getString(R.string._hindi), ignoreCase = true) -> {
+                changeLang(applicationContext, "हिन्दी")
+            }
+            else -> {
+                changeLang(applicationContext, "English")
+            }
         }
 
         if (checkFineLocationPermission(this)) {
@@ -212,21 +223,13 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             easyWayLocation = EasyWayLocation(this, request, true, this)
             easyWayLocation?.startLocation() //calculateDistance()
 
-        } else {
+        }/* else {
             requestFineLocationPermission(this)
+        }*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(this)
         }
-
-        val locale = Guru.getString(resources.getString(R.string.locale_sp), resources.getString(R.string._english))
-        Log.e("Lang", "" + locale)
-        if (locale.equals(resources.getString(R.string._gujarati), ignoreCase = true)) {
-            changeLang(applicationContext, "ગુજરાતી")
-        } else if (locale.equals(resources.getString(R.string._hindi), ignoreCase = true)) {
-            changeLang(applicationContext, "हिन्दी")
-        } else {
-            changeLang(applicationContext, "English")
-        }
-
-
     }
 
     override fun onPause() {

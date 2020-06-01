@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -34,7 +33,6 @@ import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
-import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import kotlinx.android.synthetic.main.fragment_main_details.*
@@ -158,7 +156,6 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             }
         }
 
-
         if (!member.emailAddress.isNullOrEmpty()) {
             val spannable: Spannable = SpannableString(member.emailAddress)
             Linkify.addLinks(spannable, Linkify.WEB_URLS)
@@ -174,9 +171,6 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.edtMother.setText(member.motherName)
         binding.edtMobile.setText(member.mobile)
 
-
-
-
         binding.edtAddr.setText(member.address)
         binding.edtArea.setText(member.area)
         binding.edtPincode.setText(member.pincode)
@@ -191,22 +185,27 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         setGender()
 
         binding.llHome.setOnClickListener {
-
-            if (binding.tvDistance.text.toString() != "Home") {
-                val memberId = Guru.getString(getString(R.string.member_id), "")
+            val memberId = Guru.getString(getString(R.string.member_id), "")
+            if (binding.tvDistance.text.toString() != "Home" || memberId == member.id) {
+                var msg = "Please stay at your home to set accurate your home location with Google Map"
                 if (memberId == member.id) {
                     SweetAlertDialog(activity, SweetAlertDialog.FORGOT_TYPE)
                 } else {
+                    msg = "App will open GMaps App to navigate you"
                     SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                 }
                         .setTitleText(getString(R.string.homeLocation))
-                        .setContentText(getString(R.string.withGoogleMap))
-                        .setConfirmText(getString(R.string.View))
-                        .setNeutralText(getString(R.string.set))
+                        .setContentText(msg)
+                        .setConfirmText(getString(R.string.View) + " Home Location")
+                        .setNeutralText(getString(R.string.set) + " Home Location")
                         .setCustomImage(R.drawable.ic_app)
                         .setConfirmClickListener {
                             it.dismiss()
-                            Utility.showDirections(activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}" + getString(R.string.homeDetail))
+                            if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
+                                Utility.showDirections(activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}" + getString(R.string.homeDetail))
+                            } else {
+                                Utility.displaySnackBarWithBottomMargin(binding.llMain, "Please set home location")
+                            }
                         }
                         .setNeutralClickListener {
                             it.dismiss()
@@ -226,9 +225,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                         }
                         .show()
             } else {
-                binding.llMain.snackbar("Home location not set", Snackbar.LENGTH_SHORT)
+                Utility.displaySnackBarWithBottomMargin(binding.llMain, "Home location not set")
             }
-
         }
 
         binding.edtAddr.addTextChangedListener(object : TextWatcher {
