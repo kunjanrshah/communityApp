@@ -23,6 +23,10 @@ class ByDistanceRepository(private val api: ApiServices, private val db: AppData
         return db.getLastNameDao().getLastNameById(Integer.parseInt(id))
     }
 
+    fun getLocalCommName(id: String): String {
+        return db.getLocalCommunityDao().getLocalCommName(id)
+    }
+
     suspend fun getNativeById(id: Int): String {
         return withContext(Dispatchers.IO) {
             db.getNativeDao().getNative(id)

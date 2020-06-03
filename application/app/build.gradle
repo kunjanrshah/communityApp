@@ -79,8 +79,8 @@ android {
 
         ghanchi {
             applicationId "com.ghanchi.samaj"
-            versionCode 12
-            versionName "1.0.3"
+            versionCode 13
+            versionName "1.0.4"
             resValue "string", "app_name", "Muslim Ghanchi Samaj"
             resValue "string", "dev_name", "Mehboob Gogda"
             resValue "string", "dev_contact", "9377133222"
@@ -97,6 +97,8 @@ android {
             resValue "string", "base_url_thumb", "https://muslimghanchi.org/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://muslimghanchi.org/uploads/users/original/"
             resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
+            resValue "string", "facebook_app_id", "2264814596961704"
+            resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
             buildConfigField "String", "BASE_URL", '"https://www.muslimghanchi.org/API/"'
         }
         medk {
@@ -118,7 +120,9 @@ android {
             resValue "string", "base_url_logo", "https://medkapp.org/uploads/logos/"
             resValue "string", "base_url_thumb", "https://medkapp.org/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://medkapp.org/uploads/users/original/"
-            resValue "string", "web_client_id", "317054014432-jm52j188960tkcbrflb9qq5l9jpfs9o4.apps.googleusercontent.com"
+            resValue "string", "web_client_id", "685345012359-pbf23s7oh4g2hrh73ie2fk7k9vmi1hhr.apps.googleusercontent.com"
+            resValue "string", "facebook_app_id", "1685147044959850"
+            resValue "string", "fb_login_protocol_scheme", "fb1685147044959850"
             buildConfigField "String", "BASE_URL", '"https://www.medkapp.org/API/"'
         }
         yadav {
@@ -140,7 +144,9 @@ android {
             resValue "string", "base_url_logo", "https://helixinstruments.com/uploads/logos/"
             resValue "string", "base_url_thumb", "https://helixinstruments.com/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://helixinstruments.com/uploads/users/original/"
-            resValue "string", "web_client_id", "317054014432-jm52j188960tkcbrflb9qq5l9jpfs9o4.apps.googleusercontent.com"
+            resValue "string", "web_client_id", "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com"
+            resValue "string", "facebook_app_id", "593065571323594"
+            resValue "string", "fb_login_protocol_scheme", "fb593065571323594"
             buildConfigField "String", "BASE_URL", '"https://helixinstruments.com/API/"'
         }
     }

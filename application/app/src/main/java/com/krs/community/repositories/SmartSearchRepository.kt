@@ -33,4 +33,8 @@ class SmartSearchRepository(private val api: ApiServices, private val db: AppDat
     fun getRelationName(id: String): String {
         return db.getRelationsDao().getRelationNameById(Integer.parseInt(id))
     }
+
+    fun getLocalCommName(id: String): String {
+        return db.getLocalCommunityDao().getLocalCommName(id)
+    }
 }

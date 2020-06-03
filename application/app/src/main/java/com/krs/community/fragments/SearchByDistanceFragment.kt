@@ -265,6 +265,17 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     }
                 }
 
+                Coroutines.io {
+                    if (!member.localCommunityId.isNullOrEmpty()) {
+                        val local = mByDistanceViewModel.getLocalCommById(member.localCommunityId.trim())
+                        Coroutines.main {
+                            viewHolder.tvRegion.text = local
+                        }
+                    }
+                }
+
+
+
                 /*viewHolder.tvEmail.text = member.emailAddress
                 viewHolder.tvMobile.text = member.mobile*/
 
@@ -310,6 +321,16 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 } else {
                     viewHolder.tvCode.text = getMemberCode(code)
+                }
+
+                if (BuildConfig.FLAVOR == "ghanchi") {
+                    viewHolder.viewLine.visibility = View.VISIBLE
+                    viewHolder.tvRegion.visibility = View.VISIBLE
+                    viewHolder.tvLabel.visibility = View.VISIBLE
+                } else {
+                    viewHolder.viewLine.visibility = View.GONE
+                    viewHolder.tvRegion.visibility = View.GONE
+                    viewHolder.tvLabel.visibility = View.GONE
                 }
 
                 if (member.headId.equals("0")) {
@@ -513,6 +534,10 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+
+        var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+        var viewLine: View = itemView.findViewById(R.id.view_line)
+        var tvLabel: TextView = itemView.findViewById(R.id.tv_label)
     }
 
     private fun applyImportant(holder: DistanceViewHolder, member: Member) {

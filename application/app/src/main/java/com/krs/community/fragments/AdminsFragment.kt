@@ -74,6 +74,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     private lateinit var tvCount: TextView
     private var loginUserSubCommunityId = ""
     private var loginUserLocalCommunityId = ""
+    private var role = ""
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private lateinit var llRoot: FrameLayout
@@ -293,7 +294,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
         loginUserSubCommunityId = member.subCommunityId
         loginUserLocalCommunityId = member.localCommunityId
-
+        role = member.role
         getSubAdmin()
         return root
     }
@@ -305,7 +306,9 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         jsonObject.put(getString(R.string.length), AppController.mApplication.length)
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.role), resources.getString(R.string.SUB_ADMIN))
-        jsonObj.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
+        if (role != getString(R.string.super_admin)) {
+            jsonObj.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
+        }
         jsonObject.put(getString(R.string.filter_by), jsonObj)
         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)
@@ -323,7 +326,9 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         jsonObject.put(getString(R.string.length), AppController.mApplication.length)
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.role), resources.getString(R.string.LOCAL_ADMIN))
-        jsonObj.put(getString(R.string.local_community_id), loginUserLocalCommunityId)
+        if (role != getString(R.string.super_admin)) {
+            jsonObj.put(getString(R.string.local_community_id), loginUserLocalCommunityId)
+        }
         jsonObject.put(getString(R.string.filter_by), jsonObj)
         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)

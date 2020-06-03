@@ -53,6 +53,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     var numberOfLines = 5
     override val kodein by kodein()
     var headName = ""
+
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -283,7 +284,6 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         binding.spCity.setOnItemClickListener {
             Coroutines.io {
                 val cityName = binding.spCity.text.toString().trim()
-                profileDetailViewModel.selectedCityName = cityName
                 profileDetailViewModel.selectedCityId = profileDetailViewModel.getCityIdByName(cityName)
             }
         }
@@ -439,21 +439,27 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         }
     }
 
-    private fun setMemberLastname() = Coroutines.main {
+    private fun setMemberLastname() = Coroutines.io {
         if (member.subCastId.isNotEmpty()) {
             profileDetailViewModel.selectedLastNameId = Integer.parseInt(member.subCastId)
             val lname = profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
-            binding.spLastname.setText(lname)
+            Coroutines.main {
+                binding.spLastname.setText(lname)
+            }
         }
     }
 
-    private fun setMemberState() = Coroutines.main {
+    private fun setMemberState() = Coroutines.io {
         if (member.stateId.isNotEmpty()) {
             profileDetailViewModel.selectedStateId = Integer.parseInt(member.stateId)
             val name = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
-            binding.spState.setText(name)
+            Coroutines.main {
+                binding.spState.setText(name)
+            }
         }
     }
+
+
 
     private fun setMemberCity() = Coroutines.main {
         if (!member.cityId.isNullOrEmpty()) {
@@ -462,7 +468,6 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                 binding.spCity.setText(it)
             }
         }
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -513,9 +518,9 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             binding.spState.setExpandTint(R.color.black)
         })
 
+
         val cities = profileDetailViewModel.getCityNamebyState(profileDetailViewModel.selectedStateId)
         if (cities.isNotEmpty()) {
-
             val lst = ArrayList<String>()
             lst.addAll(cities)
             lst.remove(getString(R.string.other))

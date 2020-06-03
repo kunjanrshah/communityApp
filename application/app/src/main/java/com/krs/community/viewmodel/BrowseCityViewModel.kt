@@ -37,6 +37,10 @@ class BrowseCityViewModel(
         return browsCityRepository.getNativeById(id)
     }
 
+    suspend fun getLocalCommunityById(id: String): String {
+        return browsCityRepository.getLocalCommunityById(id)
+    }
+
 
     fun getCitiesByState(request: JsonObject) {
         if (isNetworkConnected(app.applicationContext)) {

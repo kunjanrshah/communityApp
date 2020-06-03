@@ -205,7 +205,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                         .build()
             }
 
-            binding.btnLoginFb.setOnClickListener { v ->
+            binding.btnLoginFb.setOnClickListener { v0 ->
 
                 LoginManager.getInstance().logInWithReadPermissions(this@LoginActivity, Arrays.asList("email", "public_profile"))
                 LoginManager.getInstance().registerCallback(mCallbackManager!!, object : FacebookCallback<LoginResult> {

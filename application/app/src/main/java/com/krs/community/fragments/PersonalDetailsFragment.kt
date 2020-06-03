@@ -2,7 +2,6 @@ package com.krs.community.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -70,6 +68,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
 
         loginMem = Gson().fromJson(loginMember, Member::class.java)
         if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
+            binding.edtLocalAddr.isFocusable = true
             binding.edtRole.isFocusable = true
             binding.spNative.isClickable = true
             binding.chkExpired.isEnabled = true
@@ -86,8 +85,11 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.spCurrentActivity.isClickable = true
             binding.spMarital.isClickable = true
             binding.txtMdate.isEnabled = true
-            binding.edtLocalAddr.isFocusable = true
+            binding.spSubComm.isClickable = true
+            binding.spLocalComm.isClickable = true
         } else {
+            binding.spSubComm.isClickable = false
+            binding.spLocalComm.isClickable = false
             binding.edtRole.isFocusable = false
             binding.spNative.isClickable = false
             binding.chkExpired.isEnabled = false
@@ -151,6 +153,15 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         })
 
         binding.spMarital.setOnItemClickListener {
+
+            if (it == 1 || it == 2) {
+                MatrimonyDetailsFragment.binding.chkInterested.isChecked = false
+                MatrimonyDetailsFragment.binding.chkInterested.isEnabled = false
+            } else {
+                MatrimonyDetailsFragment.binding.chkInterested.isEnabled = true
+                MatrimonyDetailsFragment.binding.chkInterested.isChecked = member.matrimony.toString() == "Yes"
+            }
+
             if (it == 2) {
                 binding.txtMdate.isClickable = true
                 binding.txtMdate.isEnabled = true
@@ -300,11 +311,16 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.llNative.visibility = View.GONE
             binding.llGotra.visibility = View.GONE
             binding.llLocalAdd.visibility = View.GONE
-
+            binding.llCommunity.visibility = View.GONE
         } else {
             binding.llNative.visibility = View.VISIBLE
             binding.llGotra.visibility = View.VISIBLE
             binding.llLocalAdd.visibility = View.VISIBLE
+            if (BuildConfig.FLAVOR == "ghanchi") {
+                binding.llCommunity.visibility = View.VISIBLE
+            } else {
+                binding.llCommunity.visibility = View.GONE
+            }
         }
 
         if (BuildConfig.FLAVOR == "ghanchi") {
@@ -317,14 +333,14 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         return binding.root
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+    /*override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         if (isVisibleToUser) {
             Handler().postDelayed({
                 binding.scroll.fullScroll(ScrollView.FOCUS_UP)
                 binding.scroll.isSmoothScrollingEnabled = true
             }, 1000)
         }
-    }
+    }*/
 
     fun getSaveData(json: JSONObject) {
         try {
@@ -362,6 +378,8 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             json.put(getString(R.string.current_activity_id), profileDetailViewModel.selectedActivityId)
             json.put(getString(R.string.marital_status), binding.spMarital.text)
             json.put(getString(R.string.local_address), binding.edtLocalAddr.text)
+            json.put(getString(R.string.local_community_id), profileDetailViewModel.selectedLocalCommunityId)
+            json.put(getString(R.string.sub_community_id), profileDetailViewModel.selectedSubCommId)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -456,6 +474,57 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         val lstMarital = activity!!.resources.getStringArray(R.array.marital)
         binding.spMarital.setItems(lstMarital)
         binding.spMarital.setExpandTint(R.color.black)
+
+        profileDetailViewModel.lstSubCommName.await().observe(viewLifecycleOwner, Observer {
+            binding.spSubComm.setItems(it.toTypedArray())
+            binding.spSubComm.setExpandTint(R.color.black)
+        })
+
+        binding.spSubComm.setOnItemClickListener {
+            Coroutines.io {
+                profileDetailViewModel.selectedSubCommId = profileDetailViewModel.getSubCommIdByName(binding.spSubComm.text.toString())
+
+                Coroutines.main {
+                    profileDetailViewModel.getLocalCommunity(profileDetailViewModel.selectedSubCommId).observeForever {
+                        binding.spLocalComm.clear()
+                        binding.spLocalComm.setText(getString(R.string.select))
+                        profileDetailViewModel.selectedLocalCommunityId = 0
+                        binding.spLocalComm.setItems(it.toTypedArray())
+                        binding.spLocalComm.setExpandTint(R.color.black)
+                    }
+                }
+            }
+        }
+
+        binding.spLocalComm.setOnItemClickListener {
+            Coroutines.io {
+                val localName = binding.spLocalComm.text.toString().trim()
+                profileDetailViewModel.selectedLocalCommunityId = profileDetailViewModel.getCityIdByName(localName)
+            }
+        }
+
+        setMemberSubCommunity()
+        setMemberLocalCommunity()
+    }
+
+    private fun setMemberSubCommunity() = Coroutines.io {
+        if (member.subCommunityId.isNotEmpty()) {
+            profileDetailViewModel.selectedSubCommId = Integer.parseInt(member.subCommunityId)
+            val name = profileDetailViewModel.getSubCommName(member.subCommunityId)
+            Coroutines.main {
+                binding.spSubComm.setText(name)
+            }
+        }
+    }
+
+    private fun setMemberLocalCommunity() = Coroutines.io {
+        if (!member.localCommunityId.isNullOrEmpty()) {
+            profileDetailViewModel.selectedLocalCommunityId = Integer.parseInt(member.localCommunityId)
+            val local = profileDetailViewModel.getLocalCommunityName(member.localCommunityId)
+            Coroutines.main {
+                binding.spLocalComm.setText(local)
+            }
+        }
     }
 
     private fun setDatePicker(mem_date: String) {

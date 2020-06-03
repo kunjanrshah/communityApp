@@ -162,6 +162,16 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                         }
                     }
                 }
+
+                if (!member.localCommunityId.isNullOrEmpty()) {
+                    Coroutines.io {
+                        val local = smartFilterViewModel.getLocalCommunity(member.localCommunityId)
+                        Coroutines.main {
+                            holder.tvRegion.text = local
+                        }
+                    }
+                }
+
                 if (member.gender.equals("Male")) {
                     holder.ivGender.setBackgroundResource(R.drawable.male)
                 } else {
@@ -194,6 +204,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                         }
                     }
                 }
+
 
                 val age = Utility.getAge(member.birthDate, Utility.yyyy_MM_dd)
                 if (age in 0..100) {
@@ -451,6 +462,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
+        var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+
     }
 
     override fun getMembers(response: SmartFilterResponse) {

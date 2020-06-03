@@ -106,6 +106,15 @@
                     android:layout_marginRight="3dp"
                     android:tint="@color/icon_tint_normal" />
 
+                <TextView
+                    android:id="@+id/tv_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="@string/regionAdmin"
+                    android:textColor="@color/material_blue_500"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_home"
@@ -317,6 +326,25 @@
                         android:textSize="14sp" />
 
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/view_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="5dp"
+                    android:alpha="1"
+                    android:background="@color/colorGray"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_region"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
 
                 <View
                     android:layout_width="match_parent"

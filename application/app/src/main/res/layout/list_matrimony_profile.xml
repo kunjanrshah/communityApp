@@ -108,6 +108,17 @@
                     android:text="Head"
                     android:textColor="@color/colorPrimary"
                     android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="@string/regionAdmin"
+                    android:textColor="@color/material_blue_500"
+                    android:textSize="12sp" />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -261,6 +272,24 @@
                     android:layout_marginTop="5dp"
                     android:hint="Head name"
                     android:textSize="14sp" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorGray" />
+
+                <TextView
+                    android:id="@+id/tv_region"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:hint="Region"
+                    android:textSize="14sp" />
+
 
             </LinearLayout>
         </LinearLayout>

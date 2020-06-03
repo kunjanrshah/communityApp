@@ -228,6 +228,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             var badge: NotificationBadge = itemView.findViewById(R.id.badge)
             var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
             var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+            val tvRegion: TextView = itemView.findViewById(R.id.tv_region)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -254,6 +255,17 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                     }
                 }
             }
+
+            Coroutines.io {
+                if (!member.localCommunityId.isNullOrEmpty()) {
+                    val local = roomMemberViewModel.getLocalCommById(member.localCommunityId.trim())
+                    Coroutines.main {
+                        viewHolder.tvRegion.text = local
+                    }
+                }
+            }
+
+
             viewHolder.badge.setNumber(count)
             viewHolder.tvName.text = member.firstName
 

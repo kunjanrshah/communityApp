@@ -32,7 +32,10 @@ import org.kodein.di.generic.instance
 
 class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
-    lateinit var binding: FragmentMatrimonyDetailsBinding
+    companion object {
+        lateinit var binding: FragmentMatrimonyDetailsBinding
+    }
+
     private lateinit var member: Member
     private lateinit var loginMem: Member
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
@@ -106,7 +109,17 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         binding.chkIsMangal.isChecked = member.isMangal.equals("1")
         binding.chkIsShani.isChecked = member.isShani.equals("1")
         binding.chkGlass.isChecked = member.isSpect.equals("1")
-        binding.chkInterested.isChecked = member.matrimony.toString().toLowerCase().equals("yes")
+        val marital = PersonalDetailsFragment.binding.spMarital.text.toString()
+        if (marital == "Married" || marital == "Engaged") {
+            binding.chkInterested.isChecked = false
+            binding.chkInterested.isClickable = false
+            binding.chkInterested.isEnabled = false
+        } else {
+            binding.chkInterested.isEnabled = true
+            binding.chkInterested.isClickable = true
+            binding.chkInterested.isChecked = member.matrimony.toString().toLowerCase() == "yes"
+        }
+
         binding.chkInterested.setOnClickListener {
 
             SweetAlertDialog(activity, SweetAlertDialog.CUSTOM_IMAGE_TYPE)

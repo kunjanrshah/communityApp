@@ -119,7 +119,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 holder.tvAddr.text = member.address
 
                 holder.swipe.close(true)
-                if (loginMem?.role == "SUPERADMIN") {
+                if (loginMem?.role == getString(R.string.super_admin)) {
                     holder.swipe.setLockDrag(false)
                 } else {
                     holder.swipe.setLockDrag(true)
@@ -147,6 +147,16 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 } else {
                     holder.tvCode.text = getMemberCode(code)
+                }
+
+                if (BuildConfig.FLAVOR == "ghanchi") {
+                    holder.ll_region.visibility = View.VISIBLE
+                    holder.tvRegion.visibility = View.VISIBLE
+                    holder.view_line.visibility = View.VISIBLE
+                } else {
+                    holder.ll_region.visibility = View.GONE
+                    holder.tvRegion.visibility = View.GONE
+                    holder.view_line.visibility = View.GONE
                 }
 
                 if (member.status == "2") {
@@ -205,6 +215,15 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     viewHolder.tvEmail.text = member.emailAddress
                 }
 
+                Coroutines.io {
+                    if (!member.localCommunityId.isNullOrEmpty() && member.localCommunityId != "0") {
+                        val local = smartFilterViewModel.getLocalCommunity(member.localCommunityId.trim())
+                        Coroutines.main {
+                            viewHolder.tvRegion.text = local
+                        }
+                    }
+                }
+
                 holder.frameDelete.setOnClickListener {
 
                     TTFancyGifDialog.Builder(activity)
@@ -223,9 +242,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
                             }
                             .build()
-
                 }
-
 
                 holder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 viewHolder.itemView.isActivated = selectedItems.get(position, false)
@@ -274,13 +291,17 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         profileDetailViewModel.deleteMember(records)
     }
 
-
     private fun getNonActivesUsers() {
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
             val jsonObject = JSONObject()
             jsonObject.put(getString(R.string.start), AppController.mApplication.start)
             jsonObject.put(getString(R.string.length), AppController.mApplication.length)
+            if (loginMem?.role.equals(getString(R.string.subAdmin))) {
+                jsonObject.put(getString(R.string.sub_community_id), loginMem?.subCommunityId)
+            } else if (loginMem?.role.equals(getString(R.string.localAdmin))) {
+                jsonObject.put(getString(R.string.local_community_id), loginMem?.localCommunityId)
+            }
             jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
             jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
@@ -427,7 +448,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvEmail: TextView = view.findViewById(R.id.tv_email)
         var tvAddr: TextView = view.findViewById(R.id.tv_addr)
         var llMobile: LinearLayout = itemView.findViewById(R.id.ll_mobile)
-        var ll_email: LinearLayout = itemView.findViewById(R.id.ll_email)
         var ivMobile: ImageView = itemView.findViewById(R.id.iv_mobile)
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
@@ -437,6 +457,14 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var frameDelete: FrameLayout = itemView.findViewById(R.id.frame_delete)
         var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
+        var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+
+        var view_line: View = itemView.findViewById(R.id.view_line)
+        var ll_region: LinearLayout = itemView.findViewById(R.id.ll_region)
+        var tv_label: TextView = itemView.findViewById(R.id.tv_label)
+
+
+
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {

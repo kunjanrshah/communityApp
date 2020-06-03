@@ -223,6 +223,12 @@ class ProfileDetailRepository(private val api: ApiServices, private val db: AppD
         }
     }
 
+    suspend fun getLocalCommName(id: String): String {
+        return withContext(Dispatchers.IO) {
+            db.getLocalCommunityDao().getLocalCommName(id)
+        }
+    }
+
     suspend fun getLocalCommName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getLocalCommunityDao().getLocalCommName()
@@ -260,6 +266,7 @@ class ProfileDetailRepository(private val api: ApiServices, private val db: AppD
         }
     }
 
+
     suspend fun getCityId(name: String): LiveData<Int> {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getCityIdByName(name)
@@ -293,6 +300,12 @@ class ProfileDetailRepository(private val api: ApiServices, private val db: AppD
     suspend fun getSubCommName(): LiveData<List<String>> {
         return withContext(Dispatchers.IO) {
             db.getSubCommunityDao().getSubCommName()
+        }
+    }
+
+    suspend fun getSubCommName(id: String): String {
+        return withContext(Dispatchers.IO) {
+            db.getSubCommunityDao().getSubCommunityName(id)
         }
     }
 

@@ -310,7 +310,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 viewHolder.tvArea.text = member.area
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
-                        val name = member.firstName + " " + calendarSearchViewModel.getLastNameById(member.subCastId.toInt())
+                        val name = member.firstName + " " + member.fatherName + " " + calendarSearchViewModel.getLastNameById(member.subCastId.toInt())
                         Coroutines.main {
                             viewHolder.tvName.text = name
                         }
@@ -326,6 +326,13 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         val native = roomMemberViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                         Coroutines.main {
                             viewHolder.tvNative.text = "Native: $native"
+                        }
+                    }
+
+                    if (!member.localCommunityId.isNullOrEmpty()) {
+                        val local = roomMemberViewModel.getLocalCommById(member.localCommunityId.trim())
+                        Coroutines.main {
+                            viewHolder.tvRegion.text = local
                         }
                     }
                 }
@@ -468,6 +475,16 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                     }
                 }
 
+                if (BuildConfig.FLAVOR == "ghanchi") {
+                    viewHolder.tvLabel.visibility = View.VISIBLE
+                    viewHolder.tvRegion.visibility = View.VISIBLE
+                    viewHolder.viewLine.visibility = View.VISIBLE
+                } else {
+                    viewHolder.tvLabel.visibility = View.GONE
+                    viewHolder.tvRegion.visibility = View.GONE
+                    viewHolder.viewLine.visibility = View.GONE
+                }
+
                 applyImportant(viewHolder, member)
                 applyClickEvents(viewHolder, i, member)
                 applyProfilePicture(viewHolder, member)
@@ -586,17 +603,29 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
 
         holder.llEvent1.setOnClickListener {
             selectedPosition = position
-            setReminderDialog(member.birthDate, getString(R.string.birth_date), member.reminderBirthDate.toString(), member.firstName, member.id)
+            var reminderId = "0"
+            if (!member.reminderBirthDate.isNullOrEmpty()) {
+                reminderId = member.reminderBirthDate
+            }
+            setReminderDialog(member.birthDate, getString(R.string.birth_date), reminderId, member.firstName, member.id)
         }
 
         holder.llEvent2.setOnClickListener {
             selectedPosition = position
-            setReminderDialog(member.marriageDate, getString(R.string.marriage_date), member.reminderMarriageDate.toString(), member.firstName, member.id)
+            var reminderId = "0"
+            if (!member.reminderMarriageDate.isNullOrEmpty()) {
+                reminderId = member.reminderMarriageDate
+            }
+            setReminderDialog(member.marriageDate, getString(R.string.marriage_date), reminderId, member.firstName, member.id)
         }
 
         holder.llEvent3.setOnClickListener {
             selectedPosition = position
-            setReminderDialog(member.expireDate, getString(R.string.expire_date), member.reminderExpireDate.toString(), member.firstName, member.id)
+            var reminderId = "0"
+            if (!member.reminderExpireDate.isNullOrEmpty()) {
+                reminderId = member.reminderExpireDate
+            }
+            setReminderDialog(member.expireDate, getString(R.string.expire_date), reminderId, member.firstName, member.id)
         }
     }
 
@@ -681,6 +710,9 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var badge: NotificationBadge = v.findViewById(R.id.badge)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+        var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+        var tvLabel: TextView = itemView.findViewById(R.id.tv_label)
+        var viewLine: View = itemView.findViewById(R.id.view_line)
     }
 
     internal inner class FilterViewHolder(v: View) : RecyclerView.ViewHolder(v) {

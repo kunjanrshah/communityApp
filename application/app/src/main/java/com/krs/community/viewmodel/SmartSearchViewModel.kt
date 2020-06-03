@@ -33,6 +33,10 @@ class SmartSearchViewModel(
         return mSmartSearchRepository.getNativeById(id)
     }
 
+    suspend fun getLocalCommById(id: String): String {
+        return mSmartSearchRepository.getLocalCommName(id)
+    }
+
     fun getMemberByKeywords(jsonObject: JsonObject) {
         if (isNetworkConnected(app.applicationContext)) {
             jobBySearch = Job()

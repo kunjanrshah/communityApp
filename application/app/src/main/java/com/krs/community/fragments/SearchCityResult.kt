@@ -146,6 +146,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             cityId = this.arguments!!.getString("city_id").toString()
         }
 
+
+
         members.clear()
         adapter = object : ParallaxRecyclerAdapter<Member>(members) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
@@ -162,15 +164,20 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 Coroutines.io {
                     var lastname = ""
                     var native = ""
+                    var local = ""
                     if (!member.subCastId.isNullOrEmpty()) {
                         lastname = browseCityViewModel.getLastName(Integer.parseInt(member.subCastId.toString()))
                     }
                     if (!member.nativePlaceId.isNullOrEmpty()) {
                         native = browseCityViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                     }
+                    if (!member.localCommunityId.isNullOrEmpty()) {
+                        local = browseCityViewModel.getLocalCommunityById(member.localCommunityId.trim())
+                    }
                     Coroutines.main {
                         holder.tvName.text = "$name ${member.fatherName} $lastname"
                         holder.tvNative.text = "Native: $native"
+                        holder.tvRegion.text = local
                     }
                 }
 
@@ -219,6 +226,12 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 } else {
                     holder.tvCode.text = getMemberCode(code)
+                }
+
+                if (BuildConfig.FLAVOR == "ghanchi") {
+                    holder.llData.visibility = View.VISIBLE
+                } else {
+                    holder.llData.visibility = View.GONE
                 }
 
                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
@@ -295,7 +308,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     holder.ivVerify.visibility = View.GONE
                 }
                 holder.swipe.close(true)
-                if (loginMem?.role == "SUPERADMIN") {
+                if (loginMem?.role == getString(R.string.super_admin)) {
                     holder.swipe.setLockDrag(false)
                 } else {
                     holder.swipe.setLockDrag(true)
@@ -731,6 +744,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
         var frameDelete: FrameLayout = itemView.findViewById(R.id.frame_delete)
         var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
+        var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+        var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
 
         init {
             itemView.setOnLongClickListener(this)

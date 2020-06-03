@@ -10,10 +10,47 @@
       "client_info": {
         "mobilesdk_app_id": "1:147166615323:android:11c21dc33eb4ca84a325be",
         "android_client_info": {
+          "package_name": "com.krs.yadav"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOE-YNeTgISK5P77rHZ7UxIu17f3vPY7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147166615323:android:5376d5f08368c13ca325be",
+        "android_client_info": {
           "package_name": "com.yadav.samaj"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "147166615323-tj0653q53f4qogq7fj4vpe0o71pvcjp0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yadav.samaj",
+            "certificate_hash": "808f04ac7223825e66de31ce260fa63a072ef6b6"
+          }
+        },
         {
           "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
           "client_type": 3

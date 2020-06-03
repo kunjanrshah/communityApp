@@ -134,6 +134,13 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 } else {
                     holder.tvCode.text = getMemberCode(code)
                 }
+
+                if (BuildConfig.FLAVOR == "ghanchi") {
+                    holder.llData.visibility = View.VISIBLE
+                } else {
+                    holder.llData.visibility = View.GONE
+                }
+
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + member.fatherName + " " + contactListViewModel.getLastNameById(member.subCastId.trim().toInt())
@@ -153,6 +160,13 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                         val native = contactListViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                         Coroutines.main {
                             holder.tvNative.text = "Native: $native"
+                        }
+                    }
+
+                    if (!member.localCommunityId.isNullOrEmpty()) {
+                        val name = contactListViewModel.getLocalCommunity(member.localCommunityId)
+                        Coroutines.main {
+                            viewHolder.tvRegion.text = name
                         }
                     }
                 }
@@ -182,6 +196,9 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
+
+
+
                 if (member.updatedDt.isNotEmpty()) {
                     if (member.updatedDt.contains(getString(R.string.zero_date))) {
                         viewHolder.tvUpdate.text = getString(R.string.not_updated)
@@ -378,6 +395,8 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
         var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
+        var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+        var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
     }
 
     private fun applyClickEvents(holder: MyViewHolder, position: Int, member: Member) {

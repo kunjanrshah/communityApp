@@ -23,6 +23,10 @@ class ContactListViewModel(
         return contactListRepository.getLastNameById(id)
     }
 
+    suspend fun getLocalCommunity(id: String): String {
+        return contactListRepository.getLocalCommunity(id)
+    }
+
     suspend fun getCityNamebyId(id: String): String {
         return contactListRepository.getCityName(id)
     }

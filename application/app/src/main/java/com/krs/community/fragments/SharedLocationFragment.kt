@@ -111,15 +111,20 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 Coroutines.io {
                     var native = ""
                     var lastname = ""
+                    var local = ""
                     if (!member.subCastId.isNullOrEmpty()) {
                         lastname = filterViewModel.getLastNameById(Integer.parseInt(member.subCastId.toString()))
                     }
                     if (!member.nativePlaceId.isNullOrEmpty()) {
                         native = filterViewModel.getNativeById(Integer.parseInt(member.nativePlaceId.trim()))
                     }
+                    if (!member.localCommunityId.isNullOrEmpty()) {
+                        local = filterViewModel.getLocalCommunity(member.localCommunityId.trim())
+                    }
                     Coroutines.main {
                         holder.tvNative.text = "Native: $native"
                         holder.tvName.text = "$name ${member.fatherName} $lastname"
+                        holder.tvRegion.text = local
                     }
                 }
                 if (!name.isNullOrEmpty()) {
@@ -145,6 +150,12 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                     holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
                 } else {
                     holder.tvCode.text = getMemberCode(code)
+                }
+
+                if (BuildConfig.FLAVOR == "ghanchi") {
+                    holder.llData.visibility = View.VISIBLE
+                } else {
+                    holder.llData.visibility = View.GONE
                 }
 
                 if (member.gender.equals("Male")) {
@@ -550,6 +561,8 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
         var swipe: SwipeRevealLayout = itemView.findViewById(R.id.swipe)
+        var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+        var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
 
         override fun onLongClick(v: View): Boolean {
             enableActionMode(adapterPosition)

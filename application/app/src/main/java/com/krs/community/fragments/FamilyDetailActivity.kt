@@ -716,11 +716,15 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                         sweetAlertDialog.dismissWithAnimation()
                         val intent = Intent(this, ProfileDetailActivity::class.java)
+
                         val member = Member()
                         member.subCastId = members[0].subCastId
                         member.gotraId = members[0].gotraId
                         member.fatherName = members[0].firstName
                         member.nativePlaceId = members[0].nativePlaceId
+                        member.localCommunityId = members[0].localCommunityId
+                        member.subCommunityId = members[0].subCommunityId
+
                         intent.putExtra(getString(R.string.member), member)
                         intent.putExtra(getString(R.string.head_id), members[0].id)
                         startActivity(intent)

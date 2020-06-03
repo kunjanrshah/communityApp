@@ -22,6 +22,12 @@ class ContactListRepository(
         }
     }
 
+    suspend fun getLocalCommunity(id: String): String {
+        return withContext(Dispatchers.IO) {
+            db!!.getLocalCommunityDao().getLocalCommName(id)
+        }
+    }
+
     suspend fun getCityName(id: String): String {
         return db!!.getCityDao().getcityName(Integer.parseInt(id))
     }

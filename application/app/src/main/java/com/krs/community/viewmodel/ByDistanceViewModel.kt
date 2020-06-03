@@ -33,6 +33,10 @@ class ByDistanceViewModel(
         return mByDistanceRepository.getNativeById(id)
     }
 
+    suspend fun getLocalCommById(id: String): String {
+        return mByDistanceRepository.getLocalCommName(id)
+    }
+
     fun getUserByDistance(distance: ByDistanceModel) {
         if (isNetworkConnected(app.applicationContext)) {
             job_by_distance = Job()

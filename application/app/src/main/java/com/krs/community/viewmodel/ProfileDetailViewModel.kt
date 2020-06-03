@@ -67,12 +67,21 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getLocalCommName()
     }
 
+    var selectedLocalCommunityId: Int = 0
+    suspend fun getLocalCommunityName(id: String): String {
+        return mProfileDetailRepository.getLocalCommName(id)
+    }
+
     suspend fun getLocalCommunity(id: Int): LiveData<List<String>> {
         return mProfileDetailRepository.getLocalCommunity(id)
     }
 
     suspend fun getSubCommIdByName(name: String): Int {
         return mProfileDetailRepository.getSubCommIdByName(name)
+    }
+
+    suspend fun getSubCommName(id: String): String {
+        return mProfileDetailRepository.getSubCommName(id)
     }
 
     var selectedStateId = 0
@@ -88,12 +97,12 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getStateName()
     }
 
+    var selectedSubCommId = 0
     val lstSubCommName by lazyDeferred {
         mProfileDetailRepository.getSubCommName()
     }
 
     var selectedCityId: Int = 0
-    lateinit var selectedCityName: String
     val cityName by lazyDeferred {
         mProfileDetailRepository.getcityNameById(selectedCityId)
     }
@@ -166,6 +175,7 @@ class ProfileDetailViewModel(
     suspend fun getCityNamebyState(id: Int): List<String> {
         return mProfileDetailRepository.getCityName(id)
     }
+
 
     suspend fun getActivityIdByName(name: String): Int {
         return mProfileDetailRepository.getActivityIdByName(name)

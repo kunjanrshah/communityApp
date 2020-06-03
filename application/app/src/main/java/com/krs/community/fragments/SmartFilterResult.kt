@@ -158,11 +158,24 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                     holder.tvCode.text = getMemberCode(code)
                 }
 
+                if (BuildConfig.FLAVOR == "ghanchi") {
+                    holder.llData.visibility = View.VISIBLE
+                } else {
+                    holder.llData.visibility = View.GONE
+                }
+
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
                         Coroutines.main {
                             viewHolder.tvName.text = name
+                        }
+                    }
+
+                    if (!member.localCommunityId.isNullOrEmpty()) {
+                        val name = smartFilterViewModel.getLocalCommunity(member.localCommunityId)
+                        Coroutines.main {
+                            viewHolder.tvRegion.text = name
                         }
                     }
 
@@ -658,6 +671,8 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         var imgLocation: ImageView = itemView.findViewById(R.id.img_location)
         var imgExpired: ImageView = itemView.findViewById(R.id.img_expired)
         var llContent: LinearLayout = itemView.findViewById(R.id.ll_content)
+        var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+        var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
 
         init {
             itemView.setOnLongClickListener(this)

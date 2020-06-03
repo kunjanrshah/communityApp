@@ -40,6 +40,12 @@ class BrowseCityRepository(private val api: ApiServices, private val db: AppData
         }
     }
 
+    suspend fun getLocalCommunityById(id: String): String {
+        return withContext(Dispatchers.IO) {
+            db.getLocalCommunityDao().getLocalCommName(id)
+        }
+    }
+
     suspend fun cityByState(request: JsonObject): CityResponse {
         return apiRequest {
             api.getUserCities(request)

@@ -195,6 +195,15 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     viewHolder.tvCode.text = getMemberCode(code)
                 }
 
+                if (BuildConfig.FLAVOR == "ghanchi") {
+                    viewHolder.tvLabel.visibility = View.VISIBLE
+                    viewHolder.tvRegion.visibility = View.VISIBLE
+                    viewHolder.viewLine.visibility = View.VISIBLE
+                } else {
+                    viewHolder.tvLabel.visibility = View.GONE
+                    viewHolder.tvRegion.visibility = View.GONE
+                    viewHolder.viewLine.visibility = View.GONE
+                }
 
                 viewHolder.tvName.text = member.firstName
                 smartSearchViewModel.getLastName(member.subCastId.toInt()).observeForever {
@@ -215,7 +224,18 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                             viewHolder.tvNative.text = "Native: $native"
                         }
                     } else {
-                        viewHolder.tvNative.text = "Native:"
+                        Coroutines.main {
+                            viewHolder.tvNative.text = "Native:"
+                        }
+                    }
+                }
+
+                Coroutines.io {
+                    if (!member.localCommunityId.isNullOrEmpty() && member.localCommunityId != "0") {
+                        val local = smartSearchViewModel.getLocalCommById(member.localCommunityId.trim())
+                        Coroutines.main {
+                            viewHolder.tvRegion.text = local
+                        }
                     }
                 }
 
@@ -841,6 +861,9 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         var imgLocation: ImageView = itemView.findViewById(R.id.img_location)
         var llData: LinearLayout = itemView.findViewById(R.id.ll_data)
         var imgExpired: ImageView = itemView.findViewById(R.id.img_expired)
+        val tvRegion: TextView = itemView.findViewById(R.id.tv_region)
+        val tvLabel: TextView = itemView.findViewById(R.id.tv_label)
+        val viewLine: View = itemView.findViewById(R.id.view_line)
 
         init {
             view.setOnLongClickListener(this)

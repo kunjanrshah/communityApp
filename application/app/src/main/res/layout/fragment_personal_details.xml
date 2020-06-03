@@ -258,6 +258,93 @@
 
                 </LinearLayout>
 
+
+                <LinearLayout
+                    android:id="@+id/ll_community"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Sub Community" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border">
+
+                            <com.krs.community.jrspinner.JRSpinner
+                                android:id="@+id/sp_sub_comm"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:background="@null"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:hint="@string/select"
+                                android:imeOptions="actionNext"
+                                android:nextFocusDown="@+id/fname"
+                                android:paddingRight="10dp"
+                                android:singleLine="true"
+                                android:textColor="@color/black1"
+                                app:backgroundTint="@color/colorPrimary"
+                                app:jrs_icon_tint="@color/colorPrimary"
+                                app:jrs_multiple="false"
+                                app:jrs_title="@string/satetList" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="Local Community" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/border">
+
+                            <com.krs.community.jrspinner.JRSpinner
+                                android:id="@+id/sp_local_comm"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:background="@null"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:hint="@string/select"
+                                android:imeOptions="actionNext"
+                                android:nextFocusDown="@+id/fname"
+                                android:paddingRight="10dp"
+                                android:singleLine="true"
+                                android:textColor="@color/black1"
+                                app:backgroundTint="@color/colorPrimary"
+                                app:jrs_icon_tint="@color/colorPrimary"
+                                app:jrs_multiple="false"
+                                app:jrs_title="@string/cityList" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -564,7 +651,7 @@
                         android:maxLines="2"
                         android:minLines="2"
                         android:padding="5dp"
-                        android:scrollbars="vertical"
+                        android:scrollbars="none"
                         android:singleLine="true" />
 
                 </LinearLayout>
