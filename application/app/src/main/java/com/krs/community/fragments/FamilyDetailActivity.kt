@@ -285,7 +285,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     var canDelete = false
                     if (!loginuser.isNullOrEmpty()) {
                         val loginMember = Gson().fromJson(loginuser, Member::class.java)
-                        if (loginMember.role != getString(R.string.USER) || (loginMember.headId == "0" && members[0].id == loginMember.id)) {
+                        if (isAdmin() || (loginMember.headId == "0" && members[0].id == loginMember.id)) {
                             canDelete = true
                         }
                     }
@@ -699,7 +699,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
         val tvAdd: TextView = header.findViewById(R.id.tv_add)
 
-        if (!loginId.isNullOrEmpty() && member.id == loginId || isAdmin()) {
+        if ((!loginId.isNullOrEmpty() && member.id == loginId) || isAdmin()) {
             tvAdd.visibility = View.VISIBLE
         } else {
             tvAdd.visibility = View.GONE
@@ -757,8 +757,12 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
         var isAdmin = false
         if (!loginuser.isNullOrEmpty()) {
-            val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
-            if (loginMember.role != getString(R.string.USER)) {
+            val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (((loginMem.role == getString(R.string.LOCAL_ADMIN) && loginMem.localCommunityId == members[0].localCommunityId))) {
+                isAdmin = true
+            } else if (((loginMem.role == getString(R.string.SUB_ADMIN) && loginMem.subCommunityId == members[0].subCommunityId))) {
+                isAdmin = true
+            } else if ((loginMem.role == getString(R.string.super_admin))) {
                 isAdmin = true
             }
         }

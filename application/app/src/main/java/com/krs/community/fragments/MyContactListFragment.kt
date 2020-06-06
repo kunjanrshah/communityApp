@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -174,19 +175,19 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
-                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                    viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
-                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
+                    viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
-                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
-                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }

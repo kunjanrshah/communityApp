@@ -254,18 +254,18 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
     btnMale.setOnClickListener {
         isMale = true
         isFemale = false
-        btnMale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
-        btnMale.setTextColor(context.resources.getColor(R.color.white))
-        btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_white)
-        btnFemale.setTextColor(context.resources.getColor(R.color.black))
+        btnMale.background = ContextCompat.getDrawable(context, R.drawable.round_corner_primary)
+        btnMale.setTextColor(ContextCompat.getColor(context, R.color.white))
+        btnFemale.background = ContextCompat.getDrawable(context, R.drawable.round_corner_white)
+        btnFemale.setTextColor(ContextCompat.getColor(context, R.color.black))
     }
     btnFemale.setOnClickListener {
         isFemale = true
         isMale = false
-        btnMale.background = context.resources.getDrawable(R.drawable.round_corner_white)
-        btnMale.setTextColor(context.resources.getColor(R.color.black))
-        btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_primary)
-        btnFemale.setTextColor(context.resources.getColor(R.color.white))
+        btnMale.background = ContextCompat.getDrawable(context, R.drawable.round_corner_white)
+        btnMale.setTextColor(ContextCompat.getColor(context, R.color.black))
+        btnFemale.background = ContextCompat.getDrawable(context, R.drawable.round_corner_primary)
+        btnFemale.setTextColor(ContextCompat.getColor(context, R.color.white))
     }
 
     btnClear.setOnClickListener {
@@ -279,11 +279,11 @@ fun openFilter(context: Context, smartFilterViewModel: SmartFilterViewModel) {
         spMarital.setText("")
         isFemale = false
         isMale = false
-        btnMale.background = context.resources.getDrawable(R.drawable.round_corner_white)
-        btnMale.setTextColor(context.resources.getColor(R.color.black))
+        btnMale.background = ContextCompat.getDrawable(context, R.drawable.round_corner_white)
+        btnMale.setTextColor(ContextCompat.getColor(context, R.color.black))
 
-        btnFemale.background = context.resources.getDrawable(R.drawable.round_corner_white)
-        btnFemale.setTextColor(context.resources.getColor(R.color.black))
+        btnFemale.background = ContextCompat.getDrawable(context, R.drawable.round_corner_white)
+        btnFemale.setTextColor(ContextCompat.getColor(context, R.color.black))
 
         // btnFemale.performClick()
         rangeSeekbar.setMinStartValue(0f)

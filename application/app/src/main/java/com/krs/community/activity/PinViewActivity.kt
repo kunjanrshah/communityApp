@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
@@ -90,7 +91,7 @@ class PinViewActivity : AppCompatActivity(), KodeinAware, ILoginListener, InnerL
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
         setSupportActionBar(toolbar)
         supportActionBar!!.title = resources.getString(R.string.app_name)
         val anim = AlphaAnimation(0f, 1f)

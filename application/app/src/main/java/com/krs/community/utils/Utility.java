@@ -57,6 +57,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -1435,7 +1436,7 @@ public class Utility {
             dialog = null;
         }
         dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE).setContentText(message);
-        dialog.getProgressHelper().setBarColor(context.getColor(R.color.colorPrimary));
+        dialog.getProgressHelper().setBarColor(ContextCompat.getColor(context, R.color.colorPrimary));
         dialog.setTitleText(title);
         dialog.setCancelable(false);
         dialog.show();
@@ -1447,7 +1448,7 @@ public class Utility {
             dialog = null;
         }
         dialog = new SweetAlertDialog(context, type).setContentText(message);
-        dialog.getProgressHelper().setBarColor(context.getColor(R.color.colorPrimary));
+        dialog.getProgressHelper().setBarColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
         dialog.setTitleText(title);
         dialog.setCancelable(false);

@@ -179,7 +179,14 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         })
 
-        movetoFragment(this@DashboardActivity, DashboardFragment())
+        var notify = intent.getBooleanExtra("notification", false)
+        if (notify) {
+            movetoFragment(this@DashboardActivity, NonActivesFragment())
+        } else {
+            movetoFragment(this@DashboardActivity, DashboardFragment())
+        }
+
+
         if (isNetworkConnected(this)) {
             val JsonObj = JSONObject()
             JsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))

@@ -63,7 +63,9 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
 
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         loginMem = Gson().fromJson(loginMember, Member::class.java)
-        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id
+                || isAdmin()) {
+
             binding.chkInterested.isClickable = true
             binding.chkGlass.isClickable = true
             binding.chkIsMangal.isClickable = true
@@ -139,7 +141,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
                     .show()
         }
         binding.txtBtime.setOnClickListener {
-            if (member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
+            if (member.id == loginMem.id || member.headId == loginMem.id || isAdmin()) {
                 NumberPadTimePickerDialogFragment.newInstance(mListener).show(activity!!.supportFragmentManager, getString(R.string.bottomSheet))
             }
         }
@@ -171,6 +173,22 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         })
 
         return binding.root
+    }
+
+    private fun isAdmin(): Boolean {
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        var isAdmin = false
+        if (!loginuser.isNullOrEmpty()) {
+            val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (((loginMem.role == getString(R.string.LOCAL_ADMIN) && loginMem.localCommunityId == member.localCommunityId))) {
+                isAdmin = true
+            } else if (((loginMem.role == getString(R.string.SUB_ADMIN) && loginMem.subCommunityId == member.subCommunityId))) {
+                isAdmin = true
+            } else if ((loginMem.role == getString(R.string.super_admin))) {
+                isAdmin = true
+            }
+        }
+        return isAdmin
     }
 
     fun getSaveData(jsonObject: JSONObject) {

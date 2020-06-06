@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import com.flaviofaria.kenburnsview.KenBurnsView
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator
 import com.github.squti.guru.Guru
@@ -90,7 +91,7 @@ class SplashActivity : AppCompatActivity() {
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
         setSupportActionBar(toolbar)
         supportActionBar!!.title = resources.getString(R.string.app_name)
         val anim = AlphaAnimation(0f, 1f)
@@ -119,11 +120,11 @@ class SplashActivity : AppCompatActivity() {
             btnLogin!!.setOnTouchListener { v: View?, event: MotionEvent ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        btnLogin!!.setBackgroundColor(resources.getColor(R.color.colorDark))
+                        btnLogin!!.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDark))
                         return@setOnTouchListener true
                     }
                     MotionEvent.ACTION_UP -> {
-                        btnLogin!!.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                        btnLogin!!.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         btnLogin!!.performClick()
                         return@setOnTouchListener true
                     }
@@ -133,11 +134,11 @@ class SplashActivity : AppCompatActivity() {
             btnRegister!!.setOnTouchListener { v: View?, event: MotionEvent ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        btnRegister!!.setBackgroundColor(resources.getColor(R.color.gray_btn_bg_pressed_color))
+                        btnRegister!!.setBackgroundColor(ContextCompat.getColor(this, R.color.gray_btn_bg_pressed_color))
                         return@setOnTouchListener true
                     }
                     MotionEvent.ACTION_UP -> {
-                        btnRegister!!.setBackgroundColor(resources.getColor(R.color.white))
+                        btnRegister!!.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
                         btnRegister!!.performClick()
                         return@setOnTouchListener true
                     }

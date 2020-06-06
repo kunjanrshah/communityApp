@@ -337,7 +337,7 @@
                                 app:backgroundTint="@color/colorPrimary"
                                 app:jrs_icon_tint="@color/colorPrimary"
                                 app:jrs_multiple="false"
-                                app:jrs_title="@string/cityList" />
+                                app:jrs_title="@string/localCom" />
                         </RelativeLayout>
 
                     </LinearLayout>

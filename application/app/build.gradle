@@ -74,6 +74,8 @@ android {
             resValue "string", "base_url_thumb", "https://muslimghanchisamaj.in/uploads/users/thumb/"
             resValue "string", "base_url_original", "https://muslimghanchisamaj.in/uploads/users/original/"
             resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
+            resValue "string", "facebook_app_id", "2264814596961704"
+            resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
             buildConfigField "String", "BASE_URL", '"https://www.muslimghanchisamaj.in/API/"'
         }
 

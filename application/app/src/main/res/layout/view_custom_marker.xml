@@ -4,31 +4,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/custom_marker_view"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_gravity="center"
-        android:background="@drawable/marker_mask">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null" />
 
-
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@null"
-            android:src="@drawable/avatar" />
-    </FrameLayout>
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_gravity="center_horizontal"
         android:fontFamily="@font/montserrat_semibold"
-        android:gravity="center"
-        android:text="Name"
         android:textColor="@color/colorPrimary"
         android:textSize="14sp" />
 </LinearLayout>

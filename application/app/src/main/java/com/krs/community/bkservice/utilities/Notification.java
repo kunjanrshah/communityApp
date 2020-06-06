@@ -27,6 +27,7 @@ public class Notification {
     public android.app.Notification setNotification(Context context, String title, String text, int icon) {
         if (notificationPendingIntent == null) {
             Intent notificationIntent = new Intent(context, DashboardActivity.class);
+            //  notificationIntent.putExtra("notification",true);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             // notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);

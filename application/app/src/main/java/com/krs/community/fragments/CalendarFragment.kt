@@ -340,19 +340,19 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
-                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                    viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
-                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
+                    viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
-                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
-                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
@@ -536,7 +536,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             SlyCalendarDialog()
                     .setSingle(false)
                     .setCallback(this)
-                    .setHeaderColor(resources.getColor(R.color.colorPrimary))
+                    .setHeaderColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.colorPrimary))
                     .setBackgroundColor(Color.parseColor("#ffffff"))
                     .setSelectedColor(Color.parseColor("#c48395"))
                     .show(activity!!.supportFragmentManager, "TAG_SLYCALENDAR")

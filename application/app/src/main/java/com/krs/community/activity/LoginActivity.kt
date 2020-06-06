@@ -23,6 +23,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
@@ -117,7 +118,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
         setSupportActionBar(toolbar)
         supportActionBar!!.title = resources.getString(R.string.app_name)
         val anim = AlphaAnimation(0f, 1f)
@@ -295,7 +296,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 if (stopTIme == true) {
                     tv_resend.isClickable = true
                     tv_resend.isEnabled = true
-                    tv_resend.setTextColor(resources.getColor(R.color.black1))
+                    tv_resend.setTextColor(ContextCompat.getColor(this, R.color.black1))
                 }
             })
 
@@ -383,7 +384,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             task.addOnSuccessListener {
                 tv_resend.isClickable = false
                 tv_resend.isEnabled = false
-                tv_resend.setTextColor(resources.getColor(R.color.light_gray))
+                tv_resend.setTextColor(ContextCompat.getColor(this, R.color.light_gray))
                 loginViewModel?.cancelTimer()
                 loginViewModel?.startTimer()
                 //toast("API successfully started")
@@ -394,7 +395,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 // Fail to start API
                 tv_resend.isEnabled = true
                 tv_resend.isClickable = true
-                tv_resend.setTextColor(resources.getColor(R.color.black1))
+                tv_resend.setTextColor(ContextCompat.getColor(this, R.color.black1))
                 Log.d(TAG, "Fail to start API")
                 //toast("Fail to start API")
             }

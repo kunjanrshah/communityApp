@@ -53,6 +53,7 @@ import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
+import de.hdodenhof.circleimageview.CircleImageView
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -104,14 +105,14 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         mapFragment?.getMapAsync { googleMap ->
             mMap = googleMap
             if (locations.size > 0) {
-                val point = CameraUpdateFactory.newLatLngZoom(LatLng(locations[headId]!!.latitude, locations[headId]!!.longitude), 8f)
+                val point = CameraUpdateFactory.newLatLngZoom(LatLng(locations["u_$headId"]!!.latitude, locations["u_$headId"]!!.longitude), 9f)
                 mMap?.moveCamera(point)
             }
-            mMap?.animateCamera(CameraUpdateFactory.zoomTo(11f))
+            mMap?.animateCamera(CameraUpdateFactory.zoomTo(9f))
             mMap?.setOnMapLoadedCallback {
                 mapLoaded = true
                 mCustomMarkerView = (getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_custom_marker, null)
-                mMarkerImageView = mCustomMarkerView?.findViewById<View>(R.id.profile_image) as ImageView
+                mMarkerImageView = mCustomMarkerView?.findViewById<View>(R.id.profile_image) as CircleImageView
                 tvTitle = mCustomMarkerView?.findViewById<View>(R.id.tv_title) as TextView
                 getFamilyDetails()
                 mMap!!.uiSettings.setAllGesturesEnabled(true)
@@ -153,7 +154,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                         loc.longitude = member.homeLng.toDouble()
                         locations["h_${member.id}"] = loc
                         lstTitle["h_${member.id}"] = "Home"
-                        lstImage["h_${member.id}"] = getString(R.string.base_url_original) + member.profilePic
+                        lstImage["h_${member.id}"] = getString(R.string.base_url_original) + "home_marker.png"
                     }
                 }
 
@@ -162,17 +163,19 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     loc.latitude = member.officeLat.toDouble()
                     loc.longitude = member.officeLng.toDouble()
                     locations["o_${member.id}"] = loc
-                    lstImage["o_${member.id}"] = getString(R.string.base_url_original) + member.profilePic
-                    lstTitle["o_${member.id}"] = member.firstName + "'s Office"
+                    lstImage["o_${member.id}"] = getString(R.string.base_url_original) + "office_marker.png"
+                    lstTitle["o_${member.id}"] = member.firstName + " Office"
                 }
 
                 if (!member.userLat.isNullOrEmpty() && !member.userLng.isNullOrEmpty()) {
                     val loc = Location(LocationManager.GPS_PROVIDER)
                     loc.latitude = member.userLat.toDouble()
                     loc.longitude = member.userLng.toDouble()
-                    locations["u_${member.id}"] = loc
-                    lstImage["u_${member.id}"] = getString(R.string.base_url_original) + member.profilePic
-                    lstTitle["u_${member.id}"] = member.firstName.toString()
+                    if (headId != member.id) {
+                        locations["u_${member.id}"] = loc
+                        lstImage["u_${member.id}"] = getString(R.string.base_url_original) + member.profilePic
+                        lstTitle["u_${member.id}"] = member.firstName.toString()
+                    }
                 }
             }
             if (locations.size > 0) {
@@ -224,8 +227,12 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         mLocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
-                    locations[headId] = location
-                    lstTitle[headId] = "You are here"
+                    locations["u_$headId"]?.set(location)
+                    /* if(lstTitle["u_$headId"]!="You"){
+                         lstTitle["u_$headId"] = "You"
+                         lstImage["u_$headId"] = getString(R.string.base_url_original) + "current_pin.png"
+                     }*/
+                    lstMarkers["u_$headId"]?.remove()
                     updateMarker()
                 }
             }
@@ -260,7 +267,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
 
     inner class MoveThread : Runnable {
         var newPoint: LatLng? = null
-        var zoom = 16f
+        var zoom = 9f
         fun setNewPoint(latLng: LatLng?, zoom: Float) {
             newPoint = latLng
             this.zoom = zoom
@@ -331,7 +338,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         }
         lstMarkers[loc.key]?.rotation = bearing
         moveThread = MoveThread()
-        moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), 16f)
+        moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), 9f)
         handler?.post(moveThread)
         animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
     }

@@ -72,7 +72,8 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         member = arguments?.getSerializable(getString(R.string.member)) as Member
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         val loginMem = Gson().fromJson(loginMember, Member::class.java)
-        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id
+                || isAdmin()) {
             binding.imgLogo.isEnabled = true
             binding.edtComName.isFocusable = true
             binding.spMainCat.isClickable = true
@@ -277,6 +278,21 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         return binding.root
     }
 
+    private fun isAdmin(): Boolean {
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        var isAdmin = false
+        if (!loginuser.isNullOrEmpty()) {
+            val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (((loginMem.role == getString(R.string.LOCAL_ADMIN) && loginMem.localCommunityId == member.localCommunityId))) {
+                isAdmin = true
+            } else if (((loginMem.role == getString(R.string.SUB_ADMIN) && loginMem.subCommunityId == member.subCommunityId))) {
+                isAdmin = true
+            } else if ((loginMem.role == getString(R.string.super_admin))) {
+                isAdmin = true
+            }
+        }
+        return isAdmin
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

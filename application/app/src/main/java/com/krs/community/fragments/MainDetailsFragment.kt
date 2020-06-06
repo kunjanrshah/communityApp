@@ -70,7 +70,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         val loginMem = Gson().fromJson(loginMember, Member::class.java)
 
-        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id || loginMem.role.toString() != getString(R.string.USER)) {
+        if (member.id.isNullOrEmpty() || member.id == loginMem.id || member.headId == loginMem.id
+                || isAdmin()) {
 
             binding.fname.isFocusable = true
             binding.edtArea.isFocusable = true
@@ -104,7 +105,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                 member.isRented = loginMem.isRented
             }
 
-            if (loginMem.role.toString() != getString(R.string.USER)) {
+            if (isAdmin()) {
                 binding.edtCode.isFocusable = true
                 binding.edtCode.isClickable = true
             } else {
@@ -303,6 +304,22 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
 
 
         return binding.root
+    }
+
+    private fun isAdmin(): Boolean {
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        var isAdmin = false
+        if (!loginuser.isNullOrEmpty()) {
+            val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (((loginMem.role == getString(R.string.LOCAL_ADMIN) && loginMem.localCommunityId == member.localCommunityId))) {
+                isAdmin = true
+            } else if (((loginMem.role == getString(R.string.SUB_ADMIN) && loginMem.subCommunityId == member.subCommunityId))) {
+                isAdmin = true
+            } else if ((loginMem.role == getString(R.string.super_admin))) {
+                isAdmin = true
+            }
+        }
+        return isAdmin
     }
 
     private fun setGender() {

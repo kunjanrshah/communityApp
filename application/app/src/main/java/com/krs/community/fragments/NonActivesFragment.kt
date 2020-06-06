@@ -11,6 +11,7 @@ import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -119,6 +120,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 holder.tvAddr.text = member.address
 
                 holder.swipe.close(true)
+
                 if (loginMem?.role == getString(R.string.super_admin)) {
                     holder.swipe.setLockDrag(false)
                 } else {
@@ -198,19 +200,19 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
-                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                    viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
-                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
+                    viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.com_facebook_blue))
                 }
 
                 if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
-                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
-                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
@@ -297,9 +299,9 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             val jsonObject = JSONObject()
             jsonObject.put(getString(R.string.start), AppController.mApplication.start)
             jsonObject.put(getString(R.string.length), AppController.mApplication.length)
-            if (loginMem?.role.equals(getString(R.string.subAdmin))) {
+            if (loginMem?.role.equals("SUB_ADMIN")) {
                 jsonObject.put(getString(R.string.sub_community_id), loginMem?.subCommunityId)
-            } else if (loginMem?.role.equals(getString(R.string.localAdmin))) {
+            } else if (loginMem?.role.equals("LOCAL_ADMIN")) {
                 jsonObject.put(getString(R.string.local_community_id), loginMem?.localCommunityId)
             }
             jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))

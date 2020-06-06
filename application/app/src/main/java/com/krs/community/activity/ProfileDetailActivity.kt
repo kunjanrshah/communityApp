@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -321,6 +322,22 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         }
     }
 
+    private fun isAdmin(): Boolean {
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        var isAdmin = false
+        if (!loginuser.isNullOrEmpty()) {
+            val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (((loginMem.role == getString(R.string.LOCAL_ADMIN) && loginMem.localCommunityId == member?.localCommunityId))) {
+                isAdmin = true
+            } else if (((loginMem.role == getString(R.string.SUB_ADMIN) && loginMem.subCommunityId == member?.subCommunityId))) {
+                isAdmin = true
+            } else if ((loginMem.role == getString(R.string.super_admin))) {
+                isAdmin = true
+            }
+        }
+        return isAdmin
+    }
+
     override fun onBackPressed() {
         if (isSave) {
             setResult(102)
@@ -334,7 +351,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        toolbar.setTitleTextColor(ContextCompat.getColor(this as AppCompatActivity, R.color.colorPrimary))
         setSupportActionBar(toolbar)
         supportActionBar!!.title = resources.getString(R.string.app_name)
         val anim = AlphaAnimation(0f, 1f)
@@ -361,14 +378,14 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
         //   fade(this)
     }
 
-
     private fun setMemberValues() {
 
         binding.txtTitle.text = "${member?.firstName}" + getString(R.string.Profile)
         val memberId = Guru.getString(getString(R.string.member_id), "")
         val memberString = Guru.getString(getString(R.string.loginMember), "")
         val loginMember = Gson().fromJson(memberString, Member::class.java)
-        if (member?.id == memberId || member?.headId == memberId || (loginMember.role != getString(R.string.USER))) {
+        if (member?.id == memberId || member?.headId == memberId || isAdmin()) {
+
             binding.tvSave.visibility = View.VISIBLE
             binding.imgProfile.isEnabled = true
             if (member?.id.isNullOrEmpty()) {

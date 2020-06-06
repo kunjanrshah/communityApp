@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -113,7 +114,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     private fun setNoInternetLayout() {
         setContentView(R.layout.no_internet_layout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitleTextColor(resources.getColor(R.color.colorPrimary))
+        toolbar.setTitleTextColor(ContextCompat.getColor(this as AppCompatActivity, R.color.colorPrimary))
         setSupportActionBar(toolbar)
         supportActionBar!!.title = resources.getString(R.string.app_name)
         val anim = AlphaAnimation(0f, 1f)

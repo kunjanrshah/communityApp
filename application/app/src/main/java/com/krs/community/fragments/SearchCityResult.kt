@@ -190,11 +190,11 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
-                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                    viewHolder.tvMobile.setTextColor(getColor(context as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
-                    viewHolder.tvMobile.setTextColor(resources.getColor(R.color.com_facebook_blue))
+                    viewHolder.tvMobile.setTextColor(getColor(context as AppCompatActivity, R.color.com_facebook_blue))
                 }
                 if (member.gender == "Male") {
                     viewHolder.ivGender.setBackgroundResource(R.drawable.male)
@@ -204,9 +204,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.GONE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
-                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.gray_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(getColor(context as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
-                    viewHolder.tvEmail.setTextColor(resources.getColor(R.color.red_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(getColor(context as AppCompatActivity, R.color.red_btn_bg_color))
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
