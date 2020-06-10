@@ -305,7 +305,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     viewHolder.ivGender.setBackgroundResource(R.drawable.female)
                 }
 
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }
@@ -402,25 +402,25 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                 viewHolder.tvUser.visibility = View.GONE
                 viewHolder.llUser.visibility = View.GONE
 
-                if (nearBy.equals("Home")) {
+                if (nearBy == "Home") {
                     viewHolder.llHome.visibility = View.VISIBLE
                     viewHolder.tvHome.visibility = View.VISIBLE
                     viewHolder.tvHome.text = getString(R.string.homeDistance)
                     viewHolder.tvHomeDist.text = getDistance(member.distance)
-                } else if (nearBy.equals("Office")) {
+                } else if (nearBy == "Office") {
                     viewHolder.llOffice.visibility = View.VISIBLE
                     viewHolder.tvOffice.visibility = View.VISIBLE
                     viewHolder.tvOffice.text = getString(R.string.Officedistance)
                     viewHolder.tvOfficeDist.text = getDistance(member.distance)
                     val params = viewHolder.llOffice.layoutParams as LinearLayout.LayoutParams
-                    params.setMargins(0, 50, 0, 0)
+                    // params.setMargins(0, 20, 0, 0)
                     viewHolder.llOffice.layoutParams = params
                 }/*else if(nearBy.equals("User")){
                     viewHolder.llUser.visibility=View.VISIBLE
                     viewHolder.tvUser.visibility=View.VISIBLE
                     viewHolder.tvUser.text=getString(R.string.userDetails)
                     viewHolder.tvUserDist.text=getDistance(member.distance)
-                }*/ else if (nearBy.equals("All")) {
+                }*/ else if (nearBy == "All") {
                     try {
                         val nearBy: List<String> = member.nearBy.split(",")
                         val elements: List<String> = member.distance.split(",")

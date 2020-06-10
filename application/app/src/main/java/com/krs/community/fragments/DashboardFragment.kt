@@ -276,7 +276,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() {
 
         override fun getCount(): Int {
-            return 14
+            return 15
         }
 
         override fun getItem(position: Int): Any {
@@ -333,41 +333,53 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                     3 -> Utility.movetoFragment(activity, MatrimonyFragment())
 
                     4 -> {
+
+                        val intent = Intent(activity, FamilyDetailActivity::class.java)
+                        if (loginMember?.headId == "0") {
+                            intent.putExtra(getString(R.string.member_id), loginMember?.id)
+                            intent.putExtra(getString(R.string.id), loginMember?.id)
+                        } else {
+                            intent.putExtra(getString(R.string.id), loginMember?.headId)
+                        }
+                        startActivity(intent)
+                    }
+
+                    5 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         return@setOnClickListener
                         Utility.movetoFragment(activity, NewsListFragment())
                     }
-                    5 -> {
+                    6 -> {
                         val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
                         startActivity(mIntent)
                         //  fade(activity)
                     }
-                    6 -> Utility.movetoFragment(activity, AdminsFragment())
-                    7 -> {
+                    7 -> Utility.movetoFragment(activity, AdminsFragment())
+                    8 -> {
                         if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                             Utility.movetoFragment(activity, NonActivesFragment())
                         } else {
                             binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
                         }
                     }
-                    8 -> {
+                    9 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         return@setOnClickListener
                         Utility.movetoFragment(activity, ShareEventFragment())
                     }
-                    9 -> {
+                    10 -> {
                         // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         //startActivity(Intent(activity, ActivityDebugTools::class.java))
                         Utility.movetoFragment(activity, UploadFragment())
                     }
 
-                    10 -> {
+                    11 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         return@setOnClickListener
                         Utility.movetoFragment(activity, PaytmFragment())
                     }
 
-                    11 -> {
+                    12 -> {
                         if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                             val intent = Intent(activity, RegisterActivty::class.java)
                             val bundle = Bundle()
@@ -379,12 +391,12 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                             binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
                         }
                     }
-                    12 -> {
+                    13 -> {
                         binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                         return@setOnClickListener
                         Utility.movetoFragment(activity, TourVideoFragment())
                     }
-                    13 -> {
+                    14 -> {
                         Utility.movetoFragment(activity, MyContactListFragment())
                     }
                 }

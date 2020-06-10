@@ -127,11 +127,24 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                 viewHolder.tvArea.text = member.area
 
 
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }
                 viewHolder.badge.setNumber(count)
+
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+
+                if (BuildConfig.FLAVOR == "yadav") {
+                    viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    viewHolder.tvCode.text = getMemberCode(code)
+                }
 
                 val strRole = member.role
                 when (strRole) {
@@ -399,6 +412,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         var ivEmail: ImageView = v.findViewById(R.id.iv_email)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvNative: TextView = itemView.findViewById(R.id.tv_native)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     private fun resetIconYAxis(view: View) {

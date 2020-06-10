@@ -47,6 +47,7 @@
         <item>@drawable/qrcode_search</item>
         <item>@drawable/search_distance</item>
         <item>@drawable/search_heart</item>
+        <item>@drawable/add_user</item>
         <item>@drawable/ic_rss</item>
         <item>@drawable/ic_star</item>
         <item>@drawable/search_admin</item>
@@ -54,7 +55,7 @@
         <item>@drawable/search_event</item>
         <item>@drawable/documents</item>
         <item>@drawable/ic_paytm</item>
-        <item>@drawable/add_user</item>
+        <item>@drawable/register</item>
         <item>@drawable/ic_tour</item>
     </integer-array>
 

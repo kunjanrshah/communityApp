@@ -1,8 +1,8 @@
 package com.krs.community.repositories
 
+import com.google.gson.JsonObject
 import com.krs.community.model.RegisterModel
 import com.krs.community.retrofit.ApiServices
-import com.krs.community.utils.AppConstants
 
 class RegisterRepository(
         private val api: ApiServices
@@ -10,9 +10,9 @@ class RegisterRepository(
 
     private val TAG: String = DashboardRepository::class.java.simpleName
 
-    suspend fun getUserRegister(userRegister: AppConstants.UserRegister): RegisterModel {
+    suspend fun getUserRegister(jsonObject: JsonObject): RegisterModel {
         return apiRequest {
-            api.getUserRegister(userRegister)
+            api.getUserRegister(jsonObject)
         }
     }
 }

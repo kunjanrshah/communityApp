@@ -107,8 +107,8 @@ class ProfileDetailViewModel(
         mProfileDetailRepository.getcityNameById(selectedCityId)
     }
 
-    suspend fun getcityName(id: Int): LiveData<String> {
-        return mProfileDetailRepository.getcityNameById(id)
+    suspend fun getcityName(id: Int): String {
+        return mProfileDetailRepository.getcityById(id)
     }
 
     val lstCityName by lazyDeferred {

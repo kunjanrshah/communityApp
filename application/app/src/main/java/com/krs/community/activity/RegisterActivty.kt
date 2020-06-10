@@ -2,10 +2,13 @@ package com.krs.community.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
@@ -57,7 +60,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
-import java.io.File
+import java.io.ByteArrayOutputStream
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -183,6 +186,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             binding.imgCancel.setOnClickListener {
                 binding.imgProfile.setImageResource(R.drawable.man_reg)
                 resultUri = null
+                registerViewModel.profilePic = ""
                 binding.imgCancel.visibility = View.GONE
             }
 
@@ -201,8 +205,18 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     registerViewModel.stateId = stateId
                     binding.spinnerCities.clear()
                     registerViewModel.cityId = null
-                    binding.spinnerCities.setItems(lstCity.toTypedArray())
-                    binding.spinnerCities.setExpandTint(R.color.black)
+
+                    if (lstCity.isNotEmpty()) {
+                        val lst = ArrayList<String>()
+                        lst.addAll(lstCity)
+                        lst.remove(getString(R.string.other))
+                        val lstcityName = ArrayList<String>()
+                        lstcityName.add(getString(R.string.other))
+                        lst.sort()
+                        lstcityName.addAll(lst)
+                        binding.spinnerCities.setItems(lstcityName.toTypedArray())
+                        binding.spinnerCities.setExpandTint(R.color.black)
+                    }
                 }
             }
 
@@ -290,6 +304,30 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                         .show()
 
             }
+
+            binding.fab.setOnClickListener {
+
+                SweetAlertDialog(this, SweetAlertDialog.FORGOT_TYPE)
+                        .setTitleText("Registration Problem?")
+                        .setContentText("We have alternative for you, Please register with muslimghanchi.org")
+                        .setConfirmText("Register on Website")
+                        .setNeutralText("I have Suggestion")
+                        .setCustomImage(R.drawable.ic_app)
+                        .showCancelButton(false)
+                        .setConfirmClickListener { sDialog ->
+                            sDialog.dismiss()
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://muslimghanchi.org/site/register"))
+                            startActivity(browserIntent)
+                        }
+                        .setNeutralClickListener {
+                            it.dismiss()
+                            val intent = Intent(this, ContactUsActivity::class.java)
+                            startActivity(intent)
+                        }
+
+                        .show()
+            }
+
             setDropDownList()
         }
     }
@@ -332,8 +370,17 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     private fun setDropDownList() {
         Coroutines.main {
             profileDetailViewModel.lstLastName.await().observe(this, Observer {
-                binding.spinnerLname.setItems(it.toTypedArray())
-                binding.spinnerLname.setExpandTint(R.color.black)
+                if (it.isNotEmpty()) {
+                    val lst = ArrayList<String>()
+                    lst.addAll(it)
+                    lst.remove(getString(R.string.other))
+                    val lstLastName = ArrayList<String>()
+                    lstLastName.add(getString(R.string.other))
+                    lst.sort()
+                    lstLastName.addAll(lst)
+                    binding.spinnerLname.setItems(lstLastName.toTypedArray())
+                    binding.spinnerLname.setExpandTint(R.color.black)
+                }
             })
 
             profileDetailViewModel.lstSubCommName.await().observe(this, Observer {
@@ -491,25 +538,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     override fun getRegisterSuccess(data: RegisterModel) {
         Utility.hideSweetProgress()
-        Log.d(TAG, "onRegisterButtonClick")
-        if (resultUri != null) {
-            if (isNetworkConnected(this)) {
-                try {
-                    val uploadImage = File(resultUri?.path.toString())
-                    Utility.startSweetProgress(this, getString(R.string.RegisterFamilyPhoto), getString(R.string.loading))
-                    profileDetailViewModel.uploadImage(uploadImage, data.userId.toString(), getString(R.string.profile))
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        } else {
-            successResponse(data)
-        }
+        successResponse(data)
     }
 
     private fun successResponse(message: String) {
         Snackbar.make(binding.rootLayout, message, Snackbar.LENGTH_INDEFINITE).show()
-        // Toast.makeText(AppController.mApplication.applicationContext,message,Toast.LENGTH_SHORT).show()
     }
 
     private fun successResponse(data: RegisterModel) {
@@ -517,7 +550,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         if (data.message.contains("create")) {
             goToFamilyDetailActivity(data)
         } else {
-            root_layout.snackbar(data.message, Snackbar.LENGTH_INDEFINITE)
+            root_layout.snackbar(getString(R.string.RequestAdmin), Snackbar.LENGTH_INDEFINITE)
         }
     }
 
@@ -599,8 +632,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             } else if (requestCode == REQUEST_CROP) {
                 resultUri = getOutput(data!!)
                 try {
-                    binding.imgCancel.visibility = View.VISIBLE
-                    Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                    if (resultUri != null) {
+                        val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(resultUri!!))
+                        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false)
+                        val image = encodeTobase64(resizedBitmap)
+                        registerViewModel.profilePic = image.toString()
+                        Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
+                        binding.imgCancel.visibility = View.VISIBLE
+                    }
                 } catch (e: Exception) {
                     e.message
                 }
@@ -610,6 +649,16 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             handleCropError(data!!, this)
         }
     }
+
+    fun encodeTobase64(image: Bitmap): String? {
+        val baos = ByteArrayOutputStream()
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val b = baos.toByteArray()
+        val imageEncoded: String = Base64.encodeToString(b, Base64.DEFAULT)
+        Log.e("LOOK", imageEncoded)
+        return imageEncoded
+    }
+
 
     override fun onCropFinish(result: UCropFragment.UCropResult) {
         when (result.mResultCode) {

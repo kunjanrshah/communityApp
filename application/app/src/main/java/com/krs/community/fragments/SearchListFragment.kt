@@ -175,7 +175,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 val viewHolder: MyViewHolder = viewHolder as MyViewHolder
 
                 val member = lstMembers[position]
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }

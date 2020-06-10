@@ -118,7 +118,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     holder.ivVerify.visibility = View.GONE
                 }
 
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }
@@ -197,8 +197,6 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
-
-
 
                 if (member.updatedDt.isNotEmpty()) {
                     if (member.updatedDt.contains(getString(R.string.zero_date))) {
@@ -324,7 +322,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     }
 
     override fun getMembers(response: SmartFilterResponse) {
-        Utility.hideSweetProgress()
+
         if (response.success) {
             if (response.members.size > 0) {
                 lstMembers.clear()
@@ -339,6 +337,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
             ivNotFound?.visibility = View.VISIBLE
             rvSearch?.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
         }
+        Utility.hideSweetProgress()
     }
 
     override suspend fun getFailure(message: String) {

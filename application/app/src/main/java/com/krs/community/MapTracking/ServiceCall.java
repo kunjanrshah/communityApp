@@ -32,8 +32,8 @@ public class ServiceCall {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("token", token);
             connection.setDoOutput(postPut);
-            connection.setConnectTimeout(60000);
-            connection.setReadTimeout(60000);
+            connection.setConnectTimeout(120000);
+            connection.setReadTimeout(120000);
             if (postPut) {
                 if (jsonData != null) {
                     Writer writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));

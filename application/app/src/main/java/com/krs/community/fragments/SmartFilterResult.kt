@@ -120,7 +120,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         smartFilterViewModel.mByFilterListener = this
         roomMemberViewModel.mRoomMemberListener = this
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
-        loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+        loginMember = Gson().fromJson(loginuser, Member::class.java)
 
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
@@ -139,7 +139,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 } else {
                     holder.ivVerify.visibility = View.GONE
                 }
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }

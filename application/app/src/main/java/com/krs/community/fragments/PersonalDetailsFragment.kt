@@ -114,6 +114,8 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.edtRole.text = getString(R.string.localAdmin)
         } else if (member.role.equals(getString(R.string.SUB_ADMIN))) {
             binding.edtRole.text = getString(R.string.SubAdmin)
+        } else if (member.role.equals(getString(R.string.super_admin))) {
+            binding.edtRole.text = "SUPER ADMIN"
         } else {
             binding.edtRole.text = getString(R.string.USER)
         }
@@ -482,37 +484,50 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
 
         binding.spSubComm.setOnItemClickListener {
             Coroutines.io {
-                profileDetailViewModel.selectedSubCommId = profileDetailViewModel.getSubCommIdByName(binding.spSubComm.text.toString())
-
-                Coroutines.main {
-                    profileDetailViewModel.getLocalCommunity(profileDetailViewModel.selectedSubCommId).observeForever {
-                        binding.spLocalComm.clear()
-                        binding.spLocalComm.setText(getString(R.string.select))
-                        profileDetailViewModel.selectedLocalCommunityId = 0
-                        binding.spLocalComm.setItems(it.toTypedArray())
-                        binding.spLocalComm.setExpandTint(R.color.black)
-                    }
-                }
+                setSunCommItemClick(true)
             }
         }
 
         binding.spLocalComm.setOnItemClickListener {
             Coroutines.io {
                 val localName = binding.spLocalComm.text.toString().trim()
-                profileDetailViewModel.selectedLocalCommunityId = profileDetailViewModel.getCityIdByName(localName)
+                profileDetailViewModel.selectedLocalCommunityId = profileDetailViewModel.getLocalCommunityId(localName)
             }
         }
 
         setMemberSubCommunity()
-        setMemberLocalCommunity()
+
     }
+
+    private suspend fun setSunCommItemClick(isClicked: Boolean) {
+        Coroutines.io {
+            profileDetailViewModel.selectedSubCommId = profileDetailViewModel.getSubCommIdByName(binding.spSubComm.text.toString())
+
+            Coroutines.main {
+                profileDetailViewModel.getLocalCommunity(profileDetailViewModel.selectedSubCommId).observeForever {
+                    binding.spLocalComm.clear()
+                    if (isClicked) {
+                        binding.spLocalComm.setText(getString(R.string.select))
+                        profileDetailViewModel.selectedLocalCommunityId = 0
+                    } else {
+                        setMemberLocalCommunity()
+                    }
+                    binding.spLocalComm.setItems(it.toTypedArray())
+                    binding.spLocalComm.setExpandTint(R.color.black)
+                }
+            }
+        }
+    }
+
 
     private fun setMemberSubCommunity() = Coroutines.io {
         if (member.subCommunityId.isNotEmpty()) {
             profileDetailViewModel.selectedSubCommId = Integer.parseInt(member.subCommunityId)
             val name = profileDetailViewModel.getSubCommName(member.subCommunityId)
+
             Coroutines.main {
                 binding.spSubComm.setText(name)
+                setSunCommItemClick(false)
             }
         }
     }

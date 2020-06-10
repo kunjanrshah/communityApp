@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import com.github.squti.guru.Guru
 import com.krs.community.R
 import com.krs.community.activity.SplashActivity
@@ -16,6 +17,7 @@ import com.krs.community.fragments.SettingFragment
 class PolicyAdapter(private val mContext: Context, val screen: String) : BaseAdapter() {
 
     private val mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    var policyI: policyInterface? = null
 
     override fun getCount(): Int {
         return 1
@@ -33,11 +35,23 @@ class PolicyAdapter(private val mContext: Context, val screen: String) : BaseAda
         var convertView = convertView
         val viewHolder: ViewHolder
         if (convertView == null) {
+            try {
+                policyI = mContext as policyInterface
+            } catch (e: Exception) {
+                e.message
+            }
+
             convertView = mLayoutInflater.inflate(R.layout.policy_bottom_sheet, parent, false)
             viewHolder = ViewHolder(convertView)
             convertView.tag = viewHolder
         } else {
             viewHolder = convertView.tag as ViewHolder
+        }
+
+        if (screen == "login") {
+            viewHolder.tvLabel.visibility = View.VISIBLE
+        } else {
+            viewHolder.tvLabel.visibility = View.GONE
         }
 
         viewHolder.btnPrivacy.setOnClickListener {
@@ -66,6 +80,7 @@ class PolicyAdapter(private val mContext: Context, val screen: String) : BaseAda
             Guru.putBoolean(mContext.getString(R.string.policy), true)
             SplashActivity.polictyDialog?.dismiss()
             SettingFragment.polictyDialog?.dismiss()
+            policyI?.agreed()
         }
 
         viewHolder.btnDisAgree.setOnClickListener {
@@ -76,9 +91,18 @@ class PolicyAdapter(private val mContext: Context, val screen: String) : BaseAda
                 "setting" -> {
 
                 }
+
+                "login" -> {
+                    policyI?.disAgreed()
+                }
             }
         }
         return convertView
+    }
+
+    interface policyInterface {
+        fun agreed()
+        fun disAgreed()
     }
 
     internal class ViewHolder(view: View) {
@@ -87,5 +111,7 @@ class PolicyAdapter(private val mContext: Context, val screen: String) : BaseAda
         var btnContinue: AppCompatButton = view.findViewById(R.id.btn_continue)
         var btnDisAgree: AppCompatButton = view.findViewById(R.id.btn_disagree)
         var btnDisclosure: AppCompatButton = view.findViewById(R.id.btn_disclosure)
+        var tvLabel: AppCompatTextView = view.findViewById(R.id.tv_label)
+
     }
 }

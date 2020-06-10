@@ -112,15 +112,14 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="@string/regionAdmin"
+                    android:layout_marginBottom="10dp"
                     android:textColor="@color/material_blue_500"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Home"
                     android:textColor="@color/colorPrimary"
@@ -133,8 +132,7 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Office"
-                    android:textColor="@color/colorPrimary"
-                    android:visibility="gone" />
+                    android:textColor="@color/colorPrimary" />
 
                 <TextView
                     android:id="@+id/tv_user"
@@ -333,8 +331,7 @@
                     android:layout_height="1dp"
                     android:layout_margin="5dp"
                     android:alpha="1"
-                    android:background="@color/colorGray"
-                    android:visibility="gone" />
+                    android:background="@color/colorGray" />
 
                 <TextView
                     android:id="@+id/tv_region"
@@ -343,119 +340,99 @@
                     android:layout_marginLeft="5dp"
                     android:fontFamily="@font/montserrat_medium"
                     android:singleLine="true"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
+                    android:textSize="14sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="5dp"
                     android:alpha="1"
                     android:background="@color/colorGray" />
 
                 <LinearLayout
+                    android:id="@+id/ll_home"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/location" />
+
+                    <TextView
+                        android:id="@+id/tv_home_dist"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:hint="N/A"
+                        android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:id="@+id/ll_home"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="20dp"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
+                </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center"
-                                android:background="@drawable/location" />
+                <LinearLayout
+                    android:id="@+id/ll_office"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tv_home_dist"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:hint="N/A"
-                                android:textSize="14sp" />
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/location" />
 
-                        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_office_dist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:hint="N/A"
+                        android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:id="@+id/ll_office"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginTop="5dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
+                </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center"
-                                android:background="@drawable/location" />
+                <LinearLayout
+                    android:id="@+id/ll_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tv_office_dist"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="3dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:hint="N/A"
-                                android:textSize="14sp" />
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/location" />
 
-                        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_user_dist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:hint="N/A"
+                        android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:id="@+id/ll_user"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center"
-                                android:background="@drawable/location" />
-
-                            <TextView
-                                android:id="@+id/tv_user_dist"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:hint="N/A"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
                     </LinearLayout>
 
                     <TextView
                         android:id="@+id/tv_update"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:fontFamily="@font/montserrat_light"
-                        android:gravity="right"
+                        android:layout_gravity="right"
                         android:hint="dd-mm-yyyy"
                         android:textSize="10sp" />
-
-                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

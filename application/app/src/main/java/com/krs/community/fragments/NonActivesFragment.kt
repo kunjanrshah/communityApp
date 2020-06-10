@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.util.SparseBooleanArray
@@ -133,7 +132,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
 
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }
@@ -269,8 +268,10 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_nonactives, container, false)
         tvCount = header.findViewById(R.id.tv_count)
+
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
+
         adapter.setParallaxHeader(header, rvSearch)
         adapter.setContext(this)
         rvSearch.adapter = adapter
@@ -312,10 +313,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             if (AppController.mApplication.start == 0) {
                 shimmerFrameLayout.startShimmerAnimation()
                 shimmerFrameLayout.visibility = View.VISIBLE
-                Handler().postDelayed({
-                    shimmerFrameLayout.stopShimmerAnimation()
-                    shimmerFrameLayout.visibility = View.GONE
-                }, 10000)
             } else {
                 snackbar = Snackbar.make(rvSearch, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
                 snackbar?.show()
@@ -612,11 +609,11 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         if (getSelectedItemCount() > 0) {
             enableActionMode(position)
         } else {
-            if (lstMembers.get(position).status != "0") {
+            //if (lstMembers.get(position).status != "0") {
                 val intent = Intent(activity, ProfileDetailActivity::class.java)
                 intent.putExtra(getString(R.string.member), lstMembers.get(position))
                 startActivity(intent)
-            }
+            //}
         }
     }
 

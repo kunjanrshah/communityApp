@@ -17,7 +17,7 @@ public class Member implements Serializable {
 
     @SerializedName("member_count")
     @Expose
-    private int membersCount = 0;
+    private int memberCount = 0;
 
     @SerializedName("last_login")
     @Expose
@@ -1007,12 +1007,12 @@ public class Member implements Serializable {
         this.profilePassword = profilePassword;
     }
 
-    public int getMembersCount() {
-        return membersCount;
+    public int getMemberCount() {
+        return memberCount;
     }
 
-    public void setMembersCount(int membersCount) {
-        this.membersCount = membersCount;
+    public void setMemberCount(int memberCount) {
+        this.memberCount = memberCount;
     }
 
     public String getCreatedDt() {

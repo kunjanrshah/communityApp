@@ -253,6 +253,12 @@ class ProfileDetailRepository(private val api: ApiServices, private val db: AppD
         }
     }
 
+    suspend fun getcityById(id: Int): String {
+        return withContext(Dispatchers.IO) {
+            db.getCityDao().getcityById(id)
+        }
+    }
+
     suspend fun getCityIdByName(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getcityIdByName(name)

@@ -26,9 +26,9 @@ public class WebServiceCaller {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient okclient = new OkHttpClient.Builder()
                     .addInterceptor(logging)
-                    .connectTimeout(10, TimeUnit.MINUTES)
-                    .readTimeout(10, TimeUnit.MINUTES)
-                    .writeTimeout(10, TimeUnit.MINUTES)
+                    .connectTimeout(30, TimeUnit.MINUTES)
+                    .readTimeout(30, TimeUnit.MINUTES)
+                    .writeTimeout(30, TimeUnit.MINUTES)
                     .build();
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")

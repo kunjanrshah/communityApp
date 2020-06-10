@@ -40,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.krs.community.R
+import com.krs.community.adapter.PolicyAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -55,6 +56,7 @@ import com.krs.community.utils.Utility.*
 import com.krs.community.utils.toast
 import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodelfactory.LoginViewModelFactory
+import com.orhanobut.dialogplus.DialogPlus
 import kotlinx.android.synthetic.main.activity_loginwith.*
 import org.json.JSONException
 import org.kodein.di.KodeinAware
@@ -62,7 +64,7 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener {
+class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener, PolicyAdapter.policyInterface {
 
 
     override val kodein by kodein()
@@ -73,7 +75,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     private var loginViewModel: LoginViewModel? = null
     private var ReceviedOTP: String? = null
     private lateinit var member: Member
-
+    var polictyDialog: DialogPlus? = null
+    lateinit var binding: ActivityLoginwithBinding
 
     companion object {
         private val RC_SIGN_IN = 9001
@@ -137,7 +140,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     private fun setScreenLayout() {
         if (isNetworkConnected(this)) {
-            val binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.activity_loginwith)
+            binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.activity_loginwith)
             binding.lifecycleOwner = this
             binding.loginViewModel = loginViewModel
 
@@ -186,25 +189,19 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 loginViewModel?.cancelTimer()
             }
 
-            binding.fabLogin.setOnClickListener {
+            /* binding.fabLogin.setOnClickListener {
 
-                TTFancyGifDialog.Builder(this@LoginActivity)
-                        .setTitle("Are you sure?")
-                        .setMessage("This App will detect your sim card number for authentication purpose only")
-                        .setPositiveBtnText("Agree")
-                        .setPositiveBtnBackground("#22b573")
-                        .setNegativeBtnText("No,Please")
-                        .setNegativeBtnBackground("#c1272d")
-                        .setGifResource(R.drawable.gif_dialog)
-                        .isCancellable(true)
-                        .OnPositiveClicked {
-                            getNumber(binding)
-                        }
-                        .OnNegativeClicked {
 
-                        }
-                        .build()
-            }
+                 val adapter = PolicyAdapter(this, "login")
+                 polictyDialog = DialogPlus.newDialog(this)
+                         .setAdapter(adapter)
+                         .setGravity(Gravity.CENTER)
+                         .setCancelable(false)
+                         .setExpanded(false, 800)
+                         .setContentBackgroundResource(R.drawable.popup_corner)
+                         .create()
+                 polictyDialog?.show()
+             }*/
 
             binding.btnLoginFb.setOnClickListener { v0 ->
 
@@ -312,6 +309,15 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         }
     }
 
+    override fun agreed() {
+        polictyDialog?.dismiss()
+        getNumber(binding)
+    }
+
+    override fun disAgreed() {
+        polictyDialog?.dismiss()
+    }
+
     private fun getNumber(binding: ActivityLoginwithBinding) {
         val lstNumber = ArrayList<String>()
         val lstCarrier = ArrayList<String>()
@@ -350,7 +356,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         } else if (lstNumber.size > 1) {
             TTFancyGifDialog.Builder(this@LoginActivity)
                     .setTitle("Choose Your SIM")
-                    .setMessage("Family Head Authentication")
+                    .setMessage("User Authentication")
                     .setPositiveBtnText(lstCarrier[0])
                     .setPositiveBtnBackground("#22b573")
                     .setNegativeBtnText(lstCarrier[1])
@@ -466,7 +472,14 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         Guru.putString(getString(R.string.access_token), member.accessToken)
         val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        intent.putExtra(getString(R.string.id), member.id)
+        if (member.headId == "0") {
+            Guru.putString(getString(R.string.head_id), member.id)
+            intent.putExtra(getString(R.string.id), member.id)
+        } else {
+            intent.putExtra(getString(R.string.id), member.headId)
+            Guru.putString(getString(R.string.head_id), member.headId)
+        }
+
         startActivity(intent)
         finish()
         //   fade(this)

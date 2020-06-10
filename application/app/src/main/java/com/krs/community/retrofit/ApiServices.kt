@@ -138,7 +138,7 @@ interface ApiServices {
     suspend fun getSearchByCity(@Body request: SearchByCityData): Response<SearchByCityModel>
 
     @POST(AppConstants.UrlPath.GET_REGISTER)
-    suspend fun getUserRegister(@Body request: AppConstants.UserRegister): Response<RegisterModel>
+    suspend fun getUserRegister(@Body request: JsonObject): Response<RegisterModel>
 
     @POST(AppConstants.UrlPath.GET_LOGIN)
     suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>

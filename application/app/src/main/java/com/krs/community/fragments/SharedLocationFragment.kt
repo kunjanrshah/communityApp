@@ -134,7 +134,7 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
                 holder.itemView.isActivated = selectedItems.get(position, false)
                 holder.tvArea.text = member.area
 
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }

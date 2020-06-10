@@ -44,11 +44,11 @@ public class RetrofitBase {
                 .addInterceptor(networkConnectionInterceptor);
 
         if (addTimeout) {
-            httpClientBuilder.readTimeout(AppConstants.TimeOut.SOCKET_TIME_OUT, TimeUnit.SECONDS);
-            httpClientBuilder.connectTimeout(AppConstants.TimeOut.CONNECTION_TIME_OUT, TimeUnit.SECONDS);
+            httpClientBuilder.readTimeout(AppConstants.TimeOut.SOCKET_TIME_OUT, TimeUnit.MINUTES);
+            httpClientBuilder.connectTimeout(AppConstants.TimeOut.CONNECTION_TIME_OUT, TimeUnit.MINUTES);
         } else {
-            httpClientBuilder.readTimeout(AppConstants.TimeOut.IMAGE_UPLOAD_SOCKET_TIMEOUT, TimeUnit.SECONDS);
-            httpClientBuilder.connectTimeout(AppConstants.TimeOut.IMAGE_UPLOAD_CONNECTION_TIMEOUT, TimeUnit.SECONDS);
+            httpClientBuilder.readTimeout(AppConstants.TimeOut.IMAGE_UPLOAD_SOCKET_TIMEOUT, TimeUnit.MINUTES);
+            httpClientBuilder.connectTimeout(AppConstants.TimeOut.IMAGE_UPLOAD_CONNECTION_TIMEOUT, TimeUnit.MINUTES);
         }
         addingHeaders(httpClientBuilder);
         OkHttpClient httpClient = httpClientBuilder.build();

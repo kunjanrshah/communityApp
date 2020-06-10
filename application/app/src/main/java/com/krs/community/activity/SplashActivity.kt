@@ -185,10 +185,12 @@ class SplashActivity : AppCompatActivity() {
         super.onStart()
         val userId = Guru.getString(getString(R.string.user_id), "")
         val member = Guru.getString(getString(R.string.loginMember), "")
+
         if ((userId == null || userId.isEmpty()) && (member == null || member.isEmpty())) {
         } else if (member == null || member.isEmpty()) {
+            val headId = Guru.getString(getString(R.string.head_id), "")
             val mIntent = Intent(this@SplashActivity, FamilyDetailActivity::class.java)
-            mIntent.putExtra(getString(R.string.id), userId)
+            mIntent.putExtra(getString(R.string.id), headId)
             startActivity(mIntent)
             finish()
         } else {

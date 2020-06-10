@@ -138,7 +138,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                 val member = lstMember[position]
                 val name = member.firstName
                 holder.tvName.text = name
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }

@@ -179,8 +179,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         })
 
-        var notify = intent.getBooleanExtra("notification", false)
+        val notify = Guru.getBoolean("notification", false)
         if (notify) {
+            Guru.putBoolean("notification", false)
+            movetoFragment(this@DashboardActivity, DashboardFragment())
             movetoFragment(this@DashboardActivity, NonActivesFragment())
         } else {
             movetoFragment(this@DashboardActivity, DashboardFragment())

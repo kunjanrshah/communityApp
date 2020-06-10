@@ -302,12 +302,28 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 val member = lstCalendar[i]
                 (viewHolder as CalendarViewHolder).tvName.text = member.firstName
 
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }
                 viewHolder.badge.setNumber(count)
                 viewHolder.tvArea.text = member.area
+
+
+                var code: String? = null
+                code = if (!member.memberCode.isNullOrEmpty() && member.memberCode.length > 5) {
+                    member.memberCode.substring(0, 5)
+                } else {
+                    member.memberCode
+                }
+
+                if (BuildConfig.FLAVOR == "yadav") {
+                    viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                } else {
+                    viewHolder.tvCode.text = getMemberCode(code)
+                }
+
+
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
                         val name = member.firstName + " " + member.fatherName + " " + calendarSearchViewModel.getLastNameById(member.subCastId.toInt())
@@ -713,6 +729,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         var tvRegion: TextView = itemView.findViewById(R.id.tv_region)
         var tvLabel: TextView = itemView.findViewById(R.id.tv_label)
         var viewLine: View = itemView.findViewById(R.id.view_line)
+        var tvCode: TextView = itemView.findViewById(R.id.tv_code)
     }
 
     internal inner class FilterViewHolder(v: View) : RecyclerView.ViewHolder(v) {

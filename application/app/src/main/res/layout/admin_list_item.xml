@@ -97,7 +97,7 @@
                 android:tint="@color/icon_tint_normal" />
 
             <TextView
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="25dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_semibold"

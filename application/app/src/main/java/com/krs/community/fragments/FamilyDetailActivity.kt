@@ -126,6 +126,22 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                 }
             }
         }
+
+
+        val member = Guru.getString(getString(R.string.loginMember), "")
+        if (loginId.isNullOrEmpty() && member.isNullOrEmpty()) {
+
+            SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText("Just One Step more")
+                    .setContentText("Please click on your name to enter your PIN")
+                    .setConfirmText("Okay")
+                    .setCustomImage(R.drawable.ic_app)
+                    .showCancelButton(false)
+                    .setConfirmClickListener { sDialog ->
+                        sDialog.dismiss()
+                    }
+                    .show()
+        }
     }
 
     private fun setScreenLayout() {
@@ -832,10 +848,11 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
                     var title = ""
                     if (textMsg == getString(R.string.exitDetails)) {
-                        title = "Hey " + member.firstName + ", You haven't logout properly"
+                        title = member.firstName + ", You haven't logged out properly"
                     } else {
                         title = "Hey " + member.firstName + ", Welcome"
                     }
+
                     TTFancyGifDialog.Builder(this@FamilyDetailActivity)
                             .setTitle(title)
                             .setMessage("To $textMsg Please type your PIN")
@@ -970,6 +987,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         if (isNetworkConnected(this)) {
             mainHandler.post(updateAdapter)
         }
+
+
     }
 
     override fun onStop() {

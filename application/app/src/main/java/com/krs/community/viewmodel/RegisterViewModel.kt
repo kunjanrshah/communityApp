@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.LoginActivity
@@ -18,6 +20,7 @@ import com.krs.community.utils.Utility
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import org.json.JSONObject
 
 
 class RegisterViewModel(
@@ -38,7 +41,7 @@ class RegisterViewModel(
     var stateId: Int? = null
     var countryCode: String? = null
     var cityId: Int? = null
-
+    var profilePic: String = ""
     var localCommId: Int? = null
     var subCommId: Int? = null
 
@@ -181,17 +184,37 @@ class RegisterViewModel(
         register.city_id = cityId.toString()
         register.sub_community_id = subCommId.toString()
         register.local_community_id = localCommId.toString()
-        // register.headId="0"
+        register.profilePic = profilePic
 
-        if (!isLogin) {
-            register.isAdmin = "1"
+        // register.headId="0"
+        val jsonObject = JSONObject()
+        jsonObject.put(app.getString(R.string.first_name), fname)
+        jsonObject.put(app.getString(R.string.father_name), father)
+        jsonObject.put(app.getString(R.string.birth_date), Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
+        jsonObject.put(app.getString(R.string.sub_cast_id), lastnameId.toString())
+        jsonObject.put(app.getString(R.string.email_address), email)
+        jsonObject.put(app.getString(R.string.mobile), mobile)
+        jsonObject.put(app.getString(R.string.gender), gender)
+        jsonObject.put(app.getString(R.string.plain_password), pass)
+        jsonObject.put(app.getString(R.string.address), address)
+        jsonObject.put(app.getString(R.string.state_id), stateId.toString())
+        jsonObject.put(app.getString(R.string.city_id), cityId.toString())
+        jsonObject.put(app.getString(R.string.sub_community_id), subCommId.toString())
+        jsonObject.put(app.getString(R.string.local_community_id), localCommId.toString())
+        if (profilePic.isNotEmpty()) {
+            jsonObject.put(app.getString(R.string.profile_pic), profilePic)
         }
+        if (!isLogin) {
+            jsonObject.put(app.getString(R.string.is_admin), "1")
+        }
+        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+
         if (isNetworkConnected(app.applicationContext)) {
             jobRegistration = Job()
             jobRegistration.let { thejob ->
                 CoroutineScope(IO + thejob!!).launch {
                     try {
-                        val response = registerRepository.getUserRegister(register)
+                        val response = registerRepository.getUserRegister(updated)
 
                         response.let {
                             withContext(Main) {

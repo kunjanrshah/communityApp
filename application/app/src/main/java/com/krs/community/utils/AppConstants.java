@@ -101,6 +101,15 @@ public class AppConstants {
         String father_name;
         String birth_date;
         String head_id;
+        String profile_pic;
+
+        public String getProfilePic() {
+            return profile_pic;
+        }
+
+        public void setProfilePic(String profilePic) {
+            this.profile_pic = profilePic;
+        }
 
         public String getFather() {
             return father_name;

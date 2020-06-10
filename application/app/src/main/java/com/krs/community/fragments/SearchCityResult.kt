@@ -181,7 +181,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     }
                 }
 
-                var count = member.membersCount
+                var count = member.memberCount
                 if (count != 0) {
                     count += 1
                 }

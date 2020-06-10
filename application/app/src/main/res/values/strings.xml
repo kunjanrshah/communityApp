@@ -64,6 +64,7 @@
         <item>QRCode \u0020</item>
         <item>Distance \u0020</item>
         <item>Matrimony</item>
+        <item>Add Member \u0020</item>
         <item>MyEvent \u0020</item>
         <item>Favorite \u0020 \u0020</item>
         <item>Admin \u0020 \u0020</item>
@@ -71,7 +72,7 @@
         <item>NewEvent \u0020</item>
         <item>Uploads \u0020</item>
         <item>Paytm \u0020 \u0020</item>
-        <item>Add Family \u0020 \u0020</item>
+        <item>Register \u0020 \u0020</item>
         <item>Guide \u0020 \u0020</item>
         <item>Contacts \u0020 \u0020</item>
     </string-array>
@@ -921,7 +922,6 @@
     <string name="homeDetails">Home</string>
     <string name="rentedDetails">Rented</string>
 
-
     <string name="MemberCodeDetails">Member Code</string>
     <string name="MemberNameDetails">Member Name</string>
     <string name="LastNameDetails">Last Name</string>
@@ -958,9 +958,9 @@
     <string name="AllNotification">All Notifications</string>
     <string name="AllFilter">All Filters</string>
     <string name="youFilte">You can see list of offline filters and edit, delete or apply it.</string>
-    <string name="Community">COMMITTEE</string>
-    <string name="Designation">DESIGNATION</string>
-    <string name="Duration">DURATION</string>
+    <string name="Community">Committee</string>
+    <string name="Designation">Designation</string>
+    <string name="Duration">Duration</string>
     <string name="SarchKeyword">SEARCH KEYWORD</string>
     <string name="Commi">Committee</string>
 
@@ -1157,4 +1157,7 @@
     <string name="is_finish">is_finish</string>
     <string name="policy">policy</string>
     <string name="super_admin">SUPERADMIN</string>
+    <string name="is_admin">is_admin</string>
+    <string name="plain_password">plain_password</string>
+    <string name="profile_pic">profile_pic</string>
 </resources>

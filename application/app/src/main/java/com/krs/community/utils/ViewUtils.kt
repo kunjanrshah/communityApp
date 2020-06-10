@@ -459,7 +459,7 @@ fun getRoomMemberFromMember(member: Member): RoomMember {
             member.isShani, member.hobby, member.facebookProfile, member.expectation, member.currentActivityId, member.maritalStatus, member.marriageDate,
             member.gotraId, member.profilePic, member.isRented, member.isExpired, member.expireDate, member.isDonor, member.businessCategoryId, member.businessSubCategoryId,
             member.workDetails, member.companyName, member.businessAddress, member.businessLogo, member.website, member.educationId, member.occupationId, member.userLat, member.userLng,
-            member.homeLat, member.homeLng, member.officeLat, member.officeLng, member.isLocationEnable, member.updatedDt, member.membersCount, member.status)
+            member.homeLat, member.homeLng, member.officeLat, member.officeLng, member.isLocationEnable, member.updatedDt, member.memberCount, member.status)
     return roomMember
 }
 
@@ -529,7 +529,7 @@ fun getMemberFromRoomMember(roomMember: RoomMember): Member {
     member.officeLat = roomMember.officeLat
     member.officeLng = roomMember.officeLng
     member.status = roomMember.status
-    member.membersCount = roomMember.memberCount
+    member.memberCount = roomMember.memberCount
     member.isLocationEnable = roomMember.isLocationEnable
     member.updatedDt = roomMember.updatedDt
     return member
@@ -561,9 +561,7 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
         }
 
         if (!member.cityId.isNullOrEmpty()) {
-            profileDetailViewModel.getcityName(Integer.parseInt(member.cityId)).observeForever {
-                city = it
-            }
+            city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
         }
 
         val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
@@ -689,9 +687,8 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
         if (!member.stateId.isNullOrEmpty()) {
             state = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
         }
-
-        profileDetailViewModel.getcityName(Integer.parseInt(member.cityId)).observeForever {
-            city = it
+        if (!member.cityId.isNullOrEmpty()) {
+            city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
         }
 
         val header = "<center>  <h1><b>${mContext.getString(R.string.app_name)}</b></h1> </center> <object align=right>$currentdate</object>"

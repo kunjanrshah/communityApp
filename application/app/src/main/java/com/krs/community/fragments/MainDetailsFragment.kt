@@ -412,7 +412,11 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     fun getSaveData(jsonObject: JSONObject) {
 
         try {
-            jsonObject.put(getString(R.string.member_code), binding.edtCode.text?.trim())
+            var code = binding.edtCode.text.toString()
+            if (!binding.edtCode.text.isNullOrEmpty()) {
+                code = binding.edtCode.text?.trim()?.replaceFirst("^0+(?!$)".toRegex(), "").toString()
+            }
+            jsonObject.put(getString(R.string.member_code), code)
             jsonObject.put(getString(R.string.first_name), binding.fname.text.trim())
             jsonObject.put(getString(R.string.father_name), binding.edtFather.text.trim())
             jsonObject.put(getString(R.string.mother_name), binding.edtMother.text.trim())
