@@ -84,12 +84,28 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                             }
                         }
                     }
+                } else if (key.equals(_context.resources.getString(R.string.ss_sp_sub_samaj), ignoreCase = true)) {
+                    if (value.isNotEmpty() && !value.equals(_context.getString(R.string.ss_sp_sub_samaj), ignoreCase = true)) {
+                        Coroutines.main {
+                            profileDetailViewModel.lstSubCommName.await().observeForever {
+                                val lstValue = ArrayList<String>()
+                                lstValue.add(_context.getString(R.string.no_selection))
+                                lstValue.addAll(it.toTypedArray())
+                                viewHolder.spSubSamaj.setItems(lstValue.toTypedArray())
+                                viewHolder.spSubSamaj.setExpandTint(R.color.black)
+                                viewHolder.spSubSamaj.setText(value1)
+                                viewHolder.llSubSamaj.visibility = View.VISIBLE
+                            }
+                        }
+                    }
                 } else if (key.equals(_context.resources.getString(R.string.ss_sp_samaj), ignoreCase = true)) {
                     if (value.isNotEmpty() && !value.equals(_context.getString(R.string.ss_samaj), ignoreCase = true)) {
-
                         Coroutines.main {
-                            profileDetailViewModel.getLocalCommName.await().observeForever {
-                                viewHolder.spSamaj.setItems(it.toTypedArray())
+                            profileDetailViewModel.getLocalCommunity(profileDetailViewModel.selectedSubCommId).observeForever {
+                                val lstValue = ArrayList<String>()
+                                lstValue.add(_context.getString(R.string.no_selection))
+                                lstValue.addAll(it.toTypedArray())
+                                viewHolder.spSamaj.setItems(lstValue.toTypedArray())
                                 viewHolder.spSamaj.setExpandTint(R.color.black)
                                 viewHolder.spSamaj.setText(value1)
                                 viewHolder.llSamaj.visibility = View.VISIBLE
@@ -435,6 +451,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         viewHolder.imgMemMotherClose.setOnClickListener { v: View? -> viewHolder.llMemMother.visibility = View.GONE }
         viewHolder.imgSurnameClose.setOnClickListener { v: View? -> viewHolder.llSurname.visibility = View.GONE }
         viewHolder.imgSamajClose.setOnClickListener { v: View? -> viewHolder.llSamaj.visibility = View.GONE }
+        viewHolder.imgSubSamajClose.setOnClickListener { v: View? -> viewHolder.llSubSamaj.visibility = View.GONE }
         viewHolder.imgGenderClose.setOnClickListener { v: View? -> viewHolder.llGender.visibility = View.GONE }
         viewHolder.imgMaritalClose.setOnClickListener { v: View? -> viewHolder.llMarital.visibility = View.GONE }
         viewHolder.imgNativeClose.setOnClickListener { v: View? -> viewHolder.llNative.visibility = View.GONE }
@@ -634,6 +651,16 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
                 }
                 job1.await()
             }
+            if (viewHolder.llSubSamaj.isShown) {
+                val subComm = viewHolder.spSubSamaj.text.toString().trim { it <= ' ' }
+                val job1 = async {
+                    val id = profileDetailViewModel.getSubCommIdByName(subComm)
+                    lstValues.put(_context.resources.getString(R.string.ss_sp_sub_samaj), id)
+                }
+                job1.await()
+            }
+
+
             if (viewHolder.llNative.isShown) {
                 val name = viewHolder.spNative.text.toString().trim { it <= ' ' }
                 val job1 = async {
@@ -799,6 +826,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var imgMemberClose: ImageView = view.findViewById(R.id.img_member_close)
         var imgSurnameClose: ImageView = view.findViewById(R.id.img_surname_close)
         var imgSamajClose: ImageView = view.findViewById(R.id.img_samaj_close)
+        var imgSubSamajClose: ImageView = view.findViewById(R.id.img_sub_samaj_close)
         var imgGenderClose: ImageView = view.findViewById(R.id.img_gender_close)
         var imgMaritalClose: ImageView = view.findViewById(R.id.img_marital_close)
         var imgNativeClose: ImageView = view.findViewById(R.id.img_native_close)
@@ -846,6 +874,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
         var imgMemMotherClose: ImageView = view.findViewById(R.id.img_mem_mother_close)
         var llSurname: LinearLayout = view.findViewById(R.id.ll_surname)
         var llSamaj: LinearLayout = view.findViewById(R.id.ll_samaj)
+        var llSubSamaj: LinearLayout = view.findViewById(R.id.ll_sub_samaj)
         var llGender: LinearLayout = view.findViewById(R.id.ll_gender)
         var llMarital: LinearLayout = view.findViewById(R.id.ll_marital)
         var llNative: LinearLayout = view.findViewById(R.id.ll_native)
@@ -913,6 +942,7 @@ class SmartPopUpAdapter(private val _context: Context, adapter: SmartFilterAdapt
 
         var spSurname: JRSpinner = view.findViewById(R.id.sp_surname)
         var spSamaj: JRSpinner = view.findViewById(R.id.sp_samaj)
+        var spSubSamaj: JRSpinner = view.findViewById(R.id.sp_sub_samaj)
         var spMarital: JRSpinner = view.findViewById(R.id.sp_marital)
         var spCity: JRSpinner = view.findViewById(R.id.sp_city)
         var spGender: JRSpinner = view.findViewById(R.id.sp_gender)

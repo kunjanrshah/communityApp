@@ -35,7 +35,6 @@ class ProfileDetailViewModel(
     lateinit var keywordListener: ByKeywordListener
     lateinit var deleteListener: DeleteRecordListener
 
-
     var selectedRelationId = 0
     val relationName by lazyDeferred {
         mProfileDetailRepository.getRelationById(selectedRelationId)

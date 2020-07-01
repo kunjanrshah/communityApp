@@ -203,6 +203,8 @@
     <string name="ss_mother_name" translatable="false">@string/mother_name</string>
     <string name="ss_sp_surname" translatable="false">@string/sub_cast_id</string>
     <string name="ss_sp_samaj" translatable="false">@string/local_community_id</string>
+    <string name="ss_sp_sub_samaj" translatable="false">@string/sub_community_id</string>
+
     <string name="ss_sp_marital" translatable="false">@string/marital_status</string>
     <string name="ss_sp_city" translatable="false">@string/city_id</string>
     <string name="ss_sp_gender" translatable="false">@string/gender</string>
@@ -456,7 +458,7 @@
     <string name="home">Home</string>
     <string name="Calendar">Calendar</string>
 
-    <string name="MoveProfile">Move profile detail</string>
+    <string name="MoveProfile">Navigate your detail</string>
     <string name="LocationOff">GPS Off</string>
     <string name="LocationOn">GPS On</string>
 
@@ -618,7 +620,9 @@
     <string name="father_">Father :</string>
     <string name="mother_">Mother :</string>
     <string name="lastname">LastName :</string>
-    <string name="samaj">Samaj :</string>
+    <string name="samaj">Local Samaj :</string>
+    <string name="sub_samaj">Sub Samaj :</string>
+
     <string name="samajSecond">Samaj</string>
     <string name="genderPopup">Gender :</string>
     <string name="GenderSecondPopup">Gender</string>
@@ -1049,7 +1053,7 @@
     <string name="profile_updated_date">Profile Updated Date</string>
     <string name="profile_updatation_percentage">Profile update</string>
 
-    <string name="headn">Head Name</string>
+    <string name="headn">Family Head Name</string>
     <string name="local_communitydetails">Local Community</string>
     <string name="select_native">Select Native</string>
     <string name="select_citydetails">Select City</string>
@@ -1160,4 +1164,5 @@
     <string name="is_admin">is_admin</string>
     <string name="plain_password">plain_password</string>
     <string name="profile_pic">profile_pic</string>
+    <string name="notification">notification</string>
 </resources>

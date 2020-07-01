@@ -6,6 +6,7 @@ import android.util.Log
 import com.github.squti.guru.Guru
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.krs.community.R
 import com.krs.community.activity.SplashActivity
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.Coroutines
@@ -44,7 +45,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val fullName = "$first_name $last_name"
             Coroutines.main {
                 val resultIntent = Intent(applicationContext, SplashActivity::class.java)
-                Guru.putBoolean("notification", true)
+                if (!message.contains("Approved")) {
+                    Guru.putBoolean(getString(R.string.notification), true)
+                }
                 showNotification(applicationContext, resultIntent, user_id, message, fullName, mobile, email, photo, address, city)
             }
         }

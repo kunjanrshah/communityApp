@@ -257,7 +257,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             binding.spinnerNative.setOnItemClickListener {
                 Coroutines.io {
                     registerViewModel.nativeId = profileDetailViewModel.getNativeIdByName(binding.spinnerNative.text.toString())
-                    Log.d(TAG, "lname id: " + registerViewModel.nativeId)
+                    Log.d(TAG, "native id: " + registerViewModel.nativeId)
                 }
             }
 
@@ -309,14 +309,14 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
                 SweetAlertDialog(this, SweetAlertDialog.FORGOT_TYPE)
                         .setTitleText("Registration Problem?")
-                        .setContentText("We have alternative for you, Please register with muslimghanchi.org")
+                        .setContentText("We have alternative for you, Please register with " + getString(R.string.dev_link))
                         .setConfirmText("Register on Website")
                         .setNeutralText("I have Suggestion")
                         .setCustomImage(R.drawable.ic_app)
                         .showCancelButton(false)
                         .setConfirmClickListener { sDialog ->
                             sDialog.dismiss()
-                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://muslimghanchi.org/site/register"))
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.dev_link) + "/site/register"))
                             startActivity(browserIntent)
                         }
                         .setNeutralClickListener {

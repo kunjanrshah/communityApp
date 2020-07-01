@@ -206,6 +206,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="5dp"
                             android:hint="mobile"
+                            android:visibility="visible"
                             android:singleLine="true"
                             android:textColor="@color/com_facebook_blue"
                             android:textSize="14sp" />

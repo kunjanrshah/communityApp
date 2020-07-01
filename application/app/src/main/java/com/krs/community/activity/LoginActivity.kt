@@ -12,6 +12,7 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -39,7 +40,10 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.adapter.ForgotAdapter
 import com.krs.community.adapter.PolicyAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.AppSignatureHashHelper
@@ -55,16 +59,19 @@ import com.krs.community.utils.NotificationUtils
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.toast
 import com.krs.community.viewmodel.LoginViewModel
+import com.krs.community.viewmodel.PasswordViewModel
 import com.krs.community.viewmodelfactory.LoginViewModelFactory
+import com.krs.community.viewmodelfactory.PasswordViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
 import kotlinx.android.synthetic.main.activity_loginwith.*
 import org.json.JSONException
+import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener, PolicyAdapter.policyInterface {
+class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener, PolicyAdapter.policyInterface, ForgotAdapter.ForgotInterface {
 
 
     override val kodein by kodein()
@@ -75,8 +82,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     private var loginViewModel: LoginViewModel? = null
     private var ReceviedOTP: String? = null
     private lateinit var member: Member
-    var polictyDialog: DialogPlus? = null
+    var forgotDialog: DialogPlus? = null
     lateinit var binding: ActivityLoginwithBinding
+    private lateinit var passwordViewModel: PasswordViewModel
+    private val passwordViewModelFactory: PasswordViewModelFactory by instance<PasswordViewModelFactory>()
 
     companion object {
         private val RC_SIGN_IN = 9001
@@ -89,6 +98,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         if (isNetworkConnected(this)) {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+            passwordViewModel = ViewModelProvider(this, passwordViewModelFactory).get(PasswordViewModel::class.java)
+            passwordViewModel.mLoginListener = this
 
             loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
             loginViewModel?.iLoginListener = this
@@ -263,7 +275,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
             binding.btnContinue.setOnClickListener { v ->
 
-                if (!ReceviedOTP.isNullOrEmpty() && ReceviedOTP == squareField.text.toString()) {
+                startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
+                loginViewModel?.loginWithPassword()
+
+                /*if (!ReceviedOTP.isNullOrEmpty() && ReceviedOTP == squareField.text.toString()) {
                     goToFamilyDetailScreen()
                     return@setOnClickListener
                 }
@@ -286,8 +301,23 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                         startSweetProgress(this, getString(R.string.otp_send), getString(R.string.loading))
                         loginViewModel?.loginWithOTP()
                     }
-                }
+                }*/
             }
+
+            binding.tvForgot.setOnClickListener {
+
+                val adapter = ForgotAdapter(this)
+                forgotDialog = DialogPlus.newDialog(this)
+                        .setAdapter(adapter)
+                        .setGravity(Gravity.BOTTOM)
+                        .setCancelable(true)
+                        .setExpanded(true, 900)
+                        .setContentBackgroundResource(R.drawable.popup_top_corner)
+                        .create()
+                forgotDialog?.show()
+
+            }
+
 
             loginViewModel?.stopTime?.observe(this, androidx.lifecycle.Observer { stopTIme ->
                 if (stopTIme == true) {
@@ -310,12 +340,12 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     override fun agreed() {
-        polictyDialog?.dismiss()
+        forgotDialog?.dismiss()
         getNumber(binding)
     }
 
     override fun disAgreed() {
-        polictyDialog?.dismiss()
+        forgotDialog?.dismiss()
     }
 
     private fun getNumber(binding: ActivityLoginwithBinding) {
@@ -446,23 +476,26 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         hideSweetProgress()
         hideProgressDialog()
         Log.d(TAG, "login data: $response")
-
-        member = response.data
-        if (!response.otp.isNullOrBlank()) {
-            if (response.otp != "FAILED") {
-                card_view_mobile.visibility = View.GONE
-                card_view_otp.visibility = View.VISIBLE
-                tv_otp.text = loginViewModel?.mobile
-                startSMSListener()
-                ReceviedOTP = response.otp
-            } else {
-                Snackbar.make(findViewById(R.id.ll_login), "OTP sending fail!", Snackbar.LENGTH_LONG).show()
-            }
+        if (isForgot) {
+            Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
         } else {
-            if (response.success) {
-                goToFamilyDetailScreen()
+            member = response.data
+            if (!response.otp.isNullOrBlank()) {
+                if (response.otp != "FAILED") {
+                    card_view_mobile.visibility = View.GONE
+                    card_view_otp.visibility = View.VISIBLE
+                    tv_otp.text = loginViewModel?.mobile
+                    startSMSListener()
+                    ReceviedOTP = response.otp
+                } else {
+                    Snackbar.make(findViewById(R.id.ll_login), "OTP sending fail!", Snackbar.LENGTH_LONG).show()
+                }
             } else {
-                Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
+                if (response.success) {
+                    goToFamilyDetailScreen()
+                } else {
+                    Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -534,5 +567,23 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         }
     }
 
+    override fun sendEmail(email: String) {
+        forgotDialog?.dismiss()
+        val jsonObject = JSONObject()
+        jsonObject.put(getString(R.string.username), email)
+        jsonObject.put(getString(R.string.reset_type), "email")
+        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+        startSweetProgress(this, getString(R.string.forgotPin), "sending your PIN to ${email}")
+        passwordViewModel.forgotPassword(updated)
+    }
 
+    override fun sendMobile(mobile: String) {
+        forgotDialog?.dismiss()
+        val jsonObject = JSONObject()
+        jsonObject.put(getString(R.string.username), mobile)
+        jsonObject.put(getString(R.string.reset_type), "mobile")
+        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+        startSweetProgress(this, getString(R.string.forgotPin), "sending your PIN to ${mobile}")
+        passwordViewModel.forgotPassword(updated)
+    }
 }

@@ -89,7 +89,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     private var currentSelectedIndex = -1
     private var actionMode: ActionMode? = null
     private lateinit var actionModeCallback: ActionModeCallback
-
+    private var LocalCount = 0
+    private var SubCount = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragment_admins, container, false)
@@ -118,7 +119,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
 
                 if (lstAdmins.size > 0) {
                     tvCount.visibility = View.VISIBLE
-                    tvCount.text = "${lstAdmins.size} " + getString(R.string.adminsfound)
+                    tvCount.text = "Sub: $SubCount, Local: $LocalCount"
                 } else {
                     tvCount.visibility = View.GONE
                 }
@@ -356,11 +357,13 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         if (count == 1) {
             lstAdmins.clear()
             if (response.members != null && response.members.size > 0) {
+                SubCount = response.totalRecords
                 lstAdmins.addAll(response.members)
             }
             getLocalAdmin()
         } else if (count == 2) {
             if (response.members != null && response.members.size > 0) {
+                LocalCount = response.totalRecords
                 lstAdmins.addAll(response.members)
             }
             adapter.notifyDataSetChanged()
@@ -609,8 +612,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                     }
 
                     jsonObject.put(getString(R.string.role), changed)
-                    jsonObject.put(getString(R.string.local_community_id), loginUserLocalCommunityId)
-                    jsonObject.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
+                    // jsonObject.put(getString(R.string.local_community_id), loginUserLocalCommunityId)
+                    //  jsonObject.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
 
                     var Ids = ""
                     for (index in selectedItemPositions) {

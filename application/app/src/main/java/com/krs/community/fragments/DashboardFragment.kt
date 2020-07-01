@@ -307,7 +307,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             menuViewHolder.image?.setImageResource(imgs.getResourceId(position, -1))
             menuViewHolder.textView?.text = mainMenu[position]
             val txt = menuViewHolder.textView?.text.toString()
-            if (txt == "Restricted") {
+            if (txt == "Restricted" && isAdmin()) {
                 DashboardActivity.statusCounts.observeForever {
                     menuViewHolder.badge?.setNumber(Integer.parseInt(it))
                 }
@@ -403,6 +403,22 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             }
             return convertView!!
         }
+    }
+
+    private fun isAdmin(): Boolean {
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        var isAdmin = false
+        if (!loginuser.isNullOrEmpty()) {
+            val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (((loginMem.role == getString(R.string.LOCAL_ADMIN)))) {
+                isAdmin = true
+            } else if (((loginMem.role == getString(R.string.SUB_ADMIN)))) {
+                isAdmin = true
+            } else if ((loginMem.role == getString(R.string.super_admin))) {
+                isAdmin = true
+            }
+        }
+        return isAdmin
     }
 
     inner class SharedLocationViewHolder(v: View) : RecyclerView.ViewHolder(v) {

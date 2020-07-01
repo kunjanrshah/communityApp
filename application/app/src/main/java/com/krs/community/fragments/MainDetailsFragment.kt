@@ -119,7 +119,16 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                 binding.llHomeRent.visibility = View.GONE
                 binding.llStateCity.visibility = View.GONE
             } else {
-                binding.llPin.visibility = View.GONE
+
+                val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+                if (loginMem.role == context?.getString(R.string.super_admin)) {
+                    binding.llPin.visibility = View.VISIBLE
+                    binding.edtPassword.setText(member.plainPassword)
+                    binding.edtCpassword.setText(member.plainPassword)
+                } else {
+                    binding.llPin.visibility = View.GONE
+                }
                 binding.llAreaPin.visibility = View.VISIBLE
                 binding.llHomeRent.visibility = View.VISIBLE
                 binding.llStateCity.visibility = View.VISIBLE
@@ -415,6 +424,9 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             var code = binding.edtCode.text.toString()
             if (!binding.edtCode.text.isNullOrEmpty()) {
                 code = binding.edtCode.text?.trim()?.replaceFirst("^0+(?!$)".toRegex(), "").toString()
+            }
+            if (code.isNullOrEmpty()) {
+                code = member.id
             }
             jsonObject.put(getString(R.string.member_code), code)
             jsonObject.put(getString(R.string.first_name), binding.fname.text.trim())

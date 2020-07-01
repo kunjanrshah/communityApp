@@ -39,6 +39,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     var cTimer: CountDownTimer? = null
     var status = MutableLiveData<Boolean?>()
     var stopTime = MutableLiveData<Boolean?>()
+    var password: String? = null
 
     fun startTimer() {
         cTimer = object : CountDownTimer(1000 * 60 * 2, 1000) {
@@ -89,6 +90,19 @@ class LoginViewModel(private val loginRepository: LoginRepository,
             loginRequest.username = mobile
             loginRequest.hashcode = Guru.getString(app.applicationContext.getString(R.string.hash_key), "")
             loginRequest.login_type = "1"
+            getLoginUser(loginRequest)
+        } catch (e: Exception) {
+            Utility.hideSweetProgress()
+            e.printStackTrace()
+        }
+    }
+
+    fun loginWithPassword() {
+        try {
+            val loginRequest = AppConstants.LoginRequest()
+            loginRequest.username = mobile
+            loginRequest.login_type = "3"
+            loginRequest.password = password
             getLoginUser(loginRequest)
         } catch (e: Exception) {
             Utility.hideSweetProgress()

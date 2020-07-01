@@ -172,9 +172,9 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                     }
                 }
 
-                if (member.gender.equals("Male")) {
+                if (member.gender == "Male") {
                     holder.ivGender.setBackgroundResource(R.drawable.male)
-                } else {
+                } else if (member.gender == "Female") {
                     holder.ivGender.setBackgroundResource(R.drawable.female)
                 }
 
@@ -195,15 +195,20 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 } else {
                     holder.tvCode.text = getMemberCode(code)
                 }
+                if (member.head_name.isNullOrEmpty()) {
+                    holder.txtHead.text = member.firstName + " " + member.fatherName
+                } else {
+                    holder.txtHead.text = member.head_name
+                }
 
-                Coroutines.io {
+                /*Coroutines.io {
                     if (!member.head_sub_cast_id.isNullOrEmpty() && !member.head_name.isNullOrEmpty()) {
                         val name = member.head_name + " " + smartFilterViewModel.getLastNameById(member.head_sub_cast_id.toInt())
                         Coroutines.main {
                             holder.txtHead.text = name
                         }
                     }
-                }
+                }*/
 
 
                 val age = Utility.getAge(member.birthDate, Utility.yyyy_MM_dd)
@@ -215,9 +220,9 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
                 holder.tvStatus.text = member.maritalStatus
 
-                if (member.mobile.isEmpty()) {
+                if (member.mobile.isNullOrEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
-                    viewHolder.ivMobile.visibility = View.GONE
+                    viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
@@ -226,7 +231,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 }
 
                 if (member.emailAddress.isNullOrEmpty()) {
-                    viewHolder.ivEmail.visibility = View.GONE
+                    viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
                     viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
                 } else {

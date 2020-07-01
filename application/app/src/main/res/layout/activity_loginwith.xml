@@ -83,6 +83,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:layout_marginTop="10dp"
+                        android:visibility="gone"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="@string/Mobile"
                         android:textSize="20sp" />
@@ -91,7 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="15dp"
                         android:layout_marginRight="20dp"
                         android:orientation="horizontal">
 
@@ -129,8 +130,42 @@
                             android:text="@={loginViewModel.mobile}"
                             android:textColor="@color/black"
                             android:textColorHint="@color/dialogplus_black_overlay"
-                            android:textSize="18sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/edt_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/round_corner_mid_light_gray"
+                        android:digits="0123456789"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:hint="Type your PIN"
+                        android:inputType="number"
+                        android:maxLength="12"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:text="@={loginViewModel.password}"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dialogplus_black_overlay"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_forgot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/forgot_pin"
+                        android:textColor="@color/black2"
+                        android:textSize="12sp" />
+
 
                     <TextView
                         android:layout_width="match_parent"
@@ -139,6 +174,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
                         android:layout_marginRight="10dp"
+                        android:visibility="gone"
                         android:fontFamily="@font/montserrat_light"
                         android:text="@string/_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number"
                         android:textColor="@color/black2"

@@ -1072,10 +1072,10 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     }
 
                     jsonObject.put(getString(R.string.role), changed)
-                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
-                    val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
-                    jsonObject.put(getString(R.string.local_community_id), member.localCommunityId)
-                    jsonObject.put(getString(R.string.sub_community_id), member.subCommunityId)
+                    //  val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                    //  val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
+                    //  jsonObject.put(getString(R.string.local_community_id), member.localCommunityId)
+                    // jsonObject.put(getString(R.string.sub_community_id), member.subCommunityId)
 
                     var Ids = ""
                     for (index in selectedItemPositions) {

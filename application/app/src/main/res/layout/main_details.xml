@@ -119,35 +119,6 @@
                     app:jrs_title="@string/SelctLatname" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_gravity="center|bottom"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/border"
-                android:gravity="center|bottom"
-                android:textAlignment="center">
-
-                <com.krs.community.jrspinner.JRSpinner
-                    android:id="@+id/sp_samaj"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:background="@null"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:hint="@string/local_communitydetails"
-                    android:imeOptions="actionNext"
-                    android:nextFocusDown="@+id/rangeSeekbar"
-                    android:paddingRight="10dp"
-                    android:singleLine="true"
-                    android:textColor="@color/black1"
-                    android:textSize="14sp"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:jrs_icon_tint="@color/colorPrimary"
-                    app:jrs_multiple="false"
-                    app:jrs_title="@string/local_communitydetails" />
-            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -268,6 +239,68 @@
                     app:jrs_multiple="false"
                     app:jrs_title="@string/select_citydetails" />
             </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_sub_comm"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Sub Community"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/rangeSeekbar"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="Sub Community" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center|bottom"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/border"
+                android:gravity="center|bottom"
+                android:textAlignment="center">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_local_comm"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="@string/local_communitydetails"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/rangeSeekbar"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:jrs_icon_tint="@color/colorPrimary"
+                    app:jrs_multiple="false"
+                    app:jrs_title="@string/local_communitydetails" />
+            </RelativeLayout>
+
 
             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
                 android:id="@+id/rangeSeekbar"

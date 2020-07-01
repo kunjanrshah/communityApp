@@ -395,7 +395,7 @@
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="@string/hint_password" />
 
-                        <com.krs.community.utils.ChromaHashView
+                        <EditText
                             android:id="@+id/edt_password"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/register_field_height"
@@ -404,6 +404,7 @@
                             android:drawablePadding="15dp"
                             android:fontFamily="@font/montserrat_regular"
                             android:imeOptions="actionNext"
+                            android:inputType="number"
                             android:nextFocusDown="@+id/edt_cpassword"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
@@ -427,12 +428,13 @@
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="@string/hint_conform_password" />
 
-                        <com.krs.community.utils.ChromaHashView
+                        <EditText
                             android:id="@+id/edt_cpassword"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/register_field_height"
                             android:background="@drawable/border_color_gray"
                             android:digits="@string/only_numbers"
+                            android:inputType="number"
                             android:drawablePadding="15dp"
                             android:fontFamily="@font/montserrat_regular"
                             android:imeOptions="actionNext"

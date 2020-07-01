@@ -72,6 +72,7 @@ class SmartFilterAdapter(private val _context: Context,
 
     private lateinit var spSurname: JRSpinner
     private lateinit var spLocalComm: JRSpinner
+    private lateinit var spSubComm: JRSpinner
     private lateinit var spMarital: JRSpinner
     private lateinit var spCity: JRSpinner
     private lateinit var spGender: JRSpinner
@@ -234,12 +235,21 @@ class SmartFilterAdapter(private val _context: Context,
             } else {
                 mapChildValues[_context.getString(R.string.ss_sp_surname)] = ""
             }
-            val samaj = spLocalComm.text.toString().trim { it <= ' ' }
-            if (!samaj.isNotEmpty() && !samaj.equals("samaj", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_sp_samaj)] = samaj
+
+            val local = spLocalComm.text.toString().trim { it <= ' ' }
+            if (local.isNotEmpty() && !local.equals(_context.getString(R.string.ss_samaj), ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_sp_samaj)] = local
             } else {
                 mapChildValues[_context.getString(R.string.ss_sp_samaj)] = ""
             }
+
+            val subComm = spSubComm.text.toString().trim { it <= ' ' }
+            if (subComm.isNotEmpty() && !subComm.equals(_context.getString(R.string.ss_sp_sub_samaj), ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_sp_sub_samaj)] = subComm
+            } else {
+                mapChildValues[_context.getString(R.string.ss_sp_sub_samaj)] = ""
+            }
+
             val marital = spMarital.text.toString().trim { it <= ' ' }
             if (marital.isNotEmpty() && !marital.equals("Marital", ignoreCase = true)) {
                 mapChildValues[_context.getString(R.string.ss_sp_marital)] = marital
@@ -539,6 +549,12 @@ class SmartFilterAdapter(private val _context: Context,
                 if (samaj != null && samaj.isNotEmpty()) {
                     spLocalComm.setText(samaj)
                 }
+
+                val subSamaj = mapChildValues[_context.resources.getString(R.string.ss_sp_sub_samaj)]
+                if (subSamaj != null && subSamaj.isNotEmpty()) {
+                    spSubComm.setText(subSamaj)
+                }
+
                 val marital = mapChildValues[_context.resources.getString(R.string.ss_sp_marital)]
                 if ((marital != null) && marital.isNotEmpty() && !marital.equals("Marital", ignoreCase = true)) {
                     spMarital.setText(marital)
@@ -745,7 +761,8 @@ class SmartFilterAdapter(private val _context: Context,
                 edtFatherName = convertView.findViewById(R.id.edt_father)
                 edtMotherName = convertView.findViewById(R.id.edt_mother)
                 spSurname = convertView.findViewById(R.id.sp_surname)
-                spLocalComm = convertView.findViewById(R.id.sp_samaj)
+                spLocalComm = convertView.findViewById(R.id.sp_local_comm)
+                spSubComm = convertView.findViewById(R.id.sp_sub_comm)
                 spCity = convertView.findViewById(R.id.sp_city)
                 spGender = convertView.findViewById(R.id.sp_gender)
                 spMarital = convertView.findViewById(R.id.sp_marital)
@@ -764,6 +781,26 @@ class SmartFilterAdapter(private val _context: Context,
                         spLocalComm.setText("")
                     }
                 }
+
+                spSubComm.setOnItemClickListener {
+                    if (it == 0) {
+                        spSubComm.setText("")
+                        spLocalComm.setText("")
+                    } else {
+                        Coroutines.main {
+                            val subId = profileDetailViewModel.getSubCommIdByName(spSubComm.text.toString())
+                            profileDetailViewModel.selectedSubCommId = subId
+                            profileDetailViewModel.getLocalCommunity(subId).observeForever {
+                                val lstValue = ArrayList<String>()
+                                lstValue.add(_context.getString(R.string.no_selection))
+                                lstValue.addAll(it.toTypedArray())
+                                spLocalComm.setItems(lstValue.toTypedArray())
+                                spLocalComm.setExpandTint(R.color.black)
+                            }
+                        }
+                    }
+                }
+
                 spCity.setOnItemClickListener {
                     if (it == 0) {
                         spCity.setText("")
@@ -803,12 +840,20 @@ class SmartFilterAdapter(private val _context: Context,
                         spSurname.setExpandTint(R.color.black)
                     }
 
-                    profileDetailViewModel.getLocalCommName.await().observeForever {
+                    /* profileDetailViewModel.getLocalCommName.await().observeForever {
+                         val lstValue = ArrayList<String>()
+                         lstValue.add(_context.getString(R.string.no_selection))
+                         lstValue.addAll(it.toTypedArray())
+                         spLocalComm.setItems(lstValue.toTypedArray())
+                         spLocalComm.setExpandTint(R.color.black)
+                     }*/
+
+                    profileDetailViewModel.lstSubCommName.await().observeForever {
                         val lstValue = ArrayList<String>()
                         lstValue.add(_context.getString(R.string.no_selection))
                         lstValue.addAll(it.toTypedArray())
-                        spLocalComm.setItems(lstValue.toTypedArray())
-                        spLocalComm.setExpandTint(R.color.black)
+                        spSubComm.setItems(lstValue.toTypedArray())
+                        spSubComm.setExpandTint(R.color.black)
                     }
 
                     profileDetailViewModel.lstCityName.await().observeForever {
@@ -1150,6 +1195,7 @@ class SmartFilterAdapter(private val _context: Context,
             edtMotherName?.text?.clear()
             spSurname.text?.clear()
             spLocalComm.text?.clear()
+            spSubComm.text?.clear()
             spGender.text?.clear()
             spMarital.text?.clear()
             spNative.text?.clear()

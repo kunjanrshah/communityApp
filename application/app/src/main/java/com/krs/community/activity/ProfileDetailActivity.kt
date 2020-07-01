@@ -269,6 +269,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.password_mismatch))
                         return@setOnClickListener
                     }
+
+                    startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
+
                     if (jsonObject.has(getString(R.string.confPin))) {
                         jsonObject.remove(getString(R.string.confPin))
                     }
@@ -310,7 +313,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
                     jsonObject.put(getString(R.string.id), headId)
                     jsonObject.put(getString(R.string.role), getString(R.string.USER))
-                    startSweetProgress(this, "Adding ${jsonObject.get(getString(R.string.first_name))}'s Profie", "Please wait...")
+
                     val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                     profileDetailViewModel.updateProfile(profile, false)
                 }

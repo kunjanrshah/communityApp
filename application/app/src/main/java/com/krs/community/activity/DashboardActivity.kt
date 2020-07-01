@@ -43,14 +43,18 @@ import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.entities.MasterCounts
 import com.krs.community.fragments.*
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
+import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.UpdateListener
 import com.krs.community.model.Member
 import com.krs.community.responses.MasterUpdateResponse
+import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UserStatusResponse
 import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.DashboardViewModel
+import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
+import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import com.luseen.spacenavigation.SpaceItem
 import com.luseen.spacenavigation.SpaceOnClickListener
 import com.luseen.spacenavigation.SpaceOnLongClickListener
@@ -59,13 +63,15 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, UpdateListener, LocationData.AddressCallBack {
+class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, UpdateListener, LocationData.AddressCallBack, ByFilterListener {
 
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
     private val factory: DashboardViewModelFactory by instance<DashboardViewModelFactory>()
     private var menu: Menu? = null
-
+    private lateinit var smartFilterViewModel: SmartFilterViewModel
+    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
+    private var isClicked = false
 
     companion object {
         var stop: Boolean = false
@@ -78,6 +84,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         var curAddr = MutableLiveData<String>()
         var matrimonyCounts = MutableLiveData<String>()
         var statusCounts = MutableLiveData<String>()
+
     }
 
     private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
@@ -91,6 +98,8 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         binding = DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
         dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
         dashboardViewModel.listener = this
+        smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
+        smartFilterViewModel.mByFilterListener = this
 
         val mApp = applicationContext as AppController
         mApp.firebaseAnalytics(this@DashboardActivity, DashboardActivity.javaClass.simpleName)
@@ -179,12 +188,13 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         })
 
-        val notify = Guru.getBoolean("notification", false)
-        if (notify) {
-            Guru.putBoolean("notification", false)
+        val notify = Guru.getBoolean(getString(R.string.notification), false)
+        if (notify && isAdmin()) {
+            Guru.putBoolean(getString(R.string.notification), false)
             movetoFragment(this@DashboardActivity, DashboardFragment())
             movetoFragment(this@DashboardActivity, NonActivesFragment())
         } else {
+            Guru.putBoolean(getString(R.string.notification), false)
             movetoFragment(this@DashboardActivity, DashboardFragment())
         }
 
@@ -197,11 +207,41 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             JsonObj.put("version", getAppVersionCode(this))
             val updated = JsonParser().parse(JsonObj.toString()) as JsonObject
             dashboardViewModel.getUpdatedVersion(updated)
+            dashboardViewModel.getMasterUpdate()
         }
 
         if (isNetworkConnected(this)) {
-            dashboardViewModel.getMasterUpdate()
+            if (isAdmin()) {
+                val jsonObject = JSONObject()
+                val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+                if (loginMem?.role.equals("SUB_ADMIN")) {
+                    jsonObject.put(getString(R.string.sub_community_id), loginMem?.subCommunityId)
+                } else if (loginMem?.role.equals("LOCAL_ADMIN")) {
+                    jsonObject.put(getString(R.string.local_community_id), loginMem?.localCommunityId)
+                }
+                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                smartFilterViewModel.getInActiveRecords(updated)
+            }
         }
+    }
+
+    private fun isAdmin(): Boolean {
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        var isAdmin = false
+        if (!loginuser.isNullOrEmpty()) {
+            val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+            if (((loginMem.role == getString(R.string.LOCAL_ADMIN)))) {
+                isAdmin = true
+            } else if (((loginMem.role == getString(R.string.SUB_ADMIN)))) {
+                isAdmin = true
+            } else if ((loginMem.role == getString(R.string.super_admin))) {
+                isAdmin = true
+            }
+        }
+        return isAdmin
     }
 
     override fun onResume() {
@@ -348,12 +388,15 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         return when (item.itemId) {
             R.id.action_profile -> {
                 startSweetProgress(this, getString(R.string.MoveProfile), getString(R.string.loading))
-                val intent = Intent(this, ProfileDetailActivity::class.java)
-                val memberString = Guru.getString(getString(R.string.loginMember), "")
-                val member = Gson().fromJson(memberString, Member::class.java)
-                intent.putExtra(getString(R.string.member), member)
-                startActivity(intent)
-                //fade(this)
+
+                val jsonObject = JSONObject()
+                val jsonObj = JSONObject()
+                jsonObj.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
+                jsonObject.put(getString(R.string.filter_by), jsonObj)
+                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+                isClicked = true
+                smartFilterViewModel.smartFilterSearch(updated)
+
                 true
             }
             R.id.action_notify -> {
@@ -400,9 +443,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 if (!response.userCounts.matrimonyCounts.isNullOrEmpty()) {
                     matrimonyCounts.postValue(response.userCounts.matrimonyCounts)
                 }
-                if (!response.userCounts.statusCounts.isNullOrEmpty()) {
-                    statusCounts.postValue(response.userCounts.statusCounts)
-                }
+                /* if (!response.userCounts.statusCounts.isNullOrEmpty()) {
+                     statusCounts.postValue(response.userCounts.statusCounts)
+                 }*/
 
                 val counts = MasterCounts()
                 counts.business_categories = Integer.parseInt(response.countList.businessCategories)
@@ -492,6 +535,24 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                         }
                     }
                 }
+            }
+        }
+    }
+
+    override fun getMembers(response: SmartFilterResponse) {
+
+        if (isClicked) {
+            hideSweetProgress()
+            isClicked = false
+            val intent = Intent(this, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), response.members[0])
+            startActivity(intent)
+
+        } else {
+            if (response.success) {
+                statusCounts.postValue(response.totalRecords.toString())
+            } else {
+                statusCounts.postValue("0")
             }
         }
     }

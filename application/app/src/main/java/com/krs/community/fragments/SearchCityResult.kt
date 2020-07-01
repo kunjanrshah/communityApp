@@ -488,7 +488,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             if (data.members.size > 0) {
                 tvCount.visibility = View.VISIBLE
                 val count = data.totalHead + data.totalMem
-                tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " $count"
+                tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " ${data.totalMem}"
 
                 if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER) || loginMem?.role == getString(R.string.LOCAL_ADMIN)) {
                     ivExport.visibility = View.GONE
@@ -995,11 +995,11 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     } else {
                         changed = getString(R.string.USER)
                     }
-                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
-                    val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+                    //  val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                    //   val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
                     jsonObject.put(getString(R.string.role), changed)
-                    jsonObject.put(getString(R.string.local_community_id), loginMember?.localCommunityId)
-                    jsonObject.put(getString(R.string.sub_community_id), loginMember?.subCommunityId)
+                    //  jsonObject.put(getString(R.string.local_community_id), loginMember?.localCommunityId)
+                    //  jsonObject.put(getString(R.string.sub_community_id), loginMember?.subCommunityId)
 
                     var Ids = ""
                     for (index in selectedItemPositions) {
