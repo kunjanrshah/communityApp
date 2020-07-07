@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -385,7 +384,6 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         holder.imgProfile.setOnClickListener { view ->
             try {
                 val path = getString(R.string.base_url_original) + "" + member.profilePic
-                Log.d(TAG, "path: $path")
                 openImageDialog(activity as AppCompatActivity, path)
             } catch (e: Exception) {
                 e.message

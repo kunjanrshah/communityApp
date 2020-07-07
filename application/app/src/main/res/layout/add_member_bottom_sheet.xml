@@ -79,6 +79,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/border"
         android:digits="@string/only_numbers"
+        android:text="123456"
         android:drawableStart="@drawable/lock"
         android:drawablePadding="10dp"
         android:fontFamily="@font/montserrat_regular"

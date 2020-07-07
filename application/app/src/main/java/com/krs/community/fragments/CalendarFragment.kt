@@ -261,7 +261,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 str = SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate.time)
                 fromDate = SimpleDateFormat(Utility.yyyy_MM_dd).format(firstDate.time)
                 toDate = SimpleDateFormat(Utility.yyyy_MM_dd).format(firstDate.time)
-                Log.d(TAG, str)
             } else {
                 fromDate = SimpleDateFormat(Utility.yyyy_MM_dd).format(firstDate.time)
                 toDate = SimpleDateFormat(Utility.yyyy_MM_dd).format(secondDate.time)
@@ -270,7 +269,6 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                         SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate.time),
                         SimpleDateFormat(getString(R.string.dateFormat)).format(secondDate.time)
                 )
-                Log.d(TAG, str)
             }
             txtDate.text = str
             DashboardActivity.stop = false

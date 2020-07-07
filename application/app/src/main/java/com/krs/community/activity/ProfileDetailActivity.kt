@@ -199,6 +199,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_bdate))
                     binding.viewpager.currentItem = 1
                     return@setOnClickListener
+                } else if (!jsonObject.has(getString(R.string.marital_status)) || jsonObject.getString(getString(R.string.marital_status)).isNullOrEmpty()) {
+                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_marital))
+                    binding.viewpager.currentItem = 1
+                    return@setOnClickListener
                 }
 
                 if (member?.headId == "0") {
@@ -317,7 +321,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
                     profileDetailViewModel.updateProfile(profile, false)
                 }
-                Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
+                if (BuildConfig.DEBUG) {
+                    Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
+                }
+
                 hideSweetProgress()
             } else {
                 setNoInternetLayout()

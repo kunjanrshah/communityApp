@@ -199,6 +199,9 @@ class RegisterViewModel(
         jsonObject.put(app.getString(R.string.address), address)
         jsonObject.put(app.getString(R.string.state_id), stateId.toString())
         jsonObject.put(app.getString(R.string.city_id), cityId.toString())
+        if (BuildConfig.FLAVOR == "medk") {
+            jsonObject.put(app.getString(R.string.native_place_id), nativeId?.toString())
+        }
         jsonObject.put(app.getString(R.string.sub_community_id), subCommId.toString())
         jsonObject.put(app.getString(R.string.local_community_id), localCommId.toString())
         if (profilePic.isNotEmpty()) {

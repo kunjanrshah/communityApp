@@ -42,6 +42,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.adapter.ForgotAdapter
 import com.krs.community.adapter.PolicyAdapter
@@ -221,7 +222,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 LoginManager.getInstance().registerCallback(mCallbackManager!!, object : FacebookCallback<LoginResult> {
                     override fun onSuccess(loginResult: LoginResult) {
                         showProgressDialog(this@LoginActivity)
-                        Log.d(TAG, "facebook:onSuccess:$loginResult")
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "facebook:onSuccess:$loginResult")
+                        }
                         val request = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response ->
                             Log.v(TAG, response.toString())
                             try {
@@ -475,7 +478,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     override fun userLogin(response: LoginResponse, isForgot: Boolean) {
         hideSweetProgress()
         hideProgressDialog()
-        Log.d(TAG, "login data: $response")
+        //  Log.d(TAG, "login data: $response")
         if (isForgot) {
             Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
         } else {
@@ -524,7 +527,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     override suspend fun getFailure(message: String) {
         loginViewModel!!.status.value = false
-        Log.d(TAG, "login data: $message")
+        //  Log.d(TAG, "login data: $message")
     }
 
     override fun onResume() {
@@ -537,7 +540,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
         val currentUser = loginViewModel?.mAuth?.currentUser
         if (currentUser != null) {
-            Log.d(TAG, currentUser.email)
+            //  Log.d(TAG, currentUser.email)
         }
     }
 

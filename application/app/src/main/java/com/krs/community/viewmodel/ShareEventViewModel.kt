@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
+import com.krs.community.BuildConfig
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.CreateEventListener
 import com.krs.community.repositories.ShareEventRepository
@@ -63,7 +64,10 @@ class ShareEventViewModel(
 
                         response.let {
                             withContext(Dispatchers.Main) {
-                                Log.d("Response", response.toString())
+                                if (BuildConfig.DEBUG) {
+                                    Log.d("Response", response.toString())
+                                }
+
                                 if (response.get("success").asString.equals("true")) {
                                     mCreateEventListener.getResult(response.get("message").asString)
                                 } else {

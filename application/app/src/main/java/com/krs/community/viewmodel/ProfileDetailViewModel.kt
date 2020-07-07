@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
+import com.krs.community.BuildConfig
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.lazyDeferred
 import com.krs.community.listeners.ByKeywordListener
@@ -157,7 +158,7 @@ class ProfileDetailViewModel(
 
     var selectedBusinessSubCategoryId = 0
     val businessSubCategoryName by lazyDeferred {
-        mProfileDetailRepository.getBusinessSubCategoryById(selectedBusinessCategoryId)
+        mProfileDetailRepository.getBusinessSubCategoryById(selectedBusinessSubCategoryId)
     }
     val lstBusinessSubCategoryName by lazyDeferred {
         mProfileDetailRepository.getBusinessSubCategoryNames()
@@ -335,7 +336,9 @@ class ProfileDetailViewModel(
 
                         response.let {
                             withContext(Dispatchers.Main) {
-                                Log.d("Response", response.toString())
+                                if (BuildConfig.DEBUG) {
+                                    Log.d("Response", response.toString())
+                                }
                                 if (response.get("success").asString.equals("success")) {
                                     mImageUploadListener.onUploadSuccess(response.getAsJsonObject("data"))
                                 } else {

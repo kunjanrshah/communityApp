@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
+import com.krs.community.BuildConfig
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByDocumentListener
 import com.krs.community.listeners.DeleteFileListener
@@ -71,7 +72,9 @@ class DocumentsListModel(
 
                         response.let {
                             withContext(Dispatchers.Main) {
-                                Log.d("Response", response.toString())
+                                if (BuildConfig.DEBUG) {
+                                    Log.d("Response", response.toString())
+                                }
                                 mDeleteListener.getSuccess(position, response)
                                 thejob.complete()
                             }

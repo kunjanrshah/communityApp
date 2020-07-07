@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
@@ -156,7 +157,10 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                             response.let {
                                 withContext(Dispatchers.Main) {
                                     Guru.putString(getString(R.string.loginMember), Gson().toJson(response.member))
-                                    Log.d("Location Service: ", response.message)
+                                    if (BuildConfig.DEBUG) {
+                                        Log.d("Location Service: ", response.message)
+                                    }
+
                                     thejob.complete()
                                 }
                                 return@launch

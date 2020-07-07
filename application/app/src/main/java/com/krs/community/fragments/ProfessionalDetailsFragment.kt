@@ -211,6 +211,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         }
         if (!member.businessSubCategoryId.isNullOrEmpty()) {
             profileDetailViewModel.selectedBusinessSubCategoryId = Integer.parseInt(member.businessSubCategoryId)
+            binding.spSubCat.text
         }
         if (!member.occupationId.isNullOrEmpty()) {
             profileDetailViewModel.selectedOccupationId = Integer.parseInt(member.occupationId)

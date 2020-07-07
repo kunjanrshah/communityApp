@@ -67,10 +67,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
-    private val factory: DashboardViewModelFactory by instance<DashboardViewModelFactory>()
+    private val factory: DashboardViewModelFactory by instance()
     private var menu: Menu? = null
     private lateinit var smartFilterViewModel: SmartFilterViewModel
-    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
+    private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
     private var isClicked = false
 
     companion object {
@@ -84,7 +84,6 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         var curAddr = MutableLiveData<String>()
         var matrimonyCounts = MutableLiveData<String>()
         var statusCounts = MutableLiveData<String>()
-
     }
 
     private val PERMISSION_REQUEST_READ_PHONE_STATE = 1

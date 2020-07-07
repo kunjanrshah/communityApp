@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
@@ -351,7 +350,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         }
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_smart_filter, container, false)
-        Log.d(TAG, "City Name: $cityName")
         val tvTitle = header.findViewById<TextView>(R.id.tvTitle)
         tvTitle.text = cityName
 
@@ -464,7 +462,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
     override fun loadApi() {
         if (!DashboardActivity.stop) {
-            AppController.mApplication.start = (members.size + 1)
+            AppController.mApplication.start = (members.size)
             setupList(false)
         }
     }
@@ -488,7 +486,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             if (data.members.size > 0) {
                 tvCount.visibility = View.VISIBLE
                 val count = data.totalHead + data.totalMem
-                tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " ${data.totalMem}"
+                tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " $count"
 
                 if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER) || loginMem?.role == getString(R.string.LOCAL_ADMIN)) {
                     ivExport.visibility = View.GONE
@@ -599,7 +597,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         holder.imgProfile.setOnClickListener {
             try {
                 val path = getString(R.string.base_url_original) + "" + members.get(position).profilePic
-                Log.d(TAG, "path: $path")
                 openImageDialog(activity as AppCompatActivity, path)
             } catch (e: Exception) {
                 e.message
@@ -641,7 +638,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private fun applyProfilePicture(holder: ViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
             val url = resources.getString(R.string.base_url_thumb) + member.profilePic
-            Log.d(TAG, "url: " + url)
             Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE

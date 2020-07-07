@@ -11,6 +11,7 @@ import com.github.squti.guru.Guru
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ILoginListener
@@ -61,7 +62,10 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                 }
                 otp_timer?.set("$mins:$secs")
                 stopTime.value = false
-                Log.d(TAG, "remaining time: " + otp_timer?.get())
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "remaining time: " + otp_timer?.get())
+                }
+
             }
 
             override fun onFinish() {
@@ -125,16 +129,13 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     fun loginWithGoogle(data: Intent?) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
-        Log.d(TAG, "firebaseAuthWithGoogle:" + account?.id!!)
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
+        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
         mAuth?.signInWithCredential(credential)?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d(TAG, "signInWithCredential:success")
                 val user = mAuth?.currentUser
                 if (user != null) {
-                    Log.d(TAG, "email: " + user.email + " phone: " + user.phoneNumber + " photo: " + user.photoUrl)
                     val loginRequest = AppConstants.LoginRequest()
-                    Log.e(TAG, " email: " + user.email + " phone: " + user.phoneNumber + " Id: " + user.uid + " Name: " + user.displayName)
                     val loginuser = user.email.toString()
                     if (loginuser.isNotEmpty() && loginuser.isNotBlank()) {
                         loginRequest.username = loginuser

@@ -502,7 +502,10 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             if (member.profilePic.isNotEmpty()) {
                 holder.imgProfile.isClickable = true
                 val path = getString(R.string.base_url_thumb) + "" + member.profilePic
-                Log.d("NonActives", "path: $path")
+                if (BuildConfig.DEBUG) {
+                    Log.d("NonActives", "path: $path")
+                }
+
                 try {
                     Glide.with(AppController.mApplication).load(path).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(holder.imgProfile)
                 } catch (e: Exception) {

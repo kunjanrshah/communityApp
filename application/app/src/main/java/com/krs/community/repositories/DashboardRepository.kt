@@ -413,7 +413,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getDesignation(updated) }
-                Log.d(TAG, "response: $response")
+                //  Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateDesignationIndex(index)
                 }
@@ -442,7 +442,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getCommittee(updated) }
-                Log.d(TAG, "response: $response")
+                //  Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateCommiteesIndex(index)
                 }
@@ -471,7 +471,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getSubCommunity(updated) }
-                Log.d(TAG, "response: $response")
+                // Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateSubCommIndex(index)
                 }
@@ -500,7 +500,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getListLocalCommunity(updated) }
-                Log.d(TAG, "response: $response")
+                //   Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateLocalCommIndex(index)
                 }
@@ -529,7 +529,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getUserLastName(updated) }
-                Log.d(TAG, "response: $response")
+                // Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateSubCastIndex(index)
                 }
@@ -558,7 +558,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getEducation(updated) }
-                Log.d(TAG, "response: $response")
+                //  Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateEducationIndex(index)
                 }
@@ -587,7 +587,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getGotra(updated) }
-                Log.d(TAG, "response: $response")
+                //   Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateGotraIndex(index)
                 }
@@ -649,7 +649,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getListCity(updated) }
-                Log.d(TAG, "city response: $response")
+                //   Log.d(TAG, "city response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateCitiesIndex(index)
                 }
@@ -678,7 +678,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getBusinessCategory(updated) }
-                Log.d(TAG, "response: $response")
+                //  Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateBusinessCategoryIndex(index)
                 }
@@ -707,7 +707,7 @@ class DashboardRepository(
                 mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
                 val response = apiRequest { api.getListBusinessSubCategory(updated) }
-                Log.d(TAG, "response: $response")
+                //   Log.d(TAG, "response: $response")
                 if (response.success) {
                     db.getMasterUpdateDao().updateBusinessSubCategoryIndex(index)
                 }

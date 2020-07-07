@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -60,7 +59,6 @@ public class UploadLocationService extends IntentService {
                 pointsArray.put(new JSONArray().put(points.get(i).getLongitude()).put(points.get(i).getLatitude()));
             }
             jsonObject.put("coordinates", pointsArray);
-            Log.d("data sent", jsonObject.toString());
             if (pointsArray.length() != 0) {
                 jsonResp = ServiceCall.doServerCall("POST", url, pointsArray.toString(), token);
                 if (jsonResp != null && jsonResp.equals(ServiceCall.TIME_OUT)) {

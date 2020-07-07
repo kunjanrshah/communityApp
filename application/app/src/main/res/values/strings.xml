@@ -280,6 +280,7 @@
     <string name="enter_firstname">Please enter your First Name</string>
     <string name="enter_father">Please enter your Father Name</string>
     <string name="enter_bdate">Please enter birth date</string>
+    <string name="enter_marital">Please enter Marital Status</string>
     <string name="enter_lastname">Please enter your LastName</string>
     <string name="enter_email">Please enter your Email</string>
     <string name="enter_gender">Please select gender</string>
@@ -919,7 +920,7 @@
     <string name="genderDetails">Gender</string>
     <string name="emailDetails">Email</string>
     <string name="stateDetails">State</string>
-    <string name="cityDetails">City</string>
+    <string name="cityDetails">City/Village</string>
     <string name="areaDetails">Area</string>
     <string name="pincodeDetails">Pincode</string>
     <string name="home_addressDetails">Home Address</string>

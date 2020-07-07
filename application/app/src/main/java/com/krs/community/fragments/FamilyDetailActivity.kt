@@ -565,7 +565,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val imgProfile: ImageView = header.findViewById(R.id.icon_profile1)
         imgProfile.setOnClickListener {
             val path = getString(R.string.base_url_original) + "" + member.profilePic
-            Log.d(TAG, "path: $path")
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "path: $path")
+            }
+
             openImageDialog(this, path)
         }
         if (!TextUtils.isEmpty(member.profilePic)) {
@@ -736,7 +739,9 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         val member = Member()
                         member.subCastId = members[0].subCastId
                         member.gotraId = members[0].gotraId
-                        member.fatherName = members[0].firstName
+                        if (members[0].gender.toString().toLowerCase() == "male") {
+                            member.fatherName = members[0].firstName
+                        }
                         member.nativePlaceId = members[0].nativePlaceId
                         member.localCommunityId = members[0].localCommunityId
                         member.subCommunityId = members[0].subCommunityId
@@ -820,7 +825,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         holder.imgProfile.setOnClickListener { view ->
             try {
                 val path = getString(R.string.base_url_original) + "" + member.profilePic
-                Log.d(TAG, "path: $path")
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "path: $path")
+                }
+
                 openImageDialog(this@FamilyDetailActivity, path)
             } catch (e: Exception) {
                 e.message

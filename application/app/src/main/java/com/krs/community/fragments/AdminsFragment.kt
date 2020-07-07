@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.*
@@ -469,7 +468,6 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         holder.iconProfile.setOnClickListener {
             try {
                 val path = getString(R.string.base_url_original) + "" + member.profilePic
-                Log.d(TAG, "path: $path")
                 openImageDialog(activity as AppCompatActivity, path)
             } catch (e: Exception) {
                 e.message

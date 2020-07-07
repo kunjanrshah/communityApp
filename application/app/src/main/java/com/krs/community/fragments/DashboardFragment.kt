@@ -39,6 +39,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.*
 import com.krs.community.activity.DashboardActivity.Companion.easyWayLocation
@@ -207,7 +208,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         when (requestCode) {
             10 -> if (resultCode == RESULT_OK && data != null) {
                 val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                Log.d(TAG, "data: " + result[0])
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "data: " + result[0])
+                }
+
 
                 val searchFragment = SearchListFragment()
                 val bundle = Bundle()
@@ -483,7 +487,10 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             if (!TextUtils.isEmpty(member.profilePic)) {
                 holder.imgProfile.isClickable = true
                 val url = resources.getString(R.string.base_url_thumb) + member.profilePic
-                Log.d(TAG, "url: $url")
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "url: $url")
+                }
+
                 try {
                     Glide.with(activity!!).load(url).placeholder(R.drawable.user_face).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
                 } catch (e: Exception) {

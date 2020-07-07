@@ -73,10 +73,10 @@ class SettingFragment : Fragment() {
         switchDialog = root.findViewById<LabeledSwitch>(R.id.switch_dialog)
         val isShow = Guru.getBoolean(getString(R.string.isdialogshow), false)
 
-        val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
+        //  val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
         val isShowCallPhone = Utility.checkReadPhoneStatePermission((activity as AppCompatActivity))
 
-        switchDialog?.isOn = isShow && isShowCallPhone && isShowCallLog
+        switchDialog?.isOn = isShow && isShowCallPhone //&& isShowCallLog
 
         switchDialog?.setOnClickListener {
 
