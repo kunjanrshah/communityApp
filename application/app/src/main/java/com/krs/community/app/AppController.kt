@@ -11,6 +11,7 @@ import android.graphics.Typeface
 import android.os.Build
 import android.os.Handler
 import android.os.StrictMode
+import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
@@ -223,13 +224,16 @@ class AppController : Application(), KodeinAware {
         PRDownloader.initialize(applicationContext, config)
 
         startRepeatingTask()
+        Log.v("AppControler", "onCreate")
     }
 
 
     override fun onTerminate() {
         super.onTerminate()
+        Log.v("AppControler", "onTerminate")
         stopRepeatingTask()
     }
+
 
     private fun updateUserStatus() {
         Coroutines.io {

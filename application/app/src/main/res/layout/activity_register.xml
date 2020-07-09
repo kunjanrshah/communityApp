@@ -283,6 +283,35 @@
 
                     </LinearLayout>
 
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/register_field_height"
+                        android:layout_gravity="center|bottom"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/marital_gradient_spinner"
+                        android:gravity="center|bottom"
+                        android:textAlignment="center">
+
+                        <com.krs.community.jrspinner.JRSpinner
+                            android:id="@+id/sp_marital"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="30dp"
+                            android:background="@null"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/select_marital"
+                            android:imeOptions="actionNext"
+                            android:paddingRight="10dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black1"
+                            app:backgroundTint="@color/colorPrimary"
+                            app:jrs_icon_tint="@color/colorPrimary"
+                            app:jrs_multiple="false"
+                            app:jrs_title="@string/selectMarial" />
+                    </RelativeLayout>
+
                     <EditText
                         android:id="@+id/edt_email_id"
                         android:layout_width="match_parent"

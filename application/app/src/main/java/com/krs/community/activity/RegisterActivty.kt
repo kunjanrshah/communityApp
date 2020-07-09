@@ -156,12 +156,6 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 Utility.changeStatusbarColor(this, R.color.colorBG, false)
             }
 
-            if (BuildConfig.FLAVOR == "medk") {
-                binding.rlNative.visibility = View.VISIBLE
-            } else {
-                binding.rlNative.visibility = View.GONE
-            }
-
             if (BuildConfig.FLAVOR == "yadav") {
                 binding.llHeader.visibility = View.VISIBLE
             } else {
@@ -368,7 +362,17 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     }
 
     private fun setDropDownList() {
+
         Coroutines.main {
+
+            val lstMarital = resources.getStringArray(R.array.marital)
+            binding.spMarital.setItems(lstMarital)
+            binding.spMarital.setExpandTint(R.color.black)
+
+            binding.spMarital.setOnItemClickListener {
+                registerViewModel.maritalStatus = binding.spMarital.text.toString()
+            }
+
             profileDetailViewModel.lstLastName.await().observe(this, Observer {
                 if (it.isNotEmpty()) {
                     val lst = ArrayList<String>()
@@ -443,6 +447,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
         if (filed == 15) {
             root_layout.snackbar(getString(R.string.enter_native), Snackbar.LENGTH_LONG)
+            return
+        }
+
+        if (filed == 16) {
+            root_layout.snackbar(getString(R.string.enter_marital), Snackbar.LENGTH_LONG)
             return
         }
 

@@ -24,7 +24,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:orientation="vertical"
-                android:paddingBottom="15dp">
+                android:paddingBottom="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -456,7 +456,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -499,7 +499,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -606,7 +606,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
 
                     <LinearLayout
@@ -615,42 +615,55 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:text="@string/home_addressDetails" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/montserrat_semibold"
+                                android:text="@string/home_addressDetails" />
+
+                            <CheckBox
+                                android:id="@+id/chk_rented"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="@string/rentedDetails" />
+
+                        </LinearLayout>
 
                         <EditText
                             android:id="@+id/edt_addr"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:background="@drawable/border_color_gray"
                             android:drawablePadding="10dp"
                             android:fontFamily="@font/montserrat_regular"
-                            android:gravity="top|left"
                             android:inputType="textMultiLine|textCapWords"
-                            android:lines="3"
-                            android:maxLines="3"
-                            android:minLines="3"
-                            android:padding="5dp"
-                            android:scrollbars="vertical"
-                            android:singleLine="true" />
+                            android:layout_height="120dp"
+                            android:gravity="top"
+                            android:padding="5dp" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="10dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
-                        android:orientation="vertical">
+                        android:layout_marginRight="20dp"
+                        android:gravity="right"
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:id="@+id/ll_home"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:gravity="center_vertical"
+                            android:gravity="center_vertical|right"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -671,13 +684,7 @@
 
                         </LinearLayout>
 
-                        <CheckBox
-                            android:id="@+id/chk_rented"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:text="@string/rentedDetails" />
+
                     </LinearLayout>
 
                 </LinearLayout>

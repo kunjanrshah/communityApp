@@ -24,11 +24,13 @@ import com.ericliu.asyncexpandablelist.async.AsyncHeaderViewHolder
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppController
 import com.krs.community.databinding.FragmentBrowseCityBinding
 import com.krs.community.entities.City
+import com.krs.community.entities.States
 import com.krs.community.listeners.IbrowseCityRecordsListener
 import com.krs.community.model.SearchByCityModel
 import com.krs.community.responses.CityResponse
@@ -51,7 +53,9 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     private val factory: BrowseCityViewModelFactory by instance<BrowseCityViewModelFactory>()
     internal var browseCityViewModel: BrowseCityViewModel? = null
     override val kodein by kodein()
-    private var selectedStateId = 0
+    private var selectedGroupOrdinal = 0
+    lateinit var sortedList: ArrayList<States>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -84,7 +88,25 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
     private fun getStatesFromDB() = Coroutines.main {
         browseCityViewModel?.getStates()?.observeForever {
-            for ((index, stateData) in it.withIndex()) {
+            sortedList = ArrayList<States>()
+            if (BuildConfig.FLAVOR == "medk") {
+                sortedList.add(States(14, "Ahmedabad-Gujarat"))
+                sortedList.add(States(17, "North-Gujarat"))
+                sortedList.add(States(15, "South-Gujarat"))
+                sortedList.add(States(16, "Saurashtra-Gujarat"))
+                sortedList.add(States(2, "Mumbai-Maharashtra"))
+                sortedList.add(States(3, "Marathvada-Maharashtra"))
+                sortedList.add(States(4, "Konkan-Maharashtra"))
+                sortedList.add(States(8, "Rajasthan"))
+            }
+
+            for (States in it) {
+                if (!sortedList.contains(States)) {
+                    sortedList.add(States)
+                }
+            }
+
+            for ((index, stateData) in sortedList.withIndex()) {
                 val group = inventory?.newGroup(index) //Integer.parseInt(stateData.id)// groupOrdinal is the smallest, displayed first
                 group?.headerItem = stateData.name
             }
@@ -115,8 +137,9 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     }
 
     override fun onStartLoadingGroup(groupOrdinal: Int) {
-        selectedStateId = groupOrdinal
-        fetchCities(groupOrdinal + 1)
+        selectedGroupOrdinal = groupOrdinal
+        val stateId = sortedList[groupOrdinal].id
+        fetchCities(stateId)
     }
 
     override fun newCollectionHeaderView(context: Context, groupOrdinal: Int, parent: ViewGroup): AsyncHeaderViewHolder {
@@ -201,8 +224,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
     override fun getCitiesByState(response: CityResponse) {
         if (response.success) {
-            val groupOrdinal = selectedStateId
-            mAsyncExpandableListView.onFinishLoadingGroup(groupOrdinal, response.data)
+            mAsyncExpandableListView.onFinishLoadingGroup(selectedGroupOrdinal, response.data)
         }
     }
 

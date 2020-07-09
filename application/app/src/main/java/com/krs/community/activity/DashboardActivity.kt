@@ -289,6 +289,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+    }
+
     override fun onBackPressed() {
         backNavigation(this)
     }

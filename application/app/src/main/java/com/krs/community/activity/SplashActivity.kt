@@ -225,7 +225,7 @@ class SplashActivity : AppCompatActivity() {
     private fun setAnimation() {
         val generator = RandomTransitionGenerator(19000, AccelerateDecelerateInterpolator())
         kbv!!.setTransitionGenerator(generator)
-        if (BuildConfig.FLAVOR === "medk") {
+        if (BuildConfig.FLAVOR == "medk") {
             imgLogo!!.visibility = View.VISIBLE
             imgLogo!!.animate().setStartDelay(3000).setDuration(2000).alpha(1f).start()
         } else {

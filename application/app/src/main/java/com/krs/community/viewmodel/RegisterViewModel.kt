@@ -6,17 +6,14 @@ import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.LoginActivity
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.repositories.RegisterRepository
 import com.krs.community.utils.ApiException
-import com.krs.community.utils.AppConstants
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -44,7 +41,7 @@ class RegisterViewModel(
     var profilePic: String = ""
     var localCommId: Int? = null
     var subCommId: Int? = null
-
+    var maritalStatus: String? = null
     var iRegisterListener: IRegisterListener? = null
     var TAG: String = RegisterViewModel::class.java.simpleName
 
@@ -65,7 +62,7 @@ class RegisterViewModel(
     }
 
     fun getUserRegistration(isLogin: Boolean) {
-        val register: AppConstants.UserRegister = AppConstants.UserRegister()
+        // val register: AppConstants.UserRegister = AppConstants.UserRegister()
 
         if (fname.isNullOrBlank()) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.fname), 1)
@@ -82,13 +79,10 @@ class RegisterViewModel(
             return
         }
 
-        if (BuildConfig.FLAVOR == "medk") {
-            if (nativeId == null) {
-                iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_native), 15)
-                return
-            }
+        if (nativeId == null) {
+            iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.enter_native), 15)
+            return
         }
-
 
         if (lastnameId == null) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.lastnameId), 2)
@@ -142,51 +136,51 @@ class RegisterViewModel(
 
         if (address.isNullOrBlank()) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.addressstr), 8)
-
             return
         }
 
         if (stateId == null) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.stateis), 9)
-
             return
         }
 
         if (cityId == null) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.cityid), 10)
-
             return
         }
 
         if (subCommId == null) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.subcommid), 11)
-
             return
         }
 
         if (localCommId == null) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.localcommid), 12)
-
             return
         }
 
-        register.first_name = fname
-        register.nativePlaceId = nativeId?.toString()
-        register.father = father
-        register.setBirthdate(Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
-        register.sub_cast_id = lastnameId.toString()
-        register.email_address = email
-        register.mobile = mobile
-        register.gender = gender
-        register.profile_password = pass
-        register.address = address
-        register.state_id = stateId.toString()
-        register.city_id = cityId.toString()
-        register.sub_community_id = subCommId.toString()
-        register.local_community_id = localCommId.toString()
-        register.profilePic = profilePic
+        if (maritalStatus.isNullOrEmpty()) {
+            iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.marital_status), 16)
+            return
+        }
 
+        /* register.first_name = fname
+         register.nativePlaceId = nativeId?.toString()
+         register.father = father
+         register.setBirthdate(Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
+         register.sub_cast_id = lastnameId.toString()
+         register.email_address = email
+         register.mobile = mobile
+         register.gender = gender
+         register.profile_password = pass
+         register.address = address
+         register.state_id = stateId.toString()
+         register.city_id = cityId.toString()
+         register.sub_community_id = subCommId.toString()
+         register.local_community_id = localCommId.toString()
+         register.profilePic = profilePic*/
         // register.headId="0"
+
         val jsonObject = JSONObject()
         jsonObject.put(app.getString(R.string.first_name), fname)
         jsonObject.put(app.getString(R.string.father_name), father)
@@ -199,11 +193,11 @@ class RegisterViewModel(
         jsonObject.put(app.getString(R.string.address), address)
         jsonObject.put(app.getString(R.string.state_id), stateId.toString())
         jsonObject.put(app.getString(R.string.city_id), cityId.toString())
-        if (BuildConfig.FLAVOR == "medk") {
-            jsonObject.put(app.getString(R.string.native_place_id), nativeId?.toString())
-        }
+        jsonObject.put(app.getString(R.string.native_place_id), nativeId?.toString())
         jsonObject.put(app.getString(R.string.sub_community_id), subCommId.toString())
         jsonObject.put(app.getString(R.string.local_community_id), localCommId.toString())
+        jsonObject.put(app.getString(R.string.marital_status), maritalStatus)
+
         if (profilePic.isNotEmpty()) {
             jsonObject.put(app.getString(R.string.profile_pic), profilePic)
         }

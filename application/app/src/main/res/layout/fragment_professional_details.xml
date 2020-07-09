@@ -240,17 +240,13 @@
                     <EditText
                         android:id="@+id/edt_detail"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="80dp"
                         android:background="@drawable/border_color_gray"
+                        android:drawablePadding="10dp"
                         android:fontFamily="@font/montserrat_regular"
-                        android:gravity="top|left"
-                        android:inputType="textMultiLine|textCapSentences"
-                        android:lines="2"
-                        android:maxLines="2"
-                        android:minLines="2"
-                        android:padding="5dp"
-                        android:scrollbars="vertical"
-                        android:singleLine="true" />
+                        android:gravity="top"
+                        android:inputType="textMultiLine|textCapWords"
+                        android:padding="5dp" />
 
                 </LinearLayout>
 
@@ -269,54 +265,55 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <EditText
                             android:id="@+id/edt_addr"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_height="120dp"
                             android:background="@drawable/border_color_gray"
+                            android:drawablePadding="10dp"
                             android:fontFamily="@font/montserrat_regular"
-                            android:gravity="top|left"
+                            android:gravity="top"
                             android:inputType="textMultiLine|textCapWords"
-                            android:lines="2"
-                            android:maxLines="2"
-                            android:minLines="2"
-                            android:padding="5dp"
-                            android:scrollbars="vertical"
-                            android:singleLine="true" />
+                            android:padding="5dp" />
 
                         <LinearLayout
-                            android:id="@+id/ll_work"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center_vertical"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="20dp"
+                            android:gravity="right"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center"
-                                android:background="@drawable/location" />
-
-                            <TextView
-                                android:id="@+id/tv_distance"
+                            <LinearLayout
+                                android:id="@+id/ll_work"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:singleLine="true"
-                                android:text="@string/workPdetails"
-                                android:textSize="14sp" />
+                                android:orientation="horizontal">
 
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/location" />
+
+                                <TextView
+                                    android:id="@+id/tv_distance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:fontFamily="@font/montserrat_semibold"
+                                    android:singleLine="true"
+                                    android:text="@string/workPdetails"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+    </LinearLayout>
         </ScrollView>
     </LinearLayout>
 </layout>

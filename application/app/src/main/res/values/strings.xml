@@ -815,6 +815,7 @@
     <string name="roleDetails">Role</string>
     <string name="nativeDetails">Native</string>
     <string name="selectDetails">Select</string>
+    <string name="select_marital">Select Marital</string>
     <string name="birth_dateDetail">Birth Date</string>
     <string name="birth_timeDetail">Birth Time</string>
     <string name="expire_dateDetails">Expire Date</string>

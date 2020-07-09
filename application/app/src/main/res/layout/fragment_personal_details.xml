@@ -642,17 +642,13 @@
                     <EditText
                         android:id="@+id/edt_local_addr"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:background="@drawable/border_color_gray"
+                        android:layout_height="100dp"
                         android:fontFamily="@font/montserrat_regular"
-                        android:gravity="top|left"
                         android:inputType="textMultiLine|textCapWords"
-                        android:lines="2"
-                        android:maxLines="2"
-                        android:minLines="2"
-                        android:padding="5dp"
-                        android:scrollbars="none"
-                        android:singleLine="true" />
+                        android:drawablePadding="10dp"
+                        android:gravity="top"
+                        android:padding="5dp" />
 
                 </LinearLayout>
 
