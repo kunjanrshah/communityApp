@@ -118,9 +118,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 jsonObj.put(getString(R.string.first_name), edtSearch.text)
                 DashboardActivity.stop = false
                 searchMatrimonyList(jsonObj)
-                true
             }
-            false
+            true
         }
 
         ivExport.setOnClickListener {
@@ -246,7 +245,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                         if (it == 0) {
                             createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, getString(R.string.ExportingList) + " " + "${member.firstName}" + getString(R.string.DetailList), getString(R.string.please_wait))
+                                Utility.startSweetProgress(activity, getString(R.string.ExportingList) + "  " + "${member.firstName}" + getString(R.string.DetailList), getString(R.string.please_wait))
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
@@ -338,6 +337,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         return binding.root
     }
 
+
     private fun applyImportant(holder: ListViewHolder, member: Member) {
 
         roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
@@ -426,19 +426,20 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             jsonObject.put(getString(R.string.filter_by), jsonObj)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             smartFilterViewModel.smartFilterSearch(updated)
-            //   lstMembers.clear()
-//            adapter.notifyDataSetChanged()
-            tvRecords.visibility = View.GONE
+
             Utility.hideKeyboard(activity)
 
             if (AppController.mApplication.start == 0) {
-                Handler().postDelayed({
-                    binding.shimmerViewContainer.stopShimmerAnimation()
-                    binding.shimmerViewContainer.visibility = View.GONE
-                }, 10000)
+                /* Handler().postDelayed({
+                     binding.shimmerViewContainer.stopShimmerAnimation()
+                     binding.shimmerViewContainer.visibility = View.GONE
+                 }, 10000)*/
 
                 binding.shimmerViewContainer.startShimmerAnimation()
                 binding.shimmerViewContainer.visibility = View.VISIBLE
+                tvRecords.visibility = View.GONE
+                lstMembers.clear()
+                adapter.notifyDataSetChanged()
             } else {
                 snackbar = Snackbar.make(binding.listMatrimony, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
                 snackbar?.show()

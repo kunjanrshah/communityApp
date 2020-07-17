@@ -96,6 +96,8 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private var loginMember: Member? = null
     private var snackbar: Snackbar? = null
     private var isSimmerOn = false
+    var isExport = false
+    var selectedFilters: ArrayList<String>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_filter_result, container, false)
@@ -218,13 +220,16 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
-                if (member.updatedDt.isNotEmpty()) {
-                    if (member.updatedDt.contains(getString(R.string.zero_date))) {
-                        viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                try {
+                    if (member.updatedDt.isNullOrEmpty() || member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     } else {
-                        viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
                 }
+
 
                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
                 val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
@@ -362,23 +367,31 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             DashboardActivity.stop = true
             val jsonObject = JSONObject()
             val jsonObj = JSONObject(argus)
-            jsonObject.put(getString(R.string.start), AppController.mApplication.start)
-            jsonObject.put(getString(R.string.length), AppController.mApplication.length)
+            if (!isExport) {
+                jsonObject.put(getString(R.string.start), AppController.mApplication.start)
+                jsonObject.put(getString(R.string.length), AppController.mApplication.length)
+            } else {
+                jsonObject.put(getString(R.string.start), 0)
+                jsonObject.put(getString(R.string.length), "")
+            }
             jsonObject.put(getString(R.string.filter_by), jsonObj)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             smartFilterViewModel.smartFilterSearch(updated)
 
-            if (AppController.mApplication.start == 0) {
-                shimmerFrameLayout.startShimmerAnimation()
-                shimmerFrameLayout.visibility = View.VISIBLE
-            } else if (isSimmerOn) {
-                isSimmerOn = false
-                shimmerFrameLayout.startShimmerAnimation()
-                shimmerFrameLayout.visibility = View.VISIBLE
-            } else {
-                snackbar = Snackbar.make(rvFilters, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
-                snackbar?.show()
+            if (!isExport) {
+                if (AppController.mApplication.start == 0) {
+                    shimmerFrameLayout.startShimmerAnimation()
+                    shimmerFrameLayout.visibility = View.VISIBLE
+                } else if (isSimmerOn) {
+                    isSimmerOn = false
+                    shimmerFrameLayout.startShimmerAnimation()
+                    shimmerFrameLayout.visibility = View.VISIBLE
+                } else {
+                    snackbar = Snackbar.make(rvFilters, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                    snackbar?.show()
+                }
             }
+
             Utility.hideKeyboard(activity)
         }
     }
@@ -389,6 +402,15 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         snackbar?.dismiss()
         if (response.success) {
             if (response.members.size > 0) {
+
+                if (isExport && !selectedFilters.isNullOrEmpty()) {
+                    isExport = false
+                    val exportMembers: ArrayList<Member> = ArrayList()
+                    exportMembers.addAll(response.members)
+                    createMemberListPDF(activity as AppCompatActivity, exportMembers, selectedFilters!!, profileDetailViewModel)
+                    return
+                }
+
                 tvCount.visibility = View.VISIBLE
                 tvCount.text = "${response.totalRecords} members found"
 
@@ -951,15 +973,18 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 .show()
     }
 
+
     override fun exportPdf(filters: ArrayList<String>) {
         if (lstMembers.size > 0) {
             Handler().post {
                 Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
             }
-            createMemberListPDF(activity as AppCompatActivity, lstMembers, filters, profileDetailViewModel)
-            Handler().postDelayed({
+            isExport = true
+            selectedFilters = filters
+            getFilterMembers()
+            /*Handler().postDelayed({
                 Utility.hideSweetProgress()
-            }, 7000)
+            }, 7000) */
         } else {
             rvFilters.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
         }

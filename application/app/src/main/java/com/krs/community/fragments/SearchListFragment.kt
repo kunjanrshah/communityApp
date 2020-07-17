@@ -106,6 +106,8 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private lateinit var actionModeCallback: ActionModeCallback
     private var loginMember: Member? = null
     private var snackbar: Snackbar? = null
+    var isExport = false
+    var selectedFilters: ArrayList<String>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -274,12 +276,14 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     viewHolder.tvRole.text = resources.getString(R.string.Member)
                 }
 
-                if (member.updatedDt.isNotEmpty()) {
-                    if (member.updatedDt.contains(getString(R.string.zero_date))) {
-                        viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                try {
+                    if (member.updatedDt.isNullOrEmpty() || member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     } else {
-                        viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
                 }
 
                 val loginuser = Guru.getString(getString(R.string.loginMember), "")
@@ -492,17 +496,28 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 //                rvAdapter.notifyDataSetChanged()
                 DashboardActivity.stop = true
                 val mJSONObject = JSONObject()
-                mJSONObject.put(getString(R.string.start), AppController.mApplication.start)
-                mJSONObject.put(getString(R.string.length), AppController.mApplication.length)
+
+                if (!isExport) {
+                    mJSONObject.put(getString(R.string.start), AppController.mApplication.start)
+                    mJSONObject.put(getString(R.string.length), AppController.mApplication.length)
+                } else {
+                    mJSONObject.put(getString(R.string.start), "0")
+                    mJSONObject.put(getString(R.string.length), "")
+                }
+
                 mJSONObject.put(getString(R.string.filter_by), searchWord)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                if (AppController.mApplication.start == 0) {
-                    mShimmerViewContainer.startShimmerAnimation()
-                    mShimmerViewContainer.visibility = View.VISIBLE
-                } else {
-                    snackbar = Snackbar.make(rvSearch, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
-                    snackbar?.show()
+
+                if (!isExport) {
+                    if (AppController.mApplication.start == 0) {
+                        mShimmerViewContainer.startShimmerAnimation()
+                        mShimmerViewContainer.visibility = View.VISIBLE
+                    } else {
+                        snackbar = Snackbar.make(rvSearch, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                        snackbar?.show()
+                    }
                 }
+
                 smartSearchViewModel.getMemberByKeywords(updated)
             }
         }
@@ -533,6 +548,16 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
         hideKeyboard(activity)
 
         if (response.success) {
+
+            if (isExport) {
+                isExport = false
+                val exportMembers: ArrayList<Member> = ArrayList()
+                exportMembers.addAll(response.member)
+                createMemberListPDF(activity as AppCompatActivity, exportMembers, selectedFilters!!, profileDetailViewModel)
+                return
+            }
+
+
             //lstMembers.clear()
             rvSearch.visibility = View.VISIBLE
             // AppController.mApplication.start = 0
@@ -1105,10 +1130,16 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             Handler().post {
                 Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
             }
-            createMemberListPDF(activity as AppCompatActivity, lstMembers, filters, profileDetailViewModel)
-            Handler().postDelayed({
-                Utility.hideSweetProgress()
-            }, 7000)
+
+            isExport = true
+            selectedFilters = filters
+            DashboardActivity.stop = false
+            getMembersByKeyword()
+
+            /* createMemberListPDF(activity as AppCompatActivity, lstMembers, filters, profileDetailViewModel)
+             Handler().postDelayed({
+                 Utility.hideSweetProgress()
+             }, 7000)*/
         } else {
             rvSearch.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
         }

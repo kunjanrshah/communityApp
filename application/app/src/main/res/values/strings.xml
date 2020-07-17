@@ -79,7 +79,7 @@
 
     <string name="married" translatable="false">Married</string>
     <string-array name="marital">
-        <item>Single</item>
+        <item>Unmarried</item>
         <item>Engaged</item>
         <item>Married</item>
         <item>Widow</item>
@@ -903,6 +903,8 @@
     <string name="samaj_statistics">Samaj Statistics</string>
     <string name="search_village_here">Search Village Here</string>
     <string name="unmarried_female">Unmarried Female</string>
+    <string name="interested_male">Matrimony Male</string>
+    <string name="interested_female">Matrimony Female</string>
 
     <!-- Pther Fragment -->
 
@@ -921,7 +923,7 @@
     <string name="genderDetails">Gender</string>
     <string name="emailDetails">Email</string>
     <string name="stateDetails">State</string>
-    <string name="cityDetails">City/Village</string>
+    <string name="cityDetails">City or Village</string>
     <string name="areaDetails">Area</string>
     <string name="pincodeDetails">Pincode</string>
     <string name="home_addressDetails">Home Address</string>

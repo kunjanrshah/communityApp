@@ -112,6 +112,9 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
     private var snackbar: Snackbar? = null
     private var isSimmerOn = false
 
+    var isExport = false
+    var selectedFilters: ArrayList<String>? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filter_result, container, false)
@@ -244,10 +247,14 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     }
                 }
 
-                if (member.updatedDt.contains(getString(R.string.zero_date))) {
-                    viewHolder.tvUpdate.text = getString(R.string.not_updated)
-                } else {
-                    viewHolder.tvUpdate.text = getString(R.string.UpdateCity) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                try {
+                    if (member.updatedDt.isNullOrEmpty() || member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    } else {
+                        viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
                 }
 
                 holder.boomMenuButton.clearBuilders()
@@ -424,13 +431,21 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             if (!DashboardActivity.stop) {
                 DashboardActivity.stop = true
                 val data = SearchByCityData()
-                data.start = AppController.mApplication.start.toString()
-                data.length = AppController.mApplication.length.toString()
+
+                if (!isExport) {
+                    data.start = AppController.mApplication.start.toString()
+                    data.length = AppController.mApplication.length.toString()
+                } else {
+                    data.start = "0"
+                    data.length = ""
+                }
+
+
                 data.alpha = alpha
                 val filterBy = FilterBy()
                 filterBy.cityId = cityId
                 data.filterBy = filterBy
-                if (AppController.mApplication.start == 0) {
+                if (AppController.mApplication.start == 0 && !isExport) {
                     members.clear()
                     binding.shimmerViewContainer.startShimmerAnimation()
                     binding.shimmerViewContainer.visibility = View.VISIBLE
@@ -439,7 +454,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     binding.shimmerViewContainer.startShimmerAnimation()
                     binding.shimmerViewContainer.visibility = View.VISIBLE
                 } else {
-                    if (!isDeleted) {
+                    if (!isDeleted && !isExport) {
                         snackbar = Snackbar.make(binding.lstFilter, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
                         snackbar?.show()
                     }
@@ -473,6 +488,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
     @SuppressLint("SetTextI18n")
     override fun getSearchRecords(data: SearchByCityModel) {
+
         snackbar?.dismiss()
         DashboardActivity.stop = false
         binding.shimmerViewContainer.stopShimmerAnimation()
@@ -484,6 +500,15 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
         if (data.success) {
             if (data.members.size > 0) {
+
+                if (isExport) {
+                    isExport = false
+                    val exportMembers: ArrayList<Member> = ArrayList()
+                    exportMembers.addAll(data.members)
+                    createMemberListPDF(activity as AppCompatActivity, exportMembers, selectedFilters!!, profileDetailViewModel)
+                    return
+                }
+
                 tvCount.visibility = View.VISIBLE
                 val count = data.totalHead + data.totalMem
                 tvCount.text = getString(R.string.families) + " ${data.totalHead}, " + getString(R.string.mem) + " $count"
@@ -493,10 +518,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                 } else {
                     ivExport.visibility = View.VISIBLE
                 }
-                for (user in data.members) {
-                    members.add(user)
-                }
 
+                members.addAll(data.members)
                 adapter.notifyDataSetChanged()
                 // binding.lstFilter.layoutManager?.scrollToPosition(selectedPosition)
                 //   selectedPosition = members.size - 1
@@ -1024,10 +1047,14 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
             Handler().post {
                 Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
             }
-            createMemberListPDF(activity as AppCompatActivity, members, filters, profileDetailViewModel)
-            Handler().postDelayed({
+
+            isExport = true
+            selectedFilters = filters
+            DashboardActivity.stop = false
+            setupList(false)
+            /*Handler().postDelayed({
                 Utility.hideSweetProgress()
-            }, 7000)
+            }, 7000)*/
         } else {
             binding.llParent.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
         }

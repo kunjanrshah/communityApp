@@ -312,6 +312,63 @@
                             app:jrs_title="@string/selectMarial" />
                     </RelativeLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/register_field_height"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/state_gradient_spinner">
+
+                        <com.krs.community.jrspinner.JRSpinner
+                            android:id="@+id/spinnerStates"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/register_field_height"
+                            android:layout_marginStart="30dp"
+                            android:background="@null"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/select_state"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/spinnerCities"
+                            android:paddingRight="15dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black1"
+                            android:textSize="16sp"
+                            app:backgroundTint="@color/colorPrimary"
+                            app:jrs_icon_tint="@color/colorPrimary"
+                            app:jrs_multiple="false"
+                            app:jrs_title="@string/satetList" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/register_field_height"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/gradient_spinner">
+
+                        <com.krs.community.jrspinner.JRSpinner
+                            android:id="@+id/spinnerCities"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/register_field_height"
+                            android:layout_marginStart="30dp"
+                            android:background="@null"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/select_city"
+                            android:imeOptions="actionNext"
+                            android:nextFocusDown="@+id/spinnerNative"
+                            android:paddingRight="15dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black1"
+                            android:textSize="16sp"
+                            app:backgroundTint="@color/colorPrimary"
+                            app:jrs_icon_tint="@color/colorPrimary"
+                            app:jrs_multiple="false"
+                            app:jrs_title="@string/cityList" />
+
+                    </RelativeLayout>
+
+
                     <EditText
                         android:id="@+id/edt_email_id"
                         android:layout_width="match_parent"
@@ -420,61 +477,7 @@
                         android:textSize="16sp"
                         tools:ignore="Autofill" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/register_field_height"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/state_gradient_spinner">
 
-                        <com.krs.community.jrspinner.JRSpinner
-                            android:id="@+id/spinnerStates"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/register_field_height"
-                            android:layout_marginStart="30dp"
-                            android:background="@null"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:hint="@string/select_state"
-                            android:imeOptions="actionNext"
-                            android:nextFocusDown="@+id/spinnerCities"
-                            android:paddingRight="15dp"
-                            android:singleLine="true"
-                            android:textColor="@color/black1"
-                            android:textSize="16sp"
-                            app:backgroundTint="@color/colorPrimary"
-                            app:jrs_icon_tint="@color/colorPrimary"
-                            app:jrs_multiple="false"
-                            app:jrs_title="@string/satetList" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/register_field_height"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/gradient_spinner">
-
-                        <com.krs.community.jrspinner.JRSpinner
-                            android:id="@+id/spinnerCities"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/register_field_height"
-                            android:layout_marginStart="30dp"
-                            android:background="@null"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:hint="@string/select_city"
-                            android:imeOptions="actionNext"
-                            android:nextFocusDown="@+id/spinnerNative"
-                            android:paddingRight="15dp"
-                            android:singleLine="true"
-                            android:textColor="@color/black1"
-                            android:textSize="16sp"
-                            app:backgroundTint="@color/colorPrimary"
-                            app:jrs_icon_tint="@color/colorPrimary"
-                            app:jrs_multiple="false"
-                            app:jrs_title="@string/cityList" />
-
-                    </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/rl_native"

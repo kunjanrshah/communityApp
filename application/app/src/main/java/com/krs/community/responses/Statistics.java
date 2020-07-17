@@ -27,6 +27,14 @@ public class Statistics {
     @Expose
     private Integer totalUnmarriedFemale;
 
+    @SerializedName("TotalInterestedMale")
+    @Expose
+    private Integer totalInterestedMale;
+
+    @SerializedName("TotalInterestedFemale")
+    @Expose
+    private Integer totalInterestedFemale;
+
     public Integer getTotalVillages() {
         return totalVillages;
     }
@@ -83,5 +91,20 @@ public class Statistics {
         this.totalUnmarriedFemale = totalUnmarriedFemale;
     }
 
+    public Integer getTotalInterestedFemale() {
+        return totalInterestedFemale;
+    }
+
+    public void setTotalInterestedFemale(Integer totalInterestedFemale) {
+        this.totalInterestedFemale = totalInterestedFemale;
+    }
+
+    public Integer getTotalInterestedMale() {
+        return totalInterestedMale;
+    }
+
+    public void setTotalInterestedMale(Integer totalInterestedMale) {
+        this.totalInterestedMale = totalInterestedMale;
+    }
 }
 

@@ -869,7 +869,7 @@
     <string name="skip">Skip</string>
 
     <!-- MatriMonyList Fragment -->
-    <string name="ExportingList">Exporting</string>
+    <string name="ExportingList">Exporting \u0020</string>
     <string name="DetailList">\'s Details</string>
     <string name="EndRecordList">End of Records</string>
     <string name="ageList">Age:</string>

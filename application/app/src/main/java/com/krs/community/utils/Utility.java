@@ -717,6 +717,7 @@ public class Utility {
             Fragment calendar = fragmentManager.findFragmentByTag(CalendarFragment.class.getSimpleName());
             Fragment smartFilterResult = fragmentManager.findFragmentByTag(SmartFilterResult.class.getSimpleName());
             Fragment expandableFragment = fragmentManager.findFragmentByTag(ExpandableFilterListFragment.class.getSimpleName());
+            Fragment matrimonyListFragment = fragmentManager.findFragmentByTag(MatrimonyListFragment.class.getSimpleName());
             if (dashboard != null && dashboard.isVisible()) {
                 if (FragmentDrawer.mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                     FragmentDrawer.mDrawerLayout.closeDrawers();
@@ -725,7 +726,8 @@ public class Utility {
                     //    fade(activity);
                 }
                 return;
-            } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible()) || expandableFragment != null && expandableFragment.isVisible()) {
+            } else if ((calendar != null && calendar.isVisible()) || (smartFilterResult != null && smartFilterResult.isVisible()) || expandableFragment != null && expandableFragment.isVisible() || matrimonyListFragment != null && matrimonyListFragment.isVisible()) {
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 movetoFragment(activity, new DashboardFragment());
                 return;
             } else {

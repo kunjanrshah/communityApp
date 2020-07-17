@@ -11,7 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.Snackbar.*
+import com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE
+import com.google.android.material.snackbar.Snackbar.make
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -23,7 +24,6 @@ import com.krs.community.listeners.StatisticsListener
 import com.krs.community.responses.StatisticResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
-import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.StatisticsViewModel
 import com.krs.community.viewmodelfactory.StatisticsViewModelFactory
 import org.json.JSONObject
@@ -81,9 +81,7 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
                 if (id != 0) {
                     getStatisticsResult(id)
                 } else {
-                    Coroutines.main {
-                        binding.llVillages.snackbar(getString(R.string.went_wrong), LENGTH_LONG)
-                    }
+                    getStatisticsResult(0)
                 }
             }
         }
@@ -92,7 +90,10 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
             val cities = statisticsViewModel.lstCityName()
             Coroutines.main {
                 binding.spCity.clear()
-                binding.spCity.setItems(cities.toTypedArray())
+                val lstValue = ArrayList<String>()
+                lstValue.add("All Villages")
+                lstValue.addAll(cities.toTypedArray())
+                binding.spCity.setItems(lstValue.toTypedArray())
                 binding.spCity.setExpandTint(R.color.black)
             }
         }
@@ -130,6 +131,9 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
             binding.tvFemale.text = response.data.totalFemale.toString()
             binding.tvUnMale.text = response.data.totalUnmarriedMale.toString()
             binding.tvUnFemale.text = response.data.totalUnmarriedFemale.toString()
+            binding.tvInMale.text = response.data.totalInterestedMale.toString()
+            binding.tvInFemale.text = response.data.totalInterestedFemale.toString()
+
             if (response.data.totalVillages == null) {
                 binding.llVillages.visibility = View.GONE
             } else {

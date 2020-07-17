@@ -198,12 +198,14 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
                     holder.tvRole.text = resources.getString(R.string.Member)
                 }
 
-                if (member.updatedDt.isNotEmpty()) {
-                    if (member.updatedDt.contains(getString(R.string.zero_date))) {
-                        viewHolder.tvUpdate.text = getString(R.string.not_updated)
+                try {
+                    if (member.updatedDt.isNullOrEmpty() || member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     } else {
-                        viewHolder.tvUpdate.text = getString(R.string.updated) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
                     }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
                 }
 
                 holder.boomMenuButton.clearBuilders()

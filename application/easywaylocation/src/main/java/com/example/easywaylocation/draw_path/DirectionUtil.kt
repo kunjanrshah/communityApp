@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.util.Log
 import androidx.annotation.ColorRes
 import androidx.annotation.IntegerRes
+import com.example.easywaylocation.BuildConfig
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
@@ -84,9 +85,15 @@ class DirectionUtil private constructor(builder: Builder) {
                             isEnd = true
                         }
                         val url = getUrl(wayPoints[i - 1], wayPoints[i])
-                        Log.d(TAG, url)
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, url)
+                        }
+
                         val data = async(Dispatchers.IO + downloadDataFromUrlException) { downloadUrl(url) }
-                        Log.d(TAG, data.await())
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, data.await())
+                        }
+
                         val parseData = async(Dispatchers.IO + parseDataFromUrlException) { doParsingWork(data.await()) }
                         drawData(parseData.await(), i)
                     }
@@ -214,7 +221,6 @@ class DirectionUtil private constructor(builder: Builder) {
             sb.append(i)
         }
         data = sb.toString()
-        Log.d("downloadUrl", data)
         br.close()
         iStream?.close()
         urlConnection.disconnect()

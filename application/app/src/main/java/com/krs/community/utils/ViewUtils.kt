@@ -540,7 +540,8 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
     var Bdate = ""
     val df = SimpleDateFormat("dd.MM.yyyy h:mm a") //'at'
     val currentdate = df.format(Calendar.getInstance().time)
-    val header = "<center>  <h1><b>${mContext.getString(R.string.app_name)}</b></h1> </center> <object align=right>$currentdate</object><br><br>"
+    val logo_path = "https://muslimghanchi.org/ic_logo1.png"
+    val header = "<center> <table height='80'><tr><th><img src=$logo_path alt=''></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object><br><br>"
     var rows = header
     for (member in lstMember) {
         var name = member.firstName
@@ -553,7 +554,7 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
         }
         if (!member.subCastId.isNullOrEmpty()) {
             val lname = profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
-            name = member.firstName + " " + lname
+            name = member.firstName + " " + member.fatherName + " " + lname
         }
 
         if (!member.stateId.isNullOrEmpty()) {
@@ -569,7 +570,7 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
         val lblName = name
         val lblGender = "<b>Gender:</b> ${member.gender}"
         val lblBdate = "<b>BirthDate:</b> $Bdate"
-        val lblFather = "<b>FatherName:</b> ${member.fatherName}"
+        //val lblFather = "<b>FatherName:</b> ${member.fatherName}"
         val lblMother = "<b>MotherName:</b> ${member.motherName}"
         val lblEmail = "<b>Email:</b> ${member.emailAddress}"
         val lblMobile = "<b>Mobile:</b> ${member.mobile}"
@@ -590,9 +591,9 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
             rows += "<td> $headerImage </td>"
         }
         rows += "<td> "
-        if (lstFilter.contains("father")) {
-            rows += "$lblFather <br> "
-        }
+        /* if (lstFilter.contains("father")) {
+             rows += "$lblFather <br> "
+         }*/
         if (lstFilter.contains("mother")) {
             rows += "$lblMother <br> "
         }
@@ -691,7 +692,9 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
             city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
         }
 
-        val header = "<center>  <h1><b>${mContext.getString(R.string.app_name)}</b></h1> </center> <object align=right>$currentdate</object>"
+        val logo_path = "https://muslimghanchi.org/ic_logo1.png"
+        val header = "<center> <table height='80'><tr><th><img src=$logo_path alt=''></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object><br><br>"
+
         val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
         val headerImage = "<img src=$path alt=$name>"
         val labelMain = "<b>Main Detail  </b> "
@@ -914,7 +917,7 @@ private fun createPdf(mContext: Context, fname: String, test: String) {
 
                 override fun onSuccess(filePath: String) {
                     Log.d("Pdf Saved : ", filePath)
-                    //Toast.makeText(mContext, "Pdf Saved : $filePath", Toast.LENGTH_LONG).show()
+                    Toast.makeText(mContext, "Pdf Saved : $filePath", Toast.LENGTH_LONG).show()
                     displayPDFDialog(mContext, fname, filePath, test)
                 }
             })

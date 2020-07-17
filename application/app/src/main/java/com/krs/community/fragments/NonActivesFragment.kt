@@ -159,26 +159,25 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     holder.tvRegion.visibility = View.GONE
                     holder.view_line.visibility = View.GONE
                 }
-
                 if (member.status == "2") {
                     holder.ivVerify.visibility = View.VISIBLE
-                    if (member.updatedDt.isNotEmpty()) {
-                        if (member.updatedDt.contains(getString(R.string.zero_date))) {
-                            viewHolder.tvCreated.text = getString(R.string.not_updated)
-                        } else {
-                            viewHolder.tvCreated.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
-                        }
-                    }
                 } else {
                     holder.ivVerify.visibility = View.GONE
-                    if (member.createdDt.isNotEmpty()) {
-                        if (member.updatedDt.contains(getString(R.string.zero_date))) {
-                            viewHolder.tvCreated.text = getString(R.string.not_updated)
-                        } else {
-                            viewHolder.tvCreated.text = "Created " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
-                        }
-                    }
                 }
+                try {
+                    if (member.updatedDt.isNullOrEmpty() || member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdated.text = getString(R.string.not_updated)
+                    } else {
+                        viewHolder.tvUpdated.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
+
+                    if (!member.createdDt.isNullOrEmpty()) {
+                        viewHolder.tvCreated.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+
 
                 Coroutines.io {
                     if (!member.subCastId.isNullOrEmpty()) {
@@ -451,6 +450,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var ivEmail: ImageView = itemView.findViewById(R.id.iv_email)
         var ivVerify: ImageView = itemView.findViewById(R.id.iv_verify)
         var tvCreated: TextView = itemView.findViewById(R.id.tv_created)
+        var tvUpdated: TextView = itemView.findViewById(R.id.tv_updated)
         var tvRole: TextView = itemView.findViewById(R.id.tv_role)
         var badge: NotificationBadge = itemView.findViewById(R.id.badge)
         var tvCode: TextView = itemView.findViewById(R.id.tv_code)
@@ -461,7 +461,6 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
         var view_line: View = itemView.findViewById(R.id.view_line)
         var ll_region: LinearLayout = itemView.findViewById(R.id.ll_region)
         var tv_label: TextView = itemView.findViewById(R.id.tv_label)
-
 
 
     }
@@ -613,9 +612,9 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
             enableActionMode(position)
         } else {
             //if (lstMembers.get(position).status != "0") {
-                val intent = Intent(activity, ProfileDetailActivity::class.java)
-                intent.putExtra(getString(R.string.member), lstMembers.get(position))
-                startActivity(intent)
+            val intent = Intent(activity, ProfileDetailActivity::class.java)
+            intent.putExtra(getString(R.string.member), lstMembers.get(position))
+            startActivity(intent)
             //}
         }
     }

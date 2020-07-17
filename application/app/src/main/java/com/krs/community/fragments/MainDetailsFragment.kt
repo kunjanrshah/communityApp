@@ -193,8 +193,9 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         setMemberState()
         setMemberCity()
         setHomeLocation()
-        setGender()
+       // setGender()
 
+        binding.spGender.setText(member.gender)
         binding.llHome.setOnClickListener {
             val memberId = Guru.getString(getString(R.string.member_id), "")
             if (binding.tvDistance.text.toString() != "Home" || memberId == member.id) {
@@ -345,12 +346,12 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                         }
                     }
 
+                    if (rel == "Wife" || rel == "Husband" || rel == "Mother" || rel == "Father" || rel == "Daughter-In-Law" || rel == "Grand Father" || rel == "Grand Mother") {
+                        PersonalDetailsFragment.binding.spMarital.setText("Married")
+                    }
                     if (rel.contains("Wife") || rel.contains("Daughter") || rel.contains("Mother")) {
                         binding.spGender.setText("Female")
-                        if (rel == "Wife") {
-                            PersonalDetailsFragment.binding.spMarital.setText("Married")
-                        }
-                    } else if (rel.contains("Son") || rel.contains("Father") || rel.contains("Husband")) {
+                    } else if (rel.contains("Son") || rel.contains("Father") || rel.contains("Husband") || rel.contains("Family Head") || rel.contains("Brother")) {
                         binding.spGender.setText("Male")
                     } else {
                         binding.spGender.setText(member.gender)

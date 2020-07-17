@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.InputFilter
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -199,6 +200,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     registerViewModel.stateId = stateId
                     binding.spinnerCities.clear()
                     registerViewModel.cityId = null
+                    binding.edtMobile.setText("")
+                    if (binding.spinnerStates.text.toString().toLowerCase() == "foreign") {
+                        binding.edtMobile.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(15))
+                    } else {
+                        binding.edtMobile.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
+                    }
 
                     if (lstCity.isNotEmpty()) {
                         val lst = ArrayList<String>()

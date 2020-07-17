@@ -32,6 +32,7 @@ import com.krs.community.R
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
+import com.krs.community.adapter.ExportAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
@@ -57,7 +58,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner {
+class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener, MyRoleAdapter.iChangeRoleListner, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
 
     override val kodein by kodein()
     private var lstAdmins: ArrayList<Member> = ArrayList()
@@ -65,11 +66,11 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     private lateinit var smartFilterViewModel: SmartFilterViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
-
+    private var exportDialog: DialogPlus? = null
     private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance<SmartFilterViewModelFactory>()
     private val roomMemberViewModelFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
     private val profileDetailViewModelFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
-
+    private var loginMem: Member? = null
     private lateinit var tvCount: TextView
     private var loginUserSubCommunityId = ""
     private var loginUserLocalCommunityId = ""
@@ -90,6 +91,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     private lateinit var actionModeCallback: ActionModeCallback
     private var LocalCount = 0
     private var SubCount = 0
+    private lateinit var ivExport: ImageView
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val root = inflater.inflate(R.layout.fragment_admins, container, false)
@@ -291,6 +294,32 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         }
 
         val header = LayoutInflater.from(activity).inflate(R.layout.header_admins, container, false)
+
+        ivExport = header.findViewById(R.id.iv_export)
+        if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER) || loginMem?.role == getString(R.string.LOCAL_ADMIN)) {
+            ivExport.visibility = View.GONE
+        } else {
+            ivExport.visibility = View.VISIBLE
+        }
+        ivExport.setOnClickListener {
+
+            if (Utility.checkExternalStoragePermission(activity)) {
+                val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
+                adapter.setExportListner(this@AdminsFragment)
+                exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
+                        .setAdapter(adapter)
+                        .setGravity(Gravity.BOTTOM)
+                        .setCancelable(true)
+                        .setExpanded(true, 800)
+                        .setContentBackgroundResource(R.drawable.popup_top_corner)
+                        .create()
+                exportDialog?.show()
+            } else {
+                Utility.requestStoragePermission(activity as AppCompatActivity)
+            }
+
+        }
+
         tvCount = header.findViewById<TextView>(R.id.tv_count)
 
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
@@ -304,10 +333,10 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         rvAdmins.setHasFixedSize(true)
 
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
-        val member: Member = Gson().fromJson<Member>(loginuser, Member::class.java)
-        loginUserSubCommunityId = member.subCommunityId
-        loginUserLocalCommunityId = member.localCommunityId
-        role = member.role
+        loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+        loginUserSubCommunityId = loginMem?.subCommunityId.toString()
+        loginUserLocalCommunityId = loginMem?.localCommunityId.toString()
+        role = loginMem?.role.toString()
         getSubAdmin()
         return root
     }
@@ -315,8 +344,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     private fun getSubAdmin() {
         count = 1
         val jsonObject = JSONObject()
-        jsonObject.put(getString(R.string.start), AppController.mApplication.start)
-        jsonObject.put(getString(R.string.length), AppController.mApplication.length)
+        jsonObject.put(getString(R.string.start), "0")
+        jsonObject.put(getString(R.string.length), "")
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.role), resources.getString(R.string.SUB_ADMIN))
         if (role != getString(R.string.super_admin)) {
@@ -335,8 +364,8 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     private fun getLocalAdmin() {
         count = 2
         val jsonObject = JSONObject()
-        jsonObject.put(getString(R.string.start), AppController.mApplication.start)
-        jsonObject.put(getString(R.string.length), AppController.mApplication.length)
+        jsonObject.put(getString(R.string.start), "0")
+        jsonObject.put(getString(R.string.length), "")
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.role), resources.getString(R.string.LOCAL_ADMIN))
         if (role != getString(R.string.super_admin)) {
@@ -373,6 +402,12 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
             cancelDialog()
             if (lstAdmins.size == 0) {
                 rvAdmins.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
+            }
+
+            if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER) || loginMem?.role == getString(R.string.LOCAL_ADMIN)) {
+                ivExport.visibility = View.GONE
+            } else {
+                ivExport.visibility = View.VISIBLE
             }
         }
     }
@@ -635,10 +670,18 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                 .show()
     }
 
+    override fun exportPdf(filters: ArrayList<String>) {
+        Handler().post {
+            Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+        }
+        createMemberListPDF(activity as AppCompatActivity, lstAdmins, filters, profileDetailViewModel)
+    }
+
 
     override fun cancelDialog() {
         actionMode?.finish()
         changeRoleDialog?.dismiss()
+        exportDialog?.dismiss()
     }
 
     private inner class ActionModeCallback : ActionMode.Callback {

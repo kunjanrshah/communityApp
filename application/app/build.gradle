@@ -9,9 +9,9 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'io.fabric'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -85,7 +85,7 @@ android {
             applicationId "com.ghanchi.samaj"
             versionCode 18
             versionName "1.0.9"
-            resValue "string", "app_name", "Muslim Ghanchi Samaj"
+            resValue "string", "app_name", "Muslim Ghanchi Parivar"
             resValue "string", "dev_name", "Mehboob Gogda"
             resValue "string", "dev_contact", "9377133222"
             resValue "string", "skype_id", "9377133222"

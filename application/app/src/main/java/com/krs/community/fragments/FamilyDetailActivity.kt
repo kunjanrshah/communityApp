@@ -274,10 +274,14 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         viewHolder.ivEmail.visibility = View.VISIBLE
                         viewHolder.tvEmail.text = member.emailAddress
                     }
-                    if (member.updatedDt.contains(getString(R.string.zero_date))) {
-                        viewHolder.tvUpdate.text = getString(R.string.not_updated)
-                    } else {
-                        viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    try {
+                        if (member.updatedDt.isNullOrEmpty() || member.updatedDt.contains(getString(R.string.zero_date))) {
+                            viewHolder.tvUpdate.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        } else {
+                            viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                        }
+                    } catch (e: java.lang.Exception) {
+                        e.printStackTrace()
                     }
                     viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
 

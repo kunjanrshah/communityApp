@@ -450,10 +450,14 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     }
 
                 }
-                if (member.updatedDt.contains(getString(R.string.zero_date))) {
-                    viewHolder.tvUpdate.text = getString(R.string.not_updated)
-                } else {
-                    viewHolder.tvUpdate.text = getString(R.string.UpdateList) + " " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd_TIME, Utility.dd_MM_yyyy_TIME)
+                try {
+                    if (member.updatedDt.isNullOrEmpty() || member.updatedDt.contains(getString(R.string.zero_date))) {
+                        viewHolder.tvUpdate.text = "Created " + Utility.changeDateFormat(member.createdDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    } else {
+                        viewHolder.tvUpdate.text = "Updated " + Utility.changeDateFormat(member.updatedDt, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
+                    }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
                 }
                 applyImportant(viewHolder, member)
                 applyProfilePicture(viewHolder, member)

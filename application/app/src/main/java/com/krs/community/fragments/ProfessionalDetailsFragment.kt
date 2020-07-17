@@ -156,7 +156,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                         }
                         .setNeutralClickListener {
                             it.dismiss()
-                            if (member.headId == "0" && !member.id.isNullOrEmpty()) {
+                            if (!member.id.isNullOrEmpty()) {
                                 val jsonObject = JSONObject()
                                 jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
                                 jsonObject.put(getString(R.string.id), member.id)
@@ -167,7 +167,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                                 startSweetProgress(activity, getString(R.string.updatingLocationDetail), getString(R.string.PleasWaitDetails))
                                 profileDetailViewModel.updateProfile(profile, true)
                             } else {
-                                displaySnackBarWithBottomMargin(ll_main, getString(R.string.headDetails))
+                                displaySnackBarWithBottomMargin(ll_main, getString(R.string.somethingwrong))
                             }
                         }
                         .show()
