@@ -22,6 +22,8 @@ import com.ericliu.asyncexpandablelist.async.AsyncExpandableListView
 import com.ericliu.asyncexpandablelist.async.AsyncExpandableListViewCallbacks
 import com.ericliu.asyncexpandablelist.async.AsyncHeaderViewHolder
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.github.squti.guru.Guru
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
@@ -32,6 +34,7 @@ import com.krs.community.databinding.FragmentBrowseCityBinding
 import com.krs.community.entities.City
 import com.krs.community.entities.States
 import com.krs.community.listeners.IbrowseCityRecordsListener
+import com.krs.community.model.Member
 import com.krs.community.model.SearchByCityModel
 import com.krs.community.responses.CityResponse
 import com.krs.community.utils.Coroutines
@@ -117,8 +120,19 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
     }
 
     private fun fetchCities(stateId: Int) = Coroutines.main {
+
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        val loginMem = Gson().fromJson(loginMember, Member::class.java)
+
         val mJson = JSONObject()
-        mJson.put("state_id", stateId)
+        mJson.put(getString(R.string.state_id), stateId)
+
+        if (loginMem.role != activity?.getString(R.string.super_admin)) {
+            mJson.put(getString(R.string.sub_community_id), loginMem.subCommunityId)
+        } else {
+            mJson.put(getString(R.string.sub_community_id), 0)
+        }
+
         val updated = JsonParser().parse(mJson.toString()) as JsonObject
         browseCityViewModel?.getCitiesByState(updated)
     }

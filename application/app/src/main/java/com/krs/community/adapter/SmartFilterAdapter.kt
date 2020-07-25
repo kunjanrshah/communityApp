@@ -12,10 +12,13 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+import com.github.squti.guru.Guru
+import com.google.gson.Gson
 import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.adapter.SmartPopUpAdapter.ICloseDialog
 import com.krs.community.jrspinner.JRSpinner
+import com.krs.community.model.Member
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.NumberPadTimePickerDialogFragment
 import com.krs.community.utils.Utility
@@ -768,6 +771,8 @@ class SmartFilterAdapter(private val _context: Context,
                 spMarital = convertView.findViewById(R.id.sp_marital)
                 spNative = convertView.findViewById(R.id.sp_native)
                 rangeAgeBar = convertView.findViewById(R.id.rangeSeekbar)
+                var rlSubComm = convertView.findViewById<RelativeLayout>(R.id.rl_sub_comm)
+
                 val tvMin = convertView.findViewById<TextView>(R.id.textMin1)
                 val tvMax = convertView.findViewById<TextView>(R.id.textMax1)
 
@@ -779,6 +784,23 @@ class SmartFilterAdapter(private val _context: Context,
                 spLocalComm.setOnItemClickListener {
                     if (it == 0) {
                         spLocalComm.setText("")
+                    }
+                }
+                val loginuser = Guru.getString(_context.getString(R.string.loginMember), "")
+                val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+
+                if (loginMem.role != _context.getString(R.string.super_admin)) {
+                    Coroutines.main {
+                        rlSubComm.visibility = View.GONE
+                        val subId = loginMem?.subCommunityId?.toInt()
+                        profileDetailViewModel.selectedSubCommId = subId!!
+                        profileDetailViewModel.getLocalCommunity(subId).observeForever {
+                            val lstValue = ArrayList<String>()
+                            lstValue.add(_context.getString(R.string.no_selection))
+                            lstValue.addAll(it.toTypedArray())
+                            spLocalComm.setItems(lstValue.toTypedArray())
+                            spLocalComm.setExpandTint(R.color.black)
+                        }
                     }
                 }
 

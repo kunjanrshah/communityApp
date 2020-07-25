@@ -150,8 +150,8 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             dashboardViewModel.listener = this
 
             binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
-            binding.lifecycleOwner = this
             binding.registerviewmodel = registerViewModel
+            binding.lifecycleOwner = this
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Utility.changeStatusbarColor(this, R.color.colorBG, false)
@@ -186,7 +186,8 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             }
 
             if (isNetworkConnected(this)) {
-                dashboardViewModel.getMasterUpdate()
+                val jsonObject = JsonObject()
+                dashboardViewModel.getMasterUpdate(jsonObject)
             }
 
             binding.spinnerCountries.setOnItemClickListener { pos ->

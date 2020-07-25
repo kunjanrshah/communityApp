@@ -32,6 +32,7 @@ import com.facebook.FacebookSdk
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
@@ -108,6 +109,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
     private lateinit var ivNoFound: ImageView
     private var setLocationDialog: DialogPlus? = null
     private var filterAdapter: FilterAdapter? = null
+    var loginMem: Member? = null
 
     override fun loadApi() {
         if (!DashboardActivity.stop) {
@@ -151,6 +153,8 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
         toDate = date1
         txtDate.text = SimpleDateFormat(getString(R.string.dateFormat)).format(Date())
         DashboardActivity.stop = false
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        loginMem = Gson().fromJson(loginMember, Member::class.java)
         searchCalendarList(filter)
         return root
     }
@@ -163,6 +167,12 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
             jsonObject.put(getString(R.string.start), AppController.mApplication.start)
             jsonObject.put(getString(R.string.length), AppController.mApplication.length)
             jsonObject.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
+
+            if (loginMem?.role != activity?.getString(R.string.super_admin)) {
+                jsonObject.put(getString(R.string.sub_community_id), loginMem?.subCommunityId)
+            }
+
+
             if (fromDate.isNotEmpty()) {
                 jsonObject.put(getString(R.string.fromdate), fromDate)
             }

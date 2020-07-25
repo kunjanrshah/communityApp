@@ -366,7 +366,13 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
             val jsonObject = JSONObject()
+
             val jsonObj = JSONObject(argus)
+
+            if (loginMember?.role != activity?.getString(R.string.super_admin)) {
+                jsonObj.put(getString(R.string.sub_community_id), loginMember?.subCommunityId)
+            }
+
             if (!isExport) {
                 jsonObject.put(getString(R.string.start), AppController.mApplication.start)
                 jsonObject.put(getString(R.string.length), AppController.mApplication.length)

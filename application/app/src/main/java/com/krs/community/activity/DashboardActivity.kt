@@ -206,7 +206,19 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             JsonObj.put("version", getAppVersionCode(this))
             val updated = JsonParser().parse(JsonObj.toString()) as JsonObject
             dashboardViewModel.getUpdatedVersion(updated)
-            dashboardViewModel.getMasterUpdate()
+
+            val loginuser = Guru.getString(getString(R.string.loginMember), "")
+            val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+            val JsonObj1 = JSONObject()
+            if (loginMem.role == getString(R.string.super_admin)) {
+                JsonObj1.put(getString(R.string.sub_community_id), 0)
+            } else {
+                JsonObj1.put(getString(R.string.sub_community_id), loginMem.subCommunityId)
+            }
+
+            val updated1 = JsonParser().parse(JsonObj1.toString()) as JsonObject
+            dashboardViewModel.getMasterUpdate(updated1)
+
         }
 
         if (isNetworkConnected(this)) {

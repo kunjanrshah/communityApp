@@ -127,7 +127,7 @@
                             android:id="@+id/img_cancel"
                             android:layout_width="25dip"
                             android:layout_height="25dip"
-                            android:layout_marginStart="75dp"
+                            android:layout_marginStart="85dp"
                             android:padding="5dp"
                             android:src="@drawable/cancel_popup"
                             tools:ignore="ContentDescription" />

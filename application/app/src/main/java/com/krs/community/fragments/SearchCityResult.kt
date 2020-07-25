@@ -440,11 +440,17 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     data.length = ""
                 }
 
-
                 data.alpha = alpha
+                if (loginMem?.role == activity?.getString(R.string.super_admin)) {
+                    data.sub_community_id = ""
+                } else {
+                    data.sub_community_id = loginMem?.subCommunityId
+                }
+
                 val filterBy = FilterBy()
                 filterBy.cityId = cityId
                 data.filterBy = filterBy
+
                 if (AppController.mApplication.start == 0 && !isExport) {
                     members.clear()
                     binding.shimmerViewContainer.startShimmerAnimation()

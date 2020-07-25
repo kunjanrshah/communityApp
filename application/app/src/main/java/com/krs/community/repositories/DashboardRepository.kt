@@ -396,9 +396,9 @@ class DashboardRepository(
         }
     }
 
-    suspend fun getMasterUpdate(): MasterUpdateResponse {
+    suspend fun getMasterUpdate(jsonObject: JsonObject): MasterUpdateResponse {
         return apiRequest {
-            api.getMasterUpdate()
+            api.getMasterUpdate(jsonObject)
         }
     }
 

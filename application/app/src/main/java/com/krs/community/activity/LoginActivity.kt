@@ -154,8 +154,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     private fun setScreenLayout() {
         if (isNetworkConnected(this)) {
             binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.activity_loginwith)
-            binding.lifecycleOwner = this
             binding.loginViewModel = loginViewModel
+            binding.lifecycleOwner = this
 
             mCallbackManager = CallbackManager.Factory.create()
             loginViewModel?.mAuth = FirebaseAuth.getInstance()

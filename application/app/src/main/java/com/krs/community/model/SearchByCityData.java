@@ -16,6 +16,10 @@ public class SearchByCityData {
     @Expose
     private String alpha;
 
+    @SerializedName("sub_community_id")
+    @Expose
+    private String sub_community_id;
+
     @SerializedName("filter_by")
     @Expose
     private FilterBy filterBy;
@@ -50,5 +54,13 @@ public class SearchByCityData {
 
     public void setAlpha(String alpha) {
         this.alpha = alpha;
+    }
+
+    public String getSub_community_id() {
+        return sub_community_id;
+    }
+
+    public void setSub_community_id(String sub_community_id) {
+        this.sub_community_id = sub_community_id;
     }
 }

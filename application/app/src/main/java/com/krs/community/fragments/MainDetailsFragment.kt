@@ -22,6 +22,7 @@ import com.github.squti.guru.Guru
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.ProfileDetailActivity.Companion.setPercentage
@@ -548,7 +549,25 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         })
 
         profileDetailViewModel.lstStateName.await().observe(viewLifecycleOwner, Observer {
-            binding.spState.setItems(it.toTypedArray())
+
+
+            if (BuildConfig.FLAVOR == "medk") {
+                val sortedList = ArrayList<String>()
+                sortedList.add("Ahmedabad-Gujarat")
+                sortedList.add("North-Gujarat")
+                sortedList.add("South-Gujarat")
+                sortedList.add("Saurashtra-Gujarat")
+                for (state in it) {
+                    if (!sortedList.contains(state)) {
+                        sortedList.add(state)
+                    }
+                }
+                binding.spState.setItems(sortedList.toTypedArray())
+            } else {
+                binding.spState.setItems(it.toTypedArray())
+            }
+
+
             binding.spState.setExpandTint(R.color.black)
         })
 

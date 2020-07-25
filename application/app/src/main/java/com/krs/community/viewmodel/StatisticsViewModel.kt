@@ -2,13 +2,13 @@ package com.krs.community.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.StatisticsListener
 import com.krs.community.repositories.StatisticsRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-
 import kotlinx.coroutines.*
 
 class StatisticsViewModel(
@@ -18,6 +18,23 @@ class StatisticsViewModel(
     var job_statistics: CompletableJob? = null
     var TAG: String = StatisticsViewModel::class.java.simpleName
     var mStatisticsListener: StatisticsListener? = null
+
+    suspend fun getSubComm(): LiveData<List<String>> {
+        return mStatisticsRepository.getSubComm()
+    }
+
+    suspend fun getLocalComm(subId: Int): LiveData<List<String>> {
+        return mStatisticsRepository.getLocalComm(subId)
+    }
+
+    suspend fun getSubIdByName(name: String): Int {
+        return mStatisticsRepository.getSubIdByName(name)
+    }
+
+    suspend fun getLocalIdByName(name: String): Int {
+        return mStatisticsRepository.getLocalIdByName(name)
+    }
+
 
     suspend fun lstCityName(): List<String> {
         return mStatisticsRepository.getCityNames()

@@ -131,8 +131,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 val jsonObject = JSONObject()
                 jsonObject.put("" + mApplication.start, "0")
                 jsonObject.put("" + mApplication.length, "1")
+
+                val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+
                 val jsonObj = JSONObject()
                 jsonObj.put(getString(R.string.id), scanId)
+
+                if (loginMember?.role != getString(R.string.super_admin)) {
+                    jsonObj.put(getString(R.string.sub_community_id), loginMember?.subCommunityId)
+                }
+
                 jsonObject.put(getString(R.string.filter_by), jsonObj)
                 val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                 profileDetailViewModel.getMemberByFilters(updated)
@@ -324,8 +333,6 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 if (BuildConfig.DEBUG) {
                     Log.d(ProfileDetailActivity::class.java.simpleName, "jsonObject: " + jsonObject.toString())
                 }
-
-                hideSweetProgress()
             } else {
                 setNoInternetLayout()
             }
@@ -376,6 +383,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     private fun goToFamilyDetailActivity() {
         val intent = Intent(this, FamilyDetailActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(getString(R.string.is_finish), true)
         if (member?.headId == "0") {
             intent.putExtra(getString(R.string.member_id), member?.id)

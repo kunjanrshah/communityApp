@@ -121,6 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
+                    android:layout_marginTop="5dp"
                     android:text="Home"
                     android:textColor="@color/colorPrimary"
                     android:visibility="gone" />
@@ -129,7 +130,7 @@
                     android:id="@+id/tv_office"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Office"
                     android:textColor="@color/colorPrimary" />
@@ -351,6 +352,9 @@
 
                 <LinearLayout
                     android:id="@+id/ll_home"
+                    android:background="@color/bg_gray"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -379,6 +383,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:background="@color/bg_gray"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
@@ -405,7 +412,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
+                    android:background="@color/bg_gray"
+                    android:paddingTop="3dp"
                     android:gravity="center_vertical"
+                    android:paddingBottom="3dp"
                     android:orientation="horizontal">
 
                     <ImageView

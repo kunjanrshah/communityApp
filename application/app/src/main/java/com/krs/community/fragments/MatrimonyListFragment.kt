@@ -76,6 +76,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
     private lateinit var tvRecords: TextView
     private lateinit var ivExport: ImageView
     private var snackbar: Snackbar? = null
+    private var loginMember: Member? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -92,6 +93,10 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         roomMemberViewModel.mRoomMemberListener = this
         smartFilterViewModel.mByFilterListener = this
         AppController.mApplication.start = 0
+
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+
         val header = LayoutInflater.from(activity).inflate(R.layout.header_matrimony, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivExport = header.findViewById<ImageView>(R.id.iv_export)
@@ -423,6 +428,12 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             jsonObject.put(getString(R.string.start), AppController.mApplication.start)
             jsonObject.put(getString(R.string.length), AppController.mApplication.length)
             jsonObj.put(getString(R.string.matrimony), "Yes")
+
+            if (loginMember?.role != getString(R.string.super_admin)) {
+                jsonObj.put(getString(R.string.sub_community_id), loginMember?.subCommunityId)
+            }
+
+
             jsonObject.put(getString(R.string.filter_by), jsonObj)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             smartFilterViewModel.smartFilterSearch(updated)
@@ -478,8 +489,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             tvRecords.text = getString(R.string.recordfound) + " " + response.totalRecords
             tvRecords.visibility = View.VISIBLE
 
-            val loginuser = Guru.getString(getString(R.string.loginMember), "")
-            val loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
+
             if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
                 ivExport.visibility = View.GONE
             } else {

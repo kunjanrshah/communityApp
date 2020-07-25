@@ -24,6 +24,10 @@ public class ByDistanceModel {
     @Expose
     private String km;
 
+    @SerializedName("sub_community_id")
+    @Expose
+    private String sub_community_id;
+
     @SerializedName("start")
     @Expose
     private String start = "0";
@@ -94,5 +98,13 @@ public class ByDistanceModel {
 
     public void setStart(String start) {
         this.start = start;
+    }
+
+    public String getSub_community_id() {
+        return sub_community_id;
+    }
+
+    public void setSub_community_id(String sub_community_id) {
+        this.sub_community_id = sub_community_id;
     }
 }

@@ -35,6 +35,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
@@ -98,7 +99,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
     private val profileDetailFactory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
     private val roomMemberFactory: RoomMemberViewModelFactory by instance<RoomMemberViewModelFactory>()
     var memberId: String? = null
-
+    var loginMem: Member? = null
     private var byDistanceAdapter: ParallaxRecyclerAdapter<Member>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -140,6 +141,10 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         currLat.postValue(DashboardActivity.cur_lat.value)
         currLng.postValue(DashboardActivity.cur_lng.value)
         memberId = Guru.getString(getString(R.string.member_id), "")
+
+        val loginMember = Guru.getString(getString(R.string.loginMember), "")
+        loginMem = Gson().fromJson(loginMember, Member::class.java)
+
 
         return root
     }
@@ -377,6 +382,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                             shareDetails(activity as AppCompatActivity, viewHolder.tvName.text.toString(), member.mobile.toString(), member.emailAddress.toString(), viewHolder.tvArea.text.toString(), member.address.toString())
                         } else if (it == 5) {
                             val adapter = LocationAdapter(activity as AppCompatActivity, member)
+                            adapter.setLocationListner(this@SearchByDistanceFragment)
                             val setLocationDialog = DialogPlus.newDialog(activity as AppCompatActivity)
                                     .setAdapter(adapter)
                                     .setGravity(Gravity.BOTTOM)
@@ -407,6 +413,16 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     viewHolder.tvHome.visibility = View.VISIBLE
                     viewHolder.tvHome.text = getString(R.string.homeDistance)
                     viewHolder.tvHomeDist.text = getDistance(member.distance)
+
+                    viewHolder.llHome.setOnClickListener {
+                        if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
+                            Utility.showDirections(activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}'s Home")
+                        } else {
+                            Toast.makeText(activity, "Home location not found!", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+
                 } else if (nearBy == "Office") {
                     viewHolder.llOffice.visibility = View.VISIBLE
                     viewHolder.tvOffice.visibility = View.VISIBLE
@@ -415,6 +431,15 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     val params = viewHolder.llOffice.layoutParams as LinearLayout.LayoutParams
                     // params.setMargins(0, 20, 0, 0)
                     viewHolder.llOffice.layoutParams = params
+
+                    viewHolder.llOffice.setOnClickListener {
+                        if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
+                            Utility.showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Office")
+                        } else {
+                            Toast.makeText(activity, "Office location not found!", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
                 }/*else if(nearBy.equals("User")){
                     viewHolder.llUser.visibility=View.VISIBLE
                     viewHolder.tvUser.visibility=View.VISIBLE
@@ -430,6 +455,15 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                                 viewHolder.tvHome.visibility = View.VISIBLE
                                 viewHolder.tvHome.text = getString(R.string.homeDistance)
                                 viewHolder.tvHomeDist.text = getDistance(elements[count].trim())
+
+                                viewHolder.llHome.setOnClickListener {
+                                    if (!member.homeLat.isNullOrEmpty() && !member.homeLng.isNullOrEmpty()) {
+                                        Utility.showDirections(activity, member.homeLat.toDouble(), member.homeLng.toDouble(), "${member.firstName}'s Home")
+                                    } else {
+                                        Toast.makeText(activity, "Home location not found!", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+
                             } else if (nearBy[count].contains("office")) {
                                 viewHolder.llOffice.visibility = View.VISIBLE
                                 viewHolder.tvOffice.visibility = View.VISIBLE
@@ -438,6 +472,16 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                                 val params = viewHolder.llOffice.layoutParams as LinearLayout.LayoutParams
                                 params.setMargins(0, 10, 0, 0)
                                 viewHolder.llOffice.layoutParams = params
+
+                                viewHolder.llOffice.setOnClickListener {
+                                    if (!member.officeLat.isNullOrEmpty() && !member.officeLng.isNullOrEmpty()) {
+                                        Utility.showDirections(activity, member.officeLat.toDouble(), member.officeLng.toDouble(), "${member.firstName}'s Office")
+                                    } else {
+                                        Toast.makeText(activity, "Office location not found!", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+
+
                             } /*else if (nearBy[count].contains("user")) {
                                 viewHolder.llUser.visibility = View.VISIBLE
                                 viewHolder.tvUser.visibility = View.VISIBLE
@@ -668,6 +712,10 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     distance.lng = currLng.value.toString()
                     if (currLat.value != null && currLat.value != 0.0 && currLng.value != null && currLng.value != 0.0 && isCallAPI) {
                         isCallAPI = false
+                        if (loginMem?.role != activity?.getString(R.string.super_admin)) {
+                            distance.sub_community_id = loginMem?.subCommunityId
+                        }
+
                         mByDistanceViewModel.getUserByDistance(distance)
                     }
                 })
@@ -679,6 +727,9 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
             distance.start = (lstMembers.size + 1).toString()
+            if (loginMem?.role != activity?.getString(R.string.super_admin)) {
+                distance.sub_community_id = loginMem?.subCommunityId
+            }
             mByDistanceViewModel.getUserByDistance(distance)
         }
     }

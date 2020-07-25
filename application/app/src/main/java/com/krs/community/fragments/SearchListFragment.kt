@@ -505,6 +505,10 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     mJSONObject.put(getString(R.string.length), "")
                 }
 
+                if (loginMember?.role != activity?.getString(R.string.super_admin)) {
+                    mJSONObject.put(getString(R.string.sub_community_id), loginMember?.subCommunityId)
+                }
+
                 mJSONObject.put(getString(R.string.filter_by), searchWord)
                 val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
 

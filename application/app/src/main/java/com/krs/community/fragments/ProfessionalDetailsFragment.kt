@@ -1,6 +1,8 @@
 package com.krs.community.fragments
 
+import android.content.ContentResolver
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.*
 import android.text.method.LinkMovementMethod
@@ -39,7 +41,6 @@ import com.krs.community.utils.*
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
-
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
@@ -273,6 +274,28 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
 
         binding.imgLogo.setOnClickListener {
             pickFromGallery(activity!!)
+        }
+
+        binding.imgCancel.setOnClickListener {
+
+
+            val resultUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE.toString() +
+                    "://" + resources.getResourcePackageName(R.drawable.logo)
+                    + '/' + resources.getResourceTypeName(R.drawable.logo) + '/' + resources.getResourceEntryName(R.drawable.logo))
+
+
+            if (resultUri != null) {
+                if (isNetworkConnected(activity as AppCompatActivity)) {
+                    try {
+                        Glide.with(mApplication).load(resultUri).apply(RequestOptions.circleCropTransform()).thumbnail(0.5f).into(binding.imgLogo)
+                        val uploadImage = File(resultUri.path.toString() + ".jpeg")
+                        startSweetProgress(activity!!, "Logo uploading", getString(R.string.loading))
+                        profileDetailViewModel.uploadImage(uploadImage, member.id.toString(), getString(R.string.company))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
         }
 
         getMasterList()

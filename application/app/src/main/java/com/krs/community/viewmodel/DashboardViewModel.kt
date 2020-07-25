@@ -55,14 +55,14 @@ class DashboardViewModel(
         }
     }
 
-    fun getMasterUpdate() {
+    fun getMasterUpdate(jsonObject: JsonObject) {
         if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()
             completableJob.let { thejob ->
 
                 CoroutineScope(Dispatchers.IO + thejob).launch {
                     try {
-                        val response = mDashboardRepository.getMasterUpdate()
+                        val response = mDashboardRepository.getMasterUpdate(jsonObject)
                         response.let {
                             withContext(Dispatchers.Main) {
                                 listener.getMastersResponse(response)

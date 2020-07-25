@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar.make
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
@@ -21,6 +23,7 @@ import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.FragmentStatisticsBinding
 import com.krs.community.listeners.StatisticsListener
+import com.krs.community.model.Member
 import com.krs.community.responses.StatisticResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
@@ -37,6 +40,11 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
     private val factory: StatisticsViewModelFactory by instance<StatisticsViewModelFactory>()
     private lateinit var binding: FragmentStatisticsBinding
     private lateinit var snackbar: Snackbar
+    private lateinit var loginMem: Member
+    var subCommId = 0
+    var localCommId = 0
+    var cityId = 0
+
     override val kodein by kodein()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -52,7 +60,8 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
         statisticsViewModel.mStatisticsListener = this
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
-
+        val loginuser = Guru.getString(getString(R.string.loginMember), "")
+        loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
         setScreenLayout()
 
         AppController.mApplication.connectionLiveData.observeForever {
@@ -60,7 +69,7 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
                 if (it) {
                     if (snackbar.isShown) {
                         snackbar.dismiss()
-                        getStatisticsResult(0)
+                        getStatisticsResult()
                     }
                 } else {
                     binding.shimmerViewContainer.stopShimmerAnimation()
@@ -75,40 +84,99 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
 
     private fun setScreenLayout() {
 
+        if (loginMem.role == getString(R.string.super_admin)) {
+            binding.rlSubComm.visibility = View.VISIBLE
+        } else {
+            binding.rlSubComm.visibility = View.GONE
+            Coroutines.main {
+                statisticsViewModel.getLocalComm(loginMem.subCommunityId.toInt()).observe(activity as AppCompatActivity, Observer {
+                    binding.spLocalComm.clear()
+                    val lstValue = ArrayList<String>()
+                    lstValue.add("All Local Community")
+                    lstValue.addAll(it.toTypedArray())
+                    binding.spLocalComm.setItems(lstValue.toTypedArray())
+                    binding.spLocalComm.setExpandTint(R.color.black)
+                })
+            }
+        }
+
+        binding.spSubComm.setOnItemClickListener {
+            Coroutines.io {
+                subCommId = statisticsViewModel.getSubIdByName(binding.spSubComm.text.toString())
+                localCommId = 0
+                cityId = 0
+                binding.spLocalComm.setSelection(0)
+                binding.spCity.setSelection(0)
+
+                getStatisticsResult()
+                Coroutines.main {
+                    statisticsViewModel.getLocalComm(subCommId).observe(activity as AppCompatActivity, Observer {
+                        binding.spLocalComm.clear()
+                        val lstValue = ArrayList<String>()
+                        lstValue.add("All Local Community")
+                        lstValue.addAll(it.toTypedArray())
+                        binding.spLocalComm.setItems(lstValue.toTypedArray())
+                        binding.spLocalComm.setExpandTint(R.color.black)
+                    })
+                }
+            }
+        }
+
+        binding.spLocalComm.setOnItemClickListener {
+            Coroutines.io {
+                localCommId = statisticsViewModel.getLocalIdByName(binding.spLocalComm.text.toString())
+                getStatisticsResult()
+            }
+        }
+
         binding.spCity.setOnItemClickListener {
             Coroutines.io {
-                val id = statisticsViewModel.getCityIdByName(binding.spCity.text.toString().trim())
-                if (id != 0) {
-                    getStatisticsResult(id)
-                } else {
-                    getStatisticsResult(0)
-                }
+                cityId = statisticsViewModel.getCityIdByName(binding.spCity.text.toString().trim())
+                getStatisticsResult()
             }
         }
 
         Coroutines.io {
             val cities = statisticsViewModel.lstCityName()
+
             Coroutines.main {
+
                 binding.spCity.clear()
                 val lstValue = ArrayList<String>()
                 lstValue.add("All Villages")
                 lstValue.addAll(cities.toTypedArray())
                 binding.spCity.setItems(lstValue.toTypedArray())
                 binding.spCity.setExpandTint(R.color.black)
+
+                statisticsViewModel.getSubComm().observe(activity as AppCompatActivity, Observer {
+                    binding.spSubComm.clear()
+                    val lstSubCommValue = ArrayList<String>()
+                    lstSubCommValue.add("All Sub Community")
+                    lstSubCommValue.addAll(it.toTypedArray())
+                    binding.spSubComm.setItems(lstSubCommValue.toTypedArray())
+                    binding.spSubComm.setExpandTint(R.color.black)
+                })
             }
         }
 
-        getStatisticsResult(0)
+        getStatisticsResult()
         snackbar = make(binding.flRoot, getString(R.string.check_network), LENGTH_INDEFINITE)
         binding.ivCancel.setOnClickListener { v: View? -> Utility.backNavigation(activity) }
     }
 
-    private fun getStatisticsResult(cityId: Int) {
+    private fun getStatisticsResult() {
         if (isNetworkConnected(activity as AppCompatActivity)) {
             val jsonObject = JSONObject()
             jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
             jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
             jsonObject.put(getString(R.string.city_id), cityId)
+            jsonObject.put(getString(R.string.local_community_id), localCommId)
+
+            if (loginMem.role != getString(R.string.super_admin)) {
+                jsonObject.put(getString(R.string.sub_community_id), loginMem.subCommunityId)
+            } else {
+                jsonObject.put(getString(R.string.sub_community_id), subCommId)
+            }
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             Coroutines.main {
                 binding.shimmerViewContainer.startShimmerAnimation()
@@ -160,6 +228,5 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         DashboardActivity.binding.space.visibility = View.VISIBLE
     }
-
 
 }

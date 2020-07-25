@@ -35,14 +35,69 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:text="@string/you_can_search_total_number_of_family_members_male_female_unmarried"
                 android:textSize="12sp" />
 
 
             <RelativeLayout
+                android:id="@+id/rl_sub_comm"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/border">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_sub_comm"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Go for Sub Community"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/fname"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/border">
+
+                <com.krs.community.jrspinner.JRSpinner
+                    android:id="@+id/sp_local_comm"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Pick Local Community"
+                    android:imeOptions="actionNext"
+                    android:nextFocusDown="@+id/fname"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black1"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/border">
@@ -54,6 +109,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:drawablePadding="10dp"
                     android:fontFamily="@font/montserrat_regular"
                     android:hint="@string/search_village_here"
@@ -85,7 +141,7 @@
                     <LinearLayout
                         android:id="@+id/ll_villages"
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -116,7 +172,7 @@
 
                     <LinearLayout
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -147,7 +203,7 @@
 
                     <LinearLayout
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -178,7 +234,7 @@
 
                     <LinearLayout
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -209,7 +265,7 @@
 
                     <LinearLayout
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -240,7 +296,7 @@
 
                     <LinearLayout
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -271,7 +327,7 @@
 
                     <LinearLayout
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="20dp"
@@ -303,7 +359,7 @@
 
                     <LinearLayout
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginBottom="20dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -334,7 +390,7 @@
 
                     <LinearLayout
                         android:layout_width="350dp"
-                        android:layout_height="60dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginBottom="20dp"
                         android:background="@drawable/round_mid_corner_white"
@@ -394,6 +450,7 @@
 
                     <include layout="@layout/statistics_shimmer" />
 
+                    <include layout="@layout/statistics_shimmer" />
 
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>

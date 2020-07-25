@@ -150,7 +150,7 @@ interface ApiServices {
     suspend fun forgotPassword(@Body request: JsonObject): Response<LoginResponse>
 
     @POST(AppConstants.UrlPath.GET_MASTER_UPDATE_COUNTS)
-    suspend fun getMasterUpdate(): Response<MasterUpdateResponse>
+    suspend fun getMasterUpdate(@Body request: JsonObject): Response<MasterUpdateResponse>
 
     @POST(AppConstants.UrlPath.SET_REMINDER)
     suspend fun setReminder(@Body request: JsonObject): Response<ReminderResponse>

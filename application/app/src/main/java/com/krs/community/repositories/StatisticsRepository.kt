@@ -1,5 +1,6 @@
 package com.krs.community.repositories
 
+import androidx.lifecycle.LiveData
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
 import com.krs.community.responses.StatisticResponse
@@ -25,11 +26,33 @@ class StatisticsRepository(
         }
     }
 
+    suspend fun getSubIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getSubCommunityDao().getSubCommIdByName(name)
+        }
+    }
+
+    suspend fun getLocalIdByName(name: String): Int {
+        return withContext(Dispatchers.IO) {
+            db.getLocalCommunityDao().getLocalCommunityId(name)
+        }
+    }
+
+    suspend fun getSubComm(): LiveData<List<String>> {
+        return withContext(Dispatchers.IO) {
+            db.getSubCommunityDao().getSubCommName()
+        }
+    }
+
+    suspend fun getLocalComm(SubId: Int): LiveData<List<String>> {
+        return withContext(Dispatchers.IO) {
+            db.getLocalCommunityDao().getLocalCommNameBySubId(SubId)
+        }
+    }
+
     suspend fun getCityNames(): List<String> {
         return withContext(Dispatchers.IO) {
             db.getCityDao().getcityListName()
         }
     }
-
-
 }
