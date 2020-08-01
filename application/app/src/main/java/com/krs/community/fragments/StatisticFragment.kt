@@ -137,17 +137,7 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
         }
 
         Coroutines.io {
-            val cities = statisticsViewModel.lstCityName()
-
             Coroutines.main {
-
-                binding.spCity.clear()
-                val lstValue = ArrayList<String>()
-                lstValue.add("All Villages")
-                lstValue.addAll(cities.toTypedArray())
-                binding.spCity.setItems(lstValue.toTypedArray())
-                binding.spCity.setExpandTint(R.color.black)
-
                 statisticsViewModel.getSubComm().observe(activity as AppCompatActivity, Observer {
                     binding.spSubComm.clear()
                     val lstSubCommValue = ArrayList<String>()
@@ -207,6 +197,25 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
             } else {
                 binding.llVillages.visibility = View.VISIBLE
                 binding.tvVillage.text = response.data.totalVillages.toString()
+            }
+            Coroutines.io {
+                val lst = ArrayList<String>()
+                for (city in response.cities) {
+                    lst.add(city.cityId)
+                }
+                if (lst.isNotEmpty()) {
+                    val list = statisticsViewModel.getCityDistinctName(lst)
+                    Coroutines.main {
+                        list.observe(activity as AppCompatActivity, Observer {
+                            binding.spCity.clear()
+                            val lstValue = ArrayList<String>()
+                            lstValue.add("All Villages")
+                            lstValue.addAll(it)
+                            binding.spCity.setItems(lstValue.toTypedArray())
+                            binding.spCity.setExpandTint(R.color.black)
+                        })
+                    }
+                }
             }
         }
     }

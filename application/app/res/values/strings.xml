@@ -341,7 +341,7 @@
     <string name="_continue">Continue</string>
     <string name="hash_key">hash_key</string>
     <string name="otp_send">Messaging OTP Code on your number!</string>
-    <string name="seat_back_relax">Seat back &amp; Relax!</string>
+    <string name="seat_back_relax">Sit back &amp; Relax!</string>
     <string name="fetching_states">Fetching States</string>
     <string name="you_sure">Are you sure?</string>
     <string name="restrict_space" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>

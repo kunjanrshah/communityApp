@@ -1125,6 +1125,8 @@
     <string name="cityfilter">City</string>
     <string name="areafilter">Area</string>
     <string name="pincodefilter">PinCode</string>
+    <string name="local_comm_filter">Local Community</string>
+    <string name="sub_comm_filter">Sub Community</string>
     <string name="all_filtersfilter">All Filters</string>
 
     <string name="adminsfound">Admins found</string>

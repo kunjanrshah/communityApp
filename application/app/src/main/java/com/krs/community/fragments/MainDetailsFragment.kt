@@ -106,13 +106,11 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                 member.isRented = loginMem.isRented
             }
 
-            if (isAdmin()) {
-                binding.edtCode.isFocusable = true
-                binding.edtCode.isClickable = true
-            } else {
-                binding.edtCode.isFocusable = false
-                binding.edtCode.isClickable = false
-            }
+
+            binding.edtCode.isFocusable = false
+            binding.edtCode.isClickable = false
+
+
 
             if (member.id.isNullOrEmpty()) {
                 binding.llPin.visibility = View.VISIBLE

@@ -547,6 +547,8 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
         var name = member.firstName
         var state = member.stateId
         var city = member.cityId
+        var local = member.localCommunityId
+        var sub = member.subCommunityId
         if (!member.birthDate.isNullOrEmpty()) {
             Bdate = Utility.changeDateFormat(member.birthDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
             val age = Utility.getAge(Bdate, Utility.dd_MM_yyyy)
@@ -564,13 +566,20 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
         if (!member.cityId.isNullOrEmpty()) {
             city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
         }
+        if (!member.localCommunityId.isNullOrEmpty()) {
+            local = profileDetailViewModel.getLocalCommunityName(member.localCommunityId)
+        }
+        if (!member.subCommunityId.isNullOrEmpty()) {
+            sub = profileDetailViewModel.getSubCommName(member.subCommunityId)
+        }
 
         val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
         val headerImage = "<img src=$path alt=$name>"
         val lblName = name
         val lblGender = "<b>Gender:</b> ${member.gender}"
         val lblBdate = "<b>BirthDate:</b> $Bdate"
-        //val lblFather = "<b>FatherName:</b> ${member.fatherName}"
+        val lblSub = "<b>Sub Community:</b> $sub"
+        val lblLocal = "<b>Local Community:</b> $local"
         val lblMother = "<b>MotherName:</b> ${member.motherName}"
         val lblEmail = "<b>Email:</b> ${member.emailAddress}"
         val lblMobile = "<b>Mobile:</b> ${member.mobile}"
@@ -639,6 +648,18 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
             rows += "<td> $lblPinCode</td>"
         }
         rows += "</tr>"
+
+        rows += "<tr>"
+        if (lstFilter.contains("local_community")) {
+            rows += "<td> $lblLocal</td>"
+        }
+        rows += "</tr>"
+        rows += "<tr>"
+        if (lstFilter.contains("sub_community")) {
+            rows += "<td> $lblSub</td>"
+        }
+        rows += "</tr>"
+
         rows += "</table><br><br>"
     }
     if (Utility.checkExternalStoragePermission(mContext)) {

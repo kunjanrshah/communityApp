@@ -120,7 +120,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
 
                 holder.swipe.close(true)
 
-                if (loginMem?.role == getString(R.string.super_admin)) {
+                if (loginMem?.role == getString(R.string.super_admin) || loginMem?.role == getString(R.string.SUB_ADMIN)) {
                     holder.swipe.setLockDrag(false)
                 } else {
                     holder.swipe.setLockDrag(true)

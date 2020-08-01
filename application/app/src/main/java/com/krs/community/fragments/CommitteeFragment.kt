@@ -130,7 +130,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMember) {
             override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
                 val holder = viewHolder as ListViewHolder
-                holder.viewLine.visibility = View.VISIBLE
+               // holder.viewLine.visibility = View.VISIBLE
                 holder.llDesignation.visibility = View.VISIBLE
                 holder.llCommittee.visibility = View.VISIBLE
                 holder.llRegion.visibility = View.VISIBLE

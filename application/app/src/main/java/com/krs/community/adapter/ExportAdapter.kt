@@ -48,9 +48,9 @@ class ExportAdapter(var mContext: Context) : BaseAdapter() {
         viewHolder.llName.setOnClickListener {
             viewHolder.llName.visibility = View.GONE
         }
-        viewHolder.llFather.setOnClickListener {
+       /* viewHolder.llFather.setOnClickListener {
             viewHolder.llFather.visibility = View.GONE
-        }
+        }*/
         viewHolder.llMother.setOnClickListener {
             viewHolder.llMother.visibility = View.GONE
         }
@@ -88,8 +88,16 @@ class ExportAdapter(var mContext: Context) : BaseAdapter() {
         viewHolder.llPincode.setOnClickListener {
             viewHolder.llPincode.visibility = View.GONE
         }
+        viewHolder.llLocalComm.setOnClickListener {
+            viewHolder.llLocalComm.visibility = View.GONE
+        }
+        viewHolder.llSubComm.setOnClickListener {
+            viewHolder.llSubComm.visibility = View.GONE
+        }
         viewHolder.llAll.setOnClickListener {
             viewHolder.llPincode.visibility = View.VISIBLE
+            viewHolder.llLocalComm.visibility = View.VISIBLE
+            viewHolder.llSubComm.visibility = View.VISIBLE
             viewHolder.llArea.visibility = View.VISIBLE
             viewHolder.llCity.visibility = View.VISIBLE
             viewHolder.llState.visibility = View.VISIBLE
@@ -101,7 +109,7 @@ class ExportAdapter(var mContext: Context) : BaseAdapter() {
             viewHolder.llGender.visibility = View.VISIBLE
             viewHolder.llMarital.visibility = View.VISIBLE
             viewHolder.llMother.visibility = View.VISIBLE
-            viewHolder.llFather.visibility = View.VISIBLE
+            // viewHolder.llFather.visibility = View.VISIBLE
             viewHolder.llName.visibility = View.VISIBLE
             viewHolder.llPhoto.visibility = View.VISIBLE
         }
@@ -110,6 +118,12 @@ class ExportAdapter(var mContext: Context) : BaseAdapter() {
             val filters = ArrayList<String>()
             if (viewHolder.llPincode.isVisible) {
                 filters.add("pincode")
+            }
+            if (viewHolder.llLocalComm.isVisible) {
+                filters.add("local_community")
+            }
+            if (viewHolder.llSubComm.isVisible) {
+                filters.add("sub_community")
             }
             if (viewHolder.llArea.isVisible) {
                 filters.add("area")
@@ -144,9 +158,9 @@ class ExportAdapter(var mContext: Context) : BaseAdapter() {
             if (viewHolder.llMother.isVisible) {
                 filters.add("mother")
             }
-            if (viewHolder.llFather.isVisible) {
-                filters.add("father")
-            }
+            /* if (viewHolder.llFather.isVisible) {
+                 filters.add("father")
+             }*/
             if (viewHolder.llName.isVisible) {
                 filters.add("name")
             }
@@ -172,7 +186,8 @@ class ExportAdapter(var mContext: Context) : BaseAdapter() {
     internal class ViewHolder(view: View) {
         var llPhoto: LinearLayout = view.findViewById(R.id.ll_photo)
         var llName: LinearLayout = view.findViewById(R.id.ll_name)
-        var llFather: LinearLayout = view.findViewById(R.id.ll_father)
+
+        //  var llFather: LinearLayout = view.findViewById(R.id.ll_father)
         var ivCancel: ImageView = view.findViewById(R.id.iv_cancel)
         var llMother: LinearLayout = view.findViewById(R.id.ll_mother)
         var llMobile: LinearLayout = view.findViewById(R.id.ll_mobile)
@@ -186,6 +201,8 @@ class ExportAdapter(var mContext: Context) : BaseAdapter() {
         var llCity: LinearLayout = view.findViewById(R.id.ll_city)
         var llArea: LinearLayout = view.findViewById(R.id.ll_area)
         var llPincode: LinearLayout = view.findViewById(R.id.ll_pincode)
+        var llSubComm: LinearLayout = view.findViewById(R.id.ll_sub_comm)
+        var llLocalComm: LinearLayout = view.findViewById(R.id.ll_local_comm)
         var llAll: LinearLayout = view.findViewById(R.id.ll_all)
         var tvDone: TextView = view.findViewById(R.id.tv_done)
     }

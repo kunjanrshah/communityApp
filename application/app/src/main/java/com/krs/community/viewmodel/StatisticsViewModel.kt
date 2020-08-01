@@ -44,6 +44,10 @@ class StatisticsViewModel(
         return mStatisticsRepository.getcityIdByName(name)
     }
 
+    suspend fun getCityDistinctName(citiesId: ArrayList<String>): LiveData<List<String>> {
+        return mStatisticsRepository.getCityDistinctName(citiesId)
+    }
+
     fun getStatistics(jsonObject: JsonObject) {
         if (isNetworkConnected(app.applicationContext)) {
             job_statistics = Job()

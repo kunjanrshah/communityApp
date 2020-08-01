@@ -368,9 +368,13 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         jsonObject.put(getString(R.string.length), "")
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.role), resources.getString(R.string.LOCAL_ADMIN))
-        if (role != getString(R.string.super_admin)) {
+
+        if (role == getString(R.string.SUB_ADMIN)) {
+            jsonObj.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
+        } else if (role != getString(R.string.super_admin)) {
             jsonObj.put(getString(R.string.local_community_id), loginUserLocalCommunityId)
         }
+
         jsonObject.put(getString(R.string.filter_by), jsonObj)
         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)

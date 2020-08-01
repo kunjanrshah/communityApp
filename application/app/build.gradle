@@ -83,8 +83,8 @@ android {
 
         ghanchi {
             applicationId "com.ghanchi.samaj"
-            versionCode 18
-            versionName "1.0.9"
+            versionCode 19
+            versionName "1.0.10"
             resValue "string", "app_name", "Muslim Ghanchi Parivar"
             resValue "string", "dev_name", "Mehboob Gogda"
             resValue "string", "dev_contact", "9377133222"

@@ -26,6 +26,12 @@ class StatisticsRepository(
         }
     }
 
+    suspend fun getCityDistinctName(citiesId: ArrayList<String>): LiveData<List<String>> {
+        return withContext(Dispatchers.IO) {
+            db.getCityDao().getcityDistinctName(citiesId)
+        }
+    }
+
     suspend fun getSubIdByName(name: String): Int {
         return withContext(Dispatchers.IO) {
             db.getSubCommunityDao().getSubCommIdByName(name)
