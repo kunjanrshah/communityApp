@@ -346,14 +346,18 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
 
         val date = Date()
         val dateFormat = SimpleDateFormat("YYYY")
-        val year = dateFormat.format(date)
+        var year = dateFormat.format(date)
 
-        startDate = "$year-01"
         endDate = "$year-12"
-        var month = DateFormatSymbols().months[0]
-        strStart = String.format("%s  %s", month, year)
-        month = DateFormatSymbols().months[11]
+        var month = DateFormatSymbols().months[11]
         strEnd = String.format("%s  %s", month, year)
+
+        year = (year.toInt() - 1).toString()
+        startDate = "$year-01"
+        month = DateFormatSymbols().months[0]
+        strStart = String.format("%s  %s", month, year)
+
+
         txtDuration.text = "$strStart - $strEnd"
 
         AppController.mApplication.connectionLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -528,6 +532,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
             val month = DateFormatSymbols().months[monthSelected]
             var str_month = ""
             monthSelected++
+            str_month = "" + monthSelected
             if (monthSelected < 10) {
                 str_month = "0$monthSelected"
             }

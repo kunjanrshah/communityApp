@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -64,7 +63,6 @@ import com.krs.community.viewmodelfactory.SmartSearchViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -420,6 +418,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                     DashboardActivity.stop = false
                     getMembersByKeyword()
                 } else {
+                    DashboardActivity.stop = true
                     lstMembers.clear()
                     mShimmerViewContainer.stopShimmerAnimation()
                     mShimmerViewContainer.visibility = View.GONE
@@ -485,7 +484,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
     private fun getMembersByKeyword() {
         if (isNetworkConnected(activity as AppCompatActivity)) {
             if (!DashboardActivity.stop) {
-                //  lstMembers.clear()
+
                 tvRecords.visibility = View.GONE
                 llLabel.visibility = View.GONE
                 if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
@@ -493,7 +492,12 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 } else {
                     ivExport.visibility = View.VISIBLE
                 }
-//                rvAdapter.notifyDataSetChanged()
+
+                if (AppController.mApplication.start == 0) {
+                    lstMembers.clear()
+                    rvAdapter.notifyDataSetChanged()
+                }
+
                 DashboardActivity.stop = true
                 val mJSONObject = JSONObject()
 
@@ -573,17 +577,20 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
             if (Integer.parseInt(response.totalRecords) == 0) {
                 DashboardActivity.stop = true
-                    val gif: Int = R.drawable.gif_dialog
-                    TTFancyGifDialog.Builder(activity)
-                            .setMessage(getString(R.string.noFoundNonActives))
-                            .setPositiveBtnText(getString(R.string.ok))
-                            .setPositiveBtnBackground("#843f52")
-                            .setGifResource(gif)
-                            .isCancellable(false)
-                            .OnPositiveClicked {
 
-                            }
-                            .build()
+                Toast.makeText(activity, getString(R.string.noFoundNonActives), Toast.LENGTH_SHORT).show()
+
+                /*val gif: Int = R.drawable.gif_dialog
+                TTFancyGifDialog.Builder(activity)
+                        .setMessage(getString(R.string.noFoundNonActives))
+                        .setPositiveBtnText(getString(R.string.ok))
+                        .setPositiveBtnBackground("#843f52")
+                        .setGifResource(gif)
+                        .isCancellable(false)
+                        .OnPositiveClicked {
+
+                        }
+                        .build()*/
                     true
             } else if (response.member.size < AppController.mApplication.length) {
                     Snackbar.make(frameRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
@@ -617,19 +624,20 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             mShimmerViewContainer.stopShimmerAnimation()
             mShimmerViewContainer.visibility = View.GONE
 
+            Toast.makeText(activity, getString(R.string.noFoundNonActives), Toast.LENGTH_SHORT).show()
             //  val gif: Int = R.drawable.gif_no_record
-            val gif: Int = R.drawable.gif_dialog
-            TTFancyGifDialog.Builder(activity)
-                    //.setTitle(getString(R.string.you_sure))
-                    .setMessage(getString(R.string.noFoundNonActives))
-                    .setPositiveBtnText(getString(R.string.ok))
-                    .setPositiveBtnBackground("#843f52")
-                    .setGifResource(gif)
-                    .isCancellable(false)
-                    .OnPositiveClicked {
+            /* val gif: Int = R.drawable.gif_dialog
+             TTFancyGifDialog.Builder(activity)
+                     //.setTitle(getString(R.string.you_sure))
+                     .setMessage(getString(R.string.noFoundNonActives))
+                     .setPositiveBtnText(getString(R.string.ok))
+                     .setPositiveBtnBackground("#843f52")
+                     .setGifResource(gif)
+                     .isCancellable(false)
+                     .OnPositiveClicked {
 
-                    }
-                    .build()
+                     }
+                     .build()*/
 
             //  Snackbar.make(frameRoot, getString(R.string.endRecord), Snackbar.LENGTH_LONG).show()
         }

@@ -107,15 +107,15 @@ android {
         }
         medk {
             applicationId "com.medk.samaj"
-            versionCode 1
-            versionName "1.0.0"
+            versionCode 2
+            versionName "1.0.1"
             resValue "string", "app_name", "Vastipatrak"
-            resValue "string", "dev_name", "Kunjan Shah"
-            resValue "string", "dev_contact", "9427051418"
+            resValue "string", "dev_name", "Minesh Shah"
+            resValue "string", "dev_contact", "9820615291"
             resValue "string", "skype_id", "kunjanrshah"
             resValue "string", "fb_url", "https://www.facebook.com/kunjanrshah87"
             resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
-            resValue "string", "dev_email", "kunjanrshah@gmail.com"
+            resValue "string", "dev_email", "yee@live.in"
             resValue "string", "dev_link", "https://medkapp.org"
             resValue "string", "authorities", "com.medk.samaj.provider"
             resValue "string", "privacy_policy_url", "https://www.medkapp.org/privacy_policy.html"

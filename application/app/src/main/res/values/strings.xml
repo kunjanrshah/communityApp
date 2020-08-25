@@ -298,7 +298,7 @@
     <string name="_continue">Continue</string>
     <string name="hash_key">hash_key</string>
     <string name="otp_send">Sending OTP Please wait!</string>
-    <string name="seat_back_relax">Seat back &amp; Relax!</string>
+    <string name="seat_back_relax">Sit back &amp; Relax!</string>
     <string name="you_sure">Are you sure?</string>
     <string name="restrict_space" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
     <string name="only_chars" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</string>
@@ -334,6 +334,7 @@
     <string name="local_address" translatable="false">local_address</string>
     <string name="business_address" translatable="false">business_address</string>
     <string name="work_details" translatable="false">work_details</string>
+    <string name="phone" translatable="false">phone</string>
     <string name="website" translatable="false">website</string>
     <string name="occupation_id" translatable="false">occupation_id</string>
     <string name="business_sub_category_id" translatable="false">business_sub_category_id</string>
@@ -459,7 +460,7 @@
     <string name="home">Home</string>
     <string name="Calendar">Calendar</string>
 
-    <string name="MoveProfile">Navigate your detail</string>
+    <string name="MoveProfile">Navigating your detail</string>
     <string name="LocationOff">GPS Off</string>
     <string name="LocationOn">GPS On</string>
 
@@ -528,7 +529,7 @@
     <string name="share_qr_code">SHARE QR CODE</string>
     <string name="you_can_share_this_qr_code_to_other_you_can_scan_qr_code_by_camera_and_gallery">you can share this QR code to other, you can scan QR code by Camera and Gallery</string>
     <string name="pratik_soni">PRATIK SONI</string>
-    <string name="_9427051418">9427051418</string>
+    <string name="_9427051418">9820615291</string>
     <string name="ShareQrCode">Share QR Code</string>
     <string name="ScanQrCode">Scan QR Code</string>
     <string name="qr_code_gallery">QR Code Gallery</string>

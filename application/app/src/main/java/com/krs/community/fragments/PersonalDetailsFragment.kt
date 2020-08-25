@@ -71,6 +71,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.edtLocalAddr.isFocusable = true
             binding.edtRole.isFocusable = true
             binding.spNative.isClickable = true
+            binding.edtNumber.isFocusable = true
             binding.chkExpired.isEnabled = true
             binding.chkIsDonor.isFocusable = true
             binding.chkIsDonor.isClickable = true
@@ -92,6 +93,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
             binding.spLocalComm.isClickable = false
             binding.edtRole.isFocusable = false
             binding.spNative.isClickable = false
+            binding.edtNumber.isFocusable = false
             binding.chkExpired.isEnabled = false
             binding.chkIsDonor.isFocusable = false
             binding.chkIsDonor.isClickable = false
@@ -126,6 +128,10 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         }
         if (!member.localAddress.isNullOrEmpty()) {
             binding.edtLocalAddr.setText(member.localAddress)
+        }
+
+        if (!member.phone.isNullOrEmpty()) {
+            binding.edtNumber.setText(member.phone)
         }
 
         binding.edtLocalAddr.addTextChangedListener(object : TextWatcher {
@@ -348,7 +354,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         try {
             json.put(getString(R.string.role), member.role)
             json.put(getString(R.string.native_place_id), profileDetailViewModel.selectedNativeId)
-
+            json.put(getString(R.string.phone), binding.edtNumber.text.trim())
             val bdate = binding.txtBdate.text.toString().substringBefore("(")
             if (!bdate.isEmpty()) {
                 val str = Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd)

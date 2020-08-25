@@ -82,6 +82,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
             binding.spOccupation.isClickable = true
             binding.edtUrl.isFocusable = true
             binding.edtDetail.isFocusable = true
+            binding.edtNumber.isFocusable = true
             binding.edtAddr.isFocusable = true
         } else {
             binding.imgLogo.isEnabled = false
@@ -92,6 +93,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
             binding.edtUrl.isFocusable = false
             binding.edtUrl.movementMethod = LinkMovementMethod.getInstance()
             binding.edtDetail.isFocusable = false
+            binding.edtNumber.isFocusable = false
             binding.edtAddr.isFocusable = false
         }
 
@@ -181,6 +183,11 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         if (!member.workDetails.isNullOrEmpty()) {
             binding.edtDetail.setText(member.workDetails)
         }
+
+        if (!member.phone.isNullOrEmpty()) {
+            binding.edtNumber.setText(member.phone)
+        }
+
         binding.edtDetail.addTextChangedListener(object : TextWatcher {
             private var text: String? = null
             override fun afterTextChanged(s: Editable?) {
@@ -366,6 +373,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
             jsonObject.put(getString(R.string.occupation_id), profileDetailViewModel.selectedOccupationId)
             jsonObject.put(getString(R.string.website), binding.edtUrl.text.trim())
             jsonObject.put(getString(R.string.work_details), binding.edtDetail.text.trim())
+            //jsonObject.put(getString(R.string.phone), binding.edtNumber.text.trim())
             jsonObject.put(getString(R.string.business_address), binding.edtAddr.text.trim())
         } catch (e: Exception) {
             e.printStackTrace()

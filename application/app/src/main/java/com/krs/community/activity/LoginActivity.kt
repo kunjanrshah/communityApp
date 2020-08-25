@@ -504,8 +504,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     private fun goToFamilyDetailScreen() {
+
         Guru.putString(getString(R.string.user_id), member.id)
         Guru.putString(getString(R.string.access_token), member.accessToken)
+
         val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         if (member.headId == "0") {
