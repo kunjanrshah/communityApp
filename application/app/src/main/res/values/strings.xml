@@ -121,7 +121,7 @@
     </string-array>
 
     <string-array name="lst_relative">
-        <item>@string/other</item>
+        <item>@string/add_new</item>
         <item>@string/wife</item>
         <item>@string/husband</item>
         <item>@string/son</item>
@@ -133,6 +133,7 @@
         <item>@string/grand_daughter</item>
     </string-array>
 
+    <string name="add_new" translatable="false">Add New</string>
     <string name="other" translatable="false">Other</string>
     <string name="partner" translatable="false">Partner</string>
     <string name="father" translatable="false">Father</string>
@@ -315,6 +316,15 @@
     <string name="area" translatable="false">area</string>
     <string name="pincode" translatable="false">pincode</string>
     <string name="relation_id" translatable="false">relation_id</string>
+
+    <string name="relation_text" translatable="false">relation_text</string>
+    <string name="occupation_text" translatable="false">occupation_text</string>
+    <string name="sub_cast_text" translatable="false">sub_cast_text</string>
+    <string name="native_place_text" translatable="false">native_place_text</string>
+    <string name="education_text" translatable="false">education_text</string>
+    <string name="current_activity_text" translatable="false">current_activity_text</string>
+    <string name="business_category_text" translatable="false">business_category_text</string>
+
     <string name="sub_cast_id" translatable="false">sub_cast_id</string>
     <string name="state_id" translatable="false">state_id</string>
     <string name="city_id" translatable="false">city_id</string>
@@ -912,7 +922,7 @@
     <string name="Mobile">Mobile</string>
 
     <string name="main_detail">Main Detail</string>
-    <string name="memberDetails">Member Code</string>
+    <string name="memberDetails">Code</string>
     <string name="relationDetails">Relation</string>
     <string name="select">Select</string>
 
@@ -1139,7 +1149,8 @@
     <string name="sharing">Sharing File from</string>
     <string name="sharedetails">Share File Details</string>
     <string name="install">Install your</string>
-    <string name="pleaseclick">Please click BACK again to exit</string>
+    <string name="pleaseclick1">Turn Off GPS to Save Battery and BACK again to exit</string>
+    <string name="pleaseclick">Please BACK again to exit</string>
     <string name="birthdate" translatable="false">birthdate</string>
     <string name="fname" translatable="false">fname</string>
     <string name="lastnameId" translatable="false">lastnameId</string>

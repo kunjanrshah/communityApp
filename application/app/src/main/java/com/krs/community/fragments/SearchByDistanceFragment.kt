@@ -54,6 +54,7 @@ import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.ByDistanceResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.Utility.checkFineLocationPermission
 import com.krs.community.viewmodel.ByDistanceViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
@@ -90,7 +91,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
     private var isCallAPI = false
     private var snackbar: Snackbar? = null
     private lateinit var distance: ByDistanceModel
-
+    var request: LocationRequest? = null
     internal lateinit var mByDistanceViewModel: ByDistanceViewModel
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var roomMemberViewModel: RoomMemberViewModel
@@ -104,6 +105,15 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragmnet_search_by_distance, container, false)
+
+        if (checkFineLocationPermission(activity)) {
+            getLocationDetail = GetLocationDetail(this, activity)
+            val request = LocationRequest()
+            request.interval = Utility.INTERVAL
+            request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            easyWayLocation = EasyWayLocation(activity, request, false, this)
+        }
+
 
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.SearchDistance)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -129,17 +139,13 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         recyclerView.itemAnimator = DefaultItemAnimator()
 
         createCardAdapter(recyclerView)
-        getLocationDetail = GetLocationDetail(this, activity)
-        val request = LocationRequest()
-        request.interval = Utility.INTERVAL
-        request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        easyWayLocation = EasyWayLocation(activity, request, false, this)
+
         AppController.mApplication.start = 0
         DashboardActivity.stop = false
         isCallAPI = true
         callDistanceAPI()
-        currLat.postValue(DashboardActivity.cur_lat.value)
-        currLng.postValue(DashboardActivity.cur_lng.value)
+
+
         memberId = Guru.getString(getString(R.string.member_id), "")
 
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
@@ -663,10 +669,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         if (!DashboardActivity.stop) {
 
             Log.e("edtKm---", "" + edtKm.text.toString().trim())
-            if (edtKm.text.toString().trim().equals("") && edtKm.text.toString().trim().length == 0) {
-
-            } else {
-
+            if (edtKm.text.toString().trim().isNotEmpty()) {
                 DashboardActivity.stop = true
                 lstMembers.clear()
                 tvRecords.visibility = View.GONE

@@ -348,13 +348,13 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
         val dateFormat = SimpleDateFormat("YYYY")
         var year = dateFormat.format(date)
 
-        endDate = "$year-12"
-        var month = DateFormatSymbols().months[11]
+        endDate = "$year-09"
+        var month = DateFormatSymbols().months[8]
         strEnd = String.format("%s  %s", month, year)
 
-        year = (year.toInt() - 1).toString()
-        startDate = "$year-01"
-        month = DateFormatSymbols().months[0]
+        year = (year.toInt() - 2).toString()
+        startDate = "$year-09"
+        month = DateFormatSymbols().months[8]
         strStart = String.format("%s  %s", month, year)
 
 

@@ -752,8 +752,12 @@ public class Utility {
         }
 
         doubleBackToExitPressedOnce = true;
-        Utility.displaySnackBarWithBottomMargin(activity.findViewById(android.R.id.content), activity.getString(R.string.pleaseclick));
-
+        LocationManager manager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Utility.displaySnackBarWithBottomMargin(activity.findViewById(android.R.id.content), activity.getString(R.string.pleaseclick1));
+        } else {
+            Utility.displaySnackBarWithBottomMargin(activity.findViewById(android.R.id.content), activity.getString(R.string.pleaseclick));
+        }
         new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 

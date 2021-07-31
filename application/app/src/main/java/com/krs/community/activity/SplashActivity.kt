@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -26,7 +25,6 @@ import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.LoginActivity
 import com.krs.community.activity.RegisterActivty
 import com.krs.community.activity.SplashActivity
-import com.krs.community.adapter.PolicyAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.fragments.FamilyDetailActivity
@@ -56,23 +54,24 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val policy = Guru.getBoolean(getString(R.string.policy), false)
-        if (!policy) {
-            val adapter = PolicyAdapter(this, "splash")
-            polictyDialog = DialogPlus.newDialog(this)
-                    .setAdapter(adapter)
-                    .setGravity(Gravity.CENTER)
-                    .setOnDismissListener {
-                        onCreateMethod()
-                    }
-                    .setCancelable(false)
-                    .setExpanded(false, 800)
-                    .setContentBackgroundResource(R.drawable.popup_corner)
-                    .create()
-            polictyDialog?.show()
-        } else {
-            onCreateMethod()
-        }
+//        val policy = Guru.getBoolean(getString(R.string.policy), false)
+//        if (!policy) {
+//            val adapter = PolicyAdapter(this, "splash")
+//            polictyDialog = DialogPlus.newDialog(this)
+//                    .setAdapter(adapter)
+//                    .setGravity(Gravity.CENTER)
+//                    .setOnDismissListener {
+//                        onCreateMethod()
+//                    }
+//                    .setCancelable(false)
+//                    .setExpanded(false, 800)
+//                    .setContentBackgroundResource(R.drawable.popup_corner)
+//                    .create()
+//            polictyDialog?.show()
+//        } else {
+//            onCreateMethod()
+//        }
+        onCreateMethod()
     }
 
     private fun onCreateMethod() {

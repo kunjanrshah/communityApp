@@ -80,6 +80,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:autoLink="web"
+                            android:visibility="gone"
                             android:fontFamily="@font/montserrat_regular"
                             android:text="@string/dev_link"
                             android:textSize="14sp" />

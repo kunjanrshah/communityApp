@@ -21,7 +21,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chauthai.swipereveallayout.SwipeRevealLayout
-import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -29,7 +28,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
-import com.krs.community.activity.DashboardActivity
 import com.krs.community.activity.FamilyTreeListActivity
 import com.krs.community.activity.ProfileDetailActivity
 import com.krs.community.activity.QRCodeActivity
@@ -37,7 +35,6 @@ import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.NotificationBadge
 import com.krs.community.bkservice.ProcessMainClass
-import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.FragmnetSharedLocationBinding
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.ByFilterListener
@@ -657,38 +654,12 @@ class SharedLocationFragment : Fragment(), KodeinAware, LocationAdapter.SetLocat
         private var currentSelectedIndex = -1
     }
 
-    private fun startLocationService() {
-        try {
-            if (DashboardActivity.easyWayLocation?.hasLocationEnabled()!!) {
-                if (Utility.checkFineLocationPermission(activity)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        RestartServiceBroadcastReceiver.scheduleJob(activity)
-                    } else {
-                        val bck = ProcessMainClass()
-                        bck.launchService(activity)
-                    }
-                } else {
-                    if (Utility.checkFineLocationPermission(activity)) {
-                        DashboardActivity.easyWayLocation?.startLocation() //calculateDistance()
-                    } else {
-                        Utility.requestFineLocationPermission(activity as AppCompatActivity)
-                    }
-                }
-            } else {
-                DashboardActivity.easyWayLocation = EasyWayLocation(activity, DashboardActivity.request, true, activity as DashboardActivity)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-
     override fun getMembers(response: SmartFilterResponse) {
         if (response.success) {
             members.clear()
             duplicateIds.clear()
             if (response.members != null && response.members.size > 0) {
                 members.addAll(response.members)
-                startLocationService()
             } else {
                 if (ProcessMainClass.serviceIntent != null) {
                     activity?.stopService(ProcessMainClass.serviceIntent)

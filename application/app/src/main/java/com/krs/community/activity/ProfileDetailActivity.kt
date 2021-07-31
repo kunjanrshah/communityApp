@@ -181,12 +181,17 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
             if (isNetworkConnected(this)) {
                 val jsonObject = JSONObject()
-                mainDetailsFragment.getSaveData(jsonObject)
+                val mainPass = mainDetailsFragment.getSaveData(jsonObject)
                 personalDetailsFragment.getSaveData(jsonObject)
                 professionalDetailsFragment.getSaveData(jsonObject)
                 matrimonyDetailsFragment.getSaveData(jsonObject)
                 jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
                 jsonObject.put(getString(R.string.profile_percentage), binding.tvPercent.text.toString().replace("%", ""))
+
+                if (mainPass == 1) {
+                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
+                    return@setOnClickListener
+                }
 
                 if (member?.isLocationEnable == "1") {
                     jsonObject.put(getString(R.string.is_location_enable), "1")
@@ -232,10 +237,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     } else if (!jsonObject.has(getString(R.string.mobile)) || jsonObject.getString(getString(R.string.mobile)).isNullOrEmpty()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_mobile))
                         return@setOnClickListener
-                    } else if (!jsonObject.has(getString(R.string.email_address)) || jsonObject.getString(getString(R.string.email_address)).isNullOrEmpty()) {
+                    } /*else if (!jsonObject.has(getString(R.string.email_address)) || jsonObject.getString(getString(R.string.email_address)).isNullOrEmpty()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_email))
                         return@setOnClickListener
-                    }
+                    }*/
                 }
 
                 if (binding.tvSave.text.toString().toLowerCase().contains(getString(R.string.save).toLowerCase())) {
@@ -263,10 +268,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                             .show()
                 } else {
 
-                    if (!jsonObject.has(getString(R.string.relation_id)) || jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
+                    /*if (!jsonObject.has(getString(R.string.relation_id)) || jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
                         return@setOnClickListener
-                    } else if (!jsonObject.has(getString(R.string.profile_password)) || jsonObject.getString(getString(R.string.profile_password)).isNullOrEmpty()) {
+                    } else*/ if (!jsonObject.has(getString(R.string.profile_password)) || jsonObject.getString(getString(R.string.profile_password)).isNullOrEmpty()) {
                         displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_password))
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.profile_password)) || jsonObject.getString(getString(R.string.profile_password)).length < 6) {

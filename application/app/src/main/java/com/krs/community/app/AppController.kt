@@ -15,7 +15,6 @@ import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
-import com.crashlytics.android.Crashlytics
 import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
 import com.facebook.FacebookSdk
@@ -38,7 +37,6 @@ import com.krs.community.utils.AppConstants
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
 import com.krs.community.viewmodelfactory.*
-import io.fabric.sdk.android.Fabric
 import net.gotev.uploadservice.UploadServiceConfig
 import org.json.JSONObject
 import org.kodein.di.Kodein
@@ -63,12 +61,11 @@ class AppController : Application(), KodeinAware {
     val length: Int = 50
     val mHandler: Handler = Handler()
 
-
     companion object {
         val TAG = AppController::class.java.simpleName
         lateinit var mApplication: AppController
         const val notificationChannelID = "TestChannel"
-        val INTERVAL = 1000 * 60 * 3 //3 minutes
+        val INTERVAL = 1000 * 60 * 5 //5 minutes
     }
 
     override val kodein = Kodein.lazy {
@@ -194,7 +191,7 @@ class AppController : Application(), KodeinAware {
         retrofitBase = RetrofitBase(this, false)
         Fresco.initialize(applicationContext)
 
-        Fabric.with(this, Crashlytics())
+        //  Fabric.with(this, Crashlytics())
 
         /* val fabric = Fabric.Builder(this).kits(Crashlytics()).debuggable(true).build()
          Fabric.with(fabric)*/

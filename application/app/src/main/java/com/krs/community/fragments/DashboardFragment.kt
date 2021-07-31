@@ -1,5 +1,7 @@
 package com.krs.community.fragments
 
+//import com.krs.community.activity.DashboardActivity.Companion.easyWayLocation
+//import com.krs.community.activity.DashboardActivity.Companion.request
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_OK
@@ -33,7 +35,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.easywaylocation.EasyWayLocation
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -42,8 +43,6 @@ import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.*
-import com.krs.community.activity.DashboardActivity.Companion.easyWayLocation
-import com.krs.community.activity.DashboardActivity.Companion.request
 import com.krs.community.app.AppController
 import com.krs.community.app.NotificationBadge
 import com.krs.community.bkservice.ProcessMainClass
@@ -167,30 +166,30 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     }
 
 
-    private fun startLocationService() {
-        try {
-            if (easyWayLocation?.hasLocationEnabled()!!) {
-                if (Utility.checkFineLocationPermission(activity)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        RestartServiceBroadcastReceiver.scheduleJob(activity)
-                    } else {
-                        val bck = ProcessMainClass()
-                        bck.launchService(activity)
-                    }
-                } else {
-                    if (Utility.checkFineLocationPermission(activity)) {
-                        easyWayLocation?.startLocation() //calculateDistance()
-                    } else {
-                        Utility.requestFineLocationPermission(activity as AppCompatActivity)
-                    }
-                }
-            } else {
-                easyWayLocation = EasyWayLocation(activity, request, true, activity as DashboardActivity)
-            }
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
+    /* private fun startLocationService() {
+         try {
+             if (easyWayLocation?.hasLocationEnabled()!!) {
+                 if (Utility.checkFineLocationPermission(activity)) {
+                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                         RestartServiceBroadcastReceiver.scheduleJob(activity)
+                     } else {
+                         val bck = ProcessMainClass()
+                         bck.launchService(activity)
+                     }
+                 } else {
+                     if (Utility.checkFineLocationPermission(activity)) {
+                         easyWayLocation?.startLocation() //calculateDistance()
+                     } else {
+                         Utility.requestFineLocationPermission(activity as AppCompatActivity)
+                     }
+                 }
+             } else {
+                 easyWayLocation = EasyWayLocation(activity, request, true, activity as DashboardActivity)
+             }
+         } catch (e: java.lang.Exception) {
+             e.printStackTrace()
+         }
+     }*/
 
     private fun getSpeechInput() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -531,7 +530,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
                 sharedProfiles.clear()
                 duplicateIds.clear()
-                startLocationService()
+                //startLocationService()
                 sharedProfiles.addAll(response.members)
 
                 for (member1 in response.membersharing) {

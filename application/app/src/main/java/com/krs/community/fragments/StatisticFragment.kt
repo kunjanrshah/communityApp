@@ -198,25 +198,25 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
                 binding.llVillages.visibility = View.VISIBLE
                 binding.tvVillage.text = response.data.totalVillages.toString()
             }
-            Coroutines.io {
-                val lst = ArrayList<String>()
-                for (city in response.cities) {
-                    lst.add(city.cityId)
-                }
-                if (lst.isNotEmpty()) {
-                    val list = statisticsViewModel.getCityDistinctName(lst)
-                    Coroutines.main {
-                        list.observe(activity as AppCompatActivity, Observer {
-                            binding.spCity.clear()
-                            val lstValue = ArrayList<String>()
-                            lstValue.add("All Villages")
-                            lstValue.addAll(it)
-                            binding.spCity.setItems(lstValue.toTypedArray())
-                            binding.spCity.setExpandTint(R.color.black)
-                        })
-                    }
-                }
-            }
+//            Coroutines.io {
+//                val lst = ArrayList<String>()
+//                for (city in response.cities) {
+//                    lst.add(city.cityId)
+//                }
+//                if (lst.isNotEmpty()) {
+//                    val list = statisticsViewModel.getCityDistinctName(lst)
+//                    Coroutines.main {
+//                        list.observe(activity as AppCompatActivity, Observer {
+//                            binding.spCity.clear()
+//                            val lstValue = ArrayList<String>()
+//                            lstValue.add("All Villages")
+//                            lstValue.addAll(it)
+//                            binding.spCity.setItems(lstValue.toTypedArray())
+//                            binding.spCity.setExpandTint(R.color.black)
+//                        })
+//                    }
+//                }
+//            }
         }
     }
 

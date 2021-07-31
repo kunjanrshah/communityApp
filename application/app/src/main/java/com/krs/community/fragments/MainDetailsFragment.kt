@@ -6,12 +6,10 @@ import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -36,6 +34,7 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import kotlinx.android.synthetic.main.activity_profile_detail.*
 import kotlinx.android.synthetic.main.fragment_main_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -106,11 +105,8 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                 member.isRented = loginMem.isRented
             }
 
-
             binding.edtCode.isFocusable = false
             binding.edtCode.isClickable = false
-
-
 
             if (member.id.isNullOrEmpty()) {
                 binding.llPin.visibility = View.VISIBLE
@@ -192,7 +188,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         setMemberState()
         setMemberCity()
         setHomeLocation()
-       // setGender()
+        // setGender()
 
         binding.spGender.setText(member.gender)
         binding.llHome.setOnClickListener {
@@ -299,10 +295,31 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         }
 
         binding.spRelation.setOnItemClickListener {
-            Coroutines.io {
-                profileDetailViewModel.selectedRelationId = profileDetailViewModel.getIdByRelation(binding.spRelation.text.toString())
-                setGender()
+
+            if (binding.spRelation.text.toString() == activity?.getString(R.string.add_new)) {
+                binding.relRelation.visibility = View.GONE
+                binding.txtRelation.visibility = View.VISIBLE
+            } else {
+                Coroutines.io {
+                    profileDetailViewModel.selectedRelationId = profileDetailViewModel.getIdByRelation(binding.spRelation.text.toString())
+                    setGender()
+                }
             }
+        }
+
+        binding.txtRelation.setOnTouchListener { v, event ->
+
+            val DRAWABLE_RIGHT = 2
+
+            if (event.action == MotionEvent.ACTION_UP) {
+                if ((event.rawX - 400) >= (binding.txtRelation.right - binding.txtRelation.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
+                    binding.relRelation.visibility = View.VISIBLE
+                    binding.spRelation.setText(getString(R.string.select))
+                    binding.txtRelation.visibility = View.GONE
+                    true
+                }
+            }
+            false
         }
 
         binding.spLastname.setOnItemClickListener {
@@ -418,7 +435,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
         return str.reversed()
     }
 
-    fun getSaveData(jsonObject: JSONObject) {
+    fun getSaveData(jsonObject: JSONObject): Int {
 
         try {
             var code = binding.edtCode.text.toString()
@@ -438,10 +455,22 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             jsonObject.put(getString(R.string.gender), binding.spGender.text)
             jsonObject.put(getString(R.string.area), binding.edtArea.text.trim())
             jsonObject.put(getString(R.string.pincode), binding.edtPincode.text.trim())
-            jsonObject.put(getString(R.string.relation_id), profileDetailViewModel.selectedRelationId)
             jsonObject.put(getString(R.string.sub_cast_id), profileDetailViewModel.selectedLastNameId)
             jsonObject.put(getString(R.string.state_id), profileDetailViewModel.selectedStateId)
             jsonObject.put(getString(R.string.city_id), profileDetailViewModel.selectedCityId)
+
+            if (binding.txtRelation.isVisible) {
+                if (binding.txtRelation.text.trim().isEmpty()) {
+                    return 1
+                }
+                jsonObject.put(getString(R.string.relation_text), binding.txtRelation.text.trim())
+            } else {
+                if (profileDetailViewModel.selectedRelationId == 0 || binding.spRelation.text.toString() == getString(R.string.select)) {
+                    return 1
+                }
+                jsonObject.put(getString(R.string.relation_id), profileDetailViewModel.selectedRelationId)
+            }
+
             if (member.id.isNullOrEmpty()) {
                 jsonObject.put(getString(R.string.profile_password), binding.edtPassword.text.trim())
                 jsonObject.put(getString(R.string.confPin), binding.edtCpassword.text.trim())
@@ -452,10 +481,11 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             } else {
                 jsonObject.put(getString(R.string.is_rented), 0)
             }
+            return 0;
         } catch (e: Exception) {
             e.printStackTrace()
+            return -1;
         }
-
     }
 
     private fun setMemberRelation() = Coroutines.main {
@@ -491,7 +521,6 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
             }
         }
     }
-
 
 
     private fun setMemberCity() = Coroutines.main {
@@ -531,6 +560,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                 }
             }
         })
+
 
         profileDetailViewModel.lstLastName.await().observe(viewLifecycleOwner, Observer { it ->
             if (it.isNotEmpty()) {

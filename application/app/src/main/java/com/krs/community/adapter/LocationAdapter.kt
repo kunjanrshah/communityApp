@@ -3,7 +3,6 @@ package com.krs.community.adapter
 import android.app.Activity
 import android.content.Context
 import android.location.Location
-import android.location.LocationManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,10 +32,10 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     var mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var easyWayLocation: EasyWayLocation? = null
     private var setLocationListner: SetLocationListner? = null
-    var cur_lat = MutableLiveData<Double>()
-    var cur_lng = MutableLiveData<Double>()
+    private var cur_lat = MutableLiveData<Double>()
+    private var cur_lng = MutableLiveData<Double>()
     private lateinit var filterViewModel: SmartFilterViewModel
-    val filterViewModelFactory = SmartFilterViewModelFactory(SmartFilterRepository(ApiServices(), AppDatabase.invoke(mContext)))
+    private val filterViewModelFactory = SmartFilterViewModelFactory(SmartFilterRepository(ApiServices(), AppDatabase.invoke(mContext)))
     private lateinit var request: LocationRequest
     private var tvUserDist: TextView? = null
 
@@ -46,21 +45,20 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         filterViewModel.mByFilterListener = this
         this.setLocationListner = setLocationListner
         if (Utility.checkFineLocationPermission(mContext)) {
-            val manager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                request = LocationRequest()
-                request.interval = Utility.INTERVAL
-                request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-                easyWayLocation = EasyWayLocation(mContext, request, true, this)
-                easyWayLocation?.startLocation()
 
-                val jsonObj = JSONObject()
-                jsonObj.put(mContext.getString(R.string.user_id), Guru.getString(mContext.getString(R.string.user_id), ""))
-                jsonObj.put(mContext.getString(R.string.access_token), Guru.getString(mContext.getString(R.string.access_token), ""))
-                jsonObj.put(mContext.getString(R.string.id), Guru.getString(mContext.getString(R.string.member_id), ""))
-                val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
-                filterViewModel.getSharedProfiles(updated)
-            }
+            request = LocationRequest()
+            request.interval = Utility.INTERVAL
+            request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            easyWayLocation = EasyWayLocation(mContext, request, true, this)
+            easyWayLocation?.startLocation()
+
+            val jsonObj = JSONObject()
+            jsonObj.put(mContext.getString(R.string.user_id), Guru.getString(mContext.getString(R.string.user_id), ""))
+            jsonObj.put(mContext.getString(R.string.access_token), Guru.getString(mContext.getString(R.string.access_token), ""))
+            jsonObj.put(mContext.getString(R.string.id), Guru.getString(mContext.getString(R.string.member_id), ""))
+            val updated = JsonParser().parse(jsonObj.toString()) as JsonObject
+            filterViewModel.getSharedProfiles(updated)
+
         } else {
             Utility.requestFineLocationPermission(mContext as AppCompatActivity)
         }

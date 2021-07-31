@@ -3,7 +3,6 @@ package com.krs.community.fragments
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +17,9 @@ import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.krs.community.R
-import com.krs.community.adapter.PolicyAdapter
 import com.krs.community.app.AppController
 import com.krs.community.utils.Utility
+import com.krs.community.utils.snackbar
 import com.orhanobut.dialogplus.DialogPlus
 
 
@@ -40,7 +39,6 @@ class SettingFragment : Fragment() {
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, SettingFragment::class.simpleName)
-        mApp.facebookAnalytics(context, SettingFragment::class.simpleName)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.colorBG, false)
@@ -55,18 +53,18 @@ class SettingFragment : Fragment() {
         val llPrivacy = root.findViewById<LinearLayout>(R.id.ll_privacy)
         llPrivacy.setOnClickListener { v: View? ->
 
-            val adapter = PolicyAdapter(activity as AppCompatActivity, "setting")
-            polictyDialog = DialogPlus.newDialog(activity)
-                    .setAdapter(adapter)
-                    .setGravity(Gravity.CENTER)
-                    .setCancelable(false)
-                    .setExpanded(false, 800)
-                    .setContentBackgroundResource(R.drawable.popup_corner)
-                    .create()
-            polictyDialog?.show()
+//            val adapter = PolicyAdapter(activity as AppCompatActivity, "setting")
+//            polictyDialog = DialogPlus.newDialog(activity)
+//                    .setAdapter(adapter)
+//                    .setGravity(Gravity.CENTER)
+//                    .setCancelable(false)
+//                    .setExpanded(false, 800)
+//                    .setContentBackgroundResource(R.drawable.popup_corner)
+//                    .create()
+//            polictyDialog?.show()
 
-            /*llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-            return@setOnClickListener
+            llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+            /*return@setOnClickListener
             Utility.movetoFragment(activity, PrivacyPolicyFragment())*/
         }
 

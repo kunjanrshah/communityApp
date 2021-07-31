@@ -24,13 +24,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.crashlytics.android.Crashlytics
 import com.example.easywaylocation.EasyWayLocation
-import com.example.easywaylocation.GetLocationDetail
 import com.example.easywaylocation.Listener
 import com.example.easywaylocation.LocationData
 import com.github.squti.guru.Guru
-import com.google.android.gms.location.LocationRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -76,12 +73,13 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
-        var getLocationDetail: GetLocationDetail? = null
-        var request: LocationRequest? = null
-        var easyWayLocation: EasyWayLocation? = null
-        var cur_lat = MutableLiveData<Double>()
-        var cur_lng = MutableLiveData<Double>()
-        var curAddr = MutableLiveData<String>()
+
+        // var getLocationDetail: GetLocationDetail? = null
+        // var request: LocationRequest? = null
+        //  var easyWayLocation: EasyWayLocation? = null
+        //  var cur_lat = MutableLiveData<Double>()
+        //  var cur_lng = MutableLiveData<Double>()
+        //  var curAddr = MutableLiveData<String>()
         var matrimonyCounts = MutableLiveData<String>()
         var statusCounts = MutableLiveData<String>()
     }
@@ -276,12 +274,12 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         }
 
         if (checkFineLocationPermission(this)) {
-            getLocationDetail = GetLocationDetail(this, this)
-            request = LocationRequest()
-            request?.interval = INTERVAL
-            request?.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-            easyWayLocation = EasyWayLocation(this, request, true, this)
-            easyWayLocation?.startLocation() //calculateDistance()
+            //  getLocationDetail = GetLocationDetail(this, this)
+            //  request = LocationRequest()
+            //  request?.interval = INTERVAL
+            //  request?.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            //  easyWayLocation = EasyWayLocation(this, request, true, this)
+            // easyWayLocation?.startLocation() //calculateDistance()
 
         }/* else {
             requestFineLocationPermission(this)
@@ -295,7 +293,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun onPause() {
         super.onPause()
         if (checkFineLocationPermission(this)) {
-            easyWayLocation?.endUpdates()
+            //    easyWayLocation?.endUpdates()
         } else {
             requestFineLocationPermission(this)
         }
@@ -315,7 +313,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == EasyWayLocation.LOCATION_SETTING_REQUEST_CODE) {
-            easyWayLocation?.onActivityResult(resultCode)
+            //     easyWayLocation?.onActivityResult(resultCode)
         }
 
     }
@@ -324,7 +322,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == FINE_LOCATION_REQUEST) {
-            easyWayLocation?.startLocation()
+            //      easyWayLocation?.startLocation()
         } else {
             when (requestCode) {
                 PERMISSION_REQUEST_READ_PHONE_STATE ->
@@ -376,9 +374,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     private fun logUser(member: Member) {
-        Crashlytics.setUserIdentifier(member.id)
-        Crashlytics.setUserEmail(member.emailAddress)
-        Crashlytics.setUserName(member.firstName)
+        //  Crashlytics.setUserIdentifier(member.id)
+        // Crashlytics.setUserEmail(member.emailAddress)
+        // Crashlytics.setUserName(member.firstName)
     }
 
     private fun loadProfile() {
@@ -437,13 +435,13 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     override fun currentLocation(location: Location) {
-        cur_lat.postValue(location.latitude)
-        cur_lng.postValue(location.longitude)
-        getLocationDetail?.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
+        //  cur_lat.postValue(location.latitude)
+        //  cur_lng.postValue(location.longitude)
+        //  getLocationDetail.getAddress(location.latitude, location.longitude, getString(R.string.map_api_key))
     }
 
     override fun locationData(locationData: LocationData) {
-        curAddr.postValue(locationData.full_address)
+        //    curAddr.postValue(locationData.full_address)
     }
 
     override fun getVersionResponse(response: UserStatusResponse) {

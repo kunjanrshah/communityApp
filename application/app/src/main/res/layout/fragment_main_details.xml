@@ -45,7 +45,7 @@
                         android:id="@+id/ll_mcode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.6"
                         android:orientation="vertical">
 
                         <TextView
@@ -98,7 +98,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
+                        android:layout_weight="0.4"
                         android:orientation="vertical">
 
                         <TextView
@@ -108,6 +108,7 @@
                             android:text="@string/relationDetails" />
 
                         <RelativeLayout
+                            android:id="@+id/rel_relation"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_gravity="center|bottom"
@@ -135,8 +136,21 @@
                                 app:jrs_title="Select Relation" />
                         </RelativeLayout>
 
-                    </LinearLayout>
+                        <EditText
+                            android:id="@+id/txt_relation"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/border_color_gray"
+                            android:drawableEnd="@drawable/cancel_small"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:hint="@string/add_new"
+                            android:inputType="textFilter|textCapSentences"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:singleLine="true"
+                            android:visibility="gone" />
 
+                    </LinearLayout>
 
                 </LinearLayout>
 
