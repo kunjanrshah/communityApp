@@ -20,7 +20,6 @@ import com.krs.community.utils.ApiException
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
@@ -29,6 +28,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                      var app: Application) : AndroidViewModel(app) {
 
     lateinit var iLoginListener: ILoginListener
+    lateinit var mILoginListener: ILoginListener
     var TAG: String = LoginViewModel::class.java.simpleName
     var job_login: CompletableJob? = null
     var job_forgot: CompletableJob? = null
@@ -41,6 +41,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     var status = MutableLiveData<Boolean?>()
     var stopTime = MutableLiveData<Boolean?>()
     var password: String? = null
+    private var jobInnerLogin: CompletableJob? = null
 
     fun startTimer() {
         cTimer = object : CountDownTimer(1000 * 60 * 2, 1000) {
@@ -86,6 +87,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
     fun cancelAllJobs() {
         job_login?.cancel()
         job_forgot?.cancel()
+        jobInnerLogin?.cancel()
     }
 
     fun loginWithOTP() {
@@ -209,5 +211,4 @@ class LoginViewModel(private val loginRepository: LoginRepository,
             }
         }
     }
-
 }

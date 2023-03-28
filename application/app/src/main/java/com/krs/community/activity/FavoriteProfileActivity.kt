@@ -44,7 +44,6 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.text.Normalizer
 import java.util.*
-import kotlin.collections.ArrayList
 
 class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
 
@@ -90,7 +89,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_favorite, menu)
         return true
     }

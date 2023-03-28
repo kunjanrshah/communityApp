@@ -7,7 +7,7 @@ import com.krs.community.repositories.ShareEventRepository
 import com.krs.community.viewmodel.ShareEventViewModel
 
 class ShareEventViewModelFactory(private val repository: ShareEventRepository) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return ShareEventViewModel(repository, AppController.mApplication) as T
     }
 

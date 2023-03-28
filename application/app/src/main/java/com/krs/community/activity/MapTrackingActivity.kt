@@ -86,7 +86,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map_tracking)
-        headId = intent.getStringExtra("head_id")
+        headId = intent.getStringExtra("head_id").toString()
         val mApp = applicationContext as AppController
         mApp.firebaseAnalytics(this@MapTrackingActivity, MapTrackingActivity::class.java.simpleName)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
@@ -237,16 +237,32 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                 }
             }
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(applicationContext, "location permission required !!", Toast.LENGTH_SHORT).show()
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(
+                applicationContext,
+                "location permission required !!",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
-        mFusedLocationProviderClient?.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
+        mLocationRequest?.let {
+            mFusedLocationProviderClient?.requestLocationUpdates(
+                it,
+                mLocationCallback as LocationCallback, null
+            )
+        }
         Toast.makeText(applicationContext, "Location update started", Toast.LENGTH_SHORT).show()
     }
 
     private fun stopLocationUpdates() {
-        mFusedLocationProviderClient!!.removeLocationUpdates(mLocationCallback)
+        mLocationCallback?.let { mFusedLocationProviderClient!!.removeLocationUpdates(it) }
         Toast.makeText(applicationContext, "Location update stopped.", Toast.LENGTH_SHORT).show()
     }
 
@@ -274,8 +290,12 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         }
 
         override fun run() {
-            val point = CameraUpdateFactory.newLatLngZoom(newPoint, zoom)
-            runOnUiThread { mMap!!.animateCamera(point) }
+            val point = newPoint?.let { CameraUpdateFactory.newLatLngZoom(it, zoom) }
+            runOnUiThread {
+                if (point != null) {
+                    mMap!!.animateCamera(point)
+                }
+            }
         }
     }
 
@@ -312,8 +332,11 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     }
                     lstMarkers[loc.key]?.rotation = bearing
                     moveThread = MoveThread()
-                    moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), mMap!!.cameraPosition.zoom)
-                    handler?.post(moveThread)
+                    moveThread?.setNewPoint(
+                        LatLng(loc.value.latitude, loc.value.longitude),
+                        mMap!!.cameraPosition.zoom
+                    )
+                    handler?.post(moveThread!!)
                     animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
                 }
             }
@@ -325,21 +348,26 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
     private fun addMarker(loc: MutableMap.MutableEntry<String, Location>, bitmap: Bitmap) {
         val markerOptions = MarkerOptions()
         tvTitle?.text = lstTitle[loc.key]
-        val car = BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(mCustomMarkerView, bitmap))
+        val car = getMarkerBitmapFromView(mCustomMarkerView, bitmap)?.let {
+            BitmapDescriptorFactory.fromBitmap(
+                it
+            )
+        }
         markerOptions.icon(car)
         markerOptions.anchor(0.5f, 0.5f)
         markerOptions.flat(true)
         markerOptions.position(LatLng(loc.value.latitude, loc.value.longitude))
-        lstMarkers[loc.key] = mMap!!.addMarker(markerOptions)
-        bearing = if (loc.value.hasBearing()) { // if location has bearing set the same bearing to marker(if location is acquired using GPS bearing will be available)
-            loc.value.bearing
-        } else {
-            0f // no need to calculate bearing as it will be the first point
-        }
+        // lstMarkers[loc.key] = mMap.addMarker(markerOptions)
+        bearing =
+            if (loc.value.hasBearing()) { // if location has bearing set the same bearing to marker(if location is acquired using GPS bearing will be available)
+                loc.value.bearing
+            } else {
+                0f // no need to calculate bearing as it will be the first point
+            }
         lstMarkers[loc.key]?.rotation = bearing
         moveThread = MoveThread()
         moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), 9f)
-        handler?.post(moveThread)
+        handler?.post(moveThread!!)
         animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
     }
 
@@ -371,7 +399,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
             animator.addListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animator: Animator) {}
                 override fun onAnimationEnd(animator: Animator) {
-                    handler!!.post(moveThread)
+                    moveThread?.let { handler!!.post(it) }
                 }
 
                 override fun onAnimationCancel(animator: Animator) {}

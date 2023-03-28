@@ -64,7 +64,6 @@ import org.kodein.di.generic.instance
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener, LocationAdapter.SetLocationListner {
@@ -150,7 +149,7 @@ class CommitteeFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberL
                     member.memberCode
                 }
                 if (BuildConfig.FLAVOR == "yadav") {
-                    holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                    holder.tvCode.text = getString(R.string.yss) + code + "-" + member.id
                 } else {
                     holder.tvCode.text = getMemberCode(code)
                 }

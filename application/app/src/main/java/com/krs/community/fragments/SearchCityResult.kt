@@ -225,7 +225,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     member.memberCode
                 }
                 if (BuildConfig.FLAVOR == "yadav") {
-                    holder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                    holder.tvCode.text = getString(R.string.yss) + code + "-" + member.id
                 } else {
                     holder.tvCode.text = getMemberCode(code)
                 }

@@ -274,7 +274,7 @@
     <string name="_location">Location</string>
     <string name="_whatsapp">WhatsApp</string>
     <string name="_family_tree">Family Tree</string>
-    <string name="apikey" translatable="false">apikey</string>
+    <string name="apikey" translatable="false">Apikey</string>
     <string name="devicetoken" translatable="false">devicetoken</string>
     <string name="intudid" translatable="false">intudid</string>
     <string name="headanimation">headanimation</string>
@@ -1175,7 +1175,7 @@
     <string name="todate">todate</string>
     <string name="filter">filter</string>
     <string name="load_more">Searching...</string>
-    <string name="yss">yss/</string>
+    <string name="yss">yss-</string>
     <string name="is_finish">is_finish</string>
     <string name="policy">policy</string>
     <string name="super_admin">SUPERADMIN</string>

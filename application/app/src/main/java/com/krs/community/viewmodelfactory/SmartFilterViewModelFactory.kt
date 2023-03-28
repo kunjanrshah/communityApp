@@ -7,7 +7,7 @@ import com.krs.community.repositories.SmartFilterRepository
 import com.krs.community.viewmodel.SmartFilterViewModel
 
 class SmartFilterViewModelFactory(private val repository: SmartFilterRepository) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return SmartFilterViewModel(repository, AppController.mApplication) as T
     }
 }

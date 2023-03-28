@@ -37,9 +37,11 @@ import com.facebook.login.LoginResult
 import com.github.squti.guru.Guru
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
@@ -105,7 +107,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
             loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
             loginViewModel?.iLoginListener = this
-
             val appSignatureHashHelper = AppSignatureHashHelper(this)
             var hashkey: String = appSignatureHashHelper.appSignatures.get(0)
             hashkey = hashkey.replace("+", "%2B")
@@ -164,14 +165,26 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             have_acc.text = Html.fromHtml(sourcestr)
 
             Guru.putBoolean(getString(R.string.isdialogshow), true)
-            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@LoginActivity) { instanceIdResult ->
-                val newToken = instanceIdResult.token
-                Log.e("newToken", newToken)
-                Guru.putString(AppConstants.DEVICE_TOKEN, newToken)
-            }
+
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new FCM registration token
+                val token = task.result
+                Log.e("newToken", token)
+                Guru.putString(AppConstants.DEVICE_TOKEN, token)
+            })
 
             binding.edtMobile.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
 
                 }
 
@@ -475,12 +488,32 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         //toast("OTP Time out")
     }
 
+    fun goToDashboard(response: LoginResponse) {
+        hideSweetProgress()
+        if (response.data != null) {
+            Guru.putString(getString(R.string.user_id), member.id)
+            Guru.putString(getString(R.string.access_token), member.accessToken)
+            val json = Gson().toJson(response.data)
+            Guru.putString(getString(R.string.loginMember), json)
+            Guru.putString(getString(R.string.member_id), response.data.id)
+            Guru.putString(getString(R.string.user_id), response.data.id)
+            val intent = Intent(this, DashboardActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+            //   fade(this)
+        } else {
+            Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun userLogin(response: LoginResponse, isForgot: Boolean) {
         hideSweetProgress()
         hideProgressDialog()
         //  Log.d(TAG, "login data: $response")
         if (isForgot) {
-            Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG)
+                .show()
         } else {
             member = response.data
             if (!response.otp.isNullOrBlank()) {
@@ -495,7 +528,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 }
             } else {
                 if (response.success) {
-                    goToFamilyDetailScreen()
+                    goToDashboard(response)
+                    //  goToFamilyDetailScreen()
                 } else {
                     Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
                 }

@@ -9,7 +9,7 @@ import com.krs.community.viewmodel.PasswordViewModel
 class PasswordViewModelFactory(
         private val repository: PasswordRepository
 ) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PasswordViewModel(repository, AppController.mApplication) as T
     }
 }

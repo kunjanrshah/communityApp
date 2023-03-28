@@ -337,7 +337,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         member.memberCode
                     }
                     if (BuildConfig.FLAVOR == "yadav") {
-                        viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                        viewHolder.tvCode.text = getString(R.string.yss) + code + "-" + member.id
                     } else {
                         viewHolder.tvCode.text = getMemberCode(code)
                     }
@@ -515,7 +515,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
             member.memberCode
         }
         if (BuildConfig.FLAVOR == "yadav") {
-            tvCode.text = getString(R.string.yss) + code + "/" + member.id
+            tvCode.text = getString(R.string.yss) + code + "-" + member.id
         } else {
             tvCode.text = getMemberCode(code)
         }

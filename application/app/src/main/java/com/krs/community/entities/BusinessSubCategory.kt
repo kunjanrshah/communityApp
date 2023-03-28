@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class BusinessSubCategory(
-        @PrimaryKey(autoGenerate = false)
-        val id: Int,
-        val name: String,
-        val parent_id: Int
+    @PrimaryKey(autoGenerate = false)
+    var id: Int,
+    val name: String,
+    val parent_id: Int
 )

@@ -1,71 +1,33 @@
 {
   "project_info": {
-    "project_number": "147166615323",
-    "firebase_url": "https://yadav-samaj-26dba.firebaseio.com",
-    "project_id": "yadav-samaj-26dba",
-    "storage_bucket": "yadav-samaj-26dba.appspot.com"
+    "project_number": "537304576687",
+    "project_id": "yadav-samaj-362910",
+    "storage_bucket": "yadav-samaj-362910.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:147166615323:android:11c21dc33eb4ca84a325be",
+        "mobilesdk_app_id": "1:537304576687:android:8ab63e08bf3ab54effda5a",
         "android_client_info": {
-          "package_name": "com.krs.yadav"
+          "package_name": "com.yadav.sevasamaj"
         }
       },
       "oauth_client": [
         {
-          "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
+          "client_id": "537304576687-6c9qtecsmgbd15qi3lhotjv3m6q6nu94.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCOE-YNeTgISK5P77rHZ7UxIu17f3vPY7Q"
+          "current_key": "AIzaSyC10JruplwkTbQB1q0YQnH_7G6aoxCE--g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:147166615323:android:5376d5f08368c13ca325be",
-        "android_client_info": {
-          "package_name": "com.yadav.samaj"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "147166615323-tj0653q53f4qogq7fj4vpe0o71pvcjp0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.yadav.samaj",
-            "certificate_hash": "808f04ac7223825e66de31ce260fa63a072ef6b6"
-          }
-        },
-        {
-          "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCOE-YNeTgISK5P77rHZ7UxIu17f3vPY7Q"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com",
+              "client_id": "537304576687-6c9qtecsmgbd15qi3lhotjv3m6q6nu94.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

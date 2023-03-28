@@ -7,7 +7,7 @@ import com.krs.community.repositories.DocumentListRepository
 import com.krs.community.viewmodel.DocumentsListModel
 
 class DocumentListViewModelFactory(private val repository: DocumentListRepository) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return DocumentsListModel(repository, AppController.mApplication) as T
     }
 }

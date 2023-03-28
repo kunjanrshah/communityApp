@@ -24,11 +24,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.ContactUsActivity
+import com.krs.community.activity.SplashActivity
 import com.krs.community.adapter.NavigationDrawerAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -39,7 +38,6 @@ import com.krs.community.responses.UserInnerLogoutResponse
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
-import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -194,7 +192,14 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
     }
 
     private fun getMemberLogout() {
-        val jsonObject = JSONObject()
+
+        Guru.clear()
+        Guru.putBoolean(getString(R.string.policy), true)
+        val intent = Intent(activity, SplashActivity::class.java)
+        startActivity(intent)
+        activity?.finish()
+
+        /*val jsonObject = JSONObject()
         val userId = Guru.getString(getString(R.string.user_id), "")
         val memberId = Guru.getString(getString(R.string.member_id), "")
         if (!userId.isNullOrEmpty() && !memberId.isNullOrEmpty()) {
@@ -206,7 +211,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
             familyDetailViewModel.getInnerLogout(records)
         } else {
             Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show()
-        }
+        }*/
     }
 
     fun setUp(fragmentId: Int, drawerLayout: DrawerLayout?, toolbar: Toolbar) {

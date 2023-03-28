@@ -71,7 +71,6 @@ import org.kodein.di.generic.instance
 import ru.slybeaver.slycalendarview.SlyCalendarDialog
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, ByFilterListener, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener, LocationAdapter.SetLocationListner, ReminderListener {
@@ -326,7 +325,7 @@ class CalendarFragment : Fragment(), SlyCalendarDialog.Callback, KodeinAware, By
                 }
 
                 if (BuildConfig.FLAVOR == "yadav") {
-                    viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                    viewHolder.tvCode.text = getString(R.string.yss) + code + "-" + member.id
                 } else {
                     viewHolder.tvCode.text = getMemberCode(code)
                 }

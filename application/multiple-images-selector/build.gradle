@@ -7,7 +7,7 @@ ext {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 32
 
     lintOptions {
         abortOnError false
@@ -15,8 +15,6 @@ android {
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
-        versionCode 1
-        versionName "1.0"
     }
     buildTypes {
         release {

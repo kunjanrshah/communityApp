@@ -7,7 +7,7 @@ import com.krs.community.repositories.ByDistanceRepository
 import com.krs.community.viewmodel.ByDistanceViewModel
 
 class ByDistanceViewModelFactory(private val repository: ByDistanceRepository) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return ByDistanceViewModel(repository, AppController.mApplication) as T
     }
 }

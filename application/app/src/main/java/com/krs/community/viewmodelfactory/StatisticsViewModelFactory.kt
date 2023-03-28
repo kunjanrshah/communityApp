@@ -7,7 +7,7 @@ import com.krs.community.repositories.StatisticsRepository
 import com.krs.community.viewmodel.StatisticsViewModel
 
 class StatisticsViewModelFactory(private val repository: StatisticsRepository) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return StatisticsViewModel(repository, AppController.mApplication) as T
     }
 }

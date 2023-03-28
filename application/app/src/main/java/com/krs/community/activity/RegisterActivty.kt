@@ -27,8 +27,9 @@ import androidx.lifecycle.ViewModelProvider
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
 import com.github.squti.guru.Guru
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.JsonObject
 import com.krs.community.BuildConfig
 import com.krs.community.R
@@ -98,11 +99,17 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         mApp.firebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
         mApp.facebookAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
-            val newToken = instanceIdResult.token
-            Log.e("newToken", newToken)
-            Guru.putString(AppConstants.DEVICE_TOKEN, newToken)
-        }
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            Log.e("newToken", token)
+            Guru.putString(AppConstants.DEVICE_TOKEN, token)
+        })
 
         AppController.mApplication.connectionLiveData.observeForever {
             it?.let {

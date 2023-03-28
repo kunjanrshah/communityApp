@@ -208,13 +208,13 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             10 -> if (resultCode == RESULT_OK && data != null) {
                 val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "data: " + result[0])
+                    Log.d(TAG, "data: " + result?.get(0))
                 }
 
 
                 val searchFragment = SearchListFragment()
                 val bundle = Bundle()
-                bundle.putString("keyword", result[0])
+                bundle.putString("keyword", result?.get(0))
                 searchFragment.arguments = bundle
                 Utility.movetoFragment(activity, searchFragment)
             }

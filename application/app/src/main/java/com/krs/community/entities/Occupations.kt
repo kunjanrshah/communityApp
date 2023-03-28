@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Occupations(
-        @PrimaryKey(autoGenerate = false)
-        val id: Int,
-        val name: String
+    @PrimaryKey(autoGenerate = false)
+    var id: Int,
+    val name: String
 )

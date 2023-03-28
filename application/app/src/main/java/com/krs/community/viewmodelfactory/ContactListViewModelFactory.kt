@@ -7,7 +7,7 @@ import com.krs.community.repositories.ContactListRepository
 import com.krs.community.viewmodel.ContactListViewModel
 
 class ContactListViewModelFactory(private val repository: ContactListRepository) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return ContactListViewModel(repository, AppController.mApplication) as T
     }
 }

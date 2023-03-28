@@ -329,7 +329,7 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
                     member.memberCode
                 }
                 if (BuildConfig.FLAVOR == "yadav") {
-                    viewHolder.tvCode.text = getString(R.string.yss) + code + "/" + member.id
+                    viewHolder.tvCode.text = getString(R.string.yss) + code + "-" + member.id
                 } else {
                     viewHolder.tvCode.text = getMemberCode(code)
                 }

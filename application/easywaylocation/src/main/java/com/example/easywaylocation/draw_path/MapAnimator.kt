@@ -88,7 +88,7 @@ class MapAnimator {
 
 
         optionsForeground = PolylineOptions().add(routes[0]).color(foregroundColor!!).width(8f)
-        foregroundPolyline = googleMap.addPolyline(optionsForeground)
+        foregroundPolyline = googleMap.addPolyline(optionsForeground!!)
 //        foregroundPolyline?.tag = getTag()
 //        polyLineDetails[foregroundPolyline?.tag as String] = polyLineDataBean
 

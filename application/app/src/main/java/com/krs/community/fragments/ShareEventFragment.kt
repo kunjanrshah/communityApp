@@ -43,7 +43,6 @@ import org.kodein.di.generic.instance
 import java.io.File
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     override val kodein by kodein()
@@ -255,7 +254,9 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { // get selected images from selector
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                mResults = data!!.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS)
+                if (data != null) {
+                    mResults = data.getStringArrayListExtra(SelectorSettings.SELECTOR_RESULTS)!!
+                }
                 assert(mResults != null)
                 // show results in textview
                 val sb = StringBuffer()

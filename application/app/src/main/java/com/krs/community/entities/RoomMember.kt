@@ -5,18 +5,18 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class RoomMember(
-        @PrimaryKey(autoGenerate = false)
-        val id: Int,
-        val headId: String? = null,
-        val isImportant: Boolean,
-        val role: String? = null,
-        val memberCode: String? = null,
-        val emailAddress: String? = null,
-        val mobile: String? = null,
-        val relationId: String? = null,
-        val subCommunityId: String? = null,
-        val localCommunityId: String? = null,
-        val committeeId: String? = null,
+    @PrimaryKey(autoGenerate = false)
+    var id: Int,
+    val headId: String? = null,
+    val isImportant: Boolean,
+    val role: String? = null,
+    val memberCode: String? = null,
+    val emailAddress: String? = null,
+    val mobile: String? = null,
+    val relationId: String? = null,
+    val subCommunityId: String? = null,
+    val localCommunityId: String? = null,
+    val committeeId: String? = null,
         val designationId: String? = null,
         val firstName: String? = null,
         val fatherName: String? = null,

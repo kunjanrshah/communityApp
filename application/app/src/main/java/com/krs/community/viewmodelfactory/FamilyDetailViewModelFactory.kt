@@ -7,7 +7,7 @@ import com.krs.community.repositories.FamilyDetailRepository
 import com.krs.community.viewmodel.FamilyDetailViewModel
 
 class FamilyDetailViewModelFactory(private val repository: FamilyDetailRepository) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return FamilyDetailViewModel(repository, AppController.mApplication) as T
     }
 }

@@ -43,7 +43,6 @@ import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 fun Context.toast(message: String) {
@@ -544,123 +543,133 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
     val header = "<center> <table height='80'><tr><th><img src=$logo_path alt=''></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object><br><br>"
     var rows = header
     for (member in lstMember) {
-        var name = member.firstName
-        var state = member.stateId
-        var city = member.cityId
-        var local = member.localCommunityId
-        var sub = member.subCommunityId
-        if (!member.birthDate.isNullOrEmpty()) {
-            Bdate = Utility.changeDateFormat(member.birthDate, Utility.yyyy_MM_dd, Utility.dd_MM_yyyy)
-            val age = Utility.getAge(Bdate, Utility.dd_MM_yyyy)
-            Bdate += " ($age)"
-        }
-        if (!member.subCastId.isNullOrEmpty()) {
-            val lname = profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
-            name = member.firstName + " " + member.fatherName + " " + lname
+        try {
+            var name = member.firstName
+            var state = member.stateId
+            var city = member.cityId
+            var local = member.localCommunityId
+            var sub = member.subCommunityId
+            if (!member.birthDate.isNullOrEmpty()) {
+                Bdate = Utility.changeDateFormat(
+                    member.birthDate,
+                    Utility.yyyy_MM_dd,
+                    Utility.dd_MM_yyyy
+                )
+                val age = Utility.getAge(Bdate, Utility.dd_MM_yyyy)
+                Bdate += " ($age)"
+            }
+            if (!member.subCastId.isNullOrEmpty()) {
+                val lname =
+                    profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
+                name = member.firstName + " " + member.fatherName + " " + lname
+            }
+
+            if (!member.stateId.isNullOrEmpty()) {
+                state = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
+            }
+
+            if (!member.cityId.isNullOrEmpty()) {
+                city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
+            }
+            if (!member.localCommunityId.isNullOrEmpty()) {
+                local = profileDetailViewModel.getLocalCommunityName(member.localCommunityId)
+            }
+            if (!member.subCommunityId.isNullOrEmpty()) {
+                sub = profileDetailViewModel.getSubCommName(member.subCommunityId)
+            }
+
+            val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
+            val headerImage = "<img src=$path alt=$name>"
+            val lblName = name
+            val lblGender = "<b>Gender:</b> ${member.gender}"
+            val lblBdate = "<b>BirthDate:</b> $Bdate"
+            val lblSub = "<b>Sub Community:</b> $sub"
+            val lblLocal = "<b>Local Community:</b> $local"
+            val lblMother = "<b>MotherName:</b> ${member.motherName}"
+            val lblEmail = "<b>Email:</b> ${member.emailAddress}"
+            val lblMobile = "<b>Mobile:</b> ${member.mobile}"
+            val lblState = "<b>State:</b> $state"
+            val lblCity = "<b>City:</b> $city"
+            val lblArea = "<b>Area:</b> ${member.area}"
+            val lblAddress = "<b>Address:</b> ${member.address}"
+            val lblPinCode = "<b>Pincode:</b> ${member.pincode}"
+            val lblBg = "<b>BloodGroup:</b> ${member.bloodGroup}"
+            val lblMarital = "<b>Marital:</b> ${member.maritalStatus}"
+
+            rows += "<table>"
+            if (lstFilter.contains("name")) {
+                rows += "<tr><td><b> $lblName </b></tr>"
+            }
+            rows += "<tr>"
+            if (lstFilter.contains("photo")) {
+                rows += "<td> $headerImage </td>"
+            }
+            rows += "<td> "
+            /* if (lstFilter.contains("father")) {
+                 rows += "$lblFather <br> "
+             }*/
+            if (lstFilter.contains("mother")) {
+                rows += "$lblMother <br> "
+            }
+            if (lstFilter.contains("mobile")) {
+                rows += "$lblMobile <br> "
+            }
+            if (lstFilter.contains("email")) {
+                rows += "$lblEmail "
+            }
+            rows += "</td></tr>"
+            rows += "<tr>"
+            if (lstFilter.contains("gender")) {
+                rows += "<td> $lblGender</td>"
+            }
+            if (lstFilter.contains("marital")) {
+                rows += "<td> $lblMarital</td>"
+            }
+            rows += "</tr>"
+            rows += "<tr>"
+            if (lstFilter.contains("bdate")) {
+                rows += "<td> $lblBdate</td>"
+            }
+            if (lstFilter.contains("blood")) {
+                rows += "<td> $lblBg</td>"
+            }
+            rows += "</tr>"
+            if (lstFilter.contains("address")) {
+                rows += "<tr><td colspan='2'> $lblAddress</td></tr>"
+            }
+            rows += "<tr>"
+            if (lstFilter.contains("state")) {
+                rows += "<td> $lblState</td>"
+            }
+            if (lstFilter.contains("city")) {
+                rows += "<td> $lblCity</td>"
+            }
+            rows += "</tr>"
+            rows += "<tr>"
+            if (lstFilter.contains("area")) {
+                rows += "<td> $lblArea</td>"
+            }
+            if (lstFilter.contains("pincode")) {
+                rows += "<td> $lblPinCode</td>"
+            }
+            rows += "</tr>"
+
+            rows += "<tr>"
+            if (lstFilter.contains("local_community")) {
+                rows += "<td> $lblLocal</td>"
+            }
+            rows += "</tr>"
+            rows += "<tr>"
+            if (lstFilter.contains("sub_community")) {
+                rows += "<td> $lblSub</td>"
+            }
+            rows += "</tr>"
+
+            rows += "</table><br><br>"
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
-        if (!member.stateId.isNullOrEmpty()) {
-            state = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
-        }
-
-        if (!member.cityId.isNullOrEmpty()) {
-            city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
-        }
-        if (!member.localCommunityId.isNullOrEmpty()) {
-            local = profileDetailViewModel.getLocalCommunityName(member.localCommunityId)
-        }
-        if (!member.subCommunityId.isNullOrEmpty()) {
-            sub = profileDetailViewModel.getSubCommName(member.subCommunityId)
-        }
-
-        val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
-        val headerImage = "<img src=$path alt=$name>"
-        val lblName = name
-        val lblGender = "<b>Gender:</b> ${member.gender}"
-        val lblBdate = "<b>BirthDate:</b> $Bdate"
-        val lblSub = "<b>Sub Community:</b> $sub"
-        val lblLocal = "<b>Local Community:</b> $local"
-        val lblMother = "<b>MotherName:</b> ${member.motherName}"
-        val lblEmail = "<b>Email:</b> ${member.emailAddress}"
-        val lblMobile = "<b>Mobile:</b> ${member.mobile}"
-        val lblState = "<b>State:</b> $state"
-        val lblCity = "<b>City:</b> $city"
-        val lblArea = "<b>Area:</b> ${member.area}"
-        val lblAddress = "<b>Address:</b> ${member.address}"
-        val lblPinCode = "<b>Pincode:</b> ${member.pincode}"
-        val lblBg = "<b>BloodGroup:</b> ${member.bloodGroup}"
-        val lblMarital = "<b>Marital:</b> ${member.maritalStatus}"
-
-        rows += "<table>"
-        if (lstFilter.contains("name")) {
-            rows += "<tr><td><b> $lblName </b></tr>"
-        }
-        rows += "<tr>"
-        if (lstFilter.contains("photo")) {
-            rows += "<td> $headerImage </td>"
-        }
-        rows += "<td> "
-        /* if (lstFilter.contains("father")) {
-             rows += "$lblFather <br> "
-         }*/
-        if (lstFilter.contains("mother")) {
-            rows += "$lblMother <br> "
-        }
-        if (lstFilter.contains("mobile")) {
-            rows += "$lblMobile <br> "
-        }
-        if (lstFilter.contains("email")) {
-            rows += "$lblEmail "
-        }
-        rows += "</td></tr>"
-        rows += "<tr>"
-        if (lstFilter.contains("gender")) {
-            rows += "<td> $lblGender</td>"
-        }
-        if (lstFilter.contains("marital")) {
-            rows += "<td> $lblMarital</td>"
-        }
-        rows += "</tr>"
-        rows += "<tr>"
-        if (lstFilter.contains("bdate")) {
-            rows += "<td> $lblBdate</td>"
-        }
-        if (lstFilter.contains("blood")) {
-            rows += "<td> $lblBg</td>"
-        }
-        rows += "</tr>"
-        if (lstFilter.contains("address")) {
-            rows += "<tr><td colspan='2'> $lblAddress</td></tr>"
-        }
-        rows += "<tr>"
-        if (lstFilter.contains("state")) {
-            rows += "<td> $lblState</td>"
-        }
-        if (lstFilter.contains("city")) {
-            rows += "<td> $lblCity</td>"
-        }
-        rows += "</tr>"
-        rows += "<tr>"
-        if (lstFilter.contains("area")) {
-            rows += "<td> $lblArea</td>"
-        }
-        if (lstFilter.contains("pincode")) {
-            rows += "<td> $lblPinCode</td>"
-        }
-        rows += "</tr>"
-
-        rows += "<tr>"
-        if (lstFilter.contains("local_community")) {
-            rows += "<td> $lblLocal</td>"
-        }
-        rows += "</tr>"
-        rows += "<tr>"
-        if (lstFilter.contains("sub_community")) {
-            rows += "<td> $lblSub</td>"
-        }
-        rows += "</tr>"
-
-        rows += "</table><br><br>"
     }
     if (Utility.checkExternalStoragePermission(mContext)) {
         createPdf(mContext, "community_${currentdate}", rows)
