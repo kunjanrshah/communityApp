@@ -215,19 +215,19 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 loginViewModel?.cancelTimer()
             }
 
-            /* binding.fabLogin.setOnClickListener {
+             binding.fabLogin.setOnClickListener {
 
 
                  val adapter = PolicyAdapter(this, "login")
-                 polictyDialog = DialogPlus.newDialog(this)
-                         .setAdapter(adapter)
-                         .setGravity(Gravity.CENTER)
-                         .setCancelable(false)
-                         .setExpanded(false, 800)
-                         .setContentBackgroundResource(R.drawable.popup_corner)
-                         .create()
-                 polictyDialog?.show()
-             }*/
+                 val policyDialog = DialogPlus.newDialog(this)
+                     .setAdapter(adapter)
+                     .setGravity(Gravity.CENTER)
+                     .setCancelable(false)
+                     .setExpanded(false, 800)
+                     .setContentBackgroundResource(R.drawable.popup_corner)
+                     .create()
+                 policyDialog?.show()
+             }
 
             binding.btnLoginFb.setOnClickListener { v0 ->
 

@@ -164,12 +164,6 @@ android {
     sourceSets {
         main { res.srcDirs = ['src/main/res', 'src/main/res/values-gu', 'src/main/res/values-hi'] }
     }
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
 
     compileOptions {
         targetCompatibility '1.8'
@@ -185,6 +179,11 @@ android {
     }
     androidExtensions {
         experimental = true
+    }
+    namespace 'com.krs.community'
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
     }
 }
 

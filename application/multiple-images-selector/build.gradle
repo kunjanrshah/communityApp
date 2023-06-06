@@ -9,9 +9,6 @@ ext {
 android {
     compileSdkVersion 32
 
-    lintOptions {
-        abortOnError false
-    }
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
@@ -25,6 +22,10 @@ android {
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
+    }
+    namespace 'com.zfdang.multiple_images_selector'
+    lint {
+        abortOnError false
     }
 }
 
