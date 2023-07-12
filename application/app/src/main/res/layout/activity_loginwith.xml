@@ -1,0 +1,397 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="loginViewModel"
+            type="com.krs.community.viewmodel.LoginViewModel" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/ll_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.60">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/hands1" />
+
+                <ImageView
+                    android:id="@+id/iv_help"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/btn_help_selection" />
+
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.40" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/welcome"
+                        android:textColor="@color/black"
+                        android:textSize="26sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/Mobile"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:background="@drawable/round_corner_mid_light_gray"
+                            android:visibility="gone">
+
+                            <com.krs.community.jrspinner.JRSpinner
+                                android:id="@+id/spinnerCountries"
+                                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:background="@null"
+                                android:hint="Code"
+                                android:singleLine="true"
+                                app:jrs_multiple="false" />
+                        </RelativeLayout>
+
+                        <EditText
+                            android:id="@+id/edt_mobile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/round_corner_mid_light_gray"
+                            android:digits="0123456789"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:hint="@string/_10_digit_number"
+                            android:inputType="number"
+                            android:paddingLeft="20dp"
+                            android:singleLine="true"
+                            android:text="@={loginViewModel.mobile}"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/dialogplus_black_overlay"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/edt_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/round_corner_mid_light_gray"
+                        android:digits="0123456789"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:hint="Type your PIN"
+                        android:inputType="number"
+                        android:maxLength="12"
+                        android:paddingLeft="20dp"
+                        android:singleLine="true"
+                        android:text="@={loginViewModel.password}"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/dialogplus_black_overlay"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_forgot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/forgot_pin"
+                        android:textColor="@color/black2"
+                        android:textSize="12sp" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="10dp"
+                        android:visibility="gone"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number"
+                        android:textColor="@color/black2"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_otp"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone"
+                app:cardCornerRadius="15dp">
+
+                <ImageView
+                    android:id="@+id/img_cancel"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/cancel_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="5dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="@string/otp_verification"
+                        android:textColor="@color/black"
+                        android:textSize="26sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:text="@string/enter_the_otp_you_have_received_to"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_otp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:textColor="@color/dark_color_primary"
+                        android:textSize="14sp" />
+
+                    <com.poovam.pinedittextfield.SquarePinField
+                        android:id="@+id/squareField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="20dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:inputType="number"
+                        android:textSelectHandle="@drawable/text_handle"
+                        android:textSize="22sp"
+                        app:cornerRadius="10dp"
+                        app:fieldBgColor="#ddd"
+                        app:noOfFields="4" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_resend"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="false"
+                            android:enabled="true"
+                            android:text="@string/resend_otplogin"
+
+                            android:textColor="@color/light_gray" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@={loginViewModel.otp_timer}" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnContinue"
+                android:layout_width="170dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_registration_selection"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="@string/_continue"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <com.krs.community.utils.MovableFloatingActionButton
+                android:id="@+id/fab_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_marginRight="10dp"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@android:color/white"
+                android:src="@drawable/rocket"
+                app:borderWidth="0dp"
+                app:elevation="6dp"
+                app:fabSize="normal"
+                app:maxImageSize="40dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- - - - " />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="@string/or_login_with" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- - - - " />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_login_google"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/google_btn" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_login_fb"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/facebook_btn" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/have_acc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="60dp"
+                android:text="@string/do_you_have_an_account"
+                android:textColor="@color/dark_color_primary"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>
+
+

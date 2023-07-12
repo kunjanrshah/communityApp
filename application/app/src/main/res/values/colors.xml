@@ -1,21 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#F50057</color>
-    <color name="colorPrimaryDark">#C51162</color>
-    <color name="textColorPrimary">#FFFFFF</color>
-    <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#FF80AB</color>
+    <!--<color name="colorPrimary">#ff2975</color>-->
+    <color name="colorPrimary">#843f52</color>
+    //#92315C
+    <color name="colorTree">#C54464</color>
+    <color name="colorTree1">#FBE9EE</color>
+    <color name="colorText">#212121</color>
+    <color name="shadow">#66000000</color>
 
-    <color name="ripple">#F06292</color>
+    <color name="colorPrivacyPolictyBG">#f2f2f2</color>
+
+    <color name="colorPrimaryDark">#843f52</color>
+    <color name="colorDark">#5E2D39</color>
+
+    <color name="colorGray">#d3d3d3</color>
+    <color name="color_mid_light_gray">@color/bg_gray</color>//#E8E8E8
+
+    <color name="colorHint">#9e9e9e</color>
+
+    <color name="placeholder_bg">#dddddd</color>
+    <color name="colorBG">#fcfcfc</color>
+
+    <color name="icon_tint_normal">#7a7a7a</color>
+    <color name="icon_tint_selected">#fed776</color>
+    <!--<color name="colorPrimary">#3b5998</color>
+    <color name="colorPrimaryDark">#8b9dc3</color>-->
+
+    <!--<color name="colorAccent">#FF80AB</color>-->
+    <color name="colorAccent">@color/colorTree</color>
+
+    <color name="material_purple_200">#CE93D8</color>
+    <color name="material_white_1000">#ffffff</color>
+    <!--<color name="ripple">#F06292</color>
     <color name="accent">#E91E63</color>
-    <color name="accent_pressed">#C2185B</color>
-
+    <color name="accent_pressed">#C2185B</color>-->
 
     <!-- Screens background color-->
 
     <!-- dots inactive colors -->
 
     <!-- dots active colors -->
+
+    <color name="feed_item_bg">#ffffff</color>
+    <color name="feed_item_border">#c2c3c8</color>
+    <color name="link">#0a80d1</color>
+    <color name="timestamp">#a0a3a7</color>
+    <color name="white">#ffffff</color>
+    <color name="bg_gray">#f2f2f2</color>
+    <color name="light_mild_gray">#f8f8f8</color>
+
+    <color name="light_gray">#A8A8A8</color>
+    <color name="black2">#656565</color>
+    <color name="black1">#555252</color>
+    <color name="black3">#434242</color>
+    <color name="dark_color_primary">#5e2d3a</color>
+
+
+    <color name="row_activated">#f0e1e5</color>
+    //#e0e0e0
+    //#fed776
+    <color name="bg_circle_default">@color/colorPrimary</color>
+    <color name="black">#272727</color>
+    //#666666
+
+    <color name="jrspinner_color_line">#E0E0E0</color>
+    <color name="jrspinner_color_default">#99000000</color>
+    <color name="jrspinner_black_transparent">#80000000</color>
+
+    <!-- color action mode -->
+    <!-- color action mode -->
+
+    <!--search liveo-->
+    <color name="search_liveo_icon">#FF9E9E9E</color>
+    <color name="search_liveo_text_hint">#35000000</color>
+    <color name="search_liveo_primary_dark">#AFAFAF</color>
 
 </resources>
