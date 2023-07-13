@@ -63,28 +63,28 @@ android {
     productFlavors {
 
         staging {
-            applicationId "com.ghanchi.samaj"
+            applicationId "com.vanza.samaj"
             versionCode 1
             versionName "1.0"
-            resValue "string", "app_name", "Demo Samaj"
-            resValue "string", "dev_name", "Kunjan"
-            resValue "string", "dev_contact", "9427051418"
-            resValue "string", "skype_id", "9427051418"
+            resValue "string", "app_name", "Vanza Samaj"
+            resValue "string", "dev_name", "Hardik"
+            resValue "string", "dev_contact", "9737208790"
+            resValue "string", "skype_id", "9737208790"
             resValue "string", "fb_url", "https://www.facebook.com/MEHBOOBGHANCHI"
             resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
             resValue "string", "dev_email", "kunjanrshah@gmail.com"
-            resValue "string", "dev_link", "https://muslimghanchisamaj.in"
-            resValue "string", "authorities", "com.ghanchi.samaj.provider"
-            resValue "string", "privacy_policy_url", "https://www.muslimghanchisamaj.in/ghanchi_privacy_policy.html"
-            resValue "string", "tms_and_con_url", "https://www.muslimghanchisamaj.in/terms_and_conditions.html"
-            resValue "string", "disclaimer_url", "https://muslimghanchisamaj.in/disclaimer.html"
-            resValue "string", "base_url_logo", "https://muslimghanchisamaj.in/uploads/logos/"
-            resValue "string", "base_url_thumb", "https://muslimghanchisamaj.in/uploads/users/thumb/"
-            resValue "string", "base_url_original", "https://muslimghanchisamaj.in/uploads/users/original/"
+            resValue "string", "dev_link", "https://vanza.samajapp.in"
+            resValue "string", "authorities", "com.vanza.samaj.provider"
+            resValue "string", "privacy_policy_url", "https://www.vanza.samajapp.in/vanza_privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://www.vanza.samajapp.in/terms_and_conditions.html"
+            resValue "string", "disclaimer_url", "https://vanza.samajapp.in/disclaimer.html"
+            resValue "string", "base_url_logo", "https://vanza.samajapp.in/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://vanza.samajapp.in/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://vanza.samajapp.in/uploads/users/original/"
             resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
             resValue "string", "facebook_app_id", "2264814596961704"
             resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
-            buildConfigField "String", "BASE_URL", '"https://www.muslimghanchisamaj.in/API/"'
+            buildConfigField "String", "BASE_URL", '"https://vanza.samajapp.in/API/"'
         }
 
         ghanchi {
@@ -98,18 +98,18 @@ android {
             resValue "string", "fb_url", "https://www.facebook.com/MEHBOOBGHANCHI"
             resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
             resValue "string", "dev_email", "saraoffsetprinters@gmail.com"
-            resValue "string", "dev_link", "https://muslimghanchi.org"
+            resValue "string", "dev_link", "https://muslimghanchi.samajapp.in"
             resValue "string", "authorities", "com.ghanchi.samaj.provider"
-            resValue "string", "privacy_policy_url", "https://www.muslimghanchi.org/ghanchi_privacy_policy.html"
-            resValue "string", "tms_and_con_url", "https://www.muslimghanchi.org/terms_and_conditions.html"
-            resValue "string", "disclaimer_url", "https://muslimghanchi.org/disclaimer.html"
-            resValue "string", "base_url_logo", "https://muslimghanchi.org/uploads/logos/"
-            resValue "string", "base_url_thumb", "https://muslimghanchi.org/uploads/users/thumb/"
-            resValue "string", "base_url_original", "https://muslimghanchi.org/uploads/users/original/"
+            resValue "string", "privacy_policy_url", "https://muslimghanchi.samajapp.in/ghanchi_privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://muslimghanchi.samajapp.in/terms_and_conditions.html"
+            resValue "string", "disclaimer_url", "https://muslimghanchi.samajapp.in/disclaimer.html"
+            resValue "string", "base_url_logo", "https://muslimghanchi.samajapp.in/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://muslimghanchi.samajapp.in/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://muslimghanchi.samajapp.in/uploads/users/original/"
             resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
             resValue "string", "facebook_app_id", "2264814596961704"
             resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
-            buildConfigField "String", "BASE_URL", '"https://www.muslimghanchi.org/API/"'
+            buildConfigField "String", "BASE_URL", '"https://muslimghanchi.samajapp.in/API/"'
         }
         medk {
             applicationId "com.medk.samaj"
@@ -122,18 +122,18 @@ android {
             resValue "string", "fb_url", "https://www.facebook.com/kunjanrshah87"
             resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
             resValue "string", "dev_email", "yee@live.in"
-            resValue "string", "dev_link", "http://www.muslimghanchisamaj.in"
+            resValue "string", "dev_link", "http://www.medk.samajapp.in"
             resValue "string", "authorities", "com.medk.samaj.provider"
-            resValue "string", "privacy_policy_url", "http://www.muslimghanchisamaj.in/privacy_policy.html"
-            resValue "string", "tms_and_con_url", "http://www.muslimghanchisamaj.in/terms_and_conditions.html"
-            resValue "string", "disclaimer_url", "http://www.muslimghanchisamaj.in/disclaimer.html"
-            resValue "string", "base_url_logo", "http://www.muslimghanchisamaj.in/uploads/logos/"
-            resValue "string", "base_url_thumb", "http://www.muslimghanchisamaj.in/uploads/users/thumb/"
-            resValue "string", "base_url_original", "http://www.muslimghanchisamaj.in/uploads/users/original/"
+            resValue "string", "privacy_policy_url", "http://www.medk.samajapp.in/privacy_policy.html"
+            resValue "string", "tms_and_con_url", "http://www.medk.samajapp.in/terms_and_conditions.html"
+            resValue "string", "disclaimer_url", "http://www.medk.samajapp.in/disclaimer.html"
+            resValue "string", "base_url_logo", "http://www.medk.samajapp.in/uploads/logos/"
+            resValue "string", "base_url_thumb", "http://www.medk.samajapp.in/uploads/users/thumb/"
+            resValue "string", "base_url_original", "http://www.medk.samajapp.in/uploads/users/original/"
             resValue "string", "web_client_id", "685345012359-pbf23s7oh4g2hrh73ie2fk7k9vmi1hhr.apps.googleusercontent.com"
             resValue "string", "facebook_app_id", "1685147044959850"
             resValue "string", "fb_login_protocol_scheme", "fb1685147044959850"
-            buildConfigField "String", "BASE_URL", '"http://www.muslimghanchisamaj.in/API/"'
+            buildConfigField "String", "BASE_URL", '"http://medk.samajapp.in/API/"'
         }
         yadav {
             applicationId "com.yadav.sevasamaj"
@@ -146,18 +146,18 @@ android {
             resValue "string", "fb_url", "https://www.facebook.com/rajuyadav1979"
             resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
             resValue "string", "dev_email", "rajuyadav79@gmail.com"
-            resValue "string", "dev_link", "https://www.helixinstruments.com"
+            resValue "string", "dev_link", "https://yadav.samajapp.in"
             resValue "string", "authorities", "com.yadav.sevasamaj.provider"
-            resValue "string", "privacy_policy_url", "https://www.helixinstruments.com/privacy_policy.html"
-            resValue "string", "tms_and_con_url", "https://www.helixinstruments.com/terms_and_conditions.html"
-            resValue "string", "disclaimer_url", "https://www.helixinstruments.com/disclaimer.html"
-            resValue "string", "base_url_logo", "https://www.helixinstruments.com/uploads/logos/"
-            resValue "string", "base_url_thumb", "https://www.helixinstruments.com/uploads/users/thumb/"
-            resValue "string", "base_url_original", "https://www.helixinstruments.com/uploads/users/original/"
+            resValue "string", "privacy_policy_url", "https://yadav.samajapp.in/privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://yadav.samajapp.in/terms_and_conditions.html"
+            resValue "string", "disclaimer_url", "https://yadav.samajapp.in/disclaimer.html"
+            resValue "string", "base_url_logo", "https://yadav.samajapp.in/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://yadav.samajapp.in/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://yadav.samajapp.in/uploads/users/original/"
             resValue "string", "web_client_id", "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com"
             resValue "string", "facebook_app_id", "593065571323594"
             resValue "string", "fb_login_protocol_scheme", "fb593065571323594"
-            buildConfigField "String", "BASE_URL", '"https://www.helixinstruments.com/API/"'
+            buildConfigField "String", "BASE_URL", '"https://yadav.samajapp.in/API/"'
         }
     }
 

@@ -539,7 +539,7 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
     var Bdate = ""
     val df = SimpleDateFormat("dd.MM.yyyy h:mm a") //'at'
     val currentdate = df.format(Calendar.getInstance().time)
-    val logo_path = "https://muslimghanchi.org/ic_logo1.png"
+    val logo_path = "https://muslimghanchi.samajapp.in/ic_logo1.png"
     val header = "<center> <table height='80'><tr><th><img src=$logo_path alt=''></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object><br><br>"
     var rows = header
     for (member in lstMember) {
@@ -722,7 +722,7 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
             city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
         }
 
-        val logo_path = "https://muslimghanchi.org/ic_logo1.png"
+        val logo_path = "https://muslimghanchi.samajapp.in/ic_logo1.png"
         val header = "<center> <table height='80'><tr><th><img src=$logo_path alt=''></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object><br><br>"
 
         val path = mContext.getString(R.string.base_url_thumb) + member.profilePic

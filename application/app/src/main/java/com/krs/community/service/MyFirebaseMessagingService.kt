@@ -39,7 +39,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 message = "Approved your request, Please login"
             }
             if (photo.isNullOrEmpty()) {
-                photo = "https://muslimghanchi.org/uploads/users/noimage.png"
+                photo = "https://muslimghanchi.samajapp.in/uploads/users/noimage.png"
             }
 
             val fullName = "$first_name $last_name"

@@ -10,7 +10,7 @@ public class AppConstants {
     public static final String PREF_NAME = "Vastipatrak";
     public static final String INSERT = "insert";
     public static final String VERSION = "version";
-    //public static final String APPLICATION_BASE_URL = "https://www.muslimghanchi.org/API/";
+    //public static final String APPLICATION_BASE_URL = "https://muslimghanchi.samajapp.in/API/";
     public static final String APPLICATION_BASE_URL = BuildConfig.BASE_URL;
     public static final String UPLOAD_DOCUMENT = APPLICATION_BASE_URL + "UploadFiles";
 
