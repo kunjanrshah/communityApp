@@ -31,6 +31,7 @@ import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
+import com.krs.community.fragments.MainDetailsFragment
 import com.krs.community.fragments.MatrimonyListFragment
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.model.Member
@@ -41,6 +42,7 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
 import org.json.JSONObject
 import java.io.File
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -538,7 +540,7 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
 
     var Bdate = ""
     val df = SimpleDateFormat("dd.MM.yyyy h:mm a") //'at'
-    val currentdate = df.format(Calendar.getInstance().time)
+    val currentdate = df.format(Calendar.getInstance().timeInMillis)
     val logo_path = "https://muslimghanchi.samajapp.in/ic_logo1.png"
     val header = "<center> <table height='80'><tr><th><img src=$logo_path alt=''></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object><br><br>"
     var rows = header
@@ -672,6 +674,8 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
 
     }
     if (Utility.checkExternalStoragePermission(mContext)) {
+        val df = SimpleDateFormat("dd_MM_yyyy_h_mm_a") //'at'
+        val currentdate = df.format(Calendar.getInstance().timeInMillis)
         createPdf(mContext, "community_${currentdate}", rows)
     } else {
         Utility.requestStoragePermission(mContext as AppCompatActivity)
@@ -722,15 +726,15 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
             city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
         }
 
-        val logo_path = "https://muslimghanchi.samajapp.in/ic_logo1.png"
-        val header = "<center> <table height='80'><tr><th><img src=$logo_path alt=''></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object><br><br>"
+        val logo_path = "https://muslimghanchi.samajapp.in/uploads/logo.png"
+        val header = "<center> <table height='80'><tr><th><img src=$logo_path alt='' width='50' height='50'></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object>"
 
         val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
-        val headerImage = "<img src=$path alt=$name>"
+        val headerImage = "<img src=$path alt=$name width='150' height='150'>"
         val labelMain = "<b>Main Detail  </b> "
         val lblGender = "<font color=#843f52> Gender: </font>"
-        val lblFather = "<font color=#843f52> FatherName:  </font>"
-        val lblMother = "<font color=#843f52> MotherName:  </font>"
+        val lblFather = "<font color=#843f52>Father:</font>"
+        val lblMother = "<font color=#843f52>Mother:</font>"
         val lblEmail = "<font color=#843f52> Email:  </font>"
         val lblMobile = "<font color=#843f52> Mobile:  </font>"
         val lblState = "<font color=#843f52> State:  </font>"
@@ -787,6 +791,43 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
                 currentActivity = it
             })
         }
+
+
+        val main_table= "<table height='400'><tr><td> "+headerImage+ "</td>   " +
+                "<td> <font size='5'><b>&nbsp;" +name+ "</b></font><br>" +
+                "<font size='5'>&nbsp;" +lblFather + father + "</font><br>" +
+                "<font size='5'>&nbsp;" +lblMother + mother + "</font><br>" +
+                "<font size='5'>&nbsp;" +mobile +", "+ email + "</font><br>" +
+                "<font size='5'>&nbsp;" +city +", "+ state + "</font><br>" +
+                "</td></tr>" +
+                "<tr><td> <font size='5'>&nbsp;" +lblArea + area + "</font><br>" +
+                "<font size='5'>&nbsp;"  + lblAddress + address + "</font><br>" +
+                "<font size='5'>&nbsp;"  + lblPinCode + pincode+ "</font><br>" +
+                "<font size='5'>&nbsp;" + lblGender + gender + "</font><br>" +
+                "<font size='5'>&nbsp;" + lblBG + bloodGroup + "</font><br>" +
+                "</td>" +
+                "<td> <font size='5'>&nbsp;" + lblRole + strRole + "</font><br> " +
+                "<font size='5'>&nbsp;"  +  lblBdate + bDate + "</font><br>" +
+                "<font size='5'>&nbsp;"  + lblNative + native + "</font><br>" +
+                "<font size='5'>&nbsp;"  +lblEducation + education + "</font><br>" +
+                "<font size='5'>&nbsp;" + lblActivity + currentActivity  + "</font><br>" +
+                "</td>" +
+                "</tr>" +
+                "</table>"
+
+        /*
+        *    lblRole + strRole + "<br>" +
+                        lblBdate + bDate + "<br>" +
+                        lblBG + bloodGroup + "<br>" +
+                        lblNative + native + "<br>" +
+                        lblEducation + education + "<br>" +
+                        lblActivity + currentActivity + "<br>" +
+                        lblEdate + exDate + "<br>" +
+                        lblMarital + maritalStatus + "<br>" +
+                        lblMdate + mDate + "<br>" +
+                        lblLaddress + localAddress
+        *
+        * */
 
         //------- Professional Detail---------
         val lblProfessional = "<b> Professional </b>"
@@ -868,21 +909,22 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
 
         Coroutines.main {
             Handler().postDelayed({
+//                val MainDetail = header + "<br><h3><b>" +
+//                        name + "</b></h3><br>" +
+//                        headerImage + "<br><br>" +
+//                        labelMain + "<br>" +
+//                        lblGender + gender + "<br>" +
+//                        lblFather + father + "<br>" +
+//                        lblMother + mother + "<br>" +
+//                        lblEmail + email + "<br>" +
+//                        lblMobile + mobile + "<br>" +
+//                        lblState + state + "<br>" +
+//                        lblCity + city + "<br>" +
+//                        lblArea + area + "<br>" +
+//                        lblAddress + address + "<br>" +
+//                        lblPinCode + pincode
                 val MainDetail = header + "<br><h3><b>" +
-                        name + "</b></h3><br>" +
-                        headerImage + "<br><br>" +
-                        labelMain + "<br>" +
-                        lblGender + gender + "<br>" +
-                        lblFather + father + "<br>" +
-                        lblMother + mother + "<br>" +
-                        lblEmail + email + "<br>" +
-                        lblMobile + mobile + "<br>" +
-                        lblState + state + "<br>" +
-                        lblCity + city + "<br>" +
-                        lblArea + area + "<br>" +
-                        lblAddress + address + "<br>" +
-                        lblPinCode + pincode
-
+                        main_table
                 val PersonalDetail = "<br> <br>" + lblPersonal + "<br>" +
                         lblRole + strRole + "<br>" +
                         lblBdate + bDate + "<br>" +
@@ -934,7 +976,7 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
 private fun createPdf(mContext: Context, fname: String, test: String) {
 
     CreatePdf(mContext)
-            .setPdfName(fname)
+            .setPdfName(fname.replace(" ",""))
             .openPrintDialog(false)
             .setContentBaseUrl(null)
             .setPageSize(PrintAttributes.MediaSize.ISO_A4)
@@ -969,7 +1011,7 @@ fun displayPDFDialog(context: Context, name: String, filePath: String, content: 
                         .setContentBaseUrl(null)
                         .setPageSize(PrintAttributes.MediaSize.ISO_A4)
                         .setContent(content)
-                        .setFilePath(Environment.getExternalStorageDirectory().absolutePath + "/" + AppController.mApplication.getString(R.string.folder_name)).create()
+                        .setFilePath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath + "/" + AppController.mApplication.getString(R.string.folder_name)).create()
             }
             .setConfirmText(context.getString(R.string.share))
             .setConfirmClickListener { sDialog ->

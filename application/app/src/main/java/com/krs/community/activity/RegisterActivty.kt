@@ -63,6 +63,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -188,7 +189,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             binding.imgCancel.setOnClickListener {
                 binding.imgProfile.setImageResource(R.drawable.man_reg)
                 resultUri = null
-                registerViewModel.profilePic = ""
+                registerViewModel.profilePic = null
                 binding.imgCancel.visibility = View.GONE
             }
 
@@ -657,10 +658,12 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 resultUri = getOutput(data!!)
                 try {
                     if (resultUri != null) {
-                        val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(resultUri!!))
-                        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false)
-                        val image = encodeTobase64(resizedBitmap)
-                        registerViewModel.profilePic = image.toString()
+                        val uploadImage = File(resultUri?.path.toString())
+                      //  val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(resultUri!!))
+                      //  val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false)
+                       // val image = encodeTobase64(resizedBitmap)
+                        registerViewModel.profilePic = uploadImage
+
                         Glide.with(AppController.mApplication).load(resultUri).thumbnail(0.5f).into(binding.imgProfile)
                         binding.imgCancel.visibility = View.VISIBLE
                     }

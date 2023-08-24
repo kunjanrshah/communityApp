@@ -3,6 +3,7 @@ package com.krs.community.viewmodel
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -17,7 +18,12 @@ import com.krs.community.utils.Utility
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import java.io.File
 
 
 class RegisterViewModel(
@@ -38,7 +44,7 @@ class RegisterViewModel(
     var stateId: Int? = null
     var countryCode: String? = null
     var cityId: Int? = null
-    var profilePic: String = ""
+    var profilePic: File? = null
     var localCommId: Int? = null
     var subCommId: Int? = null
     var maritalStatus: String? = null
@@ -98,11 +104,6 @@ class RegisterViewModel(
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.genderstr), 4)
             return
         }
-
-        /*if(country_code.isNullOrBlank()){
-        iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.select_country_code),4)
-            return
-        }*/
 
         if (mobile.isNullOrBlank() || mobile?.length != 10) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.mobilestr), 5)
@@ -164,54 +165,66 @@ class RegisterViewModel(
             return
         }
 
-        /* register.first_name = fname
-         register.nativePlaceId = nativeId?.toString()
-         register.father = father
-         register.setBirthdate(Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
-         register.sub_cast_id = lastnameId.toString()
-         register.email_address = email
-         register.mobile = mobile
-         register.gender = gender
-         register.profile_password = pass
-         register.address = address
-         register.state_id = stateId.toString()
-         register.city_id = cityId.toString()
-         register.sub_community_id = subCommId.toString()
-         register.local_community_id = localCommId.toString()
-         register.profilePic = profilePic*/
-        // register.headId="0"
+//        val jsonObject = JSONObject()
+//        jsonObject.put(app.getString(R.string.first_name), fname)
+//        jsonObject.put(app.getString(R.string.father_name), father)
+//        jsonObject.put(app.getString(R.string.birth_date), Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
+//        jsonObject.put(app.getString(R.string.sub_cast_id), lastnameId.toString())
+//        jsonObject.put(app.getString(R.string.email_address), email)
+//        jsonObject.put(app.getString(R.string.mobile), mobile)
+//        jsonObject.put(app.getString(R.string.gender), gender)
+//        jsonObject.put(app.getString(R.string.plain_password), pass)
+//        jsonObject.put(app.getString(R.string.address), address)
+//        jsonObject.put(app.getString(R.string.state_id), stateId.toString())
+//        jsonObject.put(app.getString(R.string.city_id), cityId.toString())
+//        jsonObject.put(app.getString(R.string.native_place_id), nativeId?.toString())
+//        jsonObject.put(app.getString(R.string.sub_community_id), subCommId.toString())
+//        jsonObject.put(app.getString(R.string.local_community_id), localCommId.toString())
+//        jsonObject.put(app.getString(R.string.marital_status), maritalStatus)
+//        jsonObject.put(app.getString(R.string.relation_id), 1)
+//
+//        if (profilePic.isNotEmpty()) {
+//            jsonObject.put(app.getString(R.string.profile_pic), profilePic)
+//        }
+//        if (!isLogin) {
+//            jsonObject.put(app.getString(R.string.is_admin), "1")
+//        }
+//
+//        val updated = JsonParser.parseString(jsonObject.toString()) as JsonObject
 
-        val jsonObject = JSONObject()
-        jsonObject.put(app.getString(R.string.first_name), fname)
-        jsonObject.put(app.getString(R.string.father_name), father)
-        jsonObject.put(app.getString(R.string.birth_date), Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd))
-        jsonObject.put(app.getString(R.string.sub_cast_id), lastnameId.toString())
-        jsonObject.put(app.getString(R.string.email_address), email)
-        jsonObject.put(app.getString(R.string.mobile), mobile)
-        jsonObject.put(app.getString(R.string.gender), gender)
-        jsonObject.put(app.getString(R.string.plain_password), pass)
-        jsonObject.put(app.getString(R.string.address), address)
-        jsonObject.put(app.getString(R.string.state_id), stateId.toString())
-        jsonObject.put(app.getString(R.string.city_id), cityId.toString())
-        jsonObject.put(app.getString(R.string.native_place_id), nativeId?.toString())
-        jsonObject.put(app.getString(R.string.sub_community_id), subCommId.toString())
-        jsonObject.put(app.getString(R.string.local_community_id), localCommId.toString())
-        jsonObject.put(app.getString(R.string.marital_status), maritalStatus)
-
-        if (profilePic.isNotEmpty()) {
-            jsonObject.put(app.getString(R.string.profile_pic), profilePic)
-        }
-        if (!isLogin) {
-            jsonObject.put(app.getString(R.string.is_admin), "1")
-        }
-        val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
 
         if (isNetworkConnected(app.applicationContext)) {
             jobRegistration = Job()
             jobRegistration.let { thejob ->
                 CoroutineScope(IO + thejob!!).launch {
                     try {
-                        val response = registerRepository.getUserRegister(updated)
+                        var body:MultipartBody.Part? =null
+                        if(profilePic!=null){
+                            val requestFile = profilePic?.asRequestBody("image/*".toMediaTypeOrNull())
+                            body = MultipartBody.Part.createFormData("profile_pic", profilePic?.name, requestFile!!)
+                        }
+                        val fname = fname?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val father = father?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val bdate = Utility.changeDateFormat(bdate, Utility.dd_MM_yyyy, Utility.yyyy_MM_dd)?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val lastName = lastnameId.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val email = email?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val mobile = mobile?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val gender = gender?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val pass = pass?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val address = address?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val state = stateId.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val city = cityId.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val native = nativeId?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val subComm = subCommId.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val local = localCommId.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val marital = maritalStatus?.toRequestBody("text/plain".toMediaTypeOrNull())
+                        val relation = "1".toRequestBody("text/plain".toMediaTypeOrNull())
+                        var isAdmin = "-1".toRequestBody("text/plain".toMediaTypeOrNull())
+                        if (!isLogin) {
+                             isAdmin = "1".toRequestBody("text/plain".toMediaTypeOrNull())
+                        }
+
+                        val response = registerRepository.getUserRegister(body,fname,father,bdate,lastName,email,mobile,gender,pass,address,state,city,native, subComm,local, marital,relation,isAdmin)
 
                         response.let {
                             withContext(Main) {

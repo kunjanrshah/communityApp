@@ -274,7 +274,7 @@
     <string name="_location">Location</string>
     <string name="_whatsapp">WhatsApp</string>
     <string name="_family_tree">Family Tree</string>
-    <string name="apikey" translatable="false">Apikey</string>
+    <string name="apikey" translatable="false">apikey</string>
     <string name="devicetoken" translatable="false">devicetoken</string>
     <string name="intudid" translatable="false">intudid</string>
     <string name="headanimation">headanimation</string>

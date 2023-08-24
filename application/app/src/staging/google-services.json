@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:317054014432:android:4f4a04e58a94d7d96f5185",
         "android_client_info": {
-          "package_name": "com.ghanchi.samaj"
+          "package_name": "com.vanza.samaj"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "317054014432-jm52j188960tkcbrflb9qq5l9jpfs9o4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.ghanchi.samaj",
+            "package_name": "com.vanza.samaj",
             "certificate_hash": "17aa4d30208d2e9fc71f914b9cea09e81f21c25a"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "317054014432-m1d8d6ns79dbruqsuvi1ihajr3ojh303.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.ghanchi.samaj",
+            "package_name": "com.vanza.samaj",
             "certificate_hash": "808f04ac7223825e66de31ce260fa63a072ef6b6"
           }
         },

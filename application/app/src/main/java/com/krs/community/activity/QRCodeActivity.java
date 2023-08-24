@@ -268,7 +268,7 @@ public class QRCodeActivity extends AppCompatActivity {
     }
 
     private void saveImage(Bitmap image, String id, String name) {
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
         File imagesFolder = new File(path);
         Uri uri = null;
         try {

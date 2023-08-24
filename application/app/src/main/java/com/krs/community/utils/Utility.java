@@ -194,9 +194,10 @@ public class Utility {
 
     public static void requestPermissions(AppCompatActivity mActivity) {
         if (/*ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED*/
+                ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity, new String[]{/*Manifest.permission.READ_CALL_LOG,*/ Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
+            ActivityCompat.requestPermissions(mActivity, new String[]{/*Manifest.permission.READ_CALL_LOG,*/Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
         }
     }
 
@@ -1427,7 +1428,7 @@ public class Utility {
     }
 
     public static String getPath() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
+        String filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();
@@ -1681,7 +1682,7 @@ public class Utility {
     }
 
     public static void store(Bitmap bm, String fileName, Context context) {
-        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
+        final String dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
         File dir = new File(dirPath);
         if (!dir.exists()) dir.mkdirs();
         File file = new File(dirPath, fileName);

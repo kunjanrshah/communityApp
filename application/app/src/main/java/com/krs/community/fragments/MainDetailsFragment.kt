@@ -496,7 +496,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                     binding.spRelation.setText(it)
                 }
             } else {
-                profileDetailViewModel.selectedRelationId = 0
+                profileDetailViewModel.selectedRelationId = 1
                 binding.spRelation.setText(resources.getString(R.string.Family_Head))
             }
         }

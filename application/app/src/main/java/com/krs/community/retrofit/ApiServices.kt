@@ -137,8 +137,8 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_SEARCH_BY_CITY)
     suspend fun getSearchByCity(@Body request: SearchByCityData): Response<SearchByCityModel>
 
-    @POST(AppConstants.UrlPath.GET_REGISTER)
-    suspend fun getUserRegister(@Body request: JsonObject): Response<RegisterModel>
+    /*@POST(AppConstants.UrlPath.GET_REGISTER)
+    suspend fun getUserRegister(@Body request: JsonObject): Response<RegisterModel>*/
 
     @POST(AppConstants.UrlPath.GET_LOGIN)
     suspend fun getUserLogin(@Body request: AppConstants.LoginRequest): Response<LoginResponse>
@@ -164,6 +164,12 @@ interface ApiServices {
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)
     suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id") id: RequestBody, @Part("type") type: RequestBody): Response<JsonObject>
+
+    @Multipart
+    @POST(AppConstants.UrlPath.GET_REGISTER)
+    suspend fun getUserRegister(@Part file: MultipartBody.Part?, @Part("first_name") fname: RequestBody?, @Part("father_name") father: RequestBody?, @Part("birth_date") bdate: RequestBody?, @Part("sub_cast_id") lastName: RequestBody?, @Part("email_address") email: RequestBody?, @Part("mobile") mobile: RequestBody?,
+    @Part("gender") gender: RequestBody?, @Part("plain_password") pass: RequestBody?, @Part("address") address: RequestBody?, @Part("state_id") state: RequestBody?, @Part("city_id") city: RequestBody?, @Part("native_place_id") native: RequestBody?,
+    @Part("sub_community_id") subComm: RequestBody?, @Part("local_community_id") local: RequestBody?, @Part("marital_status") marital: RequestBody?, @Part("relation_id") relation: RequestBody?, @Part("is_admin") isAdmin: RequestBody?): Response<RegisterModel>
 
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_FILES)

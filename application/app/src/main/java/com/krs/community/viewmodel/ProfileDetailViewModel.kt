@@ -327,8 +327,7 @@ class ProfileDetailViewModel(
 
                 CoroutineScope(Dispatchers.IO + thejob).launch {
                     try {
-                        val requestFile = file
-                                .asRequestBody("image/*".toMediaTypeOrNull())
+                        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
                         val body = MultipartBody.Part.createFormData("uploaded_file", file.name, requestFile)
                         val id = id.toRequestBody("text/plain".toMediaTypeOrNull())
                         val _type = type.toRequestBody("text/plain".toMediaTypeOrNull())

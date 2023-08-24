@@ -2,6 +2,8 @@ package com.krs.community.retrofit;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.github.squti.guru.Guru;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,8 +15,10 @@ import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Logger;
 import com.krs.community.utils.Utility;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
@@ -26,22 +30,35 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitBase {
     public ApiServices apiServices;
     protected Context context;
-    private Logger logger;
 
     public RetrofitBase(Context context, boolean addTimeout) {
         this.context = context;
 
-        NetworkConnectionInterceptor networkConnectionInterceptor = new NetworkConnectionInterceptor(context);
+      //  NetworkConnectionInterceptor networkConnectionInterceptor = new NetworkConnectionInterceptor(context);
+
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         if (BuildConfig.DEBUG) {
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+         interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS).setLevel(HttpLoggingInterceptor.Level.BODY);
         } else {
             interceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
 
+
+
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient().newBuilder()
-                .addInterceptor(interceptor)
-                .addInterceptor(networkConnectionInterceptor);
+                .addNetworkInterceptor(interceptor)
+                .addInterceptor(new Interceptor() {
+                    @NonNull
+                    @Override
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader(context.getString(R.string.apikey), AppConstants.API_KEY_VALUE)
+                                .addHeader(context.getString(R.string.devicetoken), Guru.getString(AppConstants.DEVICE_TOKEN, ""))
+                                .addHeader(context.getString(R.string.intudid), "145dfdfs")
+                                .build();
+                        return chain.proceed(request);
+                    }
+                });
 
         if (addTimeout) {
             httpClientBuilder.readTimeout(AppConstants.TimeOut.SOCKET_TIME_OUT, TimeUnit.MINUTES);
@@ -50,10 +67,9 @@ public class RetrofitBase {
             httpClientBuilder.readTimeout(AppConstants.TimeOut.IMAGE_UPLOAD_SOCKET_TIMEOUT, TimeUnit.MINUTES);
             httpClientBuilder.connectTimeout(AppConstants.TimeOut.IMAGE_UPLOAD_CONNECTION_TIMEOUT, TimeUnit.MINUTES);
         }
-        addingHeaders(httpClientBuilder);
-        OkHttpClient httpClient = httpClientBuilder.build();
+       // addingHeaders(httpClientBuilder);
 
-        logger = new Logger(RetrofitBase.class.getSimpleName());
+        OkHttpClient httpClient = httpClientBuilder.build();
 
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -70,13 +86,17 @@ public class RetrofitBase {
 
     private void addingHeaders(OkHttpClient.Builder builder) {
 
-        builder.interceptors().add(chain -> {
-            Request request = chain.request().newBuilder()
-                    .addHeader(context.getString(R.string.apikey), AppConstants.API_KEY_VALUE)
-                    .addHeader(context.getString(R.string.devicetoken), Guru.getString(AppConstants.DEVICE_TOKEN, ""))
-                    .addHeader(context.getString(R.string.intudid), "145dfdfs")
-                    .build();
-            return chain.proceed(request);
+        builder.interceptors().add(new Interceptor() {
+            @NonNull
+            @Override
+            public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
+                Request request = chain.request().newBuilder()
+                        .addHeader(context.getString(R.string.apikey), AppConstants.API_KEY_VALUE)
+                        .addHeader(context.getString(R.string.devicetoken), Guru.getString(AppConstants.DEVICE_TOKEN, ""))
+                        .addHeader(context.getString(R.string.intudid), "145dfdfs")
+                        .build();
+                return chain.proceed(request);
+            }
         });
     }
 
