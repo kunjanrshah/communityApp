@@ -78,7 +78,7 @@ fun View.copyViewImage(): View {
 
 fun Animator.withEndAction(action: () -> Unit): Animator {
     addListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator?) {
+        override fun onAnimationEnd(animation: Animator) {
             action()
         }
     })
@@ -87,7 +87,7 @@ fun Animator.withEndAction(action: () -> Unit): Animator {
 
 fun Animator.withStartAction(action: () -> Unit): Animator {
     addListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationStart(animation: Animator?) {
+        override fun onAnimationStart(animation: Animator) {
             action()
         }
     })

@@ -27,12 +27,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.krs.community"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
