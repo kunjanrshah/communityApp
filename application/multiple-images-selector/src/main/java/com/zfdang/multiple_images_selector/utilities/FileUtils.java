@@ -17,7 +17,7 @@ public class FileUtils {
     private static final String JPEG_FILE_PREFIX = "IMG";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
     private static final String TAG = "FileUtils";
-    private static final String EXTERNAL_STORAGE_PERMISSION = "android.permission.WRITE_EXTERNAL_STORAGE";
+
 
     public static File createTmpFile(Context context) throws IOException {
         File dir;
@@ -70,7 +70,7 @@ public class FileUtils {
         } catch (IncompatibleClassChangeError e) { // (sh)it happens too (Issue #989)
             externalStorageState = "";
         }
-        if (preferExternal && MEDIA_MOUNTED.equals(externalStorageState) && hasExternalStoragePermission(context)) {
+        if (preferExternal && MEDIA_MOUNTED.equals(externalStorageState) && MyPermissionChecker.hasExternalStoragePermission(context)) {
             appCacheDir = getExternalCacheDir(context);
         }
         if (appCacheDir == null) {
@@ -119,15 +119,12 @@ public class FileUtils {
         return appCacheDir;
     }
 
-    private static boolean hasExternalStoragePermission(Context context) {
-        int perm = context.checkCallingOrSelfPermission(EXTERNAL_STORAGE_PERMISSION);
-        return perm == PackageManager.PERMISSION_GRANTED;
-    }
+/*    private static boolean hasExternalStoragePermission(Context context) {
+        return  context.checkCallingOrSelfPermission(EXTERNAL_STORAGE_PERMISSION) == PackageManager.PERMISSION_GRANTED;
+    }*/
 
     public static Uri getUriByResId(int resId) {
-        // 增加对资源id类型的图片类型判断
         return new Uri.Builder().scheme("res").path(String.valueOf(resId)).build();
     }
-
 
 }

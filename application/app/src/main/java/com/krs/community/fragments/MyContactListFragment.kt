@@ -348,14 +348,8 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     }
 
     private fun enableRuntimePermission() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED || (activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED) {
-                val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CONTACTS)
-                requestPermissions(permissions, RequestPermissionCode)
-            } else {
-                userContactList()
-            }
+        if(MyPermissionChecker.enableRuntimePermission(activity)){
+            userContactList()
         }
     }
 

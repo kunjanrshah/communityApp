@@ -2,6 +2,7 @@ package com.krs.community.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -43,6 +44,7 @@ import com.krs.community.app.ConnectionLiveData;
 import com.krs.community.databinding.FragmentByQrcodeBinding;
 import com.krs.community.model.Member;
 import com.krs.community.utils.AESUtils;
+import com.krs.community.utils.MyPermissionChecker;
 import com.krs.community.utils.Utility;
 
 import java.io.File;
@@ -82,6 +84,7 @@ public class QRCodeActivity extends AppCompatActivity {
         AppController mApp = (AppController) getApplicationContext();
         mApp.firebaseAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
         mApp.facebookAnalytics(QRCodeActivity.this, QRCodeActivity.class.getSimpleName());
+        MyPermissionChecker.requestStoragePermission(this);
     }
 
     private void setNoInternetLayout() {
@@ -267,9 +270,16 @@ public class QRCodeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private String getFilePath(){
+        ContextWrapper contextWrapper= new ContextWrapper(getApplicationContext());
+        File imageDir= contextWrapper.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        File file= new File(imageDir,"/" + AppController.mApplication.getString(R.string.folder_name));
+        return  file.getPath();
+    }
+
     private void saveImage(Bitmap image, String id, String name) {
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
-        File imagesFolder = new File(path);
+       // String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" + AppController.mApplication.getString(R.string.folder_name);
+        File imagesFolder = new File(getFilePath());
         Uri uri = null;
         try {
             imagesFolder.mkdirs();

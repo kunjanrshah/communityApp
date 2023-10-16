@@ -1,6 +1,5 @@
 package com.krs.community.activity
 
-import android.Manifest
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.TypeEvaluator
@@ -8,8 +7,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.content.pm.PackageManager
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationManager
@@ -24,7 +26,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -35,7 +36,13 @@ import com.github.squti.guru.Guru
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -51,6 +58,7 @@ import com.krs.community.listeners.IFamilyMembersListener
 import com.krs.community.model.Member
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
+import com.krs.community.utils.MyPermissionChecker
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
 import de.hdodenhof.circleimageview.CircleImageView
@@ -89,7 +97,9 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         headId = intent.getStringExtra("head_id").toString()
         val mApp = applicationContext as AppController
         mApp.firebaseAnalytics(this@MapTrackingActivity, MapTrackingActivity::class.java.simpleName)
-        familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
+        familyDetailViewModel = ViewModelProvider(
+            this, familyDetailViewModelFactory
+        ).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.mIFamilyMembersListener = this
 
         mainHandler = Handler(Looper.getMainLooper())
@@ -105,13 +115,19 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         mapFragment?.getMapAsync { googleMap ->
             mMap = googleMap
             if (locations.size > 0) {
-                val point = CameraUpdateFactory.newLatLngZoom(LatLng(locations["u_$headId"]!!.latitude, locations["u_$headId"]!!.longitude), 9f)
+                val point = CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        locations["u_$headId"]!!.latitude, locations["u_$headId"]!!.longitude
+                    ), 9f
+                )
                 mMap?.moveCamera(point)
             }
             mMap?.animateCamera(CameraUpdateFactory.zoomTo(9f))
             mMap?.setOnMapLoadedCallback {
                 mapLoaded = true
-                mCustomMarkerView = (getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.view_custom_marker, null)
+                mCustomMarkerView = (getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
+                    R.layout.view_custom_marker, null
+                )
                 mMarkerImageView = mCustomMarkerView?.findViewById<View>(R.id.profile_image) as CircleImageView
                 tvTitle = mCustomMarkerView?.findViewById<View>(R.id.tv_title) as TextView
                 getFamilyDetails()
@@ -211,12 +227,14 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         task.addOnFailureListener(this) { e ->
             val statusCode = (e as ApiException).statusCode
             when (statusCode) {
-                CommonStatusCodes.RESOLUTION_REQUIRED ->
-                    try {
-                        val resolvable = e as ResolvableApiException
-                        resolvable.startResolutionForResult(this@MapTrackingActivity, REQUEST_CHECK_SETTINGS)
-                    } catch (sendEx: IntentSender.SendIntentException) { // Ignore the error.
-                    }
+                CommonStatusCodes.RESOLUTION_REQUIRED -> try {
+                    val resolvable = e as ResolvableApiException
+                    resolvable.startResolutionForResult(
+                        this@MapTrackingActivity, REQUEST_CHECK_SETTINGS
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) { // Ignore the error.
+                }
+
                 LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
                 }
             }
@@ -227,8 +245,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         mLocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
-                    locations["u_$headId"]?.set(location)
-                    /* if(lstTitle["u_$headId"]!="You"){
+                    locations["u_$headId"]?.set(location)/* if(lstTitle["u_$headId"]!="You"){
                          lstTitle["u_$headId"] = "You"
                          lstImage["u_$headId"] = getString(R.string.base_url_original) + "current_pin.png"
                      }*/
@@ -237,25 +254,22 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                 }
             }
         }
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+
+    /*    if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                this, Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             Toast.makeText(
-                applicationContext,
-                "location permission required !!",
-                Toast.LENGTH_SHORT
+                applicationContext, "location permission required !!", Toast.LENGTH_SHORT
             ).show()
             return
-        }
+        }*/
+        MyPermissionChecker.checkGPSPermission()
         mLocationRequest?.let {
             mFusedLocationProviderClient?.requestLocationUpdates(
-                it,
-                mLocationCallback as LocationCallback, null
+                it, mLocationCallback as LocationCallback, null
             )
         }
         Toast.makeText(applicationContext, "Location update started", Toast.LENGTH_SHORT).show()
@@ -273,6 +287,7 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     Log.i("Dash", "User agreed to make required location settings changes.")
                     createLocationRequest()
                 }
+
                 Activity.RESULT_CANCELED ->  //                    showTimeoutDialog("Without location access, GreenPool Enterprise can't be used !!", true);
                     Log.i("Dash", "User choose not to make required location settings changes.")
             }
@@ -307,21 +322,18 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
             for (loc in locations) {
                 if (lstMarkers[loc.key] == null) {
                     oldLocations[loc.key] = loc.value
-                    Glide.with(applicationContext)
-                            .asBitmap()
-                            .thumbnail(0.5f)
-                            .load(lstImage[loc.key])
-                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                            .into(object : CustomTarget<Bitmap>() {
-                                override fun onLoadCleared(placeholder: Drawable?) {
-                                    val bitmap = BitmapFactory.decodeResource(resources, R.drawable.user_profile)
-                                    addMarker(loc, bitmap)
-                                }
+                    Glide.with(applicationContext).asBitmap().thumbnail(0.5f).load(lstImage[loc.key]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(object : CustomTarget<Bitmap>() {
+                            override fun onLoadCleared(placeholder: Drawable?) {
+                                val bitmap = BitmapFactory.decodeResource(resources, R.drawable.user_profile)
+                                addMarker(loc, bitmap)
+                            }
 
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    addMarker(loc, resource)
-                                }
-                            })
+                            override fun onResourceReady(
+                                resource: Bitmap, transition: Transition<in Bitmap>?
+                            ) {
+                                addMarker(loc, resource)
+                            }
+                        })
 
 
                 } else {
@@ -333,11 +345,12 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
                     lstMarkers[loc.key]?.rotation = bearing
                     moveThread = MoveThread()
                     moveThread?.setNewPoint(
-                        LatLng(loc.value.latitude, loc.value.longitude),
-                        mMap!!.cameraPosition.zoom
+                        LatLng(loc.value.latitude, loc.value.longitude), mMap!!.cameraPosition.zoom
                     )
                     handler?.post(moveThread!!)
-                    animateMarkerToICS(lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude))
+                    animateMarkerToICS(
+                        lstMarkers[loc.key], LatLng(loc.value.latitude, loc.value.longitude)
+                    )
                 }
             }
         } else {
@@ -358,12 +371,11 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         markerOptions.flat(true)
         markerOptions.position(LatLng(loc.value.latitude, loc.value.longitude))
         // lstMarkers[loc.key] = mMap.addMarker(markerOptions)
-        bearing =
-            if (loc.value.hasBearing()) { // if location has bearing set the same bearing to marker(if location is acquired using GPS bearing will be available)
-                loc.value.bearing
-            } else {
-                0f // no need to calculate bearing as it will be the first point
-            }
+        bearing = if (loc.value.hasBearing()) { // if location has bearing set the same bearing to marker(if location is acquired using GPS bearing will be available)
+            loc.value.bearing
+        } else {
+            0f // no need to calculate bearing as it will be the first point
+        }
         lstMarkers[loc.key]?.rotation = bearing
         moveThread = MoveThread()
         moveThread?.setNewPoint(LatLng(loc.value.latitude, loc.value.longitude), 9f)
@@ -392,7 +404,11 @@ class MapTrackingActivity : AppCompatActivity(), KodeinAware, IFamilyMembersList
         const val LOCATION_ACQUIRED = "locAcquired"
 
         fun animateMarkerToICS(marker: Marker?, finalPosition: LatLng?) {
-            val typeEvaluator = TypeEvaluator<LatLng> { fraction, startValue, endValue -> interpolate(fraction, startValue, endValue) }
+            val typeEvaluator = TypeEvaluator<LatLng> { fraction, startValue, endValue ->
+                interpolate(
+                    fraction, startValue, endValue
+                )
+            }
             val property = Property.of(Marker::class.java, LatLng::class.java, "position")
             val animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition)
             animator.duration = 3000

@@ -156,7 +156,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         rvDetail.layoutManager = mLayoutManager
         rvDetail.itemAnimator = DefaultItemAnimator()
         loginId = Guru.getString(getString(R.string.member_id), "")
-        requestStoragePermission(this)
+        MyPermissionChecker.requestStoragePermission(this)
     }
 
     override fun onPause() {

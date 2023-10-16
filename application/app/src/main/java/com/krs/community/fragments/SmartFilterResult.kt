@@ -49,6 +49,8 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.MyPermissionChecker.Companion.checkExternalStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
@@ -325,7 +327,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
         ivExport = header.findViewById<ImageView>(R.id.iv_export)
         ivExport.setOnClickListener {
 
-            if (Utility.checkExternalStoragePermission(activity)) {
+            if (checkExternalStoragePermission(activity)) {
                 val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
                 adapter.setExportListner(this@SmartFilterResult)
                 exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
@@ -338,7 +340,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
                 exportDialog?.show()
 
             } else {
-                Utility.requestStoragePermission(activity as AppCompatActivity)
+                requestStoragePermission(activity as AppCompatActivity)
             }
         }
 

@@ -39,6 +39,8 @@ import com.krs.community.utils.AppConstants
 import com.krs.community.utils.AppConstants.UPLOAD_DOCUMENT
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.MovableFloatingActionButton
+import com.krs.community.utils.MyPermissionChecker.Companion.checkExternalStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.DocumentsListModel
 import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
@@ -148,7 +150,7 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
                             .showCancelButton(true)
                             .setConfirmClickListener { sweetAlertDialog: SweetAlertDialog ->
                                 sweetAlertDialog.dismissWithAnimation()
-                                if (Utility.checkExternalStoragePermission(activity)) {
+                                if (checkExternalStoragePermission(activity)) {
                                     PRDownloader.download(uploadfile.fileUrl, Utility.getPath(), uploadfile.filename).build()
                                             .setOnStartOrResumeListener {
                                                 Utility.startSweetDialog(activity, SweetAlertDialog.PROGRESS_TYPE, getString(R.string.uploads), getString(R.string.download))
@@ -164,7 +166,7 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
                                                 }
                                             })
                                 } else {
-                                    Utility.requestStoragePermission(activity as AppCompatActivity)
+                                    requestStoragePermission(activity as AppCompatActivity)
                                 }
                             }
                             .show()
@@ -194,8 +196,8 @@ class UploadFragment : Fragment(), KodeinAware, ByDocumentListener, UploadDialog
         rvDocuments.adapter = adapter
 
         getFiles()
-        if (!Utility.checkExternalStoragePermission(activity)) {
-            Utility.requestStoragePermission(activity as AppCompatActivity)
+        if (!checkExternalStoragePermission(activity)) {
+            requestStoragePermission(activity as AppCompatActivity)
         }
 
         return root

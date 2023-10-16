@@ -23,6 +23,8 @@ import com.krs.community.model.Member
 import com.krs.community.repositories.SmartFilterRepository
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
+import com.krs.community.utils.MyPermissionChecker.Companion.checkFineLocationPermission
+import com.krs.community.utils.MyPermissionChecker.Companion.requestFineLocationPermission
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
@@ -44,7 +46,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
         filterViewModel = ViewModelProvider(mContext as AppCompatActivity, filterViewModelFactory).get(SmartFilterViewModel::class.java)
         filterViewModel.mByFilterListener = this
         this.setLocationListner = setLocationListner
-        if (Utility.checkFineLocationPermission(mContext)) {
+        if (checkFineLocationPermission(mContext)) {
 
             request = LocationRequest()
             request.interval = Utility.INTERVAL
@@ -60,7 +62,7 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
             filterViewModel.getSharedProfiles(updated)
 
         } else {
-            Utility.requestFineLocationPermission(mContext as AppCompatActivity)
+            requestFineLocationPermission(mContext as AppCompatActivity)
         }
     }
 

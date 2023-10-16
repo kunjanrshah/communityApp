@@ -49,6 +49,7 @@ import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.MyPermissionChecker.Companion.checkFineLocationPermission
 import com.krs.community.utils.Utility.*
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
@@ -148,10 +149,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
             }
         }
 
-        if (checkFineLocationPermission(this)) {
+        if (MyPermissionChecker.checkFineLocationPermission(this)) {
             easyWayLocation.startLocation()
         } else {
-            requestFineLocationPermission(this)
+            MyPermissionChecker.requestFineLocationPermission(this)
         }
 
         if (member?.id.isNullOrEmpty()) {

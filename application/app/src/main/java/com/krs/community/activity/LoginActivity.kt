@@ -351,20 +351,20 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                     Snackbar.make(findViewById(R.id.ll_login), getString(R.string.Authenticationfailed), Snackbar.LENGTH_LONG).show()
                 }
             })
-            requestPermissions(this@LoginActivity)
+         //   requestPermissions(this@LoginActivity)
         }
     }
 
     override fun agreed() {
         forgotDialog?.dismiss()
-        getNumber(binding)
+     //   getNumber(binding)
     }
 
     override fun disAgreed() {
         forgotDialog?.dismiss()
     }
 
-    private fun getNumber(binding: ActivityLoginwithBinding) {
+ /*   private fun getNumber(binding: ActivityLoginwithBinding) {
         val lstNumber = ArrayList<String>()
         val lstCarrier = ArrayList<String>()
 
@@ -419,7 +419,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                     }
                     .build()
         }
-    }
+    }*/
 
     private fun startSMSListener() {
         try {
@@ -457,6 +457,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             1 -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -469,7 +470,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     override fun onOTPReceived(otp: String?) {
-        val otp1 = otp?.substring(31, 35)
+     /*   val otp1 = otp?.substring(31, 35)
         Log.i(TAG, "OTP Received: $otp1")
         squareField.setText(otp1)
         if (smsReceiver != null) {
@@ -480,7 +481,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             if (ReceviedOTP.equals(otp1)) {
                 goToFamilyDetailScreen()
             }
-        }
+        }*/
     }
 
     override fun onOTPTimeOut() {
@@ -516,7 +517,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 .show()
         } else {
             member = response.data
-            if (!response.otp.isNullOrBlank()) {
+          /*  if (!response.otp.isNullOrBlank()) {
                 if (response.otp != "FAILED") {
                     card_view_mobile.visibility = View.GONE
                     card_view_otp.visibility = View.VISIBLE
@@ -526,36 +527,36 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 } else {
                     Snackbar.make(findViewById(R.id.ll_login), "OTP sending fail!", Snackbar.LENGTH_LONG).show()
                 }
-            } else {
+            } else {*/
                 if (response.success) {
                     goToDashboard(response)
                     //  goToFamilyDetailScreen()
                 } else {
                     Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
                 }
-            }
+         //   }
         }
     }
 
-    private fun goToFamilyDetailScreen() {
-
-        Guru.putString(getString(R.string.user_id), member.id)
-        Guru.putString(getString(R.string.access_token), member.accessToken)
-
-        val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        if (member.headId == "0") {
-            Guru.putString(getString(R.string.head_id), member.id)
-            intent.putExtra(getString(R.string.id), member.id)
-        } else {
-            intent.putExtra(getString(R.string.id), member.headId)
-            Guru.putString(getString(R.string.head_id), member.headId)
-        }
-
-        startActivity(intent)
-        finish()
-        //   fade(this)
-    }
+//    private fun goToFamilyDetailScreen() {
+//
+//        Guru.putString(getString(R.string.user_id), member.id)
+//        Guru.putString(getString(R.string.access_token), member.accessToken)
+//
+//        val intent = Intent(applicationContext, FamilyDetailActivity::class.java)
+//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//        if (member.headId == "0") {
+//            Guru.putString(getString(R.string.head_id), member.id)
+//            intent.putExtra(getString(R.string.id), member.id)
+//        } else {
+//            intent.putExtra(getString(R.string.id), member.headId)
+//            Guru.putString(getString(R.string.head_id), member.headId)
+//        }
+//
+//        startActivity(intent)
+//        finish()
+//        //   fade(this)
+//    }
 
     override fun onOTPReceivedError(error: String?) {
         error?.let { toast(it) }

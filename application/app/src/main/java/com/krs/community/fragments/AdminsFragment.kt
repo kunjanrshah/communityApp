@@ -44,6 +44,8 @@ import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.MyPermissionChecker.Companion.checkExternalStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
@@ -303,7 +305,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
         }
         ivExport.setOnClickListener {
 
-            if (Utility.checkExternalStoragePermission(activity)) {
+            if (checkExternalStoragePermission(activity)) {
                 val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
                 adapter.setExportListner(this@AdminsFragment)
                 exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
@@ -315,7 +317,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
                         .create()
                 exportDialog?.show()
             } else {
-                Utility.requestStoragePermission(activity as AppCompatActivity)
+                requestStoragePermission(activity as AppCompatActivity)
             }
 
         }

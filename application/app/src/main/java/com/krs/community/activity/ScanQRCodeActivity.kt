@@ -13,6 +13,7 @@ import com.budiyev.android.codescanner.*
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.utils.AESUtils
+import com.krs.community.utils.MyPermissionChecker
 
 class ScanQRCodeActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
@@ -22,7 +23,8 @@ class ScanQRCodeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan_qrcode)
         val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
-        setupPermissions()
+        MyPermissionChecker.setupPermissions(this)
+
         codeScanner = CodeScanner(this, scannerView)
         setScreenLayout()
 
@@ -74,8 +76,8 @@ class ScanQRCodeActivity : AppCompatActivity() {
         super.onPause()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             RECORD_REQUEST_CODE -> {
 
@@ -90,10 +92,8 @@ class ScanQRCodeActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupPermissions() {
-        val permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)
-
+    /*private fun setupPermissions() {
+        val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
         if (permission != PackageManager.PERMISSION_GRANTED) {
             Log.e("", "Permission to record denied")
             makeRequest()
@@ -101,10 +101,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
     }
 
     private fun makeRequest() {
-        ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.CAMERA),
-                RECORD_REQUEST_CODE)
-    }
-
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), RECORD_REQUEST_CODE)
+    }*/
 
 }

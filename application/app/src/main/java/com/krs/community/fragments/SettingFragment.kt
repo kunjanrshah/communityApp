@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.krs.community.R
 import com.krs.community.app.AppController
+import com.krs.community.utils.MyPermissionChecker.Companion.checkReadPhoneStatePermission
 import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.orhanobut.dialogplus.DialogPlus
@@ -72,7 +73,7 @@ class SettingFragment : Fragment() {
         val isShow = Guru.getBoolean(getString(R.string.isdialogshow), false)
 
         //  val isShowCallLog = Utility.checkReadCallLogPermission((activity as AppCompatActivity))
-        val isShowCallPhone = Utility.checkReadPhoneStatePermission((activity as AppCompatActivity))
+        val isShowCallPhone = checkReadPhoneStatePermission((activity as AppCompatActivity))
 
         switchDialog?.isOn = isShow && isShowCallPhone //&& isShowCallLog
 

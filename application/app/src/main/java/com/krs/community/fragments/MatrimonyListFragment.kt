@@ -42,6 +42,8 @@ import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.*
+import com.krs.community.utils.MyPermissionChecker.Companion.checkExternalStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
@@ -129,7 +131,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
         ivExport.setOnClickListener {
 
-            if (Utility.checkExternalStoragePermission(activity as AppCompatActivity)) {
+            if (checkExternalStoragePermission(activity as AppCompatActivity)) {
                 val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
                 adapter.setExportListner(this@MatrimonyListFragment)
                 exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
@@ -141,7 +143,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                         .create()
                 exportDialog?.show()
             } else {
-                Utility.requestStoragePermission(activity as AppCompatActivity)
+                requestStoragePermission(activity as AppCompatActivity)
             }
         }
 
@@ -408,14 +410,14 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         if (!TextUtils.isEmpty(member.profilePic)) {
             holder.imgProfile.isClickable = true
             val url = resources.getString(R.string.base_url_thumb) + member.profilePic
-            Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
+            activity?.let { Glide.with(it).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile) }
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
 
         } else {
             holder.imgProfile.isClickable = false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
-            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
+            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(requireActivity(), "400"))
             holder.iconText.visibility = View.VISIBLE
         }
     }

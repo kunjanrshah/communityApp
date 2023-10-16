@@ -35,6 +35,10 @@ import com.krs.community.fragments.MainDetailsFragment
 import com.krs.community.fragments.MatrimonyListFragment
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.model.Member
+import com.krs.community.utils.MyPermissionChecker.Companion.checkExternalStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.checkReadExternalStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.requestReadStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.uttampanchasara.pdfgenerator.CreatePdf
@@ -168,7 +172,7 @@ fun openImageDialog(activity: AppCompatActivity, url: String) {
 }
 
 fun pickFromGallery(context: FragmentActivity) {
-    if (Utility.checkReadExternalStoragePermission(context)) {
+    if (checkReadExternalStoragePermission(context)) {
         val intent = Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE)
         val mimeTypes = arrayOf("image/jpeg", "image/png")
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
@@ -189,7 +193,7 @@ fun promptReadPermission(context: Context) {
             .showCancelButton(true)
             .setConfirmClickListener { sDialog ->
                 sDialog.dismiss()
-                Utility.requestReadStoragePermission(context as AppCompatActivity)
+                requestReadStoragePermission(context as AppCompatActivity)
             }
             .show()
 
@@ -673,12 +677,12 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
         }
 
     }
-    if (Utility.checkExternalStoragePermission(mContext)) {
+    if (checkExternalStoragePermission(mContext)) {
         val df = SimpleDateFormat("dd_MM_yyyy_h_mm_a") //'at'
         val currentdate = df.format(Calendar.getInstance().timeInMillis)
         createPdf(mContext, "community_${currentdate}", rows)
     } else {
-        Utility.requestStoragePermission(mContext as AppCompatActivity)
+        requestStoragePermission(mContext as AppCompatActivity)
     }
 }
 
@@ -961,10 +965,10 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
                 val MailString = MainDetail + PersonalDetail + ProfessionalDetail + MatrimonyDetail
                 Log.v("ViewUtils", "MailString: $MailString")
 
-                if (Utility.checkExternalStoragePermission(mContext)) {
+                if (checkExternalStoragePermission(mContext)) {
                     createPdf(mContext, name, MailString)
                 } else {
-                    Utility.requestStoragePermission(mContext as AppCompatActivity)
+                    requestStoragePermission(mContext as AppCompatActivity)
                 }
 
             }, 1500)

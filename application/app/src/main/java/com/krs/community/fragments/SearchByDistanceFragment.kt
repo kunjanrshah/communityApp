@@ -54,7 +54,8 @@ import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.ByDistanceResponse
 import com.krs.community.utils.*
-import com.krs.community.utils.Utility.checkFineLocationPermission
+import com.krs.community.utils.MyPermissionChecker.Companion.checkFineLocationPermission
+import com.krs.community.utils.MyPermissionChecker.Companion.requestFineLocationPermission
 import com.krs.community.viewmodel.ByDistanceViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
@@ -158,20 +159,20 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar!!.hide()
-        if (Utility.checkFineLocationPermission(activity)) {
+        if (checkFineLocationPermission(activity)) {
             easyWayLocation.startLocation() //calculateDistance()
         } else {
-            Utility.requestFineLocationPermission(activity as AppCompatActivity)
+            requestFineLocationPermission(activity as AppCompatActivity)
         }
     }
 
     override fun onStop() {
         super.onStop()
         (activity as AppCompatActivity).supportActionBar!!.show()
-        if (Utility.checkFineLocationPermission(activity)) {
+        if (checkFineLocationPermission(activity)) {
             easyWayLocation.endUpdates()
         } else {
-            Utility.requestFineLocationPermission(activity as AppCompatActivity)
+            requestFineLocationPermission(activity as AppCompatActivity)
         }
     }
 
@@ -653,14 +654,14 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
         if (!TextUtils.isEmpty(member.profilePic)) {
             holder.imgProfile.isClickable = true
             val url = resources.getString(R.string.base_url_thumb) + member.profilePic
-            Glide.with(activity!!).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile)
+            activity?.let { Glide.with(it).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile) }
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
 
         } else {
             holder.imgProfile.isClickable = false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
-            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
+            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(requireActivity(), "400"))
             holder.iconText.visibility = View.VISIBLE
         }
     }

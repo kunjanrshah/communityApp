@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +34,7 @@ import com.zfdang.multiple_images_selector.models.FolderListContent;
 import com.zfdang.multiple_images_selector.models.ImageItem;
 import com.zfdang.multiple_images_selector.models.ImageListContent;
 import com.zfdang.multiple_images_selector.utilities.FileUtils;
+import com.zfdang.multiple_images_selector.utilities.MyPermissionChecker;
 import com.zfdang.multiple_images_selector.utilities.StringUtils;
 
 import java.io.File;
@@ -177,14 +180,18 @@ public class ImagesSelectorActivity extends Activity
     }
 
     public void requestReadStorageRuntimePermission() {
-        if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ImagesSelectorActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_STORAGE_CODE);
-        } else {
-            LoadFolderAndImages();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            if(MyPermissionChecker.checkAndRequestReadImagesPermission(this)){
+                LoadFolderAndImages();
+            }
+        }else{
+            if(MyPermissionChecker.checkAndRequestReadStoragePermission(this)){
+                LoadFolderAndImages();
+            }
         }
     }
 
-    public void requestCameraRuntimePermissions() {
+  /*  public void requestCameraRuntimePermissions() {
         if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -194,7 +201,7 @@ public class ImagesSelectorActivity extends Activity
         } else {
             launchCamera();
         }
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -366,9 +373,10 @@ public class ImagesSelectorActivity extends Activity
         }
 
         if (item.isCamera()) {
-            requestCameraRuntimePermissions();
+            if(MyPermissionChecker.requestCameraRuntimePermissions(this)){
+                launchCamera();
+            }
         }
-
         updateDoneButton();
     }
 

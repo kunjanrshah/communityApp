@@ -87,12 +87,12 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         var statusCounts = MutableLiveData<String>()
     }
 
-    private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
-    private val REQUEST_EXTERNAL_STORAGE = 1
-    private val PERMISSIONS_STORAGE = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
+//    private val PERMISSION_REQUEST_READ_PHONE_STATE = 1
+//    private val REQUEST_EXTERNAL_STORAGE = 1
+//    private val PERMISSIONS_STORAGE = arrayOf(
+//        Manifest.permission.READ_EXTERNAL_STORAGE,
+//        Manifest.permission.WRITE_EXTERNAL_STORAGE
+//    )
 
     override val kodein by kodein()
 
@@ -281,7 +281,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             }
         }
 
-        if (checkFineLocationPermission(this)) {
+      /*  if (checkFineLocationPermission(this)) {
             //  getLocationDetail = GetLocationDetail(this, this)
             //  request = LocationRequest()
             //  request?.interval = INTERVAL
@@ -289,22 +289,22 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             //  easyWayLocation = EasyWayLocation(this, request, true, this)
             // easyWayLocation?.startLocation() //calculateDistance()
 
-        }/* else {
+        }*//* else {
             requestFineLocationPermission(this)
-        }*/
+        }*//*
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(this)
-        }
+        }*/
     }
 
     override fun onPause() {
         super.onPause()
-        if (checkFineLocationPermission(this)) {
+       /* if (checkFineLocationPermission(this)) {
             //    easyWayLocation?.endUpdates()
         } else {
             requestFineLocationPermission(this)
-        }
+        }*/
     }
 
     override fun onDestroy() {
@@ -329,7 +329,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == FINE_LOCATION_REQUEST) {
+      /*  if (requestCode == FINE_LOCATION_REQUEST) {
             //      easyWayLocation?.startLocation()
         } else {
             when (requestCode) {
@@ -341,7 +341,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                         }
                     }
             }
-        }
+        }*/
     }
 
 
@@ -583,19 +583,20 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     }
 
-    fun verifyStoragePermissions(activity: Activity?) {
-        // Check if we have write permission
-        val permission = ActivityCompat.checkSelfPermission(
-            activity!!,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                activity,
-                PERMISSIONS_STORAGE,
-                REQUEST_EXTERNAL_STORAGE
-            )
-        }
-    }
+//    fun verifyStoragePermissions(activity: Activity?) {
+//        // Check if we have write permission
+//        val permission = ActivityCompat.checkSelfPermission(
+//            activity!!,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE
+//        )
+//        if (permission != PackageManager.PERMISSION_GRANTED) {
+//            // We don't have permission so prompt the user
+//
+//            ActivityCompat.requestPermissions(
+//                activity,
+//                PERMISSIONS_STORAGE,
+//                REQUEST_EXTERNAL_STORAGE
+//            )
+//        }
+//    }
 }

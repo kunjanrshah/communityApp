@@ -1,7 +1,6 @@
 package com.krs.community.activity;
 
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +30,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -48,6 +46,7 @@ import com.krs.community.awareviewpager.PhotosFragment;
 import com.krs.community.awareviewpager.RelativesFragment;
 import com.krs.community.awareviewpager.SlidingTabLayout;
 import com.krs.community.awareviewpager.ViewPagerFragmentBase;
+import com.krs.community.utils.MyPermissionChecker;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
@@ -240,9 +239,12 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
                     Log.d(TAG, "onPageScrollStateChanged: " + state);
                 }
             });
-
-            ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
+            MyPermissionChecker.requestReadStoragePermission(this);
+          /*  if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+                ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }else{
+                ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }*/
         }
     }
 

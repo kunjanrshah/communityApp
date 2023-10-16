@@ -148,12 +148,17 @@ public class Utility {
     private static int imageResourceIndex = 0;
     private static int textResourceIndex = 0;
 
-    public static boolean checkReadExternalStoragePermission(Context mContext) {
-        int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
+   /* public static boolean checkReadExternalStoragePermission(Context mContext) {
+        int permissionState;
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_MEDIA_IMAGES);
+        }else{
+            permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
         return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
+    }*/
 
-    public static boolean checkFineLocationPermission(Context mContext) {
+  /*  public static boolean checkFineLocationPermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
@@ -166,13 +171,18 @@ public class Utility {
     public static boolean checkReadPhoneStatePermission(Context mContext) {
         int permissionState = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
         return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
+    }*/
 
-    public static boolean checkExternalStoragePermission(Context mContext) {
+   /* public static boolean checkExternalStoragePermission(Context mContext) {
         int permissionState;
-        int permissionState1 = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int permissionState2 = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionState1 == 0 && permissionState2 == 0) {
+        int permissionState1;
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            permissionState1 = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_MEDIA_IMAGES);
+        }else{
+            permissionState1 = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+       // int permissionState2 = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionState1 == 0 *//*&& permissionState2 == 0*//*) {
             permissionState = 0;
         } else {
             permissionState = 1;
@@ -181,25 +191,38 @@ public class Utility {
     }
 
     public static void requestReadStoragePermission(AppCompatActivity mActivity) {
-        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_GALLERY_REQUEST);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PICK_GALLERY_REQUEST);
+        }else{
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_GALLERY_REQUEST);
+        }
+
     }
 
     public static void requestStoragePermission(AppCompatActivity mActivity) {
-        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
+        }else{
+            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
+        }
+
     }
 
     public static void requestFineLocationPermission(AppCompatActivity mActivity) {
         ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_REQUEST);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     public static void requestPermissions(AppCompatActivity mActivity) {
-        if (/*ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED*/
-                ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+        if (*//*ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED*//*
+                ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED ||
+        ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity, new String[]{/*Manifest.permission.READ_CALL_LOG,*/Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
+            ActivityCompat.requestPermissions(mActivity, new String[]{*//*Manifest.permission.READ_CALL_LOG,*//*Manifest.permission.POST_NOTIFICATIONS,Manifest.permission.READ_MEDIA_IMAGES,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, READ_CALL_LOG);
         }
-    }
+    }*/
 
     public static String getRandomString(final int sizeOfRandomString) {
         final Random random = new Random();
