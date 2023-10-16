@@ -53,7 +53,7 @@ import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.*
-import com.krs.community.utils.MyPermissionChecker.Companion.checkExternalStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.checkReadStoragePermission
 import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
 import com.krs.community.utils.Utility.hideKeyboard
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -152,7 +152,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
 
         ivExport = header.findViewById(R.id.iv_export)
         ivExport.setOnClickListener {
-            if (checkExternalStoragePermission(activity as AppCompatActivity)) {
+            if (checkReadStoragePermission(activity as AppCompatActivity)) {
                 val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
                 adapter.setExportListner(this@SearchListFragment)
                 exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)

@@ -3,6 +3,6 @@
 3    package="ru.slybeaver.slycalendarview" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->C:\Users\Kunjan_Shah\AndroidStudioProjects\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml
+5-->C:\Users\Kunjan_Shah\communityApp\application\slycalendarview\src\main\AndroidManifest.xml
 6
 7</manifest>

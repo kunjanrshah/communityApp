@@ -27,7 +27,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -53,11 +52,11 @@ import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.SMSReceiver
 import com.krs.community.databinding.ActivityLoginwithBinding
-import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.utils.AppConstants
+import com.krs.community.utils.MyPermissionChecker.Companion.checkRequestNotificationPermissions
 import com.krs.community.utils.NotificationUtils
 import com.krs.community.utils.Utility.*
 import com.krs.community.utils.toast
@@ -94,6 +93,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         private val RC_SIGN_IN = 9001
     }
 
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,6 +129,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                     setNoInternetLayout()
                 }
             }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            checkRequestNotificationPermissions(this)
         }
     }
 

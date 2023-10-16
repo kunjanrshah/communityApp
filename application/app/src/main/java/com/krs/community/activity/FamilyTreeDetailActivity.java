@@ -239,7 +239,7 @@ public class FamilyTreeDetailActivity extends AppCompatActivity implements ViewP
                     Log.d(TAG, "onPageScrollStateChanged: " + state);
                 }
             });
-            MyPermissionChecker.requestReadStoragePermission(this);
+            MyPermissionChecker.requestStoragePermission(this);
           /*  if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
                 ActivityCompat.requestPermissions(FamilyTreeDetailActivity.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }else{

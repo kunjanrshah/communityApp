@@ -31,13 +31,10 @@ import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
-import com.krs.community.fragments.MainDetailsFragment
 import com.krs.community.fragments.MatrimonyListFragment
 import com.krs.community.jrspinner.JRSpinner
 import com.krs.community.model.Member
-import com.krs.community.utils.MyPermissionChecker.Companion.checkExternalStoragePermission
-import com.krs.community.utils.MyPermissionChecker.Companion.checkReadExternalStoragePermission
-import com.krs.community.utils.MyPermissionChecker.Companion.requestReadStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.checkReadStoragePermission
 import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
@@ -46,7 +43,6 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.model.AspectRatio
 import org.json.JSONObject
 import java.io.File
-import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -172,7 +168,7 @@ fun openImageDialog(activity: AppCompatActivity, url: String) {
 }
 
 fun pickFromGallery(context: FragmentActivity) {
-    if (checkReadExternalStoragePermission(context)) {
+    if (checkReadStoragePermission(context)) {
         val intent = Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE)
         val mimeTypes = arrayOf("image/jpeg", "image/png")
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
@@ -193,7 +189,7 @@ fun promptReadPermission(context: Context) {
             .showCancelButton(true)
             .setConfirmClickListener { sDialog ->
                 sDialog.dismiss()
-                requestReadStoragePermission(context as AppCompatActivity)
+                requestStoragePermission(context as AppCompatActivity)
             }
             .show()
 
@@ -677,7 +673,7 @@ fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilt
         }
 
     }
-    if (checkExternalStoragePermission(mContext)) {
+    if (checkReadStoragePermission(mContext)) {
         val df = SimpleDateFormat("dd_MM_yyyy_h_mm_a") //'at'
         val currentdate = df.format(Calendar.getInstance().timeInMillis)
         createPdf(mContext, "community_${currentdate}", rows)
@@ -965,7 +961,7 @@ fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: P
                 val MailString = MainDetail + PersonalDetail + ProfessionalDetail + MatrimonyDetail
                 Log.v("ViewUtils", "MailString: $MailString")
 
-                if (checkExternalStoragePermission(mContext)) {
+                if (checkReadStoragePermission(mContext)) {
                     createPdf(mContext, name, MailString)
                 } else {
                     requestStoragePermission(mContext as AppCompatActivity)

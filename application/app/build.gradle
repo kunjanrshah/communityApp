@@ -89,8 +89,8 @@ android {
 
         ghanchi {
             applicationId "com.ghanchi.samaj"
-            versionCode 22
-            versionName "1.0.13"
+            versionCode 23
+            versionName "1.0.14"
             resValue "string", "app_name", "Muslim Ghanchi Parivar"
             resValue "string", "dev_name", "Mehboob Gogda"
             resValue "string", "dev_contact", "9377133222"
@@ -137,8 +137,8 @@ android {
         }
         yadav {
             applicationId "com.yadav.sevasamaj"
-            versionCode 2
-            versionName "1.0.1"
+            versionCode 3
+            versionName "1.0.3"
             resValue "string", "app_name", "Yadav Seva Samaj"
             resValue "string", "dev_name", "RajKumar Yadav"
             resValue "string", "dev_contact", "8000974974"

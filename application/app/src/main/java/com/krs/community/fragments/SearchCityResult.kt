@@ -57,7 +57,7 @@ import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.utils.*
-import com.krs.community.utils.MyPermissionChecker.Companion.checkExternalStoragePermission
+import com.krs.community.utils.MyPermissionChecker.Companion.checkReadStoragePermission
 import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
@@ -373,7 +373,7 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
         }
         ivExport.setOnClickListener {
 
-            if (checkExternalStoragePermission(activity)) {
+            if (checkReadStoragePermission(activity)) {
                 val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
                 adapter.setExportListner(this@SearchCityResult)
                 exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)

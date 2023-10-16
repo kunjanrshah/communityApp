@@ -1,14 +1,11 @@
 package com.krs.community.activity
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import com.krs.community.R
 import com.krs.community.app.AppController
@@ -23,7 +20,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan_qrcode)
         val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
-        MyPermissionChecker.setupPermissions(this)
+        MyPermissionChecker.checkRequestCameraPermissions(this)
 
         codeScanner = CodeScanner(this, scannerView)
         setScreenLayout()

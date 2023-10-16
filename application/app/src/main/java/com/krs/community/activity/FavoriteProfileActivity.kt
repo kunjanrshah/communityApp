@@ -13,7 +13,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -105,7 +104,7 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
             finish()
             //    Utility.fade(this)
         } else if (id == R.id.action_export) {
-            if (MyPermissionChecker.checkExternalStoragePermission(this)) {
+            if (MyPermissionChecker.checkReadStoragePermission(this)) {
                 val adapter = ExportAdapter(this@FavoriteProfileActivity)
                 adapter.setExportListner(this@FavoriteProfileActivity)
                 exportDialog = DialogPlus.newDialog(this@FavoriteProfileActivity)

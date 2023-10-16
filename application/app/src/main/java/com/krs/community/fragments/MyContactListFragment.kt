@@ -1,11 +1,9 @@
 package com.krs.community.fragments
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.ContactsContract
@@ -348,7 +346,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
     }
 
     private fun enableRuntimePermission() {
-        if(MyPermissionChecker.enableRuntimePermission(activity)){
+        if(MyPermissionChecker.checkRequestReadContactPermission(activity)){
             userContactList()
         }
     }

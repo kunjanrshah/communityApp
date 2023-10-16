@@ -5,10 +5,10 @@
 5    android:versionName="1.1" >
 6
 7    <uses-sdk android:minSdkVersion="21" />
-7-->C:\Users\Kunjan_Shah\AndroidStudioProjects\community_management_and_administration-\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
-7-->C:\Users\Kunjan_Shah\AndroidStudioProjects\community_management_and_administration-\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
+7-->C:\Users\Kunjan_Shah\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
+7-->C:\Users\Kunjan_Shah\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
 8
 9    <application />
-9-->C:\Users\Kunjan_Shah\AndroidStudioProjects\community_management_and_administration-\application\sweetdialoglib\src\main\AndroidManifest.xml:7:5-20
+9-->C:\Users\Kunjan_Shah\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:7:5-20
 10
 11</manifest>
