@@ -148,7 +148,7 @@ android {
             resValue "string", "dev_email", "rajuyadav79@gmail.com"
             resValue "string", "dev_link", "https://yadav.samajapp.in"
             resValue "string", "authorities", "com.yadav.sevasamaj.provider"
-            resValue "string", "privacy_policy_url", "https://yadav.samajapp.in/privacy_policy.html"
+            resValue "string", "privacy_policy_url", "https://yadav.samajapp.in/yadav_privacy_policy.html"
             resValue "string", "tms_and_con_url", "https://yadav.samajapp.in/terms_and_conditions.html"
             resValue "string", "disclaimer_url", "https://yadav.samajapp.in/disclaimer.html"
             resValue "string", "base_url_logo", "https://yadav.samajapp.in/uploads/logos/"

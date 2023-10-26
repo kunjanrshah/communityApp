@@ -121,6 +121,7 @@
 
                         <LinearLayout
                             android:id="@+id/ll_shared"
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
@@ -160,6 +161,7 @@
                                 android:id="@+id/lstSharedProfile"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:visibility="gone"
                                 android:layout_gravity="top"
                                 android:paddingBottom="5dp" />
 
@@ -181,6 +183,7 @@
 
                     <com.krs.community.utils.ExpandableHeightGridView
                         android:id="@+id/grid_view"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="50dp"
