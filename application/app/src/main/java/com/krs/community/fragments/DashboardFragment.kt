@@ -150,12 +150,13 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         setSliderViews()
         setDefaultProfileList()
         getSharedProfileList()
-        binding.gridView.adapter = MenuAdapter(activity!!)
+        binding.gridView.adapter = MenuAdapter(requireActivity())
         binding.tvAllShared.setOnClickListener { v: View? -> Utility.movetoFragment(activity, SharedLocationFragment()) }
         binding.tvAllNews.setOnClickListener { v: View? ->
-            binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-            return@setOnClickListener
+           binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
             Utility.movetoFragment(activity, NewsListFragment())
+            return@setOnClickListener
+
         }
         Utility.changeStatusbarColor(activity, R.color.white, false)
         //setRecyclerViewScrollListener()
@@ -195,7 +196,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-        if (intent.resolveActivity(activity!!.packageManager) != null) {
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
             startActivityForResult(intent, 10)
         } else {
             binding.llParent.snackbar(getString(R.string.DevicDont), Snackbar.LENGTH_LONG)
@@ -276,137 +277,283 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         var badge: NotificationBadge? = null
     }
 
-    internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() {
+//    internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() {
+//
+//        override fun getCount(): Int {
+//            return 15
+//        }
+//
+//        override fun getItem(position: Int): Any {
+//            return 0
+//        }
+//
+//        override fun getItemId(position: Int): Long {
+//            return 0
+//        }
+//
+//        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+//            var convertView = convertView
+//            val menuViewHolder: MenuViewHolder
+//            val inflater = (mContext as Activity).layoutInflater
+//            if (convertView == null) {
+//                convertView = inflater.inflate(R.layout.dashboard_menu, parent, false)
+//                menuViewHolder = MenuViewHolder()
+//                menuViewHolder.image = convertView.findViewById(R.id.image)
+//                menuViewHolder.textView = convertView.findViewById(R.id.name)
+//                menuViewHolder.badge = convertView.findViewById(R.id.badge)
+//                convertView.tag = menuViewHolder
+//            } else {
+//                menuViewHolder = convertView.tag as MenuViewHolder
+//            }
+//            val imgs: TypedArray = resources.obtainTypedArray(R.array.main_menu_imgs)
+//            val mainMenu = resources.getStringArray(R.array.main_menu)
+//
+//            menuViewHolder.image?.setImageResource(imgs.getResourceId(position, -1))
+//            menuViewHolder.textView?.text = mainMenu[position]
+//            val txt = menuViewHolder.textView?.text.toString()
+//            if (txt == "Restricted" && isAdmin()) {
+//                DashboardActivity.statusCounts.observeForever {
+//                    menuViewHolder.badge?.setNumber(Integer.parseInt(it))
+//                }
+//            } else if (txt == "Matrimony") {
+//                DashboardActivity.matrimonyCounts.observeForever {
+//                    menuViewHolder.badge?.setNumber(Integer.parseInt(it))
+//                }
+//            } else {
+//                menuViewHolder.badge?.setNumber(0)
+//            }
+//            convertView?.setOnClickListener {
+//                when (position) {
+//                    0 -> Utility.movetoFragment(activity, BrowseByCityFragment())
+//                    1 -> {
+//                        val mBundle = Bundle()
+//                        mBundle.putSerializable(getString(R.string.member), loginMember)
+//                        val intent1 = Intent(activity, QRCodeActivity::class.java)
+//                        intent1.putExtras(mBundle)
+//                        startActivity(intent1)
+//                        //   Utility.fade(activity)
+//                    }
+//                    2 -> Utility.movetoFragment(activity, SearchByDistanceFragment())
+//                    3 -> Utility.movetoFragment(activity, MatrimonyFragment())
+//
+//                    4 -> {
+//
+//                        val intent = Intent(activity, FamilyDetailActivity::class.java)
+//                        if (loginMember?.headId == "0") {
+//                            intent.putExtra(getString(R.string.member_id), loginMember?.id)
+//                            intent.putExtra(getString(R.string.id), loginMember?.id)
+//                        } else {
+//                            intent.putExtra(getString(R.string.id), loginMember?.headId)
+//                        }
+//                        startActivity(intent)
+//                    }
+//
+//                    5 -> {
+//                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+//                        Utility.movetoFragment(activity, NewsListFragment())
+////                        return@setOnClickListener
+//                    }
+//                    6 -> {
+//                        val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
+//                        startActivity(mIntent)
+//                        //  fade(activity)
+//                    }
+//                    7 -> Utility.movetoFragment(activity, AdminsFragment())
+//                    8 -> {
+//                        if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
+//                            Utility.movetoFragment(activity, NonActivesFragment())
+//                        } else {
+//                            binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
+//                        }
+//                    }
+//                    9 -> {
+//                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+////                        return@setOnClickListener
+//                        Utility.movetoFragment(activity, ShareEventFragment())
+//                    }
+//                    10 -> {
+//                        // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+//                        //startActivity(Intent(activity, ActivityDebugTools::class.java))
+//                        Utility.movetoFragment(activity, UploadFragment())
+//                    }
+//
+//                    11 -> {
+//                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+//                        return@setOnClickListener
+//                        Utility.movetoFragment(activity, PaytmFragment())
+//                    }
+//
+//                    12 -> {
+//                        if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
+//                            val intent = Intent(activity, RegisterActivty::class.java)
+//                            val bundle = Bundle()
+//                            bundle.putBoolean(getString(R.string.is_logged_in), false)
+//                            intent.putExtras(bundle)
+//                            startActivity(intent)
+//                            //    Utility.fade(activity)
+//                        } else {
+//                            binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
+//                        }
+//                    }
+//                    13 -> {
+//                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+//                        return@setOnClickListener
+//                        Utility.movetoFragment(activity, TourVideoFragment())
+//                    }
+//                    14 -> {
+//                        Utility.movetoFragment(activity, MyContactListFragment())
+//                    }
+//                }
+//            }
+//            return convertView!!
+//        }
+//    }
+internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() {
 
-        override fun getCount(): Int {
-            return 15
+    override fun getCount(): Int {
+        return 12
+    }
+
+    override fun getItem(position: Int): Any {
+        return 0
+    }
+
+    override fun getItemId(position: Int): Long {
+        return 0
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        var convertView = convertView
+        val menuViewHolder: MenuViewHolder
+        val inflater = (mContext as Activity).layoutInflater
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.dashboard_menu, parent, false)
+            menuViewHolder = MenuViewHolder()
+            menuViewHolder.image = convertView.findViewById(R.id.image)
+            menuViewHolder.textView = convertView.findViewById(R.id.name)
+            menuViewHolder.badge = convertView.findViewById(R.id.badge)
+            convertView.tag = menuViewHolder
+        } else {
+            menuViewHolder = convertView.tag as MenuViewHolder
         }
+        val imgs: TypedArray = resources.obtainTypedArray(R.array.main_menu_imgs)
+        val mainMenu = resources.getStringArray(R.array.main_menu)
 
-        override fun getItem(position: Int): Any {
-            return 0
-        }
-
-        override fun getItemId(position: Int): Long {
-            return 0
-        }
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            var convertView = convertView
-            val menuViewHolder: MenuViewHolder
-            val inflater = (mContext as Activity).layoutInflater
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.dashboard_menu, parent, false)
-                menuViewHolder = MenuViewHolder()
-                menuViewHolder.image = convertView.findViewById(R.id.image)
-                menuViewHolder.textView = convertView.findViewById(R.id.name)
-                menuViewHolder.badge = convertView.findViewById(R.id.badge)
-                convertView.tag = menuViewHolder
-            } else {
-                menuViewHolder = convertView.tag as MenuViewHolder
+        menuViewHolder.image?.setImageResource(imgs.getResourceId(position, -1))
+        menuViewHolder.textView?.text = mainMenu[position]
+        val txt = menuViewHolder.textView?.text.toString()
+        if (txt == "Restricted" && isAdmin()) {
+            DashboardActivity.statusCounts.observeForever {
+                menuViewHolder.badge?.setNumber(Integer.parseInt(it))
             }
-            val imgs: TypedArray = resources.obtainTypedArray(R.array.main_menu_imgs)
-            val mainMenu = resources.getStringArray(R.array.main_menu)
-
-            menuViewHolder.image?.setImageResource(imgs.getResourceId(position, -1))
-            menuViewHolder.textView?.text = mainMenu[position]
-            val txt = menuViewHolder.textView?.text.toString()
-            if (txt == "Restricted" && isAdmin()) {
-                DashboardActivity.statusCounts.observeForever {
-                    menuViewHolder.badge?.setNumber(Integer.parseInt(it))
-                }
-            } else if (txt == "Matrimony") {
-                DashboardActivity.matrimonyCounts.observeForever {
-                    menuViewHolder.badge?.setNumber(Integer.parseInt(it))
-                }
-            } else {
-                menuViewHolder.badge?.setNumber(0)
+        } else if (txt == "Matrimony") {
+            DashboardActivity.matrimonyCounts.observeForever {
+                menuViewHolder.badge?.setNumber(Integer.parseInt(it))
             }
-            convertView?.setOnClickListener {
-                when (position) {
-                    0 -> Utility.movetoFragment(activity, BrowseByCityFragment())
-                    1 -> {
-                        val mBundle = Bundle()
-                        mBundle.putSerializable(getString(R.string.member), loginMember)
-                        val intent1 = Intent(activity, QRCodeActivity::class.java)
-                        intent1.putExtras(mBundle)
-                        startActivity(intent1)
-                        //   Utility.fade(activity)
-                    }
-                    2 -> Utility.movetoFragment(activity, SearchByDistanceFragment())
-                    3 -> Utility.movetoFragment(activity, MatrimonyFragment())
+        } else {
+            menuViewHolder.badge?.setNumber(0)
+        }
+        convertView?.setOnClickListener {
+            when (position) {
+                0 -> Utility.movetoFragment(activity, BrowseByCityFragment())
+                1 -> {
+                    val mBundle = Bundle()
+                    mBundle.putSerializable(getString(R.string.member), loginMember)
+                    val intent1 = Intent(activity, QRCodeActivity::class.java)
+                    intent1.putExtras(mBundle)
+                    startActivity(intent1)
+                    //   Utility.fade(activity)
+                }
+                2 -> Utility.movetoFragment(activity, SearchByDistanceFragment())
+                3 -> Utility.movetoFragment(activity, MatrimonyFragment())
 
-                    4 -> {
+                4 -> {
 
-                        val intent = Intent(activity, FamilyDetailActivity::class.java)
-                        if (loginMember?.headId == "0") {
-                            intent.putExtra(getString(R.string.member_id), loginMember?.id)
-                            intent.putExtra(getString(R.string.id), loginMember?.id)
-                        } else {
-                            intent.putExtra(getString(R.string.id), loginMember?.headId)
-                        }
-                        startActivity(intent)
+                    val intent = Intent(activity, FamilyDetailActivity::class.java)
+                    if (loginMember?.headId == "0") {
+                        intent.putExtra(getString(R.string.member_id), loginMember?.id)
+                        intent.putExtra(getString(R.string.id), loginMember?.id)
+                    } else {
+                        intent.putExtra(getString(R.string.id), loginMember?.headId)
                     }
+                    startActivity(intent)
+                }
 
-                    5 -> {
-                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                        return@setOnClickListener
-                        Utility.movetoFragment(activity, NewsListFragment())
+                5 -> {
+                    binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                    Utility.movetoFragment(activity, NewsListFragment())
+//                        return@setOnClickListener
+                }
+//                6 -> {
+//                    val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
+//                    startActivity(mIntent)
+//                    //  fade(activity)
+//                }
+                6 -> Utility.movetoFragment(activity, AdminsFragment())
+                7 -> {
+                    if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
+                        Utility.movetoFragment(activity, NonActivesFragment())
+                    } else {
+                        binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
                     }
-                    6 -> {
-                        val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
-                        startActivity(mIntent)
-                        //  fade(activity)
-                    }
-                    7 -> Utility.movetoFragment(activity, AdminsFragment())
-                    8 -> {
-                        if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
-                            Utility.movetoFragment(activity, NonActivesFragment())
-                        } else {
-                            binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
-                        }
-                    }
-                    9 -> {
-                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                        return@setOnClickListener
+                }
+                8 -> {
+//                    binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+//                        return@setOnClickListener
+                    if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                         Utility.movetoFragment(activity, ShareEventFragment())
                     }
-                    10 -> {
-                        // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                        //startActivity(Intent(activity, ActivityDebugTools::class.java))
+                    else {
+                        binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
+                    }
+//                    Utility.movetoFragment(activity, ShareEventFragment())
+                }
+                9 -> {
+                    // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                    //startActivity(Intent(activity, ActivityDebugTools::class.java))
+                    if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                         Utility.movetoFragment(activity, UploadFragment())
                     }
+                    else {
+                        binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
+                    }
+//                    Utility.movetoFragment(activity, UploadFragment())
+                }
 
-                    11 -> {
-                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                        return@setOnClickListener
-                        Utility.movetoFragment(activity, PaytmFragment())
-                    }
+//                11 -> {
+//                    binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+//                    return@setOnClickListener
+//                    Utility.movetoFragment(activity, PaytmFragment())
+//                }
 
-                    12 -> {
-                        if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
-                            val intent = Intent(activity, RegisterActivty::class.java)
-                            val bundle = Bundle()
-                            bundle.putBoolean(getString(R.string.is_logged_in), false)
-                            intent.putExtras(bundle)
-                            startActivity(intent)
-                            //    Utility.fade(activity)
-                        } else {
-                            binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
-                        }
-                    }
-                    13 -> {
-                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                        return@setOnClickListener
-                        Utility.movetoFragment(activity, TourVideoFragment())
-                    }
-                    14 -> {
-                        Utility.movetoFragment(activity, MyContactListFragment())
+                10 -> {
+                    if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
+                        val intent = Intent(activity, RegisterActivty::class.java)
+                        val bundle = Bundle()
+                        bundle.putBoolean(getString(R.string.is_logged_in), false)
+                        intent.putExtras(bundle)
+                        startActivity(intent)
+                        //    Utility.fade(activity)
+                    } else {
+                        binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
                     }
                 }
+//                13 -> {
+//                    binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+//                    return@setOnClickListener
+//                    Utility.movetoFragment(activity, TourVideoFragment())
+//                }
+                11 -> {
+                    Utility.movetoFragment(activity, MyContactListFragment())
+                }
             }
-            return convertView!!
         }
+        return convertView!!
     }
+}
+
+
+
 
     private fun isAdmin(): Boolean {
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
@@ -558,7 +705,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                 sharedAdapter = SharedProfileAdapter(sharedProfiles)
                 binding.lstSharedProfile.adapter = sharedAdapter
                 binding.lstSharedProfile.alpha = 1.0f
-                binding.lblPrivate.visibility = View.GONE
+//                binding.lblPrivate.visibility = View.GONE
             } else {
                 setDefaultProfileList()
             }
@@ -578,7 +725,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
     private fun setDefaultProfileList() {
 
         binding.lstSharedProfile.alpha = 0.25f
-        binding.lblPrivate.visibility = View.VISIBLE
+//        binding.lblPrivate.visibility = View.VISIBLE
         try {
             sharedAdapter = SharedProfileAdapter(defaultProfiles)
             binding.lstSharedProfile.adapter = sharedAdapter

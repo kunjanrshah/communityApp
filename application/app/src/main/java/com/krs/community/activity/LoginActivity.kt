@@ -232,50 +232,50 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                  policyDialog?.show()
              }
 
-            binding.btnLoginFb.setOnClickListener { v0 ->
-
-                LoginManager.getInstance().logInWithReadPermissions(this@LoginActivity, Arrays.asList("email", "public_profile"))
-                LoginManager.getInstance().registerCallback(mCallbackManager!!, object : FacebookCallback<LoginResult> {
-                    override fun onSuccess(loginResult: LoginResult) {
-                        showProgressDialog(this@LoginActivity)
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "facebook:onSuccess:$loginResult")
-                        }
-                        val request = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response ->
-                            Log.v(TAG, response.toString())
-                            try {
-                                val email = `object`.getString("email")
-
-                                Log.e("email", "" + email)
-                                //val url = `object`.getJSONObject("picture").getJSONObject("data").getString("url")
-                                loginViewModel?.loginWithFB(email)
-                            } catch (e: JSONException) {
-                                hideProgressDialog()
-                                Toast.makeText(this@LoginActivity, "Error while getting records from Facebook", Toast.LENGTH_SHORT).show()
-                                e.printStackTrace()
-                            }
-                        }
-                        val parameters = Bundle()
-                        parameters.putString("fields", "id,name,email,picture.width(200)")
-                        request.parameters = parameters
-                        request.executeAsync()
-                    }
-
-                    override fun onCancel() {
-                        hideProgressDialog()
-                        Log.d(TAG, "facebook:onCancel")
-                    }
-
-                    override fun onError(error: FacebookException) {
-                        hideProgressDialog()
-                        Log.d(TAG, "facebook:onError", error)
-                    }
-                })
-            }
-            binding.btnLoginGoogle.setOnClickListener { v ->
-                val signInIntent = AppController.mApplication.mGoogleSignInClient.signInIntent
-                startActivityForResult(signInIntent, RC_SIGN_IN)
-            }
+//            binding.btnLoginFb.setOnClickListener { v0 ->
+//
+//                LoginManager.getInstance().logInWithReadPermissions(this@LoginActivity, Arrays.asList("email", "public_profile"))
+//                LoginManager.getInstance().registerCallback(mCallbackManager!!, object : FacebookCallback<LoginResult> {
+//                    override fun onSuccess(loginResult: LoginResult) {
+//                        showProgressDialog(this@LoginActivity)
+//                        if (BuildConfig.DEBUG) {
+//                            Log.d(TAG, "facebook:onSuccess:$loginResult")
+//                        }
+//                        val request = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response ->
+//                            Log.v(TAG, response.toString())
+//                            try {
+//                                val email = `object`.getString("email")
+//
+//                                Log.e("email", "" + email)
+//                                //val url = `object`.getJSONObject("picture").getJSONObject("data").getString("url")
+//                                loginViewModel?.loginWithFB(email)
+//                            } catch (e: JSONException) {
+//                                hideProgressDialog()
+//                                Toast.makeText(this@LoginActivity, "Error while getting records from Facebook", Toast.LENGTH_SHORT).show()
+//                                e.printStackTrace()
+//                            }
+//                        }
+//                        val parameters = Bundle()
+//                        parameters.putString("fields", "id,name,email,picture.width(200)")
+//                        request.parameters = parameters
+//                        request.executeAsync()
+//                    }
+//
+//                    override fun onCancel() {
+//                        hideProgressDialog()
+//                        Log.d(TAG, "facebook:onCancel")
+//                    }
+//
+//                    override fun onError(error: FacebookException) {
+//                        hideProgressDialog()
+//                        Log.d(TAG, "facebook:onError", error)
+//                    }
+//                })
+//            }
+//            binding.btnLoginGoogle.setOnClickListener { v ->
+//                val signInIntent = AppController.mApplication.mGoogleSignInClient.signInIntent
+//                startActivityForResult(signInIntent, RC_SIGN_IN)
+//            }
 
             binding.haveAcc.setOnClickListener { v ->
                 val mIntent = Intent(this@LoginActivity, RegisterActivty::class.java)
@@ -294,6 +294,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
             binding.btnContinue.setOnClickListener { v ->
 
+//                val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+//                startActivity(intent)
                 startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
                 loginViewModel?.loginWithPassword()
 

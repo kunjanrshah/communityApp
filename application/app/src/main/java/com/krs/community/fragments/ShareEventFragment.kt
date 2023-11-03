@@ -195,9 +195,10 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
                 json.put("youtube", yURLs)
 
 
-//              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
+              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
                 Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
                 shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)
+//                Log.d("okhttp","${shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)}")
             }
         }
         /* btnShare.setOnClickListener { v: View? ->
