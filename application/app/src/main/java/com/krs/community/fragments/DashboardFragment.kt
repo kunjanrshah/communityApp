@@ -400,6 +400,8 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
                         Utility.movetoFragment(activity, TourVideoFragment())
                     }
                     14 -> {
+                        binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        return@setOnClickListener
                         Utility.movetoFragment(activity, MyContactListFragment())
                     }
                 }

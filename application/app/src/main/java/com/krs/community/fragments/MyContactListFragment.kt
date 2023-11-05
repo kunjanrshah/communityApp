@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.ContactsContract
@@ -14,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -345,6 +347,7 @@ class MyContactListFragment : Fragment(), KodeinAware, ByFilterListener, Locatio
         rvSearch?.snackbar(message, Snackbar.LENGTH_SHORT)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun enableRuntimePermission() {
         if(MyPermissionChecker.checkRequestReadContactPermission(activity)){
             userContactList()
