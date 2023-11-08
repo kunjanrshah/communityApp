@@ -9,12 +9,26 @@ class ShareEventRepository(
         private val api: ApiServices
 ) : SafeApiRequest() {
 
+//
+//    suspend fun createEvent(images: List<MultipartBody.Part>, id: RequestBody, user_id: RequestBody, access_token: RequestBody, params: RequestBody, yourtube: List<RequestBody>): JsonObject {
+//        return apiRequest {
+//            api.createEvent(images, id, user_id, access_token, params, yourtube)
+//        }
+//    }
 
-    suspend fun createEvent(images: List<MultipartBody.Part>, id: RequestBody, user_id: RequestBody, access_token: RequestBody, params: RequestBody, yourtube: List<RequestBody>): JsonObject {
+    suspend fun createEvent(
+        images: List<MultipartBody.Part>,
+        id: RequestBody,
+        title: RequestBody,
+        description: RequestBody,
+        location: RequestBody,
+        lat: RequestBody,
+        lng: RequestBody,
+        youtube: List<RequestBody>,
+        eventDate: RequestBody
+    ): JsonObject {
         return apiRequest {
-            api.createEvent(images, id, user_id, access_token, params, yourtube)
+            api.createEvent(images, id, title, description, location, lat, lng, youtube, eventDate)
         }
     }
-
-
 }

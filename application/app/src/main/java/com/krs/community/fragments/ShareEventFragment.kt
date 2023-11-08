@@ -64,6 +64,7 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     lateinit var linearLayout: LinearLayout
     lateinit var adapter1: URLAdapter
     lateinit var fab: MovableFloatingActionButton
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_share_event, container, false)
 
@@ -182,8 +183,27 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
             } else {
                 txtEndTime.setError(null)
             }*/
+
+//            if (isValidated) {
+//                yURLs.removeAll(Arrays.asList(""))
+//                val json = JSONObject()
+//                json.put("id", userId)
+//                json.put("event_date", edt_start.text.toString())
+//                json.put("title", edtTitle.text.toString())
+//                json.put("description", edtDescription.text.toString())
+//                json.put("location", edtAddress.text.toString())
+//                json.put("lat", "23.7546")
+//                json.put("lng", "72.2308")
+//                json.put("youtube", yURLs)
+//
+//
+//              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
+//                Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
+//                shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)
+////                Log.d("okhttp","${shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)}")
+//            }
+
             if (isValidated) {
-                yURLs.removeAll(Arrays.asList(""))
                 val json = JSONObject()
                 json.put("id", userId)
                 json.put("event_date", edt_start.text.toString())
@@ -193,12 +213,27 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
                 json.put("lat", "23.7546")
                 json.put("lng", "72.2308")
                 json.put("youtube", yURLs)
+                json.put("images", mResults) // Adding images URL to the JSON object
 
-
-              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
                 Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
-                shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)
-//                Log.d("okhttp","${shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)}")
+                // Call the ViewModel function to create the event
+                shareEventViewModel.createEvent(
+                    images = mResults,
+                    id = userId,
+                    title = edtTitle.text.toString(),
+                    description = edtDescription.text.toString(),
+                    location = edtAddress.text.toString(),
+                    lat = "23.7546",
+                    lng = "72.2308",
+                    youtube = yURLs,
+                    eventDate = edt_start.text.toString()
+                )
+
+                Log.d("TAG", "Creating event with JSON data: $json")
+
+            }
+            else {
+                Log.d("TAG", "event creation failed, event not created")
             }
         }
         /* btnShare.setOnClickListener { v: View? ->

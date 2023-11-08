@@ -2,6 +2,7 @@ package com.krs.community.fragments;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
@@ -40,6 +43,23 @@ public class NotificationListFragment extends Fragment {
         AppController mApp = (AppController) getApplicationContext();
         mApp.firebaseAnalytics(getContext(), NotificationListFragment.class.getSimpleName());
         mApp.facebookAnalytics(getContext(), NotificationListFragment.class.getSimpleName());
+
+//        FirebaseMessaging.getInstance().isAutoInitEnabled = true;
+
+        String fcmToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d("FCMToken:", fcmToken);
+
+//        FirebaseMessaging.getInstance().isAutoInitEnabled = true;
+//        FirebaseMessaging.getInstance().token
+//                .addOnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.d("tokens", "Task Failed")
+//                return@addOnCompleteListener
+//            }
+//            Log.d("TAG2", "The result: " + task.result)
+
+//        }
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(getActivity(), R.color.bg_gray, false);

@@ -411,7 +411,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() {
 
     override fun getCount(): Int {
-        return 12
+        return 13
     }
 
     override fun getItem(position: Int): Any {
@@ -484,20 +484,20 @@ internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() 
                     Utility.movetoFragment(activity, NewsListFragment())
 //                        return@setOnClickListener
                 }
-//                6 -> {
-//                    val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
-//                    startActivity(mIntent)
-//                    //  fade(activity)
-//                }
-                6 -> Utility.movetoFragment(activity, AdminsFragment())
-                7 -> {
+                6 -> {
+                    val mIntent = Intent(activity, FavoriteProfileActivity::class.java)
+                    startActivity(mIntent)
+                    //  fade(activity)
+                }
+                7 -> Utility.movetoFragment(activity, AdminsFragment())
+                8 -> {
                     if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                         Utility.movetoFragment(activity, NonActivesFragment())
                     } else {
                         binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
                     }
                 }
-                8 -> {
+                9 -> {
 //                    binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
 //                        return@setOnClickListener
                     if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
@@ -508,7 +508,7 @@ internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() 
                     }
 //                    Utility.movetoFragment(activity, ShareEventFragment())
                 }
-                9 -> {
+                10 -> {
                     // binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
                     //startActivity(Intent(activity, ActivityDebugTools::class.java))
                     if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
@@ -526,7 +526,7 @@ internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() 
 //                    Utility.movetoFragment(activity, PaytmFragment())
 //                }
 
-                10 -> {
+                11 -> {
                     if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                         val intent = Intent(activity, RegisterActivty::class.java)
                         val bundle = Bundle()
@@ -543,7 +543,7 @@ internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() 
 //                    return@setOnClickListener
 //                    Utility.movetoFragment(activity, TourVideoFragment())
 //                }
-                11 -> {
+                12 -> {
                     Utility.movetoFragment(activity, MyContactListFragment())
                 }
             }

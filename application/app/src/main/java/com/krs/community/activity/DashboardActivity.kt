@@ -421,11 +421,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
                 true
             }
-//            R.id.action_notify -> {
-//                binding.containerBody.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-//                true
-//                //movetoFragment(this, NotificationListFragment())
-//            }
+            R.id.action_notify -> {
+                binding.containerBody.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                movetoFragment(this, NotificationListFragment())
+                true
+            }
             R.id.action_share -> {
                 shareApp(this)
                 true

@@ -9,7 +9,7 @@
         <item>@drawable/search_heart</item>
         <item>@drawable/add_user</item>
         <item>@drawable/ic_rss</item>
-<!--        <item>@drawable/ic_star</item>-->
+        <item>@drawable/ic_star</item>
         <item>@drawable/search_admin</item>
         <item>@drawable/restricted</item>
         <item>@drawable/search_event</item>

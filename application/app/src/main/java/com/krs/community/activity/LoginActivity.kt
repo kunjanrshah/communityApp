@@ -292,12 +292,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 startActivity(intent)
             }
 
-            binding.btnContinue.setOnClickListener { v ->
 
-//                val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-//                startActivity(intent)
-                startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
-                loginViewModel?.loginWithPassword()
 
                 /*if (!ReceviedOTP.isNullOrEmpty() && ReceviedOTP == squareField.text.toString()) {
                     goToFamilyDetailScreen()
@@ -358,7 +353,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             })
          //   requestPermissions(this@LoginActivity)
         }
-    }
+
 
     override fun agreed() {
         forgotDialog?.dismiss()
