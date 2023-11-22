@@ -1,0 +1,1196 @@
+<resources>
+    <string name="folder_name" translatable="false">community</string>
+    <string name="action_disable" translatable="false">Disable</string>
+    <string name="action_location" translatable="false">Location</string>
+    <string name="action_active" translatable="false">Active</string>
+    <string name="drawer_open" translatable="false">Open</string>
+    <string name="drawer_close" translatable="false">Close</string>
+
+    <string name="nav_item_home" translatable="false">Home</string>
+    <string name="nav_item_filter" translatable="false">Filters</string>
+    <string name="nav_item_statistic" translatable="false">Statistics</string>
+    <string name="nav_item_committee" translatable="false">Committee</string>
+
+
+    <string name="label_add_fact" translatable="false">Add Fact</string>
+    <string name="label_add_photos" translatable="false">Add Photos</string>
+    <string name="label_add_audio" translatable="false">Add Audio</string>
+    <string name="label_add_relative" translatable="false">Add Relative</string>
+
+    <string name="key_1" translatable="false">1</string>
+    <string name="key_2" translatable="false">2</string>
+    <string name="key_3" translatable="false">3</string>
+    <string name="key_4" translatable="false">4</string>
+    <string name="key_5" translatable="false">5</string>
+    <string name="key_6" translatable="false">6</string>
+    <string name="key_7" translatable="false">7</string>
+    <string name="key_8" translatable="false">8</string>
+    <string name="key_9" translatable="false">9</string>
+    <string name="key_0" translatable="false">0</string>
+
+
+    <!-- <string name="how_to_forgot_1">1. If you forgot your hashkey</string>
+     <string name="how_search_profile_2">2. Search Profiles</string>
+     <string name="how_to_event_list_3">3. Event list</string>
+     <string name="how_to_update_profile_4">4. Update your Profile</string>
+     <string name="how_ror_5">5. Request of Relation</string>
+     <string name="how_share_loc_6">6. Share Location Home,Office and Users</string>
+     <string name="how_near_by_7">7. Nearby Location</string>
+     <string name="how_matrimony_8">8. Matrimony</string>
+     <string name="how_export_search_9">9. Export search</string>
+     <string name="how_share_code_10">10. Share with QR code</string>
+     <string name="how_calendar_11">11. Calendar and Set Reminder</string>
+     <string name="how_event_manage_12">12. Event management by Admin</string>
+     <string name="how_admin_manage_13">13. Admin Management</string>-->
+
+    <string name="server_not_available" translatable="false">Server error</string>
+
+    <string name="login_1" translatable="false">Ii5POjxrXA4</string>
+
+
+    <string-array name="bloodGroup">
+        <item>O+Ve</item>
+        <item>O-Ve</item>
+        <item>B+Ve</item>
+        <item>B-Ve</item>
+        <item>A+Ve</item>
+        <item>A-Ve</item>
+        <item>AB+Ve</item>
+        <item>AB-Ve</item>
+    </string-array>
+
+    <string-array name="main_menu">
+        <item>City \u0020 \u0020 \u0020 </item>
+        <item>QRCode \u0020</item>
+        <item>Distance \u0020</item>
+        <item>Matrimony</item>
+        <item>Add Member \u0020</item>
+        <item>MyEvent \u0020</item>
+        <item>Favorite \u0020 \u0020</item>
+        <item>Admin \u0020 \u0020</item>
+        <item>Restricted</item>
+        <item>NewEvent \u0020</item>
+        <item>Uploads \u0020</item>
+<!--        <item>Paytm \u0020 \u0020</item>-->
+        <item>Register \u0020 \u0020</item>
+<!--        <item>Guide \u0020 \u0020</item>-->
+        <item>Contacts \u0020 \u0020</item>
+    </string-array>
+
+<!--    <string-array name="main_menu">-->
+<!--        <item>City \u0020 \u0020 \u0020 </item>-->
+<!--        <item>QRCode \u0020</item>-->
+<!--        <item>Distance \u0020</item>-->
+<!--        <item>Add Member \u0020</item>-->
+<!--        <item>MyEvent \u0020</item>-->
+<!--        <item>Favorite \u0020 \u0020</item>-->
+<!--        <item>Restricted</item>-->
+<!--    </string-array>-->
+
+    <string name="married" translatable="false">Married</string>
+    <string-array name="marital">
+        <item>Unmarried</item>
+        <item>Engaged</item>
+        <item>Married</item>
+        <item>Widow</item>
+        <item>Widower</item>
+        <item>Separated</item>
+        <item>Divorce</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>Choose Language</item>
+        <item>@string/_english</item>
+        <!--<item>@string/_gujarati</item>
+        <item>@string/_hindi</item>-->
+    </string-array>
+
+    <string name="_english" translatable="false">English</string>
+    <string name="_gujarati" translatable="false">ગુજરાતી</string>
+    <string name="_hindi" translatable="false">हिन्दी</string>
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="nav_drawer_labels">
+        <item>@string/nav_item_home</item>
+        <item>@string/nav_item_filter</item>
+        <item>@string/nav_item_statistic</item>
+        <item>@string/nav_item_committee</item>
+
+    </string-array>
+
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="add_relative_labels">
+        <item>@string/partner</item>
+        <item>@string/father</item>
+        <item>@string/mother</item>
+        <item>@string/brother</item>
+        <item>@string/sister</item>
+        <item>@string/son</item>
+        <item>@string/daughter</item>
+    </string-array>
+
+    <string-array name="lst_relative">
+        <item>@string/add_new</item>
+        <item>@string/wife</item>
+        <item>@string/husband</item>
+        <item>@string/son</item>
+        <item>@string/daughter</item>
+        <item>@string/daughter_in_law</item>
+        <item>@string/father</item>
+        <item>@string/mother</item>
+        <item>@string/grand_son</item>
+        <item>@string/grand_daughter</item>
+    </string-array>
+
+    <string name="add_new" translatable="false">Add New</string>
+    <string name="other" translatable="false">Other</string>
+    <string name="partner" translatable="false">Partner</string>
+    <string name="father" translatable="false">Father</string>
+    <string name="mother" translatable="false">Mother</string>
+    <string name="brother" translatable="false">Brother</string>
+    <string name="sister" translatable="false">Sister</string>
+    <string name="son" translatable="false">Son</string>
+    <string name="daughter" translatable="false">Daughter</string>
+
+    <string name="wife" translatable="false">Wife</string>
+    <string name="husband" translatable="false">Husband</string>
+    <string name="daughter_in_law" translatable="false">Daughter-In-Law</string>
+    <string name="grand_son" translatable="false">Grand Son</string>
+    <string name="grand_daughter" translatable="false">Grand Daughter</string>
+
+    <string name="fragment_title_1" translatable="false">Relatives</string>
+    <string name="fragment_title_2" translatable="false">Photo</string>
+    <string name="fragment_title_3" translatable="false">Facts</string>
+
+
+    <!--<string name="facebook_app_id" translatable="false">2264814596961704</string>//1749295805152367
+    <string name="fb_login_protocol_scheme" translatable="false">fb2264814596961704</string>-->
+
+    <string name="map_api_key" translatable="false">AIzaSyDci3uC0jldqqy0I4g4D1QpEauiVONXa1Y</string>
+
+    <!--Choose Language screen -->
+    <string name="choose_language" translatable="false">Change Language</string>
+
+    <string name="register" translatable="false">Register</string>
+
+    <!-- Login Screen -->
+    <string name="email">Email</string>
+    <string name="or_login_with">Or Login with</string>
+    <string name="do_you_have_an_account_register_now">Do you have an account?</string>
+    <string name="yes">Yes</string>
+    <string name="loading">Working…</string>
+
+    <string name="username" translatable="false">username</string>
+    <string name="reset_type" translatable="false">reset_type</string>
+
+    <!-- Register Screen -->
+    <string name="hint_address">Address</string>
+    <string name="register_now">REGISTER NOW</string>
+    <string name="hint_name">First Name</string>
+    <string name="hint_email">Email ID</string>
+    <string name="hint_mobile">10 digit mobile</string>
+    <string name="hint_password">PIN</string>
+    <string name="hint_conform_password">Confirm PIN</string>
+    <string name="how_to_register">How to Register?</string>
+    <string name="already_have_a_account_sign_in">Already have a account?</string>
+
+    <!-- Common Screen -->
+    <string name="locale_sp" translatable="false">Locale_sp</string>
+
+    <!-- Smart Screen -->
+    <string name="main">Main Details</string>
+    <string name="contact">Contanct details</string>
+    <string name="personal">Personal details</string>
+    <string name="professonal">Professional details</string>
+    <string name="_matrimony">Matrimony details</string>
+    <string name="some_more">Some more</string>
+
+
+    <string name="ss_head_name" translatable="false">@string/head_name</string>
+    <string name="ss_family_code" translatable="false">@string/member_code</string>
+    <string name="ss_mem_name" translatable="false">@string/member_name</string>
+    <string name="ss_father_name" translatable="false">@string/father_name</string>
+    <string name="ss_mother_name" translatable="false">@string/mother_name</string>
+    <string name="ss_sp_surname" translatable="false">@string/sub_cast_id</string>
+    <string name="ss_sp_samaj" translatable="false">@string/local_community_id</string>
+    <string name="ss_sp_sub_samaj" translatable="false">@string/sub_community_id</string>
+
+    <string name="ss_sp_marital" translatable="false">@string/marital_status</string>
+    <string name="ss_sp_city" translatable="false">@string/city_id</string>
+    <string name="ss_sp_gender" translatable="false">@string/gender</string>
+    <string name="ss_sp_native" translatable="false">@string/native_place_id</string>
+    <string name="ss_minage" translatable="false">@string/min_age</string>
+    <string name="ss_maxage" translatable="false">@string/max_age</string>
+    <string name="ss_edt_email" translatable="false">@string/email_address</string>
+    <string name="ss_edt_mobile" translatable="false">@string/mobile</string>
+    <string name="ss_edt_local_add" translatable="false">@string/local_address</string>
+    <string name="ss_edt_permanent_add" translatable="false">address</string>
+    <string name="ss_edt_pin_code" translatable="false">@string/pincode</string>
+    <string name="ss_edt_area" translatable="false">@string/area</string>
+    <string name="ss_sp_state" translatable="false">@string/state_id</string>
+    <string name="ss_edt_bdate" translatable="false">@string/birth_date</string>
+    <string name="ss_edt_mdate" translatable="false">@string/marriage_date</string>
+    <!--<string name="ss_edt_mosad" translatable="false">mosaad_id</string>-->
+    <string name="ss_sp_education" translatable="false">@string/education_id</string>
+    <string name="ss_sp_gotra" translatable="false">@string/gotra_id</string>
+    <string name="ss_sp_bg" translatable="false">@string/blood_group</string>
+    <string name="ss_chk_is_donor" translatable="false">@string/is_donor</string>
+    <string name="ss_chk_is_rented" translatable="false">@string/is_rented</string>
+    <string name="ss_chk_is_expired" translatable="false">@string/is_expired</string>
+    <string name="ss_edt_office" translatable="false">@string/business_address</string>
+    <string name="ss_sp_main_cat" translatable="false">@string/business_category_id</string>
+    <string name="ss_sp_sub_cat" translatable="false">@string/business_sub_category_id</string>
+    <string name="ss_sp_occupation" translatable="false">@string/occupation_id</string>
+    <string name="ss_sp_activity" translatable="false">@string/current_activity_id</string>
+    <string name="ss_edt_birth_time" translatable="false">@string/birth_time</string>
+    <string name="ss_min_height" translatable="false">@string/min_height</string>
+    <string name="ss_max_height" translatable="false">@string/max_height</string>
+    <string name="ss_min_weight" translatable="false">@string/min_weight</string>
+    <string name="ss_max_weight" translatable="false">@string/max_weight</string>
+    <string name="ss_sp_bplace" translatable="false">@string/birth_place</string>
+    <string name="ss_chk_is_spect" translatable="false">@string/is_spect</string>
+    <string name="ss_chk_is_shani" translatable="false">@string/is_shani</string>
+    <string name="ss_chk_is_mangal" translatable="false">@string/is_mangal</string>
+    <string name="ss_edt_created" translatable="false">created_dt</string>
+    <string name="ss_edt_updated" translatable="false">@string/updated_dt</string>
+    <string name="ss_min_percentage" translatable="false">min_percentage</string>
+    <string name="ss_max_percentage" translatable="false">max_percentage</string>
+    <string name="ss_maxAge" translatable="false">max_age</string>
+    <string name="ss_minAge" translatable="false">min_age</string>
+    <string name="ss_true" translatable="false">true</string>
+    <string name="ss_gender" translatable="false">Gender</string>
+    <string name="ss_native" translatable="false">Native</string>
+    <string name="ss_surname" translatable="false">Surname</string>
+    <string name="ss_samaj" translatable="false">Samaj</string>
+    <string name="ss_city" translatable="false">City</string>
+    <string name="ss_marital" translatable="false">Marital</string>
+    <string name="ss_state" translatable="false">State</string>
+    <string name="ss_education" translatable="false">Education</string>
+    <string name="ss_gotra" translatable="false">Gotra</string>
+    <string name="ss_bg" translatable="false">BG</string>
+    <string name="ss_catogory" translatable="false">Category</string>
+    <string name="ss_sub_cat" translatable="false">Sub_Cat</string>
+    <string name="ss_Occupation" translatable="false">Occupation</string>
+    <string name="ss_activity" translatable="false">Activity</string>
+
+    <string name="dateFormat" translatable="false">EE, dd MMM</string>
+    <string name="period" translatable="false">%1$s – %2$s</string>
+    <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>
+
+    <string name="_export">Export</string>
+    <string name="_qrcode">QR Code</string>
+    <string name="_share">Share</string>
+    <string name="_location">Location</string>
+    <string name="_whatsapp">WhatsApp</string>
+    <string name="_family_tree">Family Tree</string>
+    <string name="apikey" translatable="false">apikey</string>
+    <string name="devicetoken" translatable="false">devicetoken</string>
+    <string name="intudid" translatable="false">intudid</string>
+    <string name="headanimation">headanimation</string>
+    <string name="enter_firstname">Please enter your First Name</string>
+    <string name="enter_father">Please enter your Father Name</string>
+    <string name="enter_bdate">Please enter birth date</string>
+    <string name="enter_marital">Please enter Marital Status</string>
+    <string name="enter_lastname">Please enter your LastName</string>
+    <string name="enter_email">Please enter your Email</string>
+    <string name="enter_gender">Please select gender</string>
+    <string name="enter_mobile">Please enter your Mobile</string>
+    <string name="enter_password">Please enter your PIN</string>
+    <string name="confirm_password">Please enter to confirm PIN</string>
+    <string name="password_mismatch">PIN is mismatch</string>
+    <string name="enter_home_address">Please enter your home address</string>
+    <string name="enter_native">Please enter your native</string>
+    <string name="select_city">Select City</string>
+    <string name="select_state">Select State</string>
+    <string name="select_sub_comm">Please select Sub Community</string>
+    <string name="select_local">Please select Local Community</string>
+    <string name="make_strong_pass">Make PIN more than 6 characters</string>
+    <string name="_continue">Continue</string>
+    <string name="hash_key">hash_key</string>
+    <string name="otp_send">Sending OTP Please wait!</string>
+    <string name="seat_back_relax">Sit back &amp; Relax!</string>
+    <string name="you_sure">Are you sure?</string>
+    <string name="restrict_space" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
+    <string name="only_chars" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</string>
+    <string name="only_numbers" translatable="false">0123456789</string>
+    <string name="member_code" translatable="false">member_code</string>
+    <string name="first_name" translatable="false">first_name</string>
+    <string name="member_name" translatable="false">member_name</string>
+    <string name="father_name" translatable="false">father_name</string>
+    <string name="mother_name" translatable="false">mother_name</string>
+    <string name="mobile" translatable="false">mobile</string>
+    <string name="email_address" translatable="false">email_address</string>
+    <string name="address" translatable="false">address</string>
+    <string name="gender" translatable="false">gender</string>
+    <string name="area" translatable="false">area</string>
+    <string name="pincode" translatable="false">pincode</string>
+    <string name="relation_id" translatable="false">relation_id</string>
+
+    <string name="relation_text" translatable="false">relation_text</string>
+    <string name="occupation_text" translatable="false">occupation_text</string>
+    <string name="sub_cast_text" translatable="false">sub_cast_text</string>
+    <string name="native_place_text" translatable="false">native_place_text</string>
+    <string name="education_text" translatable="false">education_text</string>
+    <string name="current_activity_text" translatable="false">current_activity_text</string>
+    <string name="business_category_text" translatable="false">business_category_text</string>
+
+    <string name="sub_cast_id" translatable="false">sub_cast_id</string>
+    <string name="state_id" translatable="false">state_id</string>
+    <string name="city_id" translatable="false">city_id</string>
+    <string name="is_rented" translatable="false">is_rented</string>
+    <string name="role" translatable="false">role</string>
+    <string name="native_place_id" translatable="false">native_place_id</string>
+    <string name="birth_date" translatable="false">birth_date</string>
+    <string name="expire_date" translatable="false">expire_date</string>
+    <string name="is_expired" translatable="false">is_expired</string>
+    <string name="is_donor" translatable="false">is_donor</string>
+    <string name="blood_group" translatable="false">blood_group</string>
+    <string name="gotra_id" translatable="false">gotra_id</string>
+    <string name="education_id" translatable="false">education_id</string>
+    <string name="current_activity_id" translatable="false">current_activity_id</string>
+    <string name="marital_status" translatable="false">marital_status</string>
+    <string name="marriage_date" translatable="false">marriage_date</string>
+    <string name="local_address" translatable="false">local_address</string>
+    <string name="business_address" translatable="false">business_address</string>
+    <string name="work_details" translatable="false">work_details</string>
+    <string name="phone" translatable="false">phone</string>
+    <string name="website" translatable="false">website</string>
+    <string name="occupation_id" translatable="false">occupation_id</string>
+    <string name="business_sub_category_id" translatable="false">business_sub_category_id</string>
+    <string name="business_category_id" translatable="false">business_category_id</string>
+    <string name="company_name" translatable="false">company_name</string>
+    <string name="about_me" translatable="false">about_me</string>
+    <string name="facebook_profile" translatable="false">facebook_profile</string>
+    <string name="birth_time" translatable="false">birth_time</string>
+    <string name="birth_place" translatable="false">birth_place</string>
+    <string name="hobby" translatable="false">hobby</string>
+    <string name="expectation" translatable="false">expectation</string>
+    <string name="min_weight" translatable="false">min_weight</string>
+    <string name="max_weight" translatable="false">max_weight</string>
+    <string name="min_height" translatable="false">min_height</string>
+    <string name="max_height" translatable="false">max_height</string>
+    <string name="weight" translatable="false">weight</string>
+    <string name="height" translatable="false">height</string>
+    <string name="matrimony" translatable="false">matrimony</string>
+    <string name="is_spect" translatable="false">is_spect</string>
+    <string name="is_mangal" translatable="false">is_mangal</string>
+    <string name="is_shani" translatable="false">is_shani</string>
+    <string name="updated_dt" translatable="false">updated_dt</string>
+    <string name="user_id" translatable="false">user_id</string>
+    <string name="profile_percentage" translatable="false">profile_percent</string>
+    <string name="access_token" translatable="false">access_token</string>
+    <string name="date" translatable="false">date</string>
+    <string name="state" translatable="false">state</string>
+    <string name="designation" translatable="false">designation</string>
+    <string name="committee" translatable="false">committee</string>
+    <string name="sub_community" translatable="false">sub_community</string>
+    <string name="local_community" translatable="false">local_community</string>
+    <string name="last_name" translatable="false">last_name</string>
+    <string name="education" translatable="false">education</string>
+    <string name="gotra" translatable="false">gotra</string>
+    <string name="city" translatable="false">city</string>
+    <string name="business_category" translatable="false">business_category</string>
+    <string name="current_activity" translatable="false">current_activity</string>
+    <string name="relation" translatable="false">relation</string>
+    <string name="occupation" translatable="false">occupation</string>
+    <string name="_native" translatable="false">native</string>
+    <string name="business_sub_category" translatable="false">business_sub_category</string>
+    <string name="id" translatable="false">id</string>
+    <string name="extra_info" translatable="false">extra_info</string>
+
+    <string name="profile_password" translatable="false">profile_password</string>
+    <string name="is_location_enable" translatable="false">is_location_enable</string>
+    <string name="user_lat" translatable="false">user_lat</string>
+    <string name="user_lng" translatable="false">user_lng</string>
+    <string name="home_lat" translatable="false">home_lat</string>
+    <string name="home_lng" translatable="false">home_lng</string>
+    <string name="office_lat" translatable="false">office_lat</string>
+    <string name="office_lng" translatable="false">office_lng</string>
+    <string name="loginMember" translatable="false">loginUser</string>
+    <string name="member_id" translatable="false">member_id</string>
+    <string name="member" translatable="false">member</string>
+    <string name="head_name" translatable="false">head_name</string>
+    <string name="min_age" translatable="false">min_age</string>
+    <string name="max_age" translatable="false">max_age</string>
+    <string name="scanId" translatable="false">scanId</string>
+
+    <string name="liveo_search_view_search">Search</string>
+    <string name="liveo_search_view_arrow">Exit Search</string>
+    <string name="liveo_search_view_voice">Voice search</string>
+    <string name="liveo_search_view_close">Delete query text</string>
+    <string name="liveo_not_supported">Not Supported</string>
+
+    <string name="Local_Admin" translatable="false">Local Admin</string>
+    <string name="LOCAL_ADMIN" translatable="false">LOCAL_ADMIN</string>
+    <string name="USER" translatable="false">USER</string>
+    <string name="Sub_Admin" translatable="false">Sub Admin</string>
+    <string name="SUB_ADMIN" translatable="false">SUB_ADMIN</string>
+    <string name="Family_Head" translatable="false">Family Head</string>
+    <string name="Member" translatable="false">Member</string>
+    <string name="idList" translatable="false">idList</string>
+    <string name="sharing_id" translatable="false">sharing_id</string>
+    <string name="start" translatable="false">start</string>
+    <string name="length" translatable="false">length</string>
+    <string name="filter_by" translatable="false">filter_by</string>
+    <string name="designation_id" translatable="false">designation_id</string>
+    <string name="committee_id" translatable="false">committee_id</string>
+    <string name="end_date" translatable="false">end_date</string>
+    <string name="start_date" translatable="false">start_date</string>
+    <string name="str_search" translatable="false">str_search</string>
+    <string name="local_community_id" translatable="false">local_community_id</string>
+    <string name="sub_community_id" translatable="false">sub_community_id</string>
+
+    <string name="current_password" translatable="false">current_password</string>
+    <string name="new_password" translatable="false">new_password</string>
+    <string name="list_filter" translatable="false">list_filter</string>
+    <string name="name_filter" translatable="false">name</string>
+    <string name="value_filter" translatable="false">value</string>
+    <string name="edit_filter" translatable="false">edit_filter</string>
+    <string name="head_id" translatable="false">head_id</string>
+
+    <string name="profile" translatable="false">profile</string>
+    <string name="company" translatable="false">company</string>
+    <string name="enter_pin">Please enter your PIN</string>
+    <string name="went_wrong">Something went wrong!</string>
+
+    <!-- Login Sccren -->
+    <string name="welcome">Welcome !</string>
+    <string name="_10_digit_number">10 digit number</string>
+    <string name="_4_digit_otp_will_be_sent_via_sms_to_verify_your_mobile_number">4 digit OTP will be sent via SMS to verify your mobile number!</string>
+    <string name="do_you_have_an_account">Don\'t have an account?</string>
+    <string name="phoneNumber">Phone number is required</string>
+    <string name="pleaseEnterValidPhone">Please enter a valid phone</string>
+    <string name="Authenticationfailed">Authentication Failed.</string>
+    <string name="SmsExternalStorage">Permission denied to SMS your External storage</string>
+
+    <!-- Register Sccren -->
+    <string name="code">Code</string>
+    <string name="select_sub_community">Select Sub Community</string>
+    <string name="select_local_community">Select Local Community</string>
+    <string name="RegisterFamily">Registering your family details</string>
+    <string name="RegisterFamilyPhoto">Uploading your photo</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="Register">Register</string>
+    <string name="RequestAdmin">Your request will be approved within 24 hours by your Admin</string>
+    <string name="CannotImage">Cannot retrieve selected image</string>
+
+    <!-- DashBoard Sccren -->
+    <string name="home">Home</string>
+    <string name="Calendar">Calendar</string>
+
+    <string name="MoveProfile">Navigating your detail</string>
+    <string name="LocationOff">GPS Off</string>
+    <string name="LocationOn">GPS On</string>
+
+    <!-- FamilyTreeDetail Sccren -->
+    <string name="TimeLine">TimeLine</string>
+    <string name="SetOptionall">setOptionalIconsVisible</string>
+
+    <!-- FamilyTreeList Sccren -->
+    <string name="GotoFamilyTree">Go to Family tree</string>
+    <string name="RelationShip">Relationship</string>
+    <string name="FirstName">First name</string>
+    <string name="LastAdded">Last added</string>
+    <string name="serOptinall">setOptionalIconsVisible</string>
+    <string name="AddRelative">Add relative</string>
+    <string name="ViewTree">view in tree</string>
+    <string name="ProfileDetail">Profile Detail</string>
+    <string name="welcome_to">Welcome To,</string>
+    <string name="shah_family_tree">Shah Family tree</string>
+    <string name="_5_people">5 People</string>
+    <string name="find_person">Find Person...</string>
+
+    <!-- FavoriteProfile Sccren -->
+    <string name="Search">Search</string>
+    <string name="Updated">Updated</string>
+    <string name="number">+91</string>
+    <string name="tel">tel:</string>
+
+    <!-- PinView Sccren -->
+    <string name="EnterThePin">Enter the PIN</string>
+    <string name="enter">Happy to see you!</string>
+    <string name="Exit">See you again!</string>
+
+    <!-- ProfileDetail Sccren -->
+    <string name="Finding">Finding</string>
+    <string name="user">User</string>
+    <string name="updateprofile">Update Profile</string>
+    <string name="update">Update</string>
+    <string name="no">\u0020 No \u0020</string>
+    <string name="updatingProfile">Updating your profile</string>
+    <string name="removingProfile">Removing profile</string>
+    <string name="addingProfile">Adding profile</string>
+    <string name="pleaseWait">Please wait...</string>
+    <string name="EnterFirstName">Enter FirstName</string>
+    <string name="selectYourLastName">Select LastName</string>
+    <string name="SelectYourGender">Select Gender</string>
+    <string name="SelectRelation">Select Relation</string>
+    <string name="Profile">\'s Profile</string>
+
+    <string name="add">Add</string>
+    <string name="newProfile">New Profile</string>
+
+    <string name="Success">Success</string>
+    <string name="profileUpdate">Profile updated!</string>
+
+    <string name="my_profile">My Profile</string>
+
+    <string name="view_family">View Family</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+
+
+    <string name="save_amp_next"><![CDATA[Save & Next]]></string>
+
+
+    <!-- QRCode Sccren -->
+    <string name="share_qr_code">SHARE QR CODE</string>
+    <string name="you_can_share_this_qr_code_to_other_you_can_scan_qr_code_by_camera_and_gallery">you can share this QR code to other, you can scan QR code by Camera and Gallery</string>
+    <string name="pratik_soni">PRATIK SONI</string>
+    <string name="_9427051418">9820615291</string>
+    <string name="ShareQrCode">Share QR Code</string>
+    <string name="ScanQrCode">Scan QR Code</string>
+    <string name="qr_code_gallery">QR Code Gallery</string>
+
+
+    <!-- AtoZ Bottom Adapter -->
+    <string name="sorting_by_a_z">Sorting by A-Z</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
+    <string name="e">E</string>
+    <string name="f">F</string>
+    <string name="g">G</string>
+    <string name="h">H</string>
+    <string name="i">I</string>
+    <string name="j">J</string>
+    <string name="k">K</string>
+    <string name="l">L</string>
+    <string name="m">M</string>
+    <string name="n">N</string>
+    <string name="o">O</string>
+    <string name="p">P</string>
+    <string name="q">Q</string>
+    <string name="r">R</string>
+    <string name="s">S</string>
+    <string name="t">T</string>
+    <string name="u">U</string>
+    <string name="v">V</string>
+    <string name="w">W</string>
+    <string name="x">X</string>
+    <string name="y">Y</string>
+    <string name="z">Z</string>
+    <string name="all">ALL</string>
+    <string name="Selected">Selected \'A\'</string>
+    <string name="SelectedB">Selected \'B\'</string>
+    <string name="SelectedC">Selected \'C\'</string>
+    <string name="SelecetdD">Selected \'D\'</string>
+    <string name="SelecetdE">Selected \'E\'</string>
+    <string name="SelecetdF">Selected \'F\'</string>
+    <string name="SelectedG">Selected \'G\'</string>
+    <string name="SelecetdH">Selected \'H\'</string>
+    <string name="SelecetdeI">Selected \'I\'</string>
+    <string name="SelecetedJ">Selected \'J\'</string>
+    <string name="SelecetedK">Selected \'K\'</string>
+    <string name="SelectedL">Selected \'L\'</string>
+    <string name="SelectedM">Selected \'M\'</string>
+    <string name="SelectedN">Selected \'N\'</string>
+    <string name="SelectedO">Selected \'O\'</string>
+    <string name="SelectedP">Selected \'P\'</string>
+    <string name="SelectedQ">Selected \'Q\'</string>
+    <string name="SelectedR">Selected \'R\'</string>
+    <string name="SelectedS">Selected \'S\'</string>
+    <string name="SelectedT">Selected \'T\'</string>
+    <string name="SelectedU">Selected \'U\'</string>
+    <string name="SelectedV">Selected \'V\'</string>
+    <string name="SelectedW">Selected \'W\'</string>
+    <string name="SelectedX">Selected \'X\'</string>
+    <string name="SelectedY">Selected \'Y\'</string>
+    <string name="SelectedZ">Selected \'Z\'</string>
+    <string name="SelectedAll">Selected \'ALL\'</string>
+
+    <!-- Location Adapter -->
+    <string name="location">Location</string>
+
+
+    <string name="office">Office</string>
+
+    <!-- MyRole Adapter -->
+
+
+    <string name="subAdmin">Sub Admin</string>
+    <string name="my_role">My Role</string>
+    <string name="add_member">Add Member</string>
+    <string name="select_role">Select Role</string>
+    <string name="change_role">Change Role</string>
+
+
+    <!-- SmartFilter Adapter -->
+    <string name="smart_search">Smart Search</string>
+    <string name="click">Click</string>
+    <string name="icon_to_search_members">Icon to Search Members</string>
+
+    <!-- SmartPopUp Adapter -->
+    <string name="filter_name">Filter Name</string>
+    <string name="save">Save</string>
+    <string name="apply">Apply</string>
+    <string name="head">Head :</string>
+    <string name="membar">Member :</string>
+    <string name="father_">Father :</string>
+    <string name="mother_">Mother :</string>
+    <string name="lastname">LastName :</string>
+    <string name="samaj">Local Samaj :</string>
+    <string name="sub_samaj">Sub Samaj :</string>
+
+    <string name="samajSecond">Samaj</string>
+    <string name="genderPopup">Gender :</string>
+    <string name="GenderSecondPopup">Gender</string>
+    <string name="maritalPopup">Marital :</string>
+    <string name="maritalSecondPopup">Marital</string>
+    <string name="nativePopup">Native :</string>
+    <string name="nativeSecondPopo">Native</string>
+    <string name="cityPopup">City :</string>
+    <string name="citySecondPopup">City</string>
+    <string name="statePopup">State :</string>
+    <string name="stateSecondPopup">State</string>
+    <string name="educationPopup">Education :</string>
+    <string name="educationSecondPopop">Education</string>
+    <string name="gotraPopup">Gotra :</string>
+    <string name="gotraSecondPopup">Gotra</string>
+    <string name="bgSecond">BG :</string>
+    <string name="bgSecondpopup">BG</string>
+    <string name="categoryPopup">Category :</string>
+    <string name="categorySecondPopup">Category</string>
+    <string name="sub_categoryPopup">Sub Category :</string>
+    <string name="sub_categorySecondPopup">Sub Category</string>
+    <string name="occupationPopup">Occupation :</string>
+    <string name="occupationSecondPopup">Occupation</string>
+    <string name="activityPopup">Activity :</string>
+    <string name="activity">Activity</string>
+    <string name="age">Age</string>
+    <string name="age_0">Age 0</string>
+    <string name="age_100">Age 100</string>
+    <string name="emailPopup">Email:</string>
+    <string name="areaPopup">Area :</string>
+    <string name="mobilePopup">Mobile:</string>
+    <string name="local_addPopup">Local Add:</string>
+    <string name="permanent_addPopup">Permanent Add:</string>
+    <string name="pincodePopup">Pincode :</string>
+    <string name="birth_datePopup">Birth Date :</string>
+    <string name="marriage_datePopup">Marriage Date :</string>
+    <string name="wife_nativePopup">Wife Native :</string>
+    <string name="office_addPopup">Office Add :</string>
+    <string name="birth_timePopup">Birth Time :</string>
+    <string name="birth_placePopup">Birth Place :</string>
+    <string name="heightPopup">Height :</string>
+    <string name="meterPopup">Meter</string>
+    <string name="weightPopup">Weight :</string>
+    <string name="kgPopup">(kg)</string>
+    <string name="created_datePopup">Created Date :</string>
+    <string name="updated_datePopup">Updated Date :</string>
+    <string name="is_donorPopup">Donor?</string>
+    <string name="is_rentedPopup">Rented?</string>
+    <string name="is_expiredPopup">Expired?</string>
+    <string name="is_spectPopup">Glasses?</string>
+    <string name="is_shaniPopup">Shani?</string>
+    <string name="is_mangalPopup">Mangal?</string>
+    <string name="percentagePopup">Percentage :</string>
+    <string name="_0Popup">0%</string>
+    <string name="_100Popup">100%</string>
+    <string name="_0" translatable="false">0</string>
+    <string name="_200Popup" translatable="false">200</string>
+
+    <!-- ViewPager Fragment -->
+
+    <string name="mainAction">Main action clicked!</string>
+
+
+    <!-- AddFacts Fragment -->
+    <string name="add_fact">Add Fact</string>
+    <string name="saveAddfacts">Save</string>
+    <string name="event_name">Event Name</string>
+    <string name="dateAddFacts">Date</string>
+    <string name="event_date">Event Date</string>
+    <string name="place">Place</string>
+    <string name="event_place">Event Place</string>
+    <string name="description">Description</string>
+
+
+    <!-- AddFacts Fragment -->
+    <string name="add_relative_to_kunjan_shah">Add Relative to Kunjan Shah</string>
+    <string name="you_can_search_total_number_of_family_members_male_female_unmarried">You can search Total number of family, Members, Male, Female, Unmarried</string>
+    <string name="total_villages">Total Villages</string>
+
+    <!-- Admins Fragment -->
+    <string name="RoleAdmins">Role</string>
+    <string name="regionAdmin">Region</string>
+    <string name="wantDisable">want to disable</string>
+    <string name="profileAdmins">Profiles!</string>
+    <string name="YesDisable">Yes,Disable it!</string>
+    <string name="NoAdmins">No</string>
+
+
+    <!-- BrowseByCity Fragment -->
+    <string name="browse_by_city">Search city with Members</string>
+
+    <!-- Calendar Fragment -->
+    <string name="endRecord">End of Records</string>
+    <string name="memberCalendar">Member</string>
+
+    <!-- ChangePassword Fragment -->
+    <string name="forgotPin">Forgot PIN</string>
+    <string name="pinWillsend">PIN will be sent to</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="current_pin">Current PIN</string>
+    <string name="forgot_pin">Forgot PIN?</string>
+    <string name="enter_current_pin">Enter Current PIN</string>
+    <string name="new_pin">New PIN</string>
+    <string name="enter_new_pin">Enter New PIN</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="enter_confirm_pin">Enter Confirm PIN</string>
+    <string name="update_pin">Update PIN</string>
+
+    <!-- ContactUs Fragment -->
+    <string name="contact_us">Let us know</string>
+    <string name="you_can_contact_us_on_various_platform_and_also_send_your_feedback_with_us">You can contact us on various platform and also send your feedback with us</string>
+    <string name="type_your_message">Type Your Message...</string>
+    <string name="send_now">Send Now</string>
+
+    <!-- DashBoard Fragment -->
+    <string name="DevicDont">Your Device Don\'t Support Speech Input</string>
+    <string name="search_here">Search Here...</string>
+    <string name="news_amp_events"><![CDATA[News & Events]]></string>
+    <string name="view_all">View All</string>
+    <string name="shared_location">Shared Location</string>
+    <string name="your_location_is_private">Your location is private</string>
+    <string name="clear">Clear</string>
+
+    <!-- FamilyDetail Fragment -->
+    <string name="pinFoundDetail">PIN not found!</string>
+    <string name="delete">Delete</string>
+    <string name="download">Download</string>
+    <!-- Fragment Drawer Fragment -->
+    <string name="Version">Version</string>
+
+    <string name="logout">Logout</string>
+    <string name="version_1_2">Version 1.2</string>
+
+    <!-- MainDetails Fragment -->
+    <string name="homeLocation">Home Location</string>
+    <string name="withGoogleMap">With Google Map</string>
+    <string name="set">Set</string>
+    <string name="View">View</string>
+    <string name="updatingLocation">Updating your home location</string>
+    <string name="PleaseWait">Please wait...</string>
+    <string name="OnlyFamilyHeadLocation">Only Family Head Set the Home Location</string>
+    <string name="homeDetail">\'s Home</string>
+
+
+    <!-- MatrimonyDetail Fragment -->
+    <string name="bottomSheet">bottom_sheet</string>
+    <string name="matrimonyDetail">Matrimony</string>
+    <string name="interested">Interested?</string>
+    <string name="about_meDetails">About Me</string>
+    <string name="facebook_profile_url">Facebook Profile URL</string>
+    <string name="birthtime">BirthTime</string>
+    <string name="birthplace">BirthPlace</string>
+    <string name="hh_mm_with_24_hours">HH:MM with 24 Hours</string>
+    <string name="meter">(cm)</string>
+    <string name="spectacles">Glasses</string>
+    <string name="mangal">Mangal</string>
+    <string name="shani">Shani</string>
+
+    <!-- MatriMony Fragment -->
+    <string name="enterName">Enter name please</string>
+    <string name="welcome_to_nmatrimony_section">Welcome To, \nMatrimony Section</string>
+    <string name="search_with_given_filter_or_skip_directly">Search with given filter or skip directly</string>
+    <string name="search_nameMatrimony">Search Name</string>
+    <string name="search_now">Search Now</string>
+    <string name="skip">Skip</string>
+
+    <!-- MatriMonyList Fragment -->
+    <string name="ExportingList">Exporting</string>
+    <string name="DetailList">\'s Details</string>
+    <string name="EndRecordList">End of Records</string>
+    <string name="ageList">Age:</string>
+    <string name="statusList">Status:</string>
+
+    <string name="status" translatable="false">status</string>
+    <!-- NonActives Fragment -->
+    <string name="endNonActives">End of Records</string>
+    <string name="noFoundNonActives">No records found!</string>
+    <string name="Approved">Approved</string>
+    <string name="Restricted">Restricted</string>
+    <string name="YesApprovenon">Approve it!</string>
+
+    <string name="addressNon">Address</string>
+
+    <!-- PersonalDetail Fragment -->
+    <string name="localAdmin">Local Admin</string>
+    <string name="SubAdmin">Sub Admin</string>
+    <string name="personalDetail">Personal</string>
+    <string name="blood_donorDetail">Blood Donor?</string>
+    <string name="roleDetails">Role</string>
+    <string name="nativeDetails">Native</string>
+    <string name="selectDetails">Select</string>
+    <string name="select_marital">Select Marital</string>
+    <string name="birth_dateDetail">Birth Date</string>
+    <string name="birth_timeDetail">Birth Time</string>
+    <string name="expire_dateDetails">Expire Date</string>
+    <string name="blood_groupDetails">Blood Group</string>
+    <string name="gotraDetails">Gotra</string>
+    <string name="educationDetails">Education</string>
+    <string name="current_activityDetails">Current Activity</string>
+    <string name="marital_statusDetails">Marital Status</string>
+    <string name="marriage_dateDetails">Marriage Date</string>
+    <string name="local_address_if_anyDetails">Native/Local Address</string>
+
+    <!-- PrivancyPolicy Fragment -->
+    <string name="privacy_policy">Terms &amp; Privacy</string>
+    <string name="photoPolicy">Photo</string>
+    <string name="all_communityPolicy">All Community</string>
+    <string name="my_communityPolicy">My Community</string>
+    <string name="hidePolicy">Hide</string>
+    <string name="navigate">Navigation</string>
+    <string name="login">Login</string>
+
+    <!-- PRofessionDetail Fragment -->
+    <string name="kmPDetail">%.2f KM</string>
+    <string name="OfficeLocation">Work Location</string>
+    <string name="WithGoogle">With Google Map</string>
+    <string name="updatingLocationDetail">Updating your office location</string>
+    <string name="PleasWaitDetails">Please wait...</string>
+    <string name="headDetails">Only Family Head Set the Office Location</string>
+    <string name="SelectedImageDetails">Cannot retrieve selected image</string>
+    <string name="imageDetails">Image</string>
+    <string name="professionalDetails">Professional</string>
+    <string name="company_namePdetails">Company Name</string>
+    <string name="work_categorypDetails">Work Category</string>
+    <string name="selectpDetails">Select</string>
+    <string name="work_sub_categorypDetails">Work Sub Category</string>
+
+    <!-- SearchByDistance Fragment -->
+    <string name="occupationpDetails">Occupation</string>
+    <string name="website_urlPdetails">Website URL</string>
+    <string name="work_detailPdetails">Work Detail</string>
+    <string name="workPdetails">Work</string>
+    <string name="work_addressPdetails">Work Address</string>
+    <string name="SearchDistance">Search by Distance</string>
+    <string name="homeDistance">Home</string>
+    <string name="Officedistance">Office</string>
+    <string name="userDetails">User</string>
+    <string name="EndRecordDistance">End of the Records</string>
+    <string name="RecordDistance">Records found:</string>
+
+    <!-- SearchCity Fragment -->
+    <string name="UpdateCity">updated</string>
+    <string name="EndCity">End of</string>
+    <string name="RecordCity">Records</string>
+    <string name="LocationCity">Location shared successfully</string>
+    <string name="ShareCity">Share your location to</string>
+    <string name="ProfileCity">Profiles!</string>
+    <string name="YesCity">Share it!</string>
+    <string name="ProfileRoleCity">Profiles Role will be changed to</string>
+    <string name="YesPleaseCity">\u0020 Yes \u0020</string>
+
+    <!-- SearchList Fragment -->
+    <string name="UpdateList">Updated</string>
+    <string name="ExportList">Exporting</string>
+    <string name="DetailsList">\'s Details</string>
+    <string name="NoRecordList">No Records Found!</string>
+    <string name="RecordList">Records found:</string>
+    <string name="WantDisable">want to disable</string>
+    <string name="Proffiles">Profiles!</string>
+
+    <string name="ProfileList">Profiles Role will be changed to</string>
+    <string name="YesPlList">Yes,Please!</string>
+
+    <!-- ShareEvent Fragment -->
+
+    <string name="event_description">Event Description</string>
+    <string name="startEvent">Start</string>
+    <string name="endEvent">End</string>
+
+    <!-- SmartFilter Fragment -->
+    <string name="endrecord">End of Records</string>
+    <string name="yesDisable">Yes,Disable it!</string>
+    <string name="YesPFilter">Yes,Please!</string>
+    <string name="profileRole">Profiles Role will be changed to</string>
+
+    <!-- Statistic Fragment -->
+    <string name="samaj_statistics">Samaj Statistics</string>
+    <string name="search_village_here">Search Village Here</string>
+    <string name="unmarried_female">Unmarried Female</string>
+    <string name="interested_male">Matrimony Male</string>
+    <string name="interested_female">Matrimony Female</string>
+
+    <!-- Pther Fragment -->
+
+    <string name="Mobile">Mobile</string>
+
+    <string name="main_detail">Main Detail</string>
+    <string name="memberDetails">Code</string>
+    <string name="relationDetails">Relation</string>
+    <string name="select">Select</string>
+
+    <string name="first_nameDetails">First Name</string>
+    <string name="last_nameDetails">Last Name</string>
+    <string name="fatherDetails">Father/Husband</string>
+    <string name="motherDetails">Mother</string>
+    <string name="mobileDetails">Mobile</string>
+    <string name="genderDetails">Gender</string>
+    <string name="emailDetails">Email</string>
+    <string name="stateDetails">State</string>
+    <string name="cityDetails">City or Village</string>
+    <string name="areaDetails">Area</string>
+    <string name="pincodeDetails">Pincode</string>
+    <string name="home_addressDetails">Home Address</string>
+    <string name="homeDetails">Home</string>
+    <string name="rentedDetails">Rented</string>
+
+    <string name="MemberCodeDetails">Member Code</string>
+    <string name="MemberNameDetails">Member Name</string>
+    <string name="LastNameDetails">Last Name</string>
+    <string name="LocalComDetails">Local Community</string>
+    <string name="OccupationDetails">Occupation</string>
+    <string name="HeightDetails">Height</string>
+    <string name="WeghtDetails">Weight</string>
+    <string name="kg">Kg</string>
+    <string name="WelcomeSmart">Welcome to  Smart Filter</string>
+    <string name="MainDetails">Main Details</string>
+
+
+    <string name="FamilyDetail">Family Detail</string>
+    <string name="AddDetails">Address</string>
+    <string name="FamilyMemberDetail">Family Member List (0)</string>
+    <string name="AddMemberDetails">Add Member</string>
+    <string name="SearchNearby">Search by Distance</string>
+    <string name="EnterNewrby">Enter Distance (km)</string>
+    <string name="SearchNearBy">Search Now</string>
+    <string name="NameFilter">Name</string>
+    <string name="SurnameFilter">Surname</string>
+    <string name="HeadFilter">Head Name</string>
+    <string name="MailFilter">Mail</string>
+    <string name="CityFilter">City</string>
+    <string name="MaritalFilter">Marital</string>
+    <string name="AgeFilter">Age:</string>
+    <string name="ClearFilter">Clear</string>
+    <string name="SearchFilter">Search</string>
+    <string name="AdminList">Admin List</string>
+    <string name="RestrictedProfile">Restricted Profiles</string>
+    <string name="FindRecord">Find Records</string>
+
+    <string name="backmatrimony">Back to Matrimony</string>
+    <string name="AllNotification">All Notifications</string>
+    <string name="AllFilter">All Filters</string>
+    <string name="youFilte">You can see list of offline filters and edit, delete or apply it.</string>
+    <string name="Community">Committee</string>
+    <string name="Designation">Designation</string>
+    <string name="Duration">Duration</string>
+    <string name="SarchKeyword">SEARCH KEYWORD</string>
+    <string name="Commi">Committee</string>
+
+    <string name="no_internet">No internet connection!</string>
+    <string name="check_network">Please check your internet connection and try again</string>
+    <string name="retry">Retry</string>
+    <string name="coming_soon">Working on it</string>
+    <string name="admin_only">For Admin use only</string>
+
+    <string name="mobile_not_available">Mobile not available</string>
+    <string name="email_not_available">Email not available</string>
+    <string name="settings">Settings</string>
+    <string name="storagePermission">Storage Read Permission</string>
+    <string name="gallrypermission">Permission is needed to pick image from gallery</string>
+
+    <string name="SelctLatname">Select Last Name</string>
+    <string name="selecgender">Select Gender</string>
+    <string name="satetList">State List</string>
+    <string name="cityList">City List</string>
+    <string name="nativeList">Native List</string>
+    <string name="sCommunity">Sub Community</string>
+    <string name="localCom">Local Community</string>
+    <string name="fmilyList">Family Members</string>
+    <string name="sdetails">\'s Details</string>
+    <string name="exitDetails">Exit</string>
+    <string name="EnterDetails">Enter</string>
+    <string name="LogoutComApp">Logout the </string>
+    <string name="wontbeRecover">Permanent Delete Profile!</string>
+    <string name="delete_head">Permanent Delete Family! \n All Members will be deleted</string>
+    <string name="yesdelete">Yes,delete it!</string>
+
+    <string name="selctNative">Select Native</string>
+    <string name="selectGotra">Select Gotra</string>
+    <string name="selectBlood">Select Blood Group</string>
+    <string name="selectEduction">Select Education</string>
+    <string name="selectCurrentActivity">Select Current Activity</string>
+    <string name="selectMarial">Select Marial status</string>
+    <string name="selectworkcategory">Select Work Category</string>
+    <string name="selectworksub">Select Work Sub Category</string>
+    <string name="selectOccupation">Select Occupation</string>
+    <string name="hobbypro">Hobby</string>
+    <string name="expectationpro">Expectation</string>
+    <string name="weightpro">weight</string>
+    <string name="heightpro">height</string>
+    <string name="search_name">Search Name</string>
+    <string name="recordfound">Records found: </string>
+
+    <string name="selectstatus">Select Status</string>
+    <string name="selectsurname">Select your Surname</string>
+
+    <string name="dev_gmail_subject">@string/app_name</string>
+    <string name="dev_content">Hello</string>
+
+    <string name="expo">Exporting</string>
+    <string name="families">Families:</string>
+    <string name="mem">Members:</string>
+    <string name="found">found</string>
+    <string name="please_wait">Please Wait...</string>
+    <string name="exporting_search_list">Exporting Search List</string>
+    <string name="install_app">"Install the app from play store \n"+ "https://play.google.com/store/apps/details?id="</string>
+    <string name="mobile_not_found">Mobile not found!</string>
+    <string name="filter_values" translatable="false">filter_values</string>
+    <string name="no_selection">No Selection</string>
+
+    <string name="email_addressdetails">Email Address</string>
+    <string name="mobile_numberdetails">Mobile Number</string>
+    <string name="local_addressdetails">Local Address</string>
+    <string name="permanent_addressdetails">Permanent Address</string>
+    <string name="pincodedetails">PinCode</string>
+    <string name="areadetails">Area</string>
+    <string name="select_statedetails">Select State</string>
+    <string name="wife_s_native">Wife\'s Native</string>
+    <string name="is_doner">Doner?</string>
+    <string name="is_renteddetails">Rented?</string>
+    <string name="is_expireddetails">Expired?</string>
+    <string name="ofcAd">Office Address</string>
+    <string name="selectcategory">Select Category</string>
+    <string name="selectsubc">Select Sub Category</string>
+    <string name="sub_category">Sub Category</string>
+    <string name="selectOccu">Select Occupation</string>
+    <string name="birth_placedetails">Birth Place</string>
+    <string name="is_spectacles">Glasses?</string>
+    <string name="is_shaniDetails">Shani?</string>
+    <string name="is_mangalDetails">Mangal?</string>
+    <string name="profile_created_date">Profile Created Date</string>
+    <string name="profile_updated_date">Profile Updated Date</string>
+    <string name="profile_updatation_percentage">Profile update</string>
+
+    <string name="headn">Family Head Name</string>
+    <string name="local_communitydetails">Local Community</string>
+    <string name="select_native">Select Native</string>
+    <string name="select_citydetails">Select City</string>
+    <string name="you_can_search_here_using_many_filter_options_like_family_head_family_members_mobile_no_email_id_etc">You can search here using many filter options(Like Family head,Family members, Mobile No, Email Id etc...)</string>
+    <string name="select_filter">Please select filter!</string>
+    <string name="default_filter_name">name</string>
+    <string name="enter_filter_value">Please enter filter values for smart search</string>
+    <string name="smart_filter">Smart Filter</string>
+    <string name="isdialogshow">isDialogShow</string>
+    <string name="filename">filename</string>
+    <string name="is_logged_in">isLogin</string>
+    <string name="notification_channel_id" translatable="false">101</string>
+    <string name="mycontacts">My Contacts</string>
+    <string name="fetchingcontacts">Fetching Your Contacts</string>
+    <string name="please_wait_contacts">Just wait! Give me a minute</string>
+    <string name="permissioncontact">Permission Canceled, Now your application cannot access CONTACTS.</string>
+    <string name="updated">\"Updated \"</string>
+    <string name="members">Member</string>
+    <string name="fetchinguploadedfiles">Fetching uploaded files</string>
+    <string name="ok">Ok</string>
+    <string name="newupdate">New Update Available</string>
+    <string name="thereversion">There is a newer version of app available please update it now.</string>
+    <string name="updatenow">Update Now</string>
+
+    <string name="otp_verification">OTP Verification</string>
+    <string name="enter_the_otp_you_have_received_to">Enter the OTP you have received to</string>
+    <string name="resend_otplogin">Resend OTP</string>
+
+    <string name="QrCode">QRCode Gallery</string>
+    <string name="Generatingcode">Generating QRCode...</string>
+    <string name="search_by_calendar">Search by Calendar</string>
+
+    <string name="total_family">Total Family</string>
+    <string name="total_members">Total Members</string>
+    <string name="total_male">Total Male</string>
+    <string name="total_female">Total Female</string>
+    <string name="unmarried_male">Unmarried Male</string>
+
+    <string name="uploads">Upload</string>
+    <string name="fetchingfiles">Fetching uploaded files</string>
+    <string name="somethingwrong">Something went wrong!</string>
+    <string name="filedownloded">File is downloaded in</string>
+    <string name="folder">folder</string>
+    <string name="uploadfile">Upload File</string>
+    <string name="doyouupload">"Do you want to upload "</string>
+    <string name="uploadnow">Upload Now</string>
+    <string name="uploadingstart">Uploading start in your notification</string>
+    <string name="totalrecord">"Total Record Founds: "</string>
+    <string name="filenameupload">File Name to upload</string>
+    <string name="pleasename">Please enter name</string>
+
+    <string name="exportfilter">Export Filter</string>
+    <string name="done">Done</string>
+    <string name="photo">Photo</string>
+    <string name="name">Name</string>
+    <string name="fathername">Father/Husband Name</string>
+    <string name="mothername">Mother Name</string>
+    <string name="mobilefilter">Mobile</string>
+    <string name="genderfilter">Gender</string>
+    <string name="marital">Marital</string>
+    <string name="blood_groupfilter">Blood Group</string>
+    <string name="birth_datefilter">Birth Date</string>
+    <string name="addressfilter">Address</string>
+    <string name="statefilter">State</string>
+    <string name="cityfilter">City</string>
+    <string name="areafilter">Area</string>
+    <string name="pincodefilter">PinCode</string>
+    <string name="local_comm_filter">Local Community</string>
+    <string name="sub_comm_filter">Sub Community</string>
+    <string name="all_filtersfilter">All Filters</string>
+
+    <string name="adminsfound">Admins found</string>
+    <string name="profilerole">Profiles Role will be changed to</string>
+    <string name="youcanshare">You can View, Share and Print the PDF Profile</string>
+    <string name="print">Print</string>
+    <string name="share">Share</string>
+    <string name="view">View</string>
+    <string name="sharing">Sharing File from</string>
+    <string name="sharedetails">Share File Details</string>
+    <string name="install">Install your</string>
+    <string name="pleaseclick1">Turn Off GPS to Save Battery and BACK again to exit</string>
+    <string name="pleaseclick">Please BACK again to exit</string>
+    <string name="birthdate" translatable="false">birthdate</string>
+    <string name="fname" translatable="false">fname</string>
+    <string name="lastnameId" translatable="false">lastnameId</string>
+    <string name="emailstr" translatable="false">email</string>
+    <string name="genderstr" translatable="false">gender</string>
+    <string name="mobilestr" translatable="false">mobile</string>
+    <string name="pass" translatable="false">pass</string>
+    <string name="passsecond" translatable="false">passsecond</string>
+    <string name="cpass" translatable="false">cpass</string>
+    <string name="cpasssecond" translatable="false">cpasssecond</string>
+    <string name="passequals" translatable="false">passequals</string>
+    <string name="addressstr" translatable="false">address</string>
+    <string name="stateis" translatable="false">stateId</string>
+    <string name="cityid" translatable="false">cityId</string>
+    <string name="subcommid" translatable="false">subCommId</string>
+    <string name="localcommid" translatable="false">localCommId</string>
+    <string name="setRemider">You will get reminder on this day </string>
+    <string name="confPin">ConfPin</string>
+    <string name="not_updated">Not updated</string>
+    <string name="zero_date">0000-00-00</string>
+    <string name="fromdate">fromdate</string>
+    <string name="todate">todate</string>
+    <string name="filter">filter</string>
+    <string name="load_more">Searching...</string>
+    <string name="yss">yss-</string>
+    <string name="is_finish">is_finish</string>
+    <string name="policy">policy</string>
+    <string name="super_admin">SUPERADMIN</string>
+    <string name="is_admin">is_admin</string>
+    <string name="plain_password">plain_password</string>
+    <string name="profile_pic">profile_pic</string>
+    <string name="notification">notification</string>
+</resources>

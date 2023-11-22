@@ -1,0 +1,313 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    }
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.13'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
+    }
+
+}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+repositories {
+    maven { url "https://jitpack.io" }
+    mavenCentral()
+    google()
+    jcenter()
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://maven.google.com" }
+}
+
+android {
+    compileSdkVersion 33
+    useLibrary 'org.apache.http.legacy'
+    defaultConfig {
+        applicationId "com.krs.community"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+//        javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            debuggable false
+            buildConfigField "Boolean", "DEBUG_MODE", "false"
+            proguardFile 'proguard-google-play-services.pro'
+            proguardFile 'proguard-gson.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            minifyEnabled false
+            shrinkResources false
+            debuggable true
+            buildConfigField "Boolean", "DEBUG_MODE", "true"
+            proguardFile 'proguard-google-play-services.pro'
+            proguardFile 'proguard-gson.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "1.0"
+    productFlavors {
+
+        staging {
+            applicationId "com.vanza.samaj"
+            versionCode 1
+            versionName "1.0"
+            resValue "string", "app_name", "Vanza Samaj"
+            resValue "string", "dev_name", "Hardik"
+            resValue "string", "dev_contact", "9737208790"
+            resValue "string", "skype_id", "9737208790"
+            resValue "string", "fb_url", "https://www.facebook.com/MEHBOOBGHANCHI"
+            resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
+            resValue "string", "dev_email", "kunjanrshah@gmail.com"
+            resValue "string", "dev_link", "https://vanza.samajapp.in"
+            resValue "string", "authorities", "com.vanza.samaj.provider"
+            resValue "string", "privacy_policy_url", "https://vanza.samajapp.in/vanza_privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://vanza.samajapp.in/terms_and_conditions.html"
+            resValue "string", "disclaimer_url", "https://vanza.samajapp.in/disclaimer.html"
+            resValue "string", "base_url_logo", "https://vanza.samajapp.in/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://vanza.samajapp.in/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://vanza.samajapp.in/uploads/users/original/"
+            resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
+            resValue "string", "facebook_app_id", "2264814596961704"
+            resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
+            buildConfigField "String", "BASE_URL", '"https://vanza.samajapp.in/API/"'
+        }
+
+        ghanchi {
+            applicationId "com.ghanchi.samaj"
+            versionCode 23
+            versionName "1.0.14"
+            resValue "string", "app_name", "Muslim Ghanchi Parivar"
+            resValue "string", "dev_name", "Mehboob Gogda"
+            resValue "string", "dev_contact", "9377133222"
+            resValue "string", "skype_id", "9377133222"
+            resValue "string", "fb_url", "https://www.facebook.com/MEHBOOBGHANCHI"
+            resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
+            resValue "string", "dev_email", "saraoffsetprinters@gmail.com"
+            resValue "string", "dev_link", "https://muslimghanchi.samajapp.in"
+            resValue "string", "authorities", "com.ghanchi.samaj.provider"
+            resValue "string", "privacy_policy_url", "https://muslimghanchi.samajapp.in/ghanchi_privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://muslimghanchi.samajapp.in/terms_and_conditions.html"
+            resValue "string", "disclaimer_url", "https://muslimghanchi.samajapp.in/disclaimer.html"
+            resValue "string", "base_url_logo", "https://muslimghanchi.samajapp.in/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://muslimghanchi.samajapp.in/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://muslimghanchi.samajapp.in/uploads/users/original/"
+            resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
+            resValue "string", "facebook_app_id", "2264814596961704"
+            resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
+            buildConfigField "String", "BASE_URL", '"https://muslimghanchi.samajapp.in/API/"'
+        }
+        medk {
+            applicationId "com.medk.samaj"
+            versionCode 4
+            versionName "1.0.3"
+            resValue "string", "app_name", "Vastipatrak"
+            resValue "string", "dev_name", "Minesh Shah"
+            resValue "string", "dev_contact", "9820615291"
+            resValue "string", "skype_id", "kunjanrshah"
+            resValue "string", "fb_url", "https://www.facebook.com/kunjanrshah87"
+            resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
+            resValue "string", "dev_email", "yee@live.in"
+            resValue "string", "dev_link", "http://www.medk.samajapp.in"
+            resValue "string", "authorities", "com.medk.samaj.provider"
+            resValue "string", "privacy_policy_url", "http://www.medk.samajapp.in/privacy_policy.html"
+            resValue "string", "tms_and_con_url", "http://www.medk.samajapp.in/terms_and_conditions.html"
+            resValue "string", "disclaimer_url", "http://www.medk.samajapp.in/disclaimer.html"
+            resValue "string", "base_url_logo", "http://www.medk.samajapp.in/uploads/logos/"
+            resValue "string", "base_url_thumb", "http://www.medk.samajapp.in/uploads/users/thumb/"
+            resValue "string", "base_url_original", "http://www.medk.samajapp.in/uploads/users/original/"
+            resValue "string", "web_client_id", "685345012359-pbf23s7oh4g2hrh73ie2fk7k9vmi1hhr.apps.googleusercontent.com"
+            resValue "string", "facebook_app_id", "1685147044959850"
+            resValue "string", "fb_login_protocol_scheme", "fb1685147044959850"
+            buildConfigField "String", "BASE_URL", '"http://medk.samajapp.in/API/"'
+        }
+        yadav {
+            applicationId "com.yadav.sevasamaj"
+            versionCode 3
+            versionName "1.0.3"
+            resValue "string", "app_name", "Yadav Seva Samaj"
+            resValue "string", "dev_name", "RajKumar Yadav"
+            resValue "string", "dev_contact", "8000974974"
+            resValue "string", "skype_id", "8000974974"
+            resValue "string", "fb_url", "https://www.facebook.com/yadav.sewasamaj"
+            resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
+            resValue "string", "dev_email", "rajuyadav79@gmail.com"
+            resValue "string", "dev_link", "https://yadav.samajapp.in"
+            resValue "string", "authorities", "com.yadav.sevasamaj.provider"
+            resValue "string", "privacy_policy_url", "https://yadav.samajapp.in/yadav_privacy_policy.html"
+            resValue "string", "tms_and_con_url", "https://yadav.samajapp.in/terms_and_conditions.html"
+            resValue "string", "disclaimer_url", "https://yadav.samajapp.in/disclaimer.html"
+            resValue "string", "base_url_logo", "https://yadav.samajapp.in/uploads/logos/"
+            resValue "string", "base_url_thumb", "https://yadav.samajapp.in/uploads/users/thumb/"
+            resValue "string", "base_url_original", "https://yadav.samajapp.in/uploads/users/original/"
+            resValue "string", "web_client_id", "147166615323-26tg65sh2qh5smttv6h0mdci139nm1la.apps.googleusercontent.com"
+            resValue "string", "facebook_app_id", "593065571323594"
+            resValue "string", "fb_login_protocol_scheme", "fb593065571323594"
+            buildConfigField "String", "BASE_URL", '"https://yadav.samajapp.in/API/"'
+        }
+    }
+
+    sourceSets {
+        main { res.srcDirs = ['src/main/res', 'src/main/res/values-gu', 'src/main/res/values-hi'] }
+    }
+
+    compileOptions {
+        targetCompatibility '1.8'
+        sourceCompatibility '1.8'
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    dataBinding {
+        enabled = true
+    }
+    androidExtensions {
+        experimental = true
+    }
+    namespace 'com.krs.community'
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+
+    def room_version = "2.4.3"
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation project(':easywaylocation')
+    implementation project(':sweetdialoglib')
+    implementation project(':multisearchviewlib')
+    implementation project(':slycalendarview')
+    implementation project(':multiple-images-selector')
+
+   // implementation 'com.crashlytics.sdk.android:crashlytics:17.2.2'
+
+    implementation('com.github.florent37:androidparallax:1.0.1@aar') {
+        transitive = true
+    }
+
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
+
+    implementation 'com.google.firebase:firebase-core:21.1.1'
+//    implementation 'com.google.firebase:firebase-messaging:23.3.1'
+    implementation 'com.google.firebase:firebase-auth:21.0.8'
+    implementation 'com.facebook.android:facebook-android-sdk:5.13.0'
+    implementation 'com.google.firebase:firebase-analytics:21.1.1'
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.melnykov:floatingactionbutton:1.3.0'
+    implementation 'com.weiwangcn.betterspinner:library-material:1.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    implementation 'com.github.smarteist:autoimageslider:1.2.0'
+
+    implementation 'net.gotev:uploadservice:4.2.0'
+    implementation 'com.mindorks.android:prdownloader:0.6.0'
+    implementation 'de.blox:graphview:0.4.2'
+
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    implementation 'com.facebook.android:facebook-login:5.13.0'
+    implementation 'com.jaredrummler:material-spinner:1.3.1'
+    implementation 'com.crystal:crystalrangeseekbar:1.1.3'
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
+    implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
+    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation "androidx.core:core-ktx:1.8.0"
+   // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    implementation 'com.nightonke:boommenu:2.1.1'
+
+    // Fresco
+    implementation "com.facebook.fresco:fresco:$rootProject.FRESCO_VERSION"
+
+    implementation "com.leinardi.android:speed-dial:3.0.0"
+
+    implementation 'com.ericliu.asyncexpandablelist:asyncexpandablelist:1.1.0'
+
+    debugImplementation 'com.github.kk121:Android-Debug-Tools:1.0'
+
+    implementation 'com.github.angads25:toggle:1.1.0'
+    implementation 'com.github.krokyze:ucropnedit:2.2.4'
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    //Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+
+    //Kodein Dependency Injection
+    implementation "org.kodein.di:kodein-di-generic-jvm:6.2.1"
+    implementation "org.kodein.di:kodein-di-framework-android-x:6.2.1"
+
+    implementation 'com.poovam:pin-edittext-field:1.2.1'
+    implementation 'com.github.squti:Guru:1.0.1'
+
+    //room
+//    implementation "android.arch.persistence.room:runtime:$room_version"
+//    kapt "android.arch.persistence.room:compiler:$room_version"
+//    testImplementation "android.arch.persistence.room:testing:$room_version"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
+    implementation 'com.github.philliphsu:numberpadtimepicker:1.1.1'
+    implementation 'com.github.drawers:SpinnerDatePicker:2.0.1'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+    implementation "com.github.VaibhavLakhera:Circular-Progress-View:0.1.2"
+    implementation 'com.budiyev.android:code-scanner:2.1.0'
+    implementation 'me.ydcool.lib:qrmodule:1.0'
+    implementation 'com.uttampanchasara.pdfgenerator:pdfgenerator:1.3'
+    implementation 'com.kevalpatel2106:passcodeview:2.0.0'
+    implementation 'com.github.dewinjm:monthyear-picker:1.0.2'
+    implementation 'com.bestsoft32.tayyab:tt-fancy-gif-dialog:1.0.2'
+
+    implementation 'com.github.judemanutd:autostarter:1.0.8'
+    /*implementation('com.paytm:pgplussdk:1.3.1') {
+        transitive = true
+    }*/
+    implementation 'com.github.lubeast:PullToRefresh:1.0.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+//youtube player
+//    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0'
+
+}
+apply plugin: 'com.google.gms.google-services'
