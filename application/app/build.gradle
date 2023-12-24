@@ -89,8 +89,8 @@ android {
 
         ghanchi {
             applicationId "com.ghanchi.samaj"
-            versionCode 24
-            versionName "1.1.0"
+            versionCode 26
+            versionName "1.0.26"
             resValue "string", "app_name", "Muslim Ghanchi Parivar"
             resValue "string", "dev_name", "Mehboob Gogda"
             resValue "string", "dev_contact", "9377133222"
@@ -116,12 +116,12 @@ android {
             versionCode 4
             versionName "1.0.3"
             resValue "string", "app_name", "Vastipatrak"
-            resValue "string", "dev_name", "Minesh Shah"
-            resValue "string", "dev_contact", "9820615291"
+            resValue "string", "dev_name", "Kunjan Shah"
+            resValue "string", "dev_contact", "8320213383"
             resValue "string", "skype_id", "kunjanrshah"
             resValue "string", "fb_url", "https://www.facebook.com/kunjanrshah87"
             resValue "string", "linkedin_url", "https://www.linkedin.com/in/kunjan-shah-76901b6a/"
-            resValue "string", "dev_email", "yee@live.in"
+            resValue "string", "dev_email", "kunjanrshah@gmail.com"
             resValue "string", "dev_link", "http://www.medk.samajapp.in"
             resValue "string", "authorities", "com.medk.samaj.provider"
             resValue "string", "privacy_policy_url", "http://www.medk.samajapp.in/privacy_policy.html"
@@ -137,8 +137,8 @@ android {
         }
         yadav {
             applicationId "com.yadav.sevasamaj"
-            versionCode 3
-            versionName "1.0.3"
+            versionCode 5
+            versionName "1.0.5"
             resValue "string", "app_name", "Yadav Seva Samaj"
             resValue "string", "dev_name", "RajKumar Yadav"
             resValue "string", "dev_contact", "8000974974"

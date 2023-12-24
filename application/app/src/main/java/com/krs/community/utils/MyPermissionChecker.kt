@@ -75,13 +75,6 @@ class MyPermissionChecker {
         @JvmStatic
         fun checkRequestReadContactPermission(activity: Activity?) :Boolean{
             return false
-//                if ((activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED || (activity as AppCompatActivity).checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED) {
-//                    val permissions = arrayOf(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CONTACTS)
-//                    requestPermissions(activity,permissions, RequestPermissionCode)
-//                    return false
-//                } else {
-//                    return true
-//                }
         }
 
         private val RECORD_REQUEST_CODE = 101
