@@ -4,8 +4,8 @@
 4
 5    <uses-sdk
 6        android:minSdkVersion="21"
-6-->/home/abhishek/Desktop/communityApp/application/slycalendarview/src/main/AndroidManifest.xml
+6-->/home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
 7        android:targetSdkVersion="21" />
-7-->/home/abhishek/Desktop/communityApp/application/slycalendarview/src/main/AndroidManifest.xml
+7-->/home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
 8
 9</manifest>

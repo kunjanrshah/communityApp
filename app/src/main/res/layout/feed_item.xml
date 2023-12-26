@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_gray"
     android:orientation="vertical">
 
@@ -24,11 +26,13 @@
             android:paddingLeft="@dimen/feed_item_padding_left_right"
             android:paddingRight="@dimen/feed_item_padding_left_right">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profilePic"
                 android:layout_width="@dimen/feed_item_profile_pic"
                 android:layout_height="@dimen/feed_item_profile_pic"
-                android:scaleType="fitCenter"></ImageView>
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/colorAccent"/>
+
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -63,23 +67,52 @@
             android:paddingRight="@dimen/feed_item_status_pad_left_right"
             android:paddingBottom="5dp" />
 
-<TextView
-            android:id="@+id/txtUrl"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:linksClickable="true"
-            android:paddingLeft="@dimen/feed_item_status_pad_left_right"
-            android:paddingRight="@dimen/feed_item_status_pad_left_right"
-            android:paddingBottom="10dp"
-            android:layout_gravity="center"
-            android:textColorLink="@color/link" />
+<!--<TextView-->
+<!--            android:id="@+id/txtUrl"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:linksClickable="true"-->
+<!--            android:paddingLeft="@dimen/feed_item_status_pad_left_right"-->
+<!--            android:paddingRight="@dimen/feed_item_status_pad_left_right"-->
+<!--            android:paddingBottom="10dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:textColorLink="@color/link" />-->
+
+<!--        <WebView-->
+<!--            android:id="@+id/txtUrl"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="250dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginLeft="@dimen/feed_item_status_pad_left_right"-->
+<!--            android:layout_marginRight="@dimen/feed_item_status_pad_left_right"-->
+<!--            android:paddingBottom="10dp"-->
+<!--            android:linksClickable="true"-->
+<!--            android:textColorLink="@color/link"-->
+<!--            tools:ignore="WebViewLayout" />-->
+
+        <!-- Add these lines to your feed_item.xml layout -->
+        <FrameLayout
+            android:id="@+id/youtube_player_container"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:visibility="gone">
+
+            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                android:id="@+id/youtube_player_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+
+
 
         <ImageView
             android:id="@+id/feedImage1"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:background="@color/white"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             android:visibility="visible" />
 
         <TextView

@@ -1,17 +1,15 @@
 package com.krs.community.fragments
 
-import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.text.Html
 import android.text.TextUtils
 import android.text.format.DateUtils
-import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,8 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.facebook.FacebookSdk
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
@@ -37,14 +38,17 @@ import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.News
 import com.krs.community.responses.NewsResponse
 import com.krs.community.utils.Utility
-import com.krs.community.utils.Utility.watchYoutubeVideo
 import com.krs.community.viewmodel.NewsViewModel
 import com.krs.community.viewmodelfactory.NewsModelFactory
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import de.hdodenhof.circleimageview.CircleImageView
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-
+import java.util.regex.Pattern
 class NewsListFragment : Fragment(), KodeinAware, NewsListener {
 
     private lateinit var listView: RecyclerView
@@ -56,108 +60,12 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
     private lateinit var newsViewModel: NewsViewModel
     private val factory: NewsModelFactory by instance<NewsModelFactory>()
 
-//    private val staticJsonData = """
-//        {
-//  "success": true,
-//  "message": "Events retried successfully.",
-//  "data": [
-//    {
-//      "id": "1",
-//      "title": "Discussion with Bhavesh",
-//      "description": "Discussion with Bhavesh for community app",
-//      "location": "Isanpur, Ahmedabad, Gujarat 380043, India",
-//      "profile_pic": null,
-//      "event_date": "1970-01-01",
-//      "lat": "22.976056",
-//      "lng": "72.60176249999995",
-//      "created_dt": "1574616197",
-//      "youtube_url": [
-//        "https://www.youtube.com/watch?v=EExSSotojVI"
-//      ],
-//      "images": [
-//        "https://hips.hearstapps.com/hmg-prod/images/wisteria-in-bloom-royalty-free-image-1653423554.jpg?crop=0.685xw:1.00xh;0.112xw,0&resize=980:*"
-//      ]
-//    },
-//    {
-//      "id": "2",
-//      "title": "Test",
-//      "description": "Test",
-//      "location": "Ahmedabad, Gujarat, India",
-//      "profile_pic": null,
-//      "event_date": "2019-10-12",
-//      "lat": "23.022505",
-//      "lng": "72.57136209999999",
-//      "created_dt": "1574616870",
-//      "youtube_url": [
-//        "https://www.youtube.com/watch?v=EExSSotojVI"
-//      ],
-//      "images": [
-//        "https://hips.hearstapps.com/hmg-prod/images/vibrant-pink-and-white-summer-flowering-cosmos-royalty-free-image-1653499726.jpg?crop=0.66541xw:1xh;center,top&resize=980:*"
-//      ]
-//    },
-//    {
-//      "id": "3",
-//      "title": "Discussion with Kunjan",
-//      "description": "Discussion with kunjan for community app",
-//      "location": "Isanpur, Ahmedabad, Gujarat 380043, India",
-//      "profile_pic": null,
-//      "event_date": "1970-01-01",
-//      "lat": "22.976056",
-//      "lng": "72.60176249999995",
-//      "created_dt": "1574616197",
-//      "youtube_url": [
-//        "https://www.youtube.com/watch?v=EExSSotojVI"
-//      ],
-//      "images": [
-//        "https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*"
-//      ]
-//    },
-//    {
-//      "id": "4",
-//      "title": "testing news",
-//      "description": "testing news event for community app",
-//      "location": "Isanpur, Ahmedabad, Gujarat 380043, India",
-//      "profile_pic": null,
-//      "event_date": "1970-01-01",
-//      "lat": "22.976056",
-//      "lng": "72.60176249999995",
-//      "created_dt": "1574616197",
-//      "youtube_url": [
-//        "https://www.youtube.com/watch?v=EExSSotojVI"
-//      ],
-//      "images": [
-//        "https://hips.hearstapps.com/hmg-prod/images/gardenia-royalty-free-image-1580854928.jpg?crop=1.00xw:0.796xh;0,0.0851xh&resize=980:*"
-//      ]
-//    },
-//    {
-//      "id": "5",
-//      "title": "JSON format",
-//      "description": "testing news event for community app",
-//      "location": "Isanpur, Ahmedabad, Gujarat 380043, India",
-//      "profile_pic": null,
-//      "event_date": "1970-01-01",
-//      "lat": "22.976056",
-//      "lng": "72.60176249999995",
-//      "created_dt": "1574616197",
-//      "youtube_url": [
-//        "https://www.youtube.com/watch?v=EExSSotojVI"
-//      ],
-//      "images": [
-//        "https://hips.hearstapps.com/hmg-prod/images/gardenia-royalty-free-image-1580854928.jpg?crop=1.00xw:0.796xh;0,0.0851xh&resize=980:*"
-//      ]
-//    }
-//  ],
-//  "totalRecords": 5
-//}
-//        """
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_news, container, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utility.changeStatusbarColor(activity, R.color.bg_gray, false)
         }
-
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, NewsListFragment::class.simpleName)
         mApp.facebookAnalytics(context, NewsListFragment::class.simpleName)
@@ -190,6 +98,7 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                 // Converting timestamp into x ago format
                 val timeAgo = DateUtils.getRelativeTimeSpanString(times, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
                 holder.timestamp.text = timeAgo
+
                 // Check for empty status message
                 if (!TextUtils.isEmpty(item.description)) {
                     holder.statusMsg.text = item.description
@@ -198,36 +107,76 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                     // status is empty, remove from view
                     holder.statusMsg.visibility = View.GONE
                 }
-                val profilePic = "https://api.androidhive.info/feed/img/time.png"
 
-                // Checking for null feed url
-                val url_ = "http://bit.ly/kunjan1"
-                // item.youtubeUrl[0]
-                //  if (item.youtubeUrl != null) {
-                holder.url.text = Html.fromHtml("<a href=\"" + url_ + "\">" + url_ + "</a> ")
-                // Making url clickable
-                holder.url.movementMethod = LinkMovementMethod.getInstance()
-                holder.url.visibility = View.VISIBLE
-                /*} else { // url is null, remove from the view
-                    holder.url.visibility = View.GONE
-                }*/
+                // Check if there is a YouTube video URL
+                if (item.youtubeUrl?.isNotEmpty() == true) {
+                    // Show YouTubePlayerView and load the first video
+                    holder.youTubePlayerContainer.visibility = View.VISIBLE
 
-                // user profile pic
-                val imageUrl = "https://api.androidhive.info/feed/img/cosmos.jpg"
-                Glide.with(activity!!).load(profilePic).thumbnail(0.5f).transition(DrawableTransitionOptions.withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.profilePic)
-                //   holder.profilePic.setImageUrl(item.profilePic, imageLoader)
-                // Feed image
-                // if (item.images != null) {
-                Glide.with(activity!!).load(imageUrl).thumbnail(0.5f).transition(DrawableTransitionOptions.withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.feedImageView)
-                //holder.feedImageView.setImageUrl(item.images[0], imageLoader)
-                holder.feedImageView.visibility = View.VISIBLE
-                /*holder.feedImageView.setResponseObserver(object : FeedImageView.ResponseObserver {
-                    override fun onError() {}
-                    override fun onSuccess() {}
-                })*/
-                /*} else {
+                    // Extract the video ID from the URL
+                    val videoUrl = item.youtubeUrl[0]
+                    val videoId = extractVideoId(videoUrl)
+                    holder.youTubePlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                        override fun onReady(youTubePlayer: YouTubePlayer) {
+                            // Load the first video using the video ID
+                            youTubePlayer.cueVideo(videoId, 0f)
+                        }
+                    })
+                } else {
+                    // Hide YouTubePlayerView if there is no video URL
+                    holder.youTubePlayerContainer.visibility = View.GONE
+                }
+
+                //news feed Image
+                if (item.images?.isNotEmpty() == true) {
+                    val imageUrl = item.images[0]
+                    Glide.with(activity!!).load(imageUrl)
+                        .thumbnail(0.5f)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                        .into(holder.feedImageView)
+                    holder.feedImageView.visibility = View.VISIBLE
+                } else {
                     holder.feedImageView.visibility = View.GONE
-                }*/
+                }
+
+                // Set profile pic using Glide
+                if (item.profilePic != null && item.profilePic.isNotEmpty()) {
+                    Glide.with(activity!!)
+                        .load(item.profilePic)
+                        .thumbnail(0.5f)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                        .listener(object : RequestListener<Drawable?> {
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable?>?,
+                                dataSource: com.bumptech.glide.load.DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                // Image loaded successfully, make the profile pic visible
+                                holder.profilePic.visibility = View.VISIBLE
+                                return false
+                            }
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable?>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                // Load default profile pic from drawable if loading fails
+                                holder.profilePic.setImageResource(R.drawable.user_profile)
+                                holder.profilePic.visibility = View.VISIBLE
+                                return true // indicate that the error is handled
+                            }
+                        })
+                        .into(holder.profilePic)
+                } else {
+                    // No profile pic URL provided, load default profile pic from drawable
+                    holder.profilePic.setImageResource(R.drawable.user_profile)
+                    holder.profilePic.visibility = View.VISIBLE
+                }
             }
 
             override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<News>, i: Int): RecyclerView.ViewHolder {
@@ -256,28 +205,40 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
         return rootView
     }
 
+    // Function to extract video ID from YouTube URL
+    private fun extractVideoId(youtubeUrl: Any): String {
+        val pattern = "(?:watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%2Fwatch%3Fv%3D|youtu.be%2F|^youtu\\.be\\/|watch\\?v=|\\?v=|\\&v=|youtube.com\\/user\\/[^\\/]*\\/|\\.be\\/|youtube.com\\/[^\\/]*\\/)([^\"&'<>?\\s]*)"
+        val compiledPattern = Pattern.compile(pattern)
+        val matcher = compiledPattern.matcher(youtubeUrl.toString())
+
+        return if (matcher.find()) {
+            matcher.group(1)
+        } else {
+            // Handle invalid URL or return a default video ID
+            "defaultVideoId"
+        }
+    }
+
     internal class FeedListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var name: TextView = itemView.findViewById(R.id.name)
         var timestamp: TextView = itemView.findViewById(R.id.timestamp)
         var statusMsg: TextView = itemView.findViewById(R.id.txtStatusMsg)
         var txtExpire: TextView = itemView.findViewById(R.id.txt_expire)
-        var url: TextView = itemView.findViewById(R.id.txtUrl)
-        var profilePic: ImageView = itemView.findViewById(R.id.profilePic)
+        var youTubePlayer :YouTubePlayerView = itemView.findViewById(R.id.youtube_player_view)
+        var youTubePlayerContainer: FrameLayout = itemView.findViewById(R.id.youtube_player_container)
+        var profilePic: CircleImageView = itemView.findViewById(R.id.profilePic)
         var feedImageView: ImageView = itemView.findViewById(R.id.feedImage1)
     }
-
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.hide()
         mShimmerViewContainer.startShimmerAnimation()
     }
-
     override fun onPause() {
         super.onPause()
         (activity as AppCompatActivity).supportActionBar?.show()
         mShimmerViewContainer.stopShimmerAnimation()
     }
-
     override fun getNewsList(response: NewsResponse) {
         mShimmerViewContainer.stopShimmerAnimation()
         mShimmerViewContainer.visibility = View.GONE
@@ -287,12 +248,12 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                 lstNews.clear()
                 lstNews.addAll(response.data)
                 adapter.notifyDataSetChanged()
+//                Log.d("NewsListFragment", "Response Data: ${Gson().toJson(response.data)}")
             } else {
                 Utility.displaySnackBarWithBottomMargin(listView, response.message)
             }
         }
     }
-
     override fun getFailure(message: String) {
     }
 }

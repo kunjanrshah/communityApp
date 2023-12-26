@@ -1,31 +1,31 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:1:1-9:12
-INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:1:1-9:12
-INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:1:1-9:12
+ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:1:1-9:12
+INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:1:1-9:12
+INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:1:1-9:12
 	package
-		INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml
-		ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:1:1-9:12
-		INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml
+		INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml
+		ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:1:1-9:12
+		INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml
 	android:versionName
-		ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:3:5-30
+		ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:3:5-30
 	xmlns:android
-		ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:1:11-69
+		ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:1:11-69
 	android:versionCode
-		ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:2:5-28
+		ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:2:5-28
 uses-sdk
-ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
-INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
-INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
-INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
-INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
+ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
+INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
+INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
+INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
+INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
 	android:targetSdkVersion
-		ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:5:15-44
-		INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml
-		INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml
+		ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:5:15-44
+		INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml
+		INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml
-		ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
-		INJECTED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml
+		INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml
+		ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:5:5-47
+		INJECTED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml
 application
-ADDED from /home/abhishek/Desktop/communityApp/application/sweetdialoglib/src/main/AndroidManifest.xml:7:5-20
+ADDED from /home/abhishek/Desktop/communityApp/sweetdialoglib/src/main/AndroidManifest.xml:7:5-20
