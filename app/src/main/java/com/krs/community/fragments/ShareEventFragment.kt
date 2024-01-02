@@ -2,8 +2,10 @@ package com.krs.community.fragments
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -36,12 +38,20 @@ import com.krs.community.viewmodelfactory.ShareEventViewModelFactory
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity
 import com.zfdang.multiple_images_selector.SelectorSettings
 import kotlinx.android.synthetic.main.fragment_share_event.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import ru.slybeaver.slycalendarview.SlyCalendarDialog
 import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
@@ -49,6 +59,10 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     private lateinit var shareEventViewModel: ShareEventViewModel
     private val shareEventFactory: ShareEventViewModelFactory by instance<ShareEventViewModelFactory>()
 
+
+    private lateinit var edtTitle: EditText
+    private lateinit var edtAddress: EditText
+    private lateinit var edtDescription: EditText
     // class variables
     private val REQUEST_CODE = 123
     private var adapter: ImagesAdapter? = null
@@ -56,17 +70,23 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     private var yURLs = ArrayList<String>()
     lateinit var txtStart: TextView
 
-    //lateinit var edtEndDate: TextView
-    //  private lateinit var txtEndTime: TextView
+    lateinit var edtEndDate: TextView
+    private lateinit var txtEndTime: TextView
     private lateinit var txtStartTime: TextView
     var isStart = false
     private lateinit var userId: String
     lateinit var linearLayout: LinearLayout
     lateinit var adapter1: URLAdapter
     lateinit var fab: MovableFloatingActionButton
-    @SuppressLint("SuspiciousIndentation")
+    @SuppressLint("SuspiciousIndentation", "MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_share_event, container, false)
+
+
+        // Initialize EditText fields
+        edtTitle = root.findViewById(R.id.edt_title)
+        edtAddress = root.findViewById(R.id.edt_address)
+        edtDescription = root.findViewById(R.id.edt_description)
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, ShareEventFragment::class.simpleName)
@@ -94,9 +114,6 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         rvImages.adapter = adapter
         rvImages.layoutManager = linearLayoutManager
         val rvParent: RecyclerView = root.findViewById(R.id.rv_parent)
-        val edtTitle = root.findViewById<EditText>(R.id.edt_title)
-        val edtAddress = root.findViewById<EditText>(R.id.edt_address)
-        val edtDescription = root.findViewById<EditText>(R.id.edt_description)
         rvParent.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = RecyclerView.VERTICAL
@@ -124,118 +141,78 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         // val btnCreate: Button
         // btnShare = root.findViewById(R.id.btnShare)
         /*btnCreate = root.findViewById(R.id.btnCreate)*/
-        fab = root.findViewById(R.id.fab)
+        fab = root.findViewById(R.id.createeventfab)
         txtStart = root.findViewById(R.id.edt_start)
-        //  edtEndDate = root.findViewById(R.id.edt_end_date)
+        edtEndDate = root.findViewById(R.id.edt_end_date)
         txtStartTime = root.findViewById(R.id.txt_start_time)
-        // txtEndTime = root.findViewById(R.id.txt_end_time)
+        txtEndTime = root.findViewById(R.id.txt_end_time)
         txtStart.setOnClickListener { view: View? ->
             isStart = true
-            // showCalendar()
+             showCalendar()
         }
-        /* edtEndDate.setOnClickListener({ view: View? ->
+        edtEndDate.setOnClickListener({ view: View? ->
              isStart = false
              showCalendar()
-         })*/
+         })
         txtStartTime.setOnClickListener { view: View? ->
             isStart = true
-            //showTimerSelection()
+            showTimerSelection()
         }
-        /*txtEndTime.setOnClickListener({ view: View? ->
+        txtEndTime.setOnClickListener({ view: View? ->
             isStart = false
             showTimerSelection()
-        })*/
-        fab.setOnClickListener { v: View? ->
-            var isValidated = true
-            if (edtTitle.text.toString().isEmpty()) {
-                edtTitle.error = "Event title is required"
-                isValidated = false
-            }
-            if (edtAddress.text.toString().isEmpty()) {
-                edtAddress.error = "Event address is required"
-                isValidated = false
-            }
-            if (edtDescription.text.toString().isEmpty()) {
-                edtDescription.error = "Event description is required"
-                isValidated = false
-            }
-            if (txtStart.text.toString().isEmpty()) {
-                txtStart.error = "Start date is required"
-                isValidated = false
-            } else {
-                txtStart.error = null
-            }
-            /* if (edtEndDate.getText().toString().length == 0) {
-                 edtEndDate.setError("End date is required")
-                 isValidated = false
-             } else {
-                 edtEndDate.setError(null)
-             }*/
-            if (txtStartTime.text.toString().length == 0) {
-                txtStartTime.error = "Start time is required"
-                isValidated = false
-            } else {
-                txtStartTime.error = null
-            }
-            /*if (txtEndTime.getText().toString().length == 0) {
-                txtEndTime.setError("End time is required")
-                isValidated = false
-            } else {
-                txtEndTime.setError(null)
-            }*/
+        })
 
+//        fab.setOnClickListener { v: View? ->
+//            val isValidated = validateInputFields(edtTitle, edtAddress, edtDescription, txtStart, txtStartTime)
+//
 //            if (isValidated) {
-//                yURLs.removeAll(Arrays.asList(""))
-//                val json = JSONObject()
-//                json.put("id", userId)
-//                json.put("event_date", edt_start.text.toString())
-//                json.put("title", edtTitle.text.toString())
-//                json.put("description", edtDescription.text.toString())
-//                json.put("location", edtAddress.text.toString())
-//                json.put("lat", "23.7546")
-//                json.put("lng", "72.2308")
-//                json.put("youtube", yURLs)
+//                yURLs.removeAll(listOf(""))
 //
+//                val json = JSONObject().apply {
+//                    put("id", userId)
+//                    put("event_date", edt_start.text.toString())
+//                    put("title", edtTitle.text.toString())
+//                    put("description", edtDescription.text.toString())
+//                    put("location", edtAddress.text.toString())
+//                    put("lat", "23.7546")
+//                    put("lng", "72.2308")
+//                    put("youtube", JSONArray(yURLs)) // Convert YouTube URLs list to JSON array
+//                }
 //
-//              val data = "{\"id\":\"1\",\"event_date\":\"2020-01-01\",\"title\":\"DemoTitile\",\"description\":\"DemoDescription\",\"location\":\"DemoLocation\",\"lat\":\"23.7546\",\"lng\":\"72.2308\",\"youtube\":[\"https:\\/\\/youtube.com\",\"https:\\/\\/youtube.com\"]}";
 //                Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
-//                shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)
-////                Log.d("okhttp","${shareEventViewModel.createEvent(mResults, userId, userId, Guru.getString(getString(R.string.access_token), "").toString(), json.toString(), yURLs)}")
+//
+//                // Prepare images and YouTube URLs for the API call
+//                val imagesList = prepareImageParts(mResults)
+//                val youtubeRequestBodyList = yURLs.map { it.toRequestBody("text/plain".toMediaTypeOrNull()) }
+//
+//                // Access token should be retrieved securely, e.g., from secure storage or a session manager
+//                val accessToken = "Your_Access_Token_Here".toRequestBody("text/plain".toMediaTypeOrNull())
+//
+//                // Call the ViewModel function to create the event
+//                shareEventViewModel.createEvent(
+//                    galleryPaths = imagesList,
+//                    id = userId.toRequestBody("text/plain".toMediaTypeOrNull()),
+//                    youtubeLinks = youtubeRequestBodyList,
+//                    description = edtDescription.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+//                    title = edtTitle.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+//                    location = edtAddress.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+//                    lat = "23.7546".toRequestBody("text/plain".toMediaTypeOrNull()),
+//                    lng = "72.2308".toRequestBody("text/plain".toMediaTypeOrNull()),
+//                    eventDate = edt_start.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+//                )
 //            }
+//        }
 
-            if (isValidated) {
-                val json = JSONObject()
-                json.put("id", userId)
-                json.put("event_date", edt_start.text.toString())
-                json.put("title", edtTitle.text.toString())
-                json.put("description", edtDescription.text.toString())
-                json.put("location", edtAddress.text.toString())
-                json.put("lat", "23.7546")
-                json.put("lng", "72.2308")
-                json.put("youtube", yURLs)
-                json.put("images", mResults) // Adding images URL to the JSON object
-
-                Utility.startSweetProgress(activity, "Creating an event", "Please wait...")
-                // Call the ViewModel function to create the event
-                shareEventViewModel.createEvent(
-                    images = mResults,
-                    id = userId,
-                    title = edtTitle.text.toString(),
-                    description = edtDescription.text.toString(),
-                    location = edtAddress.text.toString(),
-                    lat = "23.7546",
-                    lng = "72.2308",
-                    youtube = yURLs,
-                    eventDate = edt_start.text.toString()
-                )
-
-                Log.d("TAG", "Creating event with JSON data: $json")
-
-            }
-            else {
-                Log.d("TAG", "event creation failed, event not created")
+        fab.setOnClickListener { v: View? ->
+            if (validateInputFields(edtTitle, edtAddress, edtDescription)) {
+                Log.d("abhi","inside")
+                createEventWithUserInput()
             }
         }
+
+
+
         /* btnShare.setOnClickListener { v: View? ->
              val adapter = ShareEventAdapter()
              val dialog = DialogPlus.newDialog(context).setAdapter(adapter).setGravity(Gravity.BOTTOM).setCancelable(true).setExpanded(true, 900).setContentBackgroundResource(R.drawable.popup_top_corner).create()
@@ -244,14 +221,51 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         return root
     }
 
-    /*private fun showCalendar() {
+    private fun validateInputFields(vararg textViews: TextView): Boolean {
+        var allFieldsValid = true
+
+        textViews.forEach { textView ->
+            if (textView.text.toString().trim().isEmpty()) {
+                textView.error = "This field cannot be empty"
+                allFieldsValid = false
+            } else {
+                textView.error = null
+            }
+        }
+
+        return allFieldsValid
+    }
+
+    private fun createEventWithUserInput() {
+        // Prepare images and YouTube URLs for the API call
+        val imagesList = prepareImageParts(mResults)
+        val youtubeRequestBodyList = prepareYoutubeRequestBody(yURLs)
+        // Call the ViewModel function to create the event
+        shareEventViewModel.createEvent(
+            galleryPaths = imagesList,
+            id = userId.toRequestBody("text/plain".toMediaTypeOrNull()),
+            youtubeLinks = youtubeRequestBodyList,
+            description = edtDescription.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+            title = edtTitle.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+            location = edtAddress.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+            lat = "23.7546".toRequestBody("text/plain".toMediaTypeOrNull()),
+            lng = "72.2308".toRequestBody("text/plain".toMediaTypeOrNull()),
+            access_token = "Your_Access_Token_Here".toRequestBody("text/plain".toMediaTypeOrNull()),
+            user_id = userId.toRequestBody("text/plain".toMediaTypeOrNull()),
+            eventDate = edt_start.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+        )
+    }
+
+
+    private fun showCalendar() {
         SlyCalendarDialog()
                 .setSingle(false)
                 .setCallback(object:SlyCalendarDialog.Callback{
                     override fun onDataSelected(firstDate: Calendar?, secondDate: Calendar?, hours: Int, minutes: Int) {
+                        val str = SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate?.time)
                        try {
-                           val str = SimpleDateFormat(getString(R.string.dateFormat_first)).format(firstDate?.time)
                            if (isStart) {
+
                                txtStart.error = null
                                txtStart.text = str
                            } else {
@@ -272,8 +286,8 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
                 .setHeaderColor(resources.getColor(R.color.colorPrimary))
                 .setBackgroundColor(Color.parseColor("#ffffff"))
                 .setSelectedColor(Color.parseColor("#c48395"))
-                .show(activity!!.supportFragmentManager, "TAG_SLYCALENDAR")
-    }*/
+                .show(requireActivity().supportFragmentManager, "TAG_SLYCALENDAR")
+    }
 
     override fun onResume() {
         super.onResume()
@@ -308,7 +322,7 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     }
 
 
-    /*fun showTimerSelection() {
+    fun showTimerSelection() {
         val mcurrentTime = Calendar.getInstance()
         val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
         val minute = mcurrentTime[Calendar.MINUTE]
@@ -324,7 +338,7 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         }, hour, minute, true) //Yes 24 hour time
         mTimePicker.setTitle("Select Time")
         mTimePicker.show()
-    }*/
+    }
 
 
     inner class URLAdapter : RecyclerView.Adapter<URLViewHolder>() {
@@ -482,6 +496,22 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         yURLs = ArrayList()
         adapter?.notifyDataSetChanged()
         adapter1.notifyDataSetChanged()
+    }
+
+
+
+    private fun prepareImageParts(imagePaths: List<String>): List<MultipartBody.Part> {
+        return imagePaths.mapNotNull { path ->
+            val file = File(path)
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("gallery[]", file.name, requestFile)
+        }
+    }
+
+    private fun prepareYoutubeRequestBody(youtubeLinks: List<String>): List<RequestBody> {
+        return youtubeLinks.map { link ->
+            link.toRequestBody("text/plain".toMediaTypeOrNull())
+        }
     }
 
     override suspend fun onFailure(message: String) {

@@ -10,6 +10,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -163,33 +165,55 @@ interface ApiServices {
 
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_PROFILE_IMAGE)
-    suspend fun uploadProfileImage(@Part file: MultipartBody.Part, @Part("id") id: RequestBody, @Part("type") type: RequestBody): Response<JsonObject>
+    suspend fun uploadProfileImage(
+        @Part file: MultipartBody.Part,
+        @Part("id") id: RequestBody,
+        @Part("type") type: RequestBody
+    ): Response<JsonObject>
 
     @Multipart
     @POST(AppConstants.UrlPath.GET_REGISTER)
-    suspend fun getUserRegister(@Part file: MultipartBody.Part?, @Part("first_name") fname: RequestBody?, @Part("father_name") father: RequestBody?, @Part("birth_date") bdate: RequestBody?, @Part("sub_cast_id") lastName: RequestBody?, @Part("email_address") email: RequestBody?, @Part("mobile") mobile: RequestBody?,
-    @Part("gender") gender: RequestBody?, @Part("plain_password") pass: RequestBody?, @Part("address") address: RequestBody?, @Part("state_id") state: RequestBody?, @Part("city_id") city: RequestBody?, @Part("native_place_id") native: RequestBody?,
-    @Part("sub_community_id") subComm: RequestBody?, @Part("local_community_id") local: RequestBody?, @Part("marital_status") marital: RequestBody?, @Part("relation_id") relation: RequestBody?, @Part("is_admin") isAdmin: RequestBody?): Response<RegisterModel>
+    suspend fun getUserRegister(
+        @Part file: MultipartBody.Part?,
+        @Part("first_name") fname: RequestBody?,
+        @Part("father_name") father: RequestBody?,
+        @Part("birth_date") bdate: RequestBody?,
+        @Part("sub_cast_id") lastName: RequestBody?,
+        @Part("email_address") email: RequestBody?,
+        @Part("mobile") mobile: RequestBody?,
+        @Part("gender") gender: RequestBody?,
+        @Part("plain_password") pass: RequestBody?,
+        @Part("address") address: RequestBody?,
+        @Part("state_id") state: RequestBody?,
+        @Part("city_id") city: RequestBody?,
+        @Part("native_place_id") native: RequestBody?,
+        @Part("sub_community_id") subComm: RequestBody?,
+        @Part("local_community_id") local: RequestBody?,
+        @Part("marital_status") marital: RequestBody?,
+        @Part("relation_id") relation: RequestBody?,
+        @Part("is_admin") isAdmin: RequestBody?
+    ): Response<RegisterModel>
 
     @Multipart
     @POST(AppConstants.UrlPath.UPLOAD_FILES)
     suspend fun deleteUploadedFile(@Part("file_id") id: RequestBody): Response<JsonObject>
-
-
+    
     @Multipart
     @POST(AppConstants.UrlPath.CREATE_EVENT)
-//    suspend fun createEvent(@Part file: List<MultipartBody.Part>, @Part("id") id: RequestBody, @Part("user_id") user_id: RequestBody, @Part("access_token") access_token: RequestBody, @Part("params") params: RequestBody, @Part("youtube[]") youtube: List<RequestBody>): Response<JsonObject>
     suspend fun createEvent(
-        @Part("images") images: List<MultipartBody.Part>,
+        @Part gallery: List<MultipartBody.Part>,
+        @Part("access_token") access_token: RequestBody,
         @Part("id") id: RequestBody,
-        @Part("title") title: RequestBody,
+        @Part("user_id") user_id: RequestBody,
+        @Part("youtube[]") youtubeLinks: List<RequestBody>,
         @Part("description") description: RequestBody,
+        @Part("title") title: RequestBody,
         @Part("location") location: RequestBody,
+        @Part("event_date") eventDate: RequestBody,
         @Part("lat") lat: RequestBody,
         @Part("lng") lng: RequestBody,
-        @Part("youtube[]") youtubeLinks: List<RequestBody>,
-        @Part("event_date") eventDate: RequestBody
-    ): Response<JsonObject>
+        ): Response<JsonObject>
+
     companion object {
         operator fun invoke(): ApiServices {
             return AppController.mApplication.retrofitBase.apiServices

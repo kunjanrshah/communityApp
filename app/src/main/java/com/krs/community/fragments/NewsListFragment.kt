@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +34,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.adapter.SliderAdapter
+import com.krs.community.adapter.VideoSliderAdapter
 import com.krs.community.app.AppController
 import com.krs.community.listeners.NewsListener
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
@@ -40,15 +44,14 @@ import com.krs.community.responses.NewsResponse
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.NewsViewModel
 import com.krs.community.viewmodelfactory.NewsModelFactory
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import com.smarteist.autoimageslider.SliderView
 import de.hdodenhof.circleimageview.CircleImageView
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.util.regex.Pattern
+
+
 class NewsListFragment : Fragment(), KodeinAware, NewsListener {
 
     private lateinit var listView: RecyclerView
@@ -60,7 +63,11 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
     private lateinit var newsViewModel: NewsViewModel
     private val factory: NewsModelFactory by instance<NewsModelFactory>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_news, container, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -76,7 +83,8 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
         listView = rootView.findViewById(R.id.list)
         mShimmerViewContainer = rootView.findViewById(R.id.shimmer_view_container)
 
-        val mLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(FacebookSdk.getApplicationContext())
+        val mLayoutManager: RecyclerView.LayoutManager =
+            LinearLayoutManager(FacebookSdk.getApplicationContext())
         listView.setHasFixedSize(true)
         listView.itemAnimator = DefaultItemAnimator()
         listView.layoutManager = mLayoutManager
@@ -87,16 +95,25 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
 
         adapter = object : ParallaxRecyclerAdapter<News>(lstNews) {
 
-            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<News>, position: Int) {
+            override fun onBindViewHolderImpl(
+                viewHolder: RecyclerView.ViewHolder,
+                adapter: ParallaxRecyclerAdapter<News>,
+                position: Int
+            ) {
 
                 val item: News = lstNews.get(position)
                 val holder = viewHolder as FeedListViewHolder
                 holder.name.text = item.title
-                val eDate = Utility.changeDateFormat(item.eventDate, Utility.yyyy_MM_dd, Utility.ddMMyyyy)
+                val eDate =
+                    Utility.changeDateFormat(item.eventDate, Utility.yyyy_MM_dd, Utility.ddMMyyyy)
                 holder.txtExpire.text = eDate
                 val times = 1578140965000
                 // Converting timestamp into x ago format
-                val timeAgo = DateUtils.getRelativeTimeSpanString(times, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
+                val timeAgo = DateUtils.getRelativeTimeSpanString(
+                    times,
+                    System.currentTimeMillis(),
+                    DateUtils.SECOND_IN_MILLIS
+                )
                 holder.timestamp.text = timeAgo
 
                 // Check for empty status message
@@ -109,36 +126,94 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                 }
 
                 // Check if there is a YouTube video URL
-                if (item.youtubeUrl?.isNotEmpty() == true) {
-                    // Show YouTubePlayerView and load the first video
-                    holder.youTubePlayerContainer.visibility = View.VISIBLE
-
-                    // Extract the video ID from the URL
-                    val videoUrl = item.youtubeUrl[0]
-                    val videoId = extractVideoId(videoUrl)
-                    holder.youTubePlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-                        override fun onReady(youTubePlayer: YouTubePlayer) {
-                            // Load the first video using the video ID
-                            youTubePlayer.cueVideo(videoId, 0f)
-                        }
-                    })
-                } else {
-                    // Hide YouTubePlayerView if there is no video URL
-                    holder.youTubePlayerContainer.visibility = View.GONE
-                }
+//                if (item.youtubeUrl?.isNotEmpty() == true) {
+//                    // Show YouTubePlayerView and load the first video
+//                    holder.youTubePlayerContainer.visibility = View.VISIBLE
+//
+//                    // Extract the video ID from the URL
+//                    val videoUrl = item.youtubeUrl[0]
+//                    val videoId = extractVideoId(videoUrl)
+//                    holder.youTubePlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+//                        override fun onReady(youTubePlayer: YouTubePlayer) {
+//                            // Load the first video using the video ID
+//                            youTubePlayer.cueVideo(videoId, 0f)
+//                        }
+//                    })
+//                } else {
+//                    // Hide YouTubePlayerView if there is no video URL
+//                    holder.youTubePlayerContainer.visibility = View.GONE
+//                }
 
                 //news feed Image
+//                if (item.images?.isNotEmpty() == true) {
+//                    val imageUrl = item.images[0]
+//                    Glide.with(activity!!).load(imageUrl)
+//                        .thumbnail(0.5f)
+//                        .transition(DrawableTransitionOptions.withCrossFade())
+//                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+//                        .into(holder.feedImageView)
+//                    holder.feedImageView.visibility = View.VISIBLE
+//                } else {
+//                    holder.feedImageView.visibility = View.GONE
+//                }
+
+                //imagesliderview
                 if (item.images?.isNotEmpty() == true) {
-                    val imageUrl = item.images[0]
-                    Glide.with(activity!!).load(imageUrl)
-                        .thumbnail(0.5f)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                        .into(holder.feedImageView)
-                    holder.feedImageView.visibility = View.VISIBLE
+                    // Log the image URLs
+                    for (imageUrl in item.images) {
+                        Log.d("Image URL", imageUrl)
+                    }
+
+                    val sliderAdapter = SliderAdapter(context!!, item.images)
+                    holder.imagesliderView.setSliderAdapter(sliderAdapter)
+
+//                    holder.imagesliderView.setOnTouchListener(object : OnTouchListener {
+//                        override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
+//                            p0.scro
+//                            return false
+//                        }
+//                    })
+
+                    // Check if there is only one image URL
+//                    if (item.images.size == 1) {
+//                        // If there is only one image URL, disable auto-cycling
+//                        holder.imagesliderView.stopNestedScroll()
+//                    }
+//                    else {
+//                        // If there are multiple image URLs, enable auto-cycling
+//                        holder.imagesliderView.startAutoCycle()
+//                    }
+
+                    holder.imagesliderView.visibility = View.VISIBLE
                 } else {
-                    holder.feedImageView.visibility = View.GONE
+                    holder.imagesliderView.visibility = View.GONE
                 }
+
+
+                //youtubevideo slider
+                if (item.youtubeUrl?.isNotEmpty() == true) {
+                    // Log the image URLs
+                    for (youtubeUrl in item.youtubeUrl) {
+                        Log.d("video URL", youtubeUrl.toString())
+                    }
+
+                    val videosliderAdapter = VideoSliderAdapter(context!!, item.youtubeUrl)
+                    holder.videosliderView.setSliderAdapter(videosliderAdapter)
+
+                    // Check if there is only one image URL
+                    if (item.youtubeUrl.size == 1) {
+                        // If there is only one image URL, disable auto-cycling
+                        holder.videosliderView.stopAutoCycle()
+                    } else {
+                        // If there are multiple image URLs, enable auto-cycling
+                        holder.videosliderView.startAutoCycle()
+                    }
+
+                    holder.videosliderView.visibility = View.VISIBLE
+                } else {
+                    holder.videosliderView.visibility = View.GONE
+                }
+
 
                 // Set profile pic using Glide
                 if (item.profilePic != null && item.profilePic.isNotEmpty()) {
@@ -159,6 +234,7 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                                 holder.profilePic.visibility = View.VISIBLE
                                 return false
                             }
+
                             override fun onLoadFailed(
                                 e: GlideException?,
                                 model: Any?,
@@ -179,8 +255,15 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                 }
             }
 
-            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<News>, i: Int): RecyclerView.ViewHolder {
-                return FeedListViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.feed_item, viewGroup, false))
+            override fun onCreateViewHolderImpl(
+                viewGroup: ViewGroup,
+                adapter: ParallaxRecyclerAdapter<News>,
+                i: Int
+            ): RecyclerView.ViewHolder {
+                return FeedListViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.feed_item, viewGroup, false)
+                )
             }
 
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<News>): Int {
@@ -191,7 +274,10 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
         listView.adapter = adapter
 
         val jsonObject = JSONObject()
-        jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
+        jsonObject.put(
+            getString(R.string.access_token),
+            Guru.getString(getString(R.string.access_token), "")
+        )
         jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
         jsonObject.put("page", "1")
         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
@@ -206,39 +292,48 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
     }
 
     // Function to extract video ID from YouTube URL
-    private fun extractVideoId(youtubeUrl: Any): String {
-        val pattern = "(?:watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%2Fwatch%3Fv%3D|youtu.be%2F|^youtu\\.be\\/|watch\\?v=|\\?v=|\\&v=|youtube.com\\/user\\/[^\\/]*\\/|\\.be\\/|youtube.com\\/[^\\/]*\\/)([^\"&'<>?\\s]*)"
-        val compiledPattern = Pattern.compile(pattern)
-        val matcher = compiledPattern.matcher(youtubeUrl.toString())
-
-        return if (matcher.find()) {
-            matcher.group(1)
-        } else {
-            // Handle invalid URL or return a default video ID
-            "defaultVideoId"
-        }
-    }
+//    private fun extractVideoId(youtubeUrl: Any): String {
+//        val pattern = "(?:watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%2Fwatch%3Fv%3D|youtu.be%2F|^youtu\\.be\\/|watch\\?v=|\\?v=|\\&v=|youtube.com\\/user\\/[^\\/]*\\/|\\.be\\/|youtube.com\\/[^\\/]*\\/)([^\"&'<>?\\s]*)"
+//        val compiledPattern = Pattern.compile(pattern)
+//        val matcher = compiledPattern.matcher(youtubeUrl.toString())
+//
+//        return if (matcher.find()) {
+//            matcher.group(1)
+//        } else {
+//            // Handle invalid URL or return a default video ID
+//            "defaultVideoId"
+//        }
+//    }
 
     internal class FeedListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var name: TextView = itemView.findViewById(R.id.name)
         var timestamp: TextView = itemView.findViewById(R.id.timestamp)
         var statusMsg: TextView = itemView.findViewById(R.id.txtStatusMsg)
         var txtExpire: TextView = itemView.findViewById(R.id.txt_expire)
-        var youTubePlayer :YouTubePlayerView = itemView.findViewById(R.id.youtube_player_view)
-        var youTubePlayerContainer: FrameLayout = itemView.findViewById(R.id.youtube_player_container)
+
+        //        var youTubePlayer :YouTubePlayerView = itemView.findViewById(R.id.youtube_player_view)
+//        var youTubePlayerContainer: FrameLayout = itemView.findViewById(R.id.youtube_player_container)
         var profilePic: CircleImageView = itemView.findViewById(R.id.profilePic)
-        var feedImageView: ImageView = itemView.findViewById(R.id.feedImage1)
+//        var feedImageView: ImageView = itemView.findViewById(R.id.feedImage1)
+
+        var imagesliderView: SliderView = itemView.findViewById(R.id.imageSlider)
+        var videosliderView: SliderView = itemView.findViewById(R.id.videoSlider)
+
+
     }
+
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.hide()
         mShimmerViewContainer.startShimmerAnimation()
     }
+
     override fun onPause() {
         super.onPause()
         (activity as AppCompatActivity).supportActionBar?.show()
         mShimmerViewContainer.stopShimmerAnimation()
     }
+
     override fun getNewsList(response: NewsResponse) {
         mShimmerViewContainer.stopShimmerAnimation()
         mShimmerViewContainer.visibility = View.GONE
@@ -248,12 +343,13 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                 lstNews.clear()
                 lstNews.addAll(response.data)
                 adapter.notifyDataSetChanged()
-//                Log.d("NewsListFragment", "Response Data: ${Gson().toJson(response.data)}")
+                Log.d("NewsListFragment", "Response Data: ${Gson().toJson(response.data)}")
             } else {
                 Utility.displaySnackBarWithBottomMargin(listView, response.message)
             }
         }
     }
+
     override fun getFailure(message: String) {
     }
 }

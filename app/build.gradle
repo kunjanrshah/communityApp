@@ -262,9 +262,11 @@ dependencies {
     implementation 'com.github.angads25:toggle:1.1.0'
     implementation 'com.github.krokyze:ucropnedit:2.2.4'
 
-    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     //Kotlin Coroutines
@@ -307,10 +309,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
 //youtube player
-    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.0.1'
 
     //round profile pic
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
 
 
 }

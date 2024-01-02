@@ -191,7 +191,7 @@ public class ImagesSelectorActivity extends Activity
         }
     }
 
-  /*  public void requestCameraRuntimePermissions() {
+    public void requestCameraRuntimePermissions() {
         if (ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(ImagesSelectorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -201,7 +201,7 @@ public class ImagesSelectorActivity extends Activity
         } else {
             launchCamera();
         }
-    }*/
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

@@ -55,8 +55,7 @@ import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
-import com.smarteist.autoimageslider.DefaultSliderView
-import com.smarteist.autoimageslider.IndicatorAnimations
+
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
 import org.json.JSONObject

@@ -10,166 +10,78 @@ import com.krs.community.listeners.CreateEventListener
 import com.krs.community.repositories.ShareEventRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-
+import okhttp3.RequestBody.Companion.asRequestBody
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class ShareEventViewModel(
-        private val shareEventRepository: ShareEventRepository,
-        var app: Application) : AndroidViewModel(app) {
+    private val shareEventRepository: ShareEventRepository,
+    var app: Application
+) : AndroidViewModel(app) {
 
     private var TAG: String = ShareEventViewModel::class.java.simpleName
-    private lateinit var job_by_update: CompletableJob
     lateinit var mCreateEventListener: CreateEventListener
 
-
-//    fun createEvent(images: List<String>, id: String, user_id: String, access_token: String, params: String, yourtube: List<String>) {
-//        if (isNetworkConnected(app.applicationContext)) {
-//            job_by_update = Job()
-//            job_by_update.let { thejob ->
-//
-//                CoroutineScope(Dispatchers.IO + thejob).launch {
-//                    try {
-//                        var imagesList: MutableList<MultipartBody.Part> = ArrayList()
-//                        var videoURLs: MutableList<RequestBody> = ArrayList()
-//
-//                        for (i in 0..images.size - 1) {
-//                            val requestFile = File(images.get(i))
-//                                    .asRequestBody("image/*".toMediaTypeOrNull())
-//                            val body = MultipartBody.Part.createFormData("uploaded_file", File(images.get(i)).name, requestFile)
-//                            imagesList.add(body)
-//                        }
-//
-//                        for (i in 0..yourtube.size - 1) {
-//                            val url = id.toRequestBody("text/plain".toMediaTypeOrNull())
-//                            videoURLs.add(url)
-//                        }
-//
-//                        val id = id.toRequestBody("text/plain".toMediaTypeOrNull())
-//
-//
-//                        val user_id = user_id.toRequestBody("text/plain".toMediaTypeOrNull())
-//
-//                        val access_token = access_token.toRequestBody("text/plain".toMediaTypeOrNull())
-//
-//                        val body = params.toRequestBody("text/plain".toMediaTypeOrNull())
-//
-//                        val response: JsonObject = shareEventRepository.createEvent(imagesList, id, user_id, access_token, body, videoURLs)
-//
-//
-//                        response.let {
-//                            withContext(Dispatchers.Main) {
-//                                if (BuildConfig.DEBUG) {
-//                                    Log.d("Response", response.toString())
-//                                }
-//
-//                                if (response.get("success").asString.equals("true")) {
-//                                    mCreateEventListener.getResult(response.get("message").asString)
-//                                } else {
-//                                    mCreateEventListener.onFailure(response.get("message").asString)
-//                                }
-//                                thejob.complete()
-//                            }
-//                            return@launch
-//                        }
-//                    } catch (e: ApiException) {
-//                        e.message?.let {
-//                            mCreateEventListener.onFailure(it)
-//                        }
-//                    } catch (e: NoInternetException) {
-//                        e.message?.let {
-//                            mCreateEventListener.onFailure(it)
-//                        }
-//                    } catch (e: Exception) {
-//                        e.message?.let {
-//                            mCreateEventListener.onFailure(it)
-//                        }
-//                    }
-//                    thejob.complete()
-//                }
-//            }
-//        }
-//    }
-
     fun createEvent(
-        images: List<String>,
-        id: String,
-        title: String,
-        description: String,
-        location: String,
-        lat: String,
-        lng: String,
-        youtube: List<String>,
-        eventDate: String
+        galleryPaths: List<MultipartBody.Part>,
+        id: RequestBody,
+        title: RequestBody, // Changed from String
+        description: RequestBody, // Changed from String
+        location: RequestBody, // Changed from String
+        lat: RequestBody, // Changed from String
+        lng: RequestBody, // Changed from String
+        youtubeLinks: List<RequestBody>, // Changed from List<String>
+        eventDate: RequestBody, // Changed from String
+        access_token: RequestBody,
+        user_id: RequestBody,
     ) {
         if (isNetworkConnected(app.applicationContext)) {
-            job_by_update = Job()
-            job_by_update.let { thejob ->
+            val job = Job()
 
-                CoroutineScope(Dispatchers.IO + thejob).launch {
-                    try {
-                        val imagesList: MutableList<MultipartBody.Part> = ArrayList()
-                        val youtubeLinks: MutableList<RequestBody> = ArrayList()
+            CoroutineScope(Dispatchers.IO + job).launch {
+                try {
+                    // Use the galleryPaths and youtubeLinks directly as they are already the correct type
+                    val response: JsonObject = shareEventRepository.createEvent(
+                        gallery = galleryPaths,
+                        id = id,
+                        youtubeLinks = youtubeLinks,
+                        description = description,
+                        title = title,
+                        location = location,
+                        eventDate = eventDate,
+                        lat = lat,
+                        lng = lng,
+                        access_token = access_token,
+                        user_id = user_id
+                    )
 
-                        for (imagePath in images) {
-                            val file = File(imagePath)
-                            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-                            val body = MultipartBody.Part.createFormData("images[]", file.name, requestFile)
-                            imagesList.add(body)
-                        }
-
-                        for (link in youtube) {
-                            val url = link.toRequestBody("text/plain".toMediaTypeOrNull())
-                            youtubeLinks.add(url)
-                        }
-
-                        val idBody = id.toRequestBody("text/plain".toMediaTypeOrNull())
-                        val titleBody = title.toRequestBody("text/plain".toMediaTypeOrNull())
-                        val descriptionBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
-                        val locationBody = location.toRequestBody("text/plain".toMediaTypeOrNull())
-                        val latBody = lat.toRequestBody("text/plain".toMediaTypeOrNull())
-                        val lngBody = lng.toRequestBody("text/plain".toMediaTypeOrNull())
-                        val eventDateBody = eventDate.toRequestBody("text/plain".toMediaTypeOrNull())
-
-                        val response: JsonObject = shareEventRepository.createEvent(imagesList, idBody, titleBody, descriptionBody, locationBody, latBody, lngBody, youtubeLinks, eventDateBody)
-
-                        response.let {
-                            withContext(Dispatchers.Main) {
-                                if (BuildConfig.DEBUG) {
-                                    Log.d("Response", response.toString())
-                                }
-
-                                if (response.get("success").asBoolean) {
-                                    mCreateEventListener.getResult(response.get("message").asString)
-                                } else {
-                                    mCreateEventListener.onFailure(response.get("message").asString)
-                                }
-                                thejob.complete()
-                            }
-                            return@launch
-                        }
-                    } catch (e: ApiException) {
-                        e.message?.let {
-                            mCreateEventListener.onFailure(it)
-                        }
-                    } catch (e: NoInternetException) {
-                        e.message?.let {
-                            mCreateEventListener.onFailure(it)
-                        }
-                    } catch (e: Exception) {
-                        e.message?.let {
-                            mCreateEventListener.onFailure(it)
+                    withContext(Dispatchers.Main) {
+                        if (response.get("success").asBoolean) {
+                            mCreateEventListener.getResult(response.get("message").asString)
+                        } else {
+                            mCreateEventListener.onFailure(response.get("message").asString)
                         }
                     }
-                    thejob.complete()
+                } catch (e: ApiException) {
+                    handleException(e)
+                } catch (e: NoInternetException) {
+                    handleException(e)
+                } catch (e: Exception) {
+                    handleException(e)
+                } finally {
+                    job.complete()
                 }
             }
         }
     }
 
+    private suspend fun handleException(exception: Exception) {
+        withContext(Dispatchers.Main) {
+            mCreateEventListener.onFailure(exception.message ?: "An error occurred")
+        }
+    }
 }
