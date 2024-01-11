@@ -10,8 +10,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -70,9 +73,9 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     private var yURLs = ArrayList<String>()
     lateinit var txtStart: TextView
 
-    lateinit var edtEndDate: TextView
-    private lateinit var txtEndTime: TextView
-    private lateinit var txtStartTime: TextView
+//    lateinit var edtEndDate: TextView
+//    private lateinit var txtEndTime: TextView
+//    private lateinit var txtStartTime: TextView
     var isStart = false
     private lateinit var userId: String
     lateinit var linearLayout: LinearLayout
@@ -143,25 +146,25 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         /*btnCreate = root.findViewById(R.id.btnCreate)*/
         fab = root.findViewById(R.id.createeventfab)
         txtStart = root.findViewById(R.id.edt_start)
-        edtEndDate = root.findViewById(R.id.edt_end_date)
-        txtStartTime = root.findViewById(R.id.txt_start_time)
-        txtEndTime = root.findViewById(R.id.txt_end_time)
+//        edtEndDate = root.findViewById(R.id.edt_end_date)
+//        txtStartTime = root.findViewById(R.id.txt_start_time)
+//        txtEndTime = root.findViewById(R.id.txt_end_time)
         txtStart.setOnClickListener { view: View? ->
             isStart = true
              showCalendar()
         }
-        edtEndDate.setOnClickListener({ view: View? ->
-             isStart = false
-             showCalendar()
-         })
-        txtStartTime.setOnClickListener { view: View? ->
-            isStart = true
-            showTimerSelection()
-        }
-        txtEndTime.setOnClickListener({ view: View? ->
-            isStart = false
-            showTimerSelection()
-        })
+//        edtEndDate.setOnClickListener({ view: View? ->
+//             isStart = false
+//             showCalendar()
+//         })
+//        txtStartTime.setOnClickListener { view: View? ->
+//            isStart = true
+//            showTimerSelection()
+//        }
+//        txtEndTime.setOnClickListener({ view: View? ->
+//            isStart = false
+//            showTimerSelection()
+//        })
 
 //        fab.setOnClickListener { v: View? ->
 //            val isValidated = validateInputFields(edtTitle, edtAddress, edtDescription, txtStart, txtStartTime)
@@ -206,7 +209,6 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
 
         fab.setOnClickListener { v: View? ->
             if (validateInputFields(edtTitle, edtAddress, edtDescription)) {
-                Log.d("abhi","inside")
                 createEventWithUserInput()
             }
         }
@@ -237,9 +239,12 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     }
 
     private fun createEventWithUserInput() {
+
+
         // Prepare images and YouTube URLs for the API call
         val imagesList = prepareImageParts(mResults)
         val youtubeRequestBodyList = prepareYoutubeRequestBody(yURLs)
+
         // Call the ViewModel function to create the event
         shareEventViewModel.createEvent(
             galleryPaths = imagesList,
@@ -250,7 +255,7 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
             location = edtAddress.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
             lat = "23.7546".toRequestBody("text/plain".toMediaTypeOrNull()),
             lng = "72.2308".toRequestBody("text/plain".toMediaTypeOrNull()),
-            access_token = "Your_Access_Token_Here".toRequestBody("text/plain".toMediaTypeOrNull()),
+            access_token = "86f18".toRequestBody("text/plain".toMediaTypeOrNull()),
             user_id = userId.toRequestBody("text/plain".toMediaTypeOrNull()),
             eventDate = edt_start.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
         )
@@ -262,15 +267,15 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
                 .setSingle(false)
                 .setCallback(object:SlyCalendarDialog.Callback{
                     override fun onDataSelected(firstDate: Calendar?, secondDate: Calendar?, hours: Int, minutes: Int) {
-                        val str = SimpleDateFormat(getString(R.string.dateFormat)).format(firstDate?.time)
+                        val str = SimpleDateFormat(getString(R.string.dateFormatevent),Locale.getDefault()).format(firstDate?.time)
                        try {
                            if (isStart) {
 
                                txtStart.error = null
                                txtStart.text = str
                            } else {
-                               edtEndDate.error = null
-                               edtEndDate.text = str
+//                               edtEndDate.error = null
+//                               edtEndDate.text = str
                            }
                        }catch (ignore:java.lang.Exception){
 
@@ -322,23 +327,23 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     }
 
 
-    fun showTimerSelection() {
-        val mcurrentTime = Calendar.getInstance()
-        val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
-        val minute = mcurrentTime[Calendar.MINUTE]
-        val mTimePicker: TimePickerDialog
-        mTimePicker = TimePickerDialog(activity, TimePickerDialog.OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
-            if (isStart) {
-                txtStartTime.error = null
-                txtStartTime.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
-            } else {
-                txtEndTime.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
-                txtEndTime.error = null
-            }
-        }, hour, minute, true) //Yes 24 hour time
-        mTimePicker.setTitle("Select Time")
-        mTimePicker.show()
-    }
+//    fun showTimerSelection() {
+//        val mcurrentTime = Calendar.getInstance()
+//        val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
+//        val minute = mcurrentTime[Calendar.MINUTE]
+//        val mTimePicker: TimePickerDialog
+//        mTimePicker = TimePickerDialog(activity, TimePickerDialog.OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
+//            if (isStart) {
+//                txtStartTime.error = null
+//                txtStartTime.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
+//            } else {
+//                txtEndTime.text = (if (selectedHour < 10) "0$selectedHour" else selectedHour.toString() ).plus( ":") .plus( if (selectedMinute < 10) "0$selectedMinute" else selectedMinute)
+//                txtEndTime.error = null
+//            }
+//        }, hour, minute, true) //Yes 24 hour time
+//        mTimePicker.setTitle("Select Time")
+//        mTimePicker.show()
+//    }
 
 
     inner class URLAdapter : RecyclerView.Adapter<URLViewHolder>() {
@@ -348,37 +353,50 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         }
 
         @SuppressLint("ClickableViewAccessibility")
-        override fun onBindViewHolder(holder: URLViewHolder, position: Int) {
-            /* holder.edt_yurl.setOnTouchListener { v: View?, event: MotionEvent ->
-                 val DRAWABLE_RIGHT = 2
-                 if (event.action == MotionEvent.ACTION_UP) {
-                     if (event.rawX >= holder.edt_yurl.right - holder.edt_yurl.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
-                         Log.d("YoutubeURL", "position: $position")
-                         yURLs.removeAt(position)
-                         notifyDataSetChanged()
-                         return@setOnTouchListener true
-                     }
-                 }
-                 false
-             }*/
+//        override fun onBindViewHolder(holder: URLViewHolder, @SuppressLint("RecyclerView") position: Int) {
+//             holder.edt_yurl.setOnTouchListener { v: View?, event: MotionEvent ->
+//                 val DRAWABLE_RIGHT = 2
+//                 if (event.action == MotionEvent.ACTION_UP) {
+//                     if (event.rawX >= holder.edt_yurl.right - holder.edt_yurl.compoundDrawables[DRAWABLE_RIGHT].bounds.width()) {
+//                         Log.d("YoutubeURL", "position: $position")
+//                         yURLs.removeAt(position)
+//                         notifyDataSetChanged()
+//                         return@setOnTouchListener true
+//                     }
+//                 }
+//                 false
+//             }
+//
+//             holder.edt_yurl.addTextChangedListener(object : TextWatcher {
+//
+//                 override fun afterTextChanged(s: Editable) {
+//
+//                 }
+//
+//                 override fun beforeTextChanged(s: CharSequence, start: Int,
+//                                                count: Int, after: Int) {
+//                 }
+//
+//                 override fun onTextChanged(s: CharSequence, start: Int,
+//                                            before: Int, count: Int) {
+//                     yURLs[position] = s.toString();
+//                 }
+//             })
+//        }
 
-            /* holder.edt_yurl.addTextChangedListener(object : TextWatcher {
+        override fun onBindViewHolder(holder: URLViewHolder, @SuppressLint("RecyclerView") position: Int) {
+            holder.edt_yurl.setText(yURLs[position])
+            holder.edt_yurl.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable) {
+                    // Update the yURLs list when the user changes the text
+                    yURLs[position] = s.toString()
+                }
 
-                 override fun afterTextChanged(s: Editable) {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-                 }
-
-                 override fun beforeTextChanged(s: CharSequence, start: Int,
-                                                count: Int, after: Int) {
-                 }
-
-                 override fun onTextChanged(s: CharSequence, start: Int,
-                                            before: Int, count: Int) {
-                     yURLs[position] = s.toString();
-                 }
-             })*/
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            })
         }
-
         override fun getItemId(position: Int): Long {
             return 0
         }
@@ -491,7 +509,7 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         edt_description.setText("")
         edt_address.setText("")
         edt_start.text = ""
-        txtStartTime.text = ""
+//        txtStartTime.text = ""
         mResults = ArrayList()
         yURLs = ArrayList()
         adapter?.notifyDataSetChanged()

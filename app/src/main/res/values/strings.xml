@@ -273,7 +273,7 @@
     <string name="ss_sub_cat" translatable="false">Sub_Cat</string>
     <string name="ss_Occupation" translatable="false">Occupation</string>
     <string name="ss_activity" translatable="false">Activity</string>
-
+    <string name="dateFormatevent" translatable="false">yyyy-MM-dd</string>
     <string name="dateFormat" translatable="false">EE, dd MMM</string>
     <string name="period" translatable="false">%1$s – %2$s</string>
     <string name="text_inside_circle_button_text_normal">Text Inside Circle Button(Normal)</string>

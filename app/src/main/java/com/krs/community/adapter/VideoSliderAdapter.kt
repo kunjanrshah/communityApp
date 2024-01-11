@@ -1,46 +1,43 @@
 package com.krs.community.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.krs.community.R
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-import com.smarteist.autoimageslider.SliderViewAdapter
 import java.util.regex.Pattern
 
 class VideoSliderAdapter(private val context: Context, private val videoUrls: MutableList<Any>) :
-    SliderViewAdapter<VideoSliderAdapter.SliderViewHolder>() {
+    RecyclerView.Adapter<VideoSliderAdapter.SliderViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup): SliderViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.slider_item1, null)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderViewHolder {
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.slider_item1, parent, false)
         return SliderViewHolder(view)
     }
 
-    override fun onBindViewHolder(viewHolder: SliderViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SliderViewHolder, position: Int) {
         val videoUrl = videoUrls[position]
 
         // Load YouTube video using YouTubePlayerView
-        viewHolder.youTubePlayerView.addYouTubePlayerListener(object :
+        holder.youTubePlayerView.addYouTubePlayerListener(object :
             AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 // Load the YouTube video using the video URL
                 youTubePlayer.cueVideo(getVideoId(videoUrl), 0f)
-
-                Log.d("video URL", "$videoUrl")
-
             }
         })
     }
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return videoUrls.size
     }
 
-    class SliderViewHolder(itemView: View) : SliderViewAdapter.ViewHolder(itemView) {
+    class SliderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val youTubePlayerView: YouTubePlayerView = itemView.findViewById(R.id.youtubePlayerView)
     }
 
@@ -59,3 +56,4 @@ class VideoSliderAdapter(private val context: Context, private val videoUrls: Mu
         }
     }
 }
+

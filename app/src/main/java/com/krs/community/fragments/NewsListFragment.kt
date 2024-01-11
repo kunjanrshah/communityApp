@@ -8,9 +8,7 @@ import android.text.TextUtils
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
@@ -44,7 +43,6 @@ import com.krs.community.responses.NewsResponse
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.NewsViewModel
 import com.krs.community.viewmodelfactory.NewsModelFactory
-import com.smarteist.autoimageslider.SliderView
 import de.hdodenhof.circleimageview.CircleImageView
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -125,95 +123,28 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                     holder.statusMsg.visibility = View.GONE
                 }
 
-                // Check if there is a YouTube video URL
-//                if (item.youtubeUrl?.isNotEmpty() == true) {
-//                    // Show YouTubePlayerView and load the first video
-//                    holder.youTubePlayerContainer.visibility = View.VISIBLE
-//
-//                    // Extract the video ID from the URL
-//                    val videoUrl = item.youtubeUrl[0]
-//                    val videoId = extractVideoId(videoUrl)
-//                    holder.youTubePlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-//                        override fun onReady(youTubePlayer: YouTubePlayer) {
-//                            // Load the first video using the video ID
-//                            youTubePlayer.cueVideo(videoId, 0f)
-//                        }
-//                    })
-//                } else {
-//                    // Hide YouTubePlayerView if there is no video URL
-//                    holder.youTubePlayerContainer.visibility = View.GONE
-//                }
 
-                //news feed Image
-//                if (item.images?.isNotEmpty() == true) {
-//                    val imageUrl = item.images[0]
-//                    Glide.with(activity!!).load(imageUrl)
-//                        .thumbnail(0.5f)
-//                        .transition(DrawableTransitionOptions.withCrossFade())
-//                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-//                        .into(holder.feedImageView)
-//                    holder.feedImageView.visibility = View.VISIBLE
-//                } else {
-//                    holder.feedImageView.visibility = View.GONE
-//                }
-
-                //imagesliderview
+                // For image slider
                 if (item.images?.isNotEmpty() == true) {
-                    // Log the image URLs
-                    for (imageUrl in item.images) {
-                        Log.d("Image URL", imageUrl)
-                    }
 
+                    val imageSlider: ViewPager2 = holder.itemView.findViewById(R.id.imageSlider)
                     val sliderAdapter = SliderAdapter(context!!, item.images)
-                    holder.imagesliderView.setSliderAdapter(sliderAdapter)
+                    imageSlider.adapter = sliderAdapter
+                    imageSlider.visibility = View.VISIBLE
 
-//                    holder.imagesliderView.setOnTouchListener(object : OnTouchListener {
-//                        override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-//                            p0.scro
-//                            return false
-//                        }
-//                    })
-
-                    // Check if there is only one image URL
-//                    if (item.images.size == 1) {
-//                        // If there is only one image URL, disable auto-cycling
-//                        holder.imagesliderView.stopNestedScroll()
-//                    }
-//                    else {
-//                        // If there are multiple image URLs, enable auto-cycling
-//                        holder.imagesliderView.startAutoCycle()
-//                    }
-
-                    holder.imagesliderView.visibility = View.VISIBLE
+                    // Disable auto-cycling if there's only one image
                 } else {
                     holder.imagesliderView.visibility = View.GONE
                 }
-
-
-                //youtubevideo slider
+                
+//                 For video slider
                 if (item.youtubeUrl?.isNotEmpty() == true) {
-                    // Log the image URLs
-                    for (youtubeUrl in item.youtubeUrl) {
-                        Log.d("video URL", youtubeUrl.toString())
-                    }
-
-                    val videosliderAdapter = VideoSliderAdapter(context!!, item.youtubeUrl)
-                    holder.videosliderView.setSliderAdapter(videosliderAdapter)
-
-                    // Check if there is only one image URL
-                    if (item.youtubeUrl.size == 1) {
-                        // If there is only one image URL, disable auto-cycling
-                        holder.videosliderView.stopAutoCycle()
-                    } else {
-                        // If there are multiple image URLs, enable auto-cycling
-                        holder.videosliderView.startAutoCycle()
-                    }
-
+                    val videoSliderAdapter = VideoSliderAdapter(context!!, item.youtubeUrl)
+                    holder.videosliderView.adapter = videoSliderAdapter
                     holder.videosliderView.visibility = View.VISIBLE
                 } else {
                     holder.videosliderView.visibility = View.GONE
                 }
-
 
                 // Set profile pic using Glide
                 if (item.profilePic != null && item.profilePic.isNotEmpty()) {
@@ -316,8 +247,8 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
         var profilePic: CircleImageView = itemView.findViewById(R.id.profilePic)
 //        var feedImageView: ImageView = itemView.findViewById(R.id.feedImage1)
 
-        var imagesliderView: SliderView = itemView.findViewById(R.id.imageSlider)
-        var videosliderView: SliderView = itemView.findViewById(R.id.videoSlider)
+        var imagesliderView: ViewPager2 = itemView.findViewById(R.id.imageSlider)
+        var videosliderView: ViewPager2 = itemView.findViewById(R.id.videoSlider)
 
 
     }
