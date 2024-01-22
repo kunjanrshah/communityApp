@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.telephony.SubscriptionInfo
-import android.telephony.SubscriptionManager
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -21,20 +20,25 @@ import android.view.animation.Animation
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.facebook.AccessToken
 import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
 import com.facebook.GraphRequest
+import com.facebook.LoginStatusCallback
 import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.github.squti.guru.Guru
 import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
@@ -73,14 +77,17 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
+
 class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener, PolicyAdapter.policyInterface, ForgotAdapter.ForgotInterface {
 
 
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
     override val kodein by kodein()
     private val factory: LoginViewModelFactory by instance<LoginViewModelFactory>()
     private var smsReceiver: SMSReceiver? = null
     private val TAG = LoginActivity::class.java.simpleName
     private var mCallbackManager: CallbackManager? = null
+    private lateinit var facebookLoginLauncher: ActivityResultLauncher<Intent>
     private var loginViewModel: LoginViewModel? = null
     private var ReceviedOTP: String? = null
     private lateinit var member: Member
@@ -91,12 +98,22 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     companion object {
         private val RC_SIGN_IN = 9001
+        private const val CUSTOM_TAB_REQUEST_CODE = 100
     }
 
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mCallbackManager = CallbackManager.Factory.create()
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.web_client_id))
+            .requestEmail()
+            .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         if (isNetworkConnected(this)) {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -133,6 +150,8 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkRequestNotificationPermissions(this)
         }
+
+
     }
 
     private fun setNoInternetLayout() {
@@ -154,7 +173,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             }
         }
     }
-
     private fun setScreenLayout() {
         if (isNetworkConnected(this)) {
             binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.activity_loginwith)
@@ -231,6 +249,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                      .create()
                  policyDialog?.show()
              }
+//      web view is depricated for FB login
 
 //            binding.btnLoginFb.setOnClickListener { v0 ->
 //
@@ -272,10 +291,59 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 //                    }
 //                })
 //            }
-//            binding.btnLoginGoogle.setOnClickListener { v ->
-//                val signInIntent = AppController.mApplication.mGoogleSignInClient.signInIntent
-//                startActivityForResult(signInIntent, RC_SIGN_IN)
+
+            //it will open chrome tab for login
+
+//            binding.btnLoginFb.setOnClickListener { v0 ->
+//                LoginManager.getInstance().logInWithReadPermissions(this@LoginActivity, Arrays.asList("email", "public_profile"))
+//                LoginManager.getInstance().retrieveLoginStatus(this, object : LoginStatusCallback {
+//                    override fun onCompleted(accessToken: AccessToken) {
+//                        showProgressDialog(this@LoginActivity)
+//                        if (BuildConfig.DEBUG) {
+//                            Log.d(TAG, "facebook:onSuccess:$accessToken")
+//                        }
+//                        val request = GraphRequest.newMeRequest(accessToken) { `object`, response ->
+//                                Log.v(TAG, response.toString())
+//                                try {
+//                                    val email = `object`?.getString("email")
+//
+//                                    Log.e("email", "" + email)
+//                                    //val url = `object`.getJSONObject("picture").getJSONObject("data").getString("url")
+//                                    if (email != null) {
+//                                        loginViewModel?.loginWithFB(email)
+//                                    }
+//                                } catch (e: JSONException) {
+//                                    hideProgressDialog()
+//                                    Toast.makeText(
+//                                        this@LoginActivity,
+//                                        "Error while getting records from Facebook",
+//                                        Toast.LENGTH_SHORT
+//                                    ).show()
+//                                    e.printStackTrace()
+//                                }
+//                            }
+//                    }
+//
+//                    override fun onFailure() {
+//                        hideProgressDialog()
+//                        Log.d(TAG, "facebook:onFailure")
+//                    }
+//
+//                    override fun onError(exception: java.lang.Exception) {
+//                        hideProgressDialog()
+//                        Log.d(TAG, "facebook:onError", exception)
+//                    }
+//                })
 //            }
+
+//            binding.btnLoginFb.setOnClickListener { v0 ->
+//                openFacebookLoginUrl()
+//            }
+
+            binding.btnLoginGoogle.setOnClickListener { v ->
+                val signInIntent = mGoogleSignInClient.signInIntent
+                startActivityForResult(signInIntent, RC_SIGN_IN)
+            }
 
             binding.haveAcc.setOnClickListener { v ->
                 val mIntent = Intent(this@LoginActivity, RegisterActivty::class.java)
@@ -465,6 +533,13 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         }
     }
 
+//    private fun openFacebookLoginUrl() {
+//        val customTabIntent = CustomTabsIntent.Builder().build()
+//        val uri = Uri.parse("https://www.facebook.com/dialog/oauth?client_id=920272212971451&redirect_uri=fb920272212971451://authorize&response_type=token&scope=email,public_profile")
+//        customTabIntent.launchUrl(this, uri)
+//    }
+
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -600,21 +675,40 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         loginViewModel?.cancelAllJobs()
     }
 
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        Log.e(TAG, "Google sign requestCode: $requestCode result code : $resultCode")
+//
+//        if (requestCode == RC_SIGN_IN && resultCode != 0) {
+//            try {
+//                startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
+//                loginViewModel?.loginWithGoogle(data)
+//            } catch (e: ApiException) {
+//                Log.w(TAG, "Google sign in failed", e)
+//            }
+//        } else {
+//            mCallbackManager?.onActivityResult(requestCode, resultCode, data)
+//        }
+//    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Log.e(TAG, "Google sign requestCode: $requestCode")
-
-        if (requestCode == RC_SIGN_IN && resultCode != 0) {
+         if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+//            loginViewModel?.loginWithGoogle(task)
             try {
                 startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
-                loginViewModel?.loginWithGoogle(data)
+                loginViewModel?.loginWithGoogle(task)
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)
             }
-        } else {
-            mCallbackManager?.onActivityResult(requestCode, resultCode, data)
-        }
+        }else if (requestCode == CUSTOM_TAB_REQUEST_CODE) {
+             // Handle result from custom Chrome Tab
+             val callbackManager = CallbackManager.Factory.create()
+             callbackManager.onActivityResult(requestCode, resultCode, data)
+         }
     }
 
     override fun sendEmail(email: String) {

@@ -12,7 +12,20 @@
           "package_name": "com.vanza.samaj"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "880736251672-evdh5a7dbb4874f5ghj7g4843b3gs4md.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vanza.samaj",
+            "certificate_hash": "b5ef0041a036f61a4b9700297bca8ccd461ab678"
+          }
+        },
+        {
+          "client_id": "880736251672-o2e7g500sicgl4t13pmnnvnic7vo9cnk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA3lS1QrNVJ6S5Hz5q10JQZ5lzYO_xorBI"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880736251672-14ljq7s73or5lp3vhrd1v5n94lns6sed.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

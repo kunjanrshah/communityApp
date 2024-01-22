@@ -120,9 +120,24 @@ class AppController : Application(), KodeinAware {
         firebaseAnalytics.setCurrentScreen((getContext as Activity?)!!, "Screen", Name)
     }
 
-    fun facebookAnalytics(getContext: Context?, Name: String?) {
-        logger = AppEventsLogger.newLogger(getContext)
-        logger.logEvent(Name)
+//    fun facebookAnalytics(getContext: Context?, Name: String?) {
+//        logger = AppEventsLogger.newLogger(getContext)
+//        logger.logEvent(Name)
+//    }
+
+    fun facebookAnalytics(context: Context?, name: String?) {
+        // Ensure that the context is not null before creating the logger
+        if (context == null || context !is Activity) {
+            // If the context is null or not an Activity, log an error or handle it as appropriate for your use case
+            return
+        }
+
+        val logger = AppEventsLogger.newLogger(context)
+
+        // Check if name is not null before logging the event
+        name?.let {
+            logger.logEvent(it)
+        }
     }
 
     /*  fun stringTranslateAPI(Name: String?):String {
@@ -208,10 +223,10 @@ class AppController : Application(), KodeinAware {
         StrictMode.setVmPolicy(builder.build())
 
 
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.web_client_id))
-                .requestEmail().build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestIdToken(getString(R.string.web_client_id))
+//                .requestEmail().build()
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         val config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)

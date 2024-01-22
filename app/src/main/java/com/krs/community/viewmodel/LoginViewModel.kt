@@ -9,6 +9,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.github.squti.guru.Guru
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.krs.community.BuildConfig
@@ -128,11 +130,40 @@ class LoginViewModel(private val loginRepository: LoginRepository,
         }
     }
 
-    fun loginWithGoogle(data: Intent?) {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-        val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
+//    fun loginWithGoogle(data: Intent?) {
+//        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+//        val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
+//
+//        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+//        mAuth?.signInWithCredential(credential)?.addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                val user = mAuth?.currentUser
+//                if (user != null) {
+//                    val loginRequest = AppConstants.LoginRequest()
+//                    val loginuser = user.email.toString()
+//                    if (loginuser.isNotEmpty() && loginuser.isNotBlank()) {
+//                        loginRequest.username = loginuser
+//                        loginRequest.login_type = "0"
+//                        getLoginUser(loginRequest)
+//                    } else {
+//                        status.value = false
+//                        Utility.hideSweetProgress()
+//                    }
+//                }
+//            } else {
+//                Utility.hideSweetProgress()
+//                status.value = false
+//                Log.w(TAG, "signInWithCredential:failure", task.exception)
+//            }
+//        }
+//    }
+
+    fun loginWithGoogle(data: Task<GoogleSignInAccount>) {
+
+        val account = data.getResult(ApiException::class.java)
 
         val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+
         mAuth?.signInWithCredential(credential)?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val user = mAuth?.currentUser
