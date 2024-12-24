@@ -35,7 +35,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.krs.community.BuildConfig
+//import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
@@ -55,12 +55,13 @@ import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
-import com.luseen.spacenavigation.SpaceItem
-import com.luseen.spacenavigation.SpaceOnClickListener
-import com.luseen.spacenavigation.SpaceOnLongClickListener
+//import com.luseen.spacenavigation.SpaceItem
+//import com.luseen.spacenavigation.SpaceOnClickListener
+//import com.luseen.spacenavigation.SpaceOnLongClickListener
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
+import org.kodein.di.android.x.BuildConfig
 import org.kodein.di.generic.instance
 
 class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, UpdateListener, LocationData.AddressCallBack, ByFilterListener {

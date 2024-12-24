@@ -1,14 +1,13 @@
 buildscript {
-    ext.kotlin_version = '1.6.21'
+    ext.kotlin_version = '2.0.0'
     repositories {
         google()
-        jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
+//        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.android.tools.build:gradle:8.1.4'
         classpath 'com.google.gms:google-services:4.3.13'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.27.0'
@@ -21,11 +20,8 @@ allprojects {
 
     repositories {
         google()
-        jcenter()
         mavenCentral()
-        maven {
-            url "https://maven.google.com"
-        }
+        maven {url "https://maven.google.com"}
         maven { url 'https://jitpack.io' }
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
@@ -37,7 +33,7 @@ task clean(type: Delete) {
 
 ext {
     minSdkVersion = 21
-    compileSdkVersion = 33
+    compileSdkVersion = 35
     // https://developer.android.com/studio/releases/build-tools
     buildToolsVersion = '28.0.3'
     FRESCO_VERSION = '2.0.0'

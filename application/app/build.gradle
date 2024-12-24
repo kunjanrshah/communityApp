@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 repositories {
@@ -27,7 +27,7 @@ repositories {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 35
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.krs.community"

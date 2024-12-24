@@ -27,17 +27,17 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <com.kevalpatel.passcodeview.PinView
-            android:id="@+id/pattern_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:dividerColor="@color/white"
-            app:fingerprintDefaultText="Enter PIN"
-            app:fingerprintEnable="false"
-            app:fingerprintTextColor="@color/white"
-            app:fingerprintTextSize="12sp"
-            app:giveTactileFeedback="true"
-            app:titleTextColor="@android:color/white" />
+<!--        <com.kevalpatel.passcodeview.PinView-->
+<!--            android:id="@+id/pattern_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:dividerColor="@color/white"-->
+<!--            app:fingerprintDefaultText="Enter PIN"-->
+<!--            app:fingerprintEnable="false"-->
+<!--            app:fingerprintTextColor="@color/white"-->
+<!--            app:fingerprintTextSize="12sp"-->
+<!--            app:giveTactileFeedback="true"-->
+<!--            app:titleTextColor="@android:color/white" />-->
 
     </RelativeLayout>
 

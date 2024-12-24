@@ -1,25 +1,23 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml:1:1-13
-INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml:1:1-13
-INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml:1:1-13
+ADDED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:1:1-9:12
+INJECTED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:1:1-9:12
 	package
-		INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
-		ADDED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml:1:1-13
-		INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
+		INJECTED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:3:5-30
 	xmlns:android
-		ADDED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml:1:1-13
+		ADDED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:1:11-69
+	android:versionCode
+		ADDED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:2:5-28
 uses-sdk
-INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
-INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
-INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
-INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
+ADDED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:5:5-47
+INJECTED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:5:5-47
+INJECTED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:5:5-47
 	android:targetSdkVersion
-		INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
-		ADDED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
-		INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
+		ADDED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:5:15-44
+		INJECTED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
-		ADDED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
-		INJECTED from /home/abhishek/Desktop/communityApp/slycalendarview/src/main/AndroidManifest.xml
+		INJECTED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml
+application
+ADDED from /home/abc/AndroidStudioProjects/communityApp/slycalendarview/src/main/AndroidManifest.xml:7:5-20

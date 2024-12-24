@@ -102,16 +102,16 @@
                 android:layout_marginRight="3dp"
                 android:background="@drawable/male" />
 
-            <com.nightonke.boommenu.BoomMenuButton
-                android:id="@+id/boomMenuButton1"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginLeft="-5dp"
-                android:layout_marginTop="-15dp"
-                app:bmb_buttonEnum="textInsideCircle"
-                app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
-                app:bmb_inList="true"
-                app:bmb_piecePlaceEnum="piecePlace_dot_6_1" />
+<!--            <com.nightonke.boommenu.BoomMenuButton-->
+<!--                android:id="@+id/boomMenuButton1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="-5dp"-->
+<!--                android:layout_marginTop="-15dp"-->
+<!--                app:bmb_buttonEnum="textInsideCircle"-->
+<!--                app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"-->
+<!--                app:bmb_inList="true"-->
+<!--                app:bmb_piecePlaceEnum="piecePlace_dot_6_1" />-->
 
             <ImageView
                 android:id="@+id/icon_star"
