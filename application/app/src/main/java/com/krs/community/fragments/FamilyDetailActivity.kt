@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
+import com.krs.community.fancygifdialoglib.FancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chauthai.swipereveallayout.SwipeRevealLayout
@@ -59,7 +59,6 @@ import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
-import kotlinx.android.synthetic.main.header_detail.view.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -386,13 +385,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
 
                     viewHolder.llDelete.setOnClickListener {
                         if (!loginId.isNullOrEmpty()) {
-                            TTFancyGifDialog.Builder(this@FamilyDetailActivity)
+                            FancyGifDialog.Builder(this@FamilyDetailActivity)
                                     .setTitle(getString(R.string.you_sure))
                                     .setMessage(getString(R.string.wontbeRecover))
                                     .setPositiveBtnText(getString(R.string.yesdelete))
-                                    .setPositiveBtnBackground("#22b573")
+                                    .setPositiveBtnBackground(R.color.fancy_positive)
                                     .setNegativeBtnText(getString(R.string.no))
-                                    .setNegativeBtnBackground("#c1272d")
+                                    .setNegativeBtnBackground(R.color.fancy_nagative)
                                     .setGifResource(R.drawable.gif_dialog)
                                     .isCancellable(false)
                                     .OnPositiveClicked {
@@ -478,6 +477,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val layoutManagerFixed = HeaderLayoutManagerFixed(this)
         rvDetail.layoutManager = layoutManagerFixed
         val header = layoutInflater.inflate(R.layout.header_detail, rvDetail, false)
+        val bmb = header.findViewById<BoomMenuButton>(R.id.bmb)
         val cancel = header.findViewById<ImageView>(R.id.img_cancel1)
         val login = header.findViewById<ImageView>(R.id.login)
         val imgMap = header.findViewById<ImageView>(R.id.img_map)
@@ -529,13 +529,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         }
 
         login.setOnClickListener {
-            TTFancyGifDialog.Builder(this)
+            FancyGifDialog.Builder(this)
                     .setTitle(getString(R.string.you_sure))
                     .setMessage(getString(R.string.LogoutComApp) + " " + getString(R.string.app_name) + " App")
                     .setPositiveBtnText(getString(R.string.yes))
-                    .setPositiveBtnBackground("#22b573")
+                    .setPositiveBtnBackground(R.color.fancy_positive)
                     .setNegativeBtnText(getString(R.string.no))
-                    .setNegativeBtnBackground("#c1272d")
+                    .setNegativeBtnBackground(R.color.fancy_nagative)
                     .setGifResource(R.drawable.gif_dialog)
                     .isCancellable(false)
                     .OnPositiveClicked {
@@ -621,8 +621,8 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
         val tvTitle: TextView = header.findViewById(R.id.tv_title)
         tvTitle.text = getString(R.string.FamilyDetail) + " (${members.size})"
 
-        header.bmb.clearBuilders()
-        for (i in 0 until header.bmb.piecePlaceEnum.pieceNumber()) {
+        bmb.clearBuilders()
+        for (i in 0 until bmb.piecePlaceEnum.pieceNumber()) {
             val builder: TextInsideCircleButton.Builder? = getTextInsideCircleButtonBuilder()
             builder?.listener {
                 if (it == 0) {
@@ -666,10 +666,10 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                     setLocationDialog?.show()
                 }
             }
-            header.bmb.addBuilder(builder)
+            bmb.addBuilder(builder)
         }
-        header.bmb.setOnClickListener {
-            header.bmb.boom()
+        bmb.setOnClickListener {
+            bmb.boom()
         }
         val llFamilyHead: LinearLayout = header.findViewById(R.id.ll_family_head)
         llFamilyHead.setOnClickListener {
@@ -697,13 +697,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         title = "Hey " + member.firstName + ", Welcome"
                     }
 
-                    TTFancyGifDialog.Builder(this)
+                    FancyGifDialog.Builder(this)
                             .setTitle(title)
                             .setMessage("To $textMsg Please type your PIN")
                             .setPositiveBtnText(getString(R.string.yes))
-                            .setPositiveBtnBackground("#22b573")
+                            .setPositiveBtnBackground(R.color.fancy_positive)
                             .setNegativeBtnText(getString(R.string.no))
-                            .setNegativeBtnBackground("#c1272d")
+                            .setNegativeBtnBackground(R.color.fancy_nagative)
                             .setGifResource(gif)
                             .isCancellable(false)
                             .OnPositiveClicked {
@@ -865,13 +865,13 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         title = "Hey " + member.firstName + ", Welcome"
                     }
 
-                    TTFancyGifDialog.Builder(this@FamilyDetailActivity)
+                    FancyGifDialog.Builder(this@FamilyDetailActivity)
                             .setTitle(title)
                             .setMessage("To $textMsg Please type your PIN")
                             .setPositiveBtnText(getString(R.string.yes))
-                            .setPositiveBtnBackground("#22b573")
+                            .setPositiveBtnBackground(R.color.fancy_positive)
                             .setNegativeBtnText(getString(R.string.no))
-                            .setNegativeBtnBackground("#c1272d")
+                            .setNegativeBtnBackground(R.color.fancy_nagative)
                             .setGifResource(R.drawable.gif_dialog)
                             .isCancellable(false)
                             .OnPositiveClicked {

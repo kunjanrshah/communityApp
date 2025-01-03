@@ -1,1 +1,14 @@
-include ':app',':multisearchviewlib',':slycalendarview', ':multiple-images-selector',':easywaylocation',':sweetdialoglib'
+include ':app',':pdfgenerator',':easywaylocation',':androidparallax',':crystalrangeseekbar',':spacelib',':swipe-reveal-layout',':boommenu',':asyncexpandablelist',':qrmodule',':passcodeview',':multisearchviewlib',':slycalendarview', ':multiple-images-selector',':sweetdialoglib'
+
+dependencyResolutionManagement {
+    //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        maven { url "https://jitpack.io" }
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://maven.google.com" }
+    }
+}

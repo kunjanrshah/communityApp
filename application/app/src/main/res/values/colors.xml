@@ -22,6 +22,10 @@
     <color name="placeholder_bg">#dddddd</color>
     <color name="colorBG">#fcfcfc</color>
 
+    <color name="fancy_positive">#22b573</color>
+    <color name="fancy_nagative">#c1272d</color>
+
+
     <color name="icon_tint_normal">#7a7a7a</color>
     <color name="icon_tint_selected">#fed776</color>
     <!--<color name="colorPrimary">#3b5998</color>

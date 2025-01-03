@@ -47,7 +47,7 @@ class DashboardRepository(
     private val city = MutableLiveData<List<City>>()
     private val businessCategory = MutableLiveData<List<BusinessCategory>>()
     private val businessSubCategory = MutableLiveData<List<BusinessSubCategory>>()
-    private val native = MutableLiveData<List<Native>>()
+    private val native = MutableLiveData<List<NativeList>>()
     private val occupation = MutableLiveData<List<Occupations>>()
     private val relations = MutableLiveData<List<Relations>>()
     private val currentActivity = MutableLiveData<List<CurrentActivity>>()
@@ -109,7 +109,7 @@ class DashboardRepository(
         }
     }
 
-    private fun saveNative(native: List<Native>) {
+    private fun saveNative(native: List<NativeList>) {
         Coroutines.io {
             db.getNativeDao().saveAllNative(native)
         }

@@ -1,0 +1,9 @@
+cn.pedant.SweetAlert.test.sweetdialoglib-appcompat-1.0.0-0 C:\Users\Kunjan\.gradle\caches\8.9\transforms\70a84a25a881d065e3183443bc047c50\transformed\appcompat-1.0.0\res
+cn.pedant.SweetAlert.test.sweetdialoglib-core-1.0.0-1 C:\Users\Kunjan\.gradle\caches\8.9\transforms\7f674c8c503e898f84d55f0b2bf81479\transformed\core-1.0.0\res
+cn.pedant.SweetAlert.test.sweetdialoglib-coordinatorlayout-1.0.0-2 C:\Users\Kunjan\.gradle\caches\8.9\transforms\994b83affc563d03a800171c7e32f58a\transformed\coordinatorlayout-1.0.0\res
+cn.pedant.SweetAlert.test.sweetdialoglib-jetified-materialish-progress-1.0-3 C:\Users\Kunjan\.gradle\caches\8.9\transforms\b43a4f3da6e8e11ef62703eafad733b8\transformed\jetified-materialish-progress-1.0\res
+cn.pedant.SweetAlert.test.sweetdialoglib-androidTest-4 E:\community_management_and_administration-\application\sweetdialoglib\build\generated\res\resValues\androidTest\debug
+cn.pedant.SweetAlert.test.sweetdialoglib-mergeDebugAndroidTestResources-5 E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+cn.pedant.SweetAlert.test.sweetdialoglib-mergeDebugAndroidTestResources-6 E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+cn.pedant.SweetAlert.test.sweetdialoglib-debugAndroidTest-7 E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
+cn.pedant.SweetAlert.test.sweetdialoglib-debug-8 E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\packaged_res\debug\packageDebugResources

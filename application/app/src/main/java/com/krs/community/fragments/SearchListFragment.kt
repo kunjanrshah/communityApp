@@ -583,7 +583,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
                 Toast.makeText(activity, getString(R.string.noFoundNonActives), Toast.LENGTH_SHORT).show()
 
                 /*val gif: Int = R.drawable.gif_dialog
-                TTFancyGifDialog.Builder(activity)
+                FancyGifDialog.Builder(activity)
                         .setMessage(getString(R.string.noFoundNonActives))
                         .setPositiveBtnText(getString(R.string.ok))
                         .setPositiveBtnBackground("#843f52")
@@ -629,7 +629,7 @@ class SearchListFragment : Fragment(), KodeinAware, ByKeywordListener, ParallaxR
             Toast.makeText(activity, getString(R.string.noFoundNonActives), Toast.LENGTH_SHORT).show()
             //  val gif: Int = R.drawable.gif_no_record
             /* val gif: Int = R.drawable.gif_dialog
-             TTFancyGifDialog.Builder(activity)
+             FancyGifDialog.Builder(activity)
                      //.setTitle(getString(R.string.you_sure))
                      .setMessage(getString(R.string.noFoundNonActives))
                      .setPositiveBtnText(getString(R.string.ok))

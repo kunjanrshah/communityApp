@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 35
+   // buildToolsVersion "23.0.2"
+
+    namespace 'me.ydcool.lib.qrmodule'
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.google.zxing:core:3.4.1'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()  // or JCenter if the dependency is not in Maven Central
+        maven { url 'https://jfrog.org' }
+    }
+//    dependencies {
+//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+//        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1"
+//    }
+}
+
+//apply from: 'bintray.gradle'
+//apply from:'https://raw.githubusercontent.com/Ydcool/EasingAndroid/master/lib/bintray.gradle'

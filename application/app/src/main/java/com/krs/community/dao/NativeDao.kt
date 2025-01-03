@@ -5,35 +5,35 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.krs.community.entities.Native
+import com.krs.community.entities.NativeList
 
 @Dao
 interface NativeDao {
 
-    @Query("SELECT name FROM Native ORDER BY name ASC")
+    @Query("SELECT name FROM NativeList ORDER BY name ASC")
     fun getNative(): LiveData<List<String>>
 
-    @Query("SELECT COUNT(id) FROM Native")
+    @Query("SELECT COUNT(id) FROM NativeList")
     fun getNativeCount(): Int
 
-    @Query("SELECT id FROM Native")
+    @Query("SELECT id FROM NativeList")
     fun getNativeIds(): LiveData<List<Int>>
 
-    @Query("SELECT name FROM Native WHERE id == :id")
+    @Query("SELECT name FROM NativeList WHERE id == :id")
     fun getNativeById(id: Int): LiveData<String>
 
-    @Query("SELECT name FROM Native WHERE id == :id")
+    @Query("SELECT name FROM NativeList WHERE id == :id")
     fun getNative(id: Int): String
 
-    @Query("SELECT id FROM Native WHERE name == :name")
+    @Query("SELECT id FROM NativeList WHERE name == :name")
     fun getNativeIdByName(name: String): Int
 
-    @Query("SELECT id FROM Native WHERE id NOT IN (:Ids)")
+    @Query("SELECT id FROM NativeList WHERE id NOT IN (:Ids)")
     fun getRemovedNativeIds(Ids: List<String>): List<Int>
 
-    @Query("DELETE FROM Native WHERE id IN (:Ids)")
+    @Query("DELETE FROM NativeList WHERE id IN (:Ids)")
     fun deleteNativeByIds(Ids: List<Int>): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllNative(native: List<Native>)
+    fun saveAllNative(nativeList: List<NativeList>)
 }

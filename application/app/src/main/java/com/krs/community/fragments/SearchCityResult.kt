@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
+import com.krs.community.fancygifdialoglib.FancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chauthai.swipereveallayout.SwipeRevealLayout
@@ -324,13 +324,13 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 holder.frameDelete.setOnClickListener {
 
-                    TTFancyGifDialog.Builder(activity)
+                    FancyGifDialog.Builder(activity)
                             .setTitle(getString(R.string.you_sure))
                             .setMessage(getString(R.string.delete_head))
                             .setPositiveBtnText(getString(R.string.yesdelete))
-                            .setPositiveBtnBackground("#22b573")
+                            .setPositiveBtnBackground(R.color.fancy_positive)
                             .setNegativeBtnText(getString(R.string.no))
-                            .setNegativeBtnBackground("#c1272d")
+                            .setNegativeBtnBackground(R.color.fancy_nagative)
                             .setGifResource(R.drawable.gif_dialog)
                             .isCancellable(false)
                             .OnPositiveClicked {

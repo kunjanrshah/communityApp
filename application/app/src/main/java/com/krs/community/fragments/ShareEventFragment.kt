@@ -27,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppController
+import com.krs.community.databinding.FragmentShareEventBinding
 import com.krs.community.listeners.CreateEventListener
 import com.krs.community.utils.MovableFloatingActionButton
 import com.krs.community.utils.Utility
@@ -35,7 +36,6 @@ import com.krs.community.viewmodel.ShareEventViewModel
 import com.krs.community.viewmodelfactory.ShareEventViewModelFactory
 import com.zfdang.multiple_images_selector.ImagesSelectorActivity
 import com.zfdang.multiple_images_selector.SelectorSettings
-import kotlinx.android.synthetic.main.fragment_share_event.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -64,10 +64,11 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     lateinit var linearLayout: LinearLayout
     lateinit var adapter1: URLAdapter
     lateinit var fab: MovableFloatingActionButton
-    @SuppressLint("SuspiciousIndentation")
+    private lateinit var binding: FragmentShareEventBinding
+   @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_share_event, container, false)
-
+       binding =FragmentShareEventBinding.inflate(inflater)
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, ShareEventFragment::class.simpleName)
         mApp.facebookAnalytics(context, ShareEventFragment::class.simpleName)
@@ -94,8 +95,8 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         rvImages.adapter = adapter
         rvImages.layoutManager = linearLayoutManager
         val rvParent: RecyclerView = root.findViewById(R.id.rv_parent)
-        val edtTitle = root.findViewById<EditText>(R.id.edt_title)
-        val edtAddress = root.findViewById<EditText>(R.id.edt_address)
+        //val edtTitle = root.findViewById<EditText>(R.id.binding.edtTitle)
+        //val edtAddress = root.findViewById<EditText>(R.id.binding.edtAddress)
         val edtDescription = root.findViewById<EditText>(R.id.edt_description)
         rvParent.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
@@ -125,7 +126,7 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         // btnShare = root.findViewById(R.id.btnShare)
         /*btnCreate = root.findViewById(R.id.btnCreate)*/
         fab = root.findViewById(R.id.fab)
-        txtStart = root.findViewById(R.id.edt_start)
+       // txtStart = root.findViewById(R.id.binding.edtStart)
         //  edtEndDate = root.findViewById(R.id.edt_end_date)
         txtStartTime = root.findViewById(R.id.txt_start_time)
         // txtEndTime = root.findViewById(R.id.txt_end_time)
@@ -147,12 +148,12 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
         })*/
         fab.setOnClickListener { v: View? ->
             var isValidated = true
-            if (edtTitle.text.toString().isEmpty()) {
-                edtTitle.error = "Event title is required"
+            if (binding.edtTitle.text.toString().isEmpty()) {
+                binding.edtTitle.error = "Event title is required"
                 isValidated = false
             }
-            if (edtAddress.text.toString().isEmpty()) {
-                edtAddress.error = "Event address is required"
+            if (binding.edtAddress.text.toString().isEmpty()) {
+                binding.edtAddress.error = "Event address is required"
                 isValidated = false
             }
             if (edtDescription.text.toString().isEmpty()) {
@@ -188,7 +189,7 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
 //                yURLs.removeAll(Arrays.asList(""))
 //                val json = JSONObject()
 //                json.put("id", userId)
-//                json.put("event_date", edt_start.text.toString())
+//                json.put("event_date", binding.edtStart.text.toString())
 //                json.put("title", edtTitle.text.toString())
 //                json.put("description", edtDescription.text.toString())
 //                json.put("location", edtAddress.text.toString())
@@ -206,10 +207,10 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
             if (isValidated) {
                 val json = JSONObject()
                 json.put("id", userId)
-                json.put("event_date", edt_start.text.toString())
-                json.put("title", edtTitle.text.toString())
+                json.put("event_date", binding.edtStart.text.toString())
+                json.put("title", binding.edtTitle.text.toString())
                 json.put("description", edtDescription.text.toString())
-                json.put("location", edtAddress.text.toString())
+                json.put("location", binding.edtAddress.text.toString())
                 json.put("lat", "23.7546")
                 json.put("lng", "72.2308")
                 json.put("youtube", yURLs)
@@ -220,13 +221,13 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
                 shareEventViewModel.createEvent(
                     images = mResults,
                     id = userId,
-                    title = edtTitle.text.toString(),
+                    title = binding.edtTitle.text.toString(),
                     description = edtDescription.text.toString(),
-                    location = edtAddress.text.toString(),
+                    location = binding.edtAddress.text.toString(),
                     lat = "23.7546",
                     lng = "72.2308",
                     youtube = yURLs,
-                    eventDate = edt_start.text.toString()
+                    eventDate = binding.edtStart.text.toString()
                 )
 
                 Log.d("TAG", "Creating event with JSON data: $json")
@@ -473,10 +474,10 @@ class ShareEventFragment : Fragment(), KodeinAware, CreateEventListener {
     override fun getResult(profile: String) {
         Utility.hideSweetProgress()
         linearLayout.snackbar(profile, Snackbar.LENGTH_SHORT)
-        edt_title.setText("")
-        edt_description.setText("")
-        edt_address.setText("")
-        edt_start.text = ""
+        binding.edtTitle.setText("")
+        binding.edtDescription.setText("")
+        binding.edtAddress.setText("")
+        binding.edtStart.text = ""
         txtStartTime.text = ""
         mResults = ArrayList()
         yURLs = ArrayList()

@@ -28,7 +28,6 @@ import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
-import kotlinx.android.synthetic.main.fragment_personal_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -301,7 +300,7 @@ class PersonalDetailsFragment : Fragment(), KodeinAware, DatePickerDialog.OnDate
         }
 
         binding.txtExpire.setOnClickListener {
-            if (!chkExpired.isChecked) {
+            if (!binding.chkExpired.isChecked) {
                 return@setOnClickListener
             }
             which = 2

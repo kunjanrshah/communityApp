@@ -74,7 +74,7 @@
 
                     </LinearLayout>
 
-                    <com.smarteist.autoimageslider.SliderLayout
+                    <com.smarteist.autoimageslider.SliderView
                         android:id="@+id/imageSlider"
                         android:layout_width="match_parent"
                         android:layout_marginTop="16dp"

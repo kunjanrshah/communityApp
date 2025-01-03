@@ -56,7 +56,6 @@ import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
-import kotlinx.android.synthetic.main.activity_profile_detail.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -190,7 +189,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 jsonObject.put(getString(R.string.profile_percentage), binding.tvPercent.text.toString().replace("%", ""))
 
                 if (mainPass == 1) {
-                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
+                    displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.SelectRelation))
                     return@setOnClickListener
                 }
 
@@ -205,41 +204,41 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     mainDetailsFragment.binding.fname.error = getString(R.string.EnterFirstName)
                     return@setOnClickListener
                 } else if (!jsonObject.has(getString(R.string.sub_cast_id)) || jsonObject.getString(getString(R.string.sub_cast_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.sub_cast_id)) == "0") {
-                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectYourLastName))
+                    displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.selectYourLastName))
                     return@setOnClickListener
                 } else if (!jsonObject.has(getString(R.string.gender)) || jsonObject.getString(getString(R.string.gender)).isNullOrEmpty()) {
-                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectYourGender))
+                    displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.SelectYourGender))
                     return@setOnClickListener
                 } else if (!jsonObject.has(getString(R.string.birth_date)) || jsonObject.getString(getString(R.string.birth_date)).isNullOrEmpty()) {
-                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_bdate))
+                    displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.enter_bdate))
                     binding.viewpager.currentItem = 1
                     return@setOnClickListener
                 } else if (!jsonObject.has(getString(R.string.marital_status)) || jsonObject.getString(getString(R.string.marital_status)).isNullOrEmpty()) {
-                    displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_marital))
+                    displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.enter_marital))
                     binding.viewpager.currentItem = 1
                     return@setOnClickListener
                 }
 
                 if (member?.headId == "0") {
                     if (!jsonObject.has(getString(R.string.father_name)) || jsonObject.getString(getString(R.string.father_name)).isNullOrEmpty()) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_father))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.enter_father))
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.address)) || jsonObject.getString(getString(R.string.address)).isNullOrEmpty()) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_home_address))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.enter_home_address))
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.native_place_id)) || jsonObject.getString(getString(R.string.native_place_id)).isNullOrEmpty()) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.select_native))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.select_native))
                         binding.viewpager.currentItem = 1
                         return@setOnClickListener
                     } else if (BuildConfig.FLAVOR == "medk" && (!jsonObject.has(getString(R.string.gotra_id)) || jsonObject.getString(getString(R.string.gotra_id)).isNullOrEmpty())) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.selectGotra))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.selectGotra))
                         binding.viewpager.currentItem = 1
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.mobile)) || jsonObject.getString(getString(R.string.mobile)).isNullOrEmpty()) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_mobile))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.enter_mobile))
                         return@setOnClickListener
                     } /*else if (!jsonObject.has(getString(R.string.email_address)) || jsonObject.getString(getString(R.string.email_address)).isNullOrEmpty()) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_email))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.enter_email))
                         return@setOnClickListener
                     }*/
                 }
@@ -270,22 +269,22 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                 } else {
 
                     /*if (!jsonObject.has(getString(R.string.relation_id)) || jsonObject.getString(getString(R.string.relation_id)).isNullOrEmpty() || jsonObject.getString(getString(R.string.relation_id)) == "0") {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.SelectRelation))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.SelectRelation))
                         return@setOnClickListener
                     } else*/ if (!jsonObject.has(getString(R.string.profile_password)) || jsonObject.getString(getString(R.string.profile_password)).isNullOrEmpty()) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.enter_password))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.enter_password))
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.profile_password)) || jsonObject.getString(getString(R.string.profile_password)).length < 6) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.make_strong_pass))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.make_strong_pass))
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.confPin)) || jsonObject.getString(getString(R.string.confPin)).isNullOrBlank()) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.confirm_password))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.confirm_password))
                         return@setOnClickListener
                     } else if (!jsonObject.has(getString(R.string.confPin)) || jsonObject.getString(getString(R.string.confPin)).length < 6) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.make_strong_pass))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.make_strong_pass))
                         return@setOnClickListener
                     } else if (!jsonObject.getString(getString(R.string.profile_password)).trim().equals(jsonObject.getString(getString(R.string.confPin)).trim())) {
-                        displaySnackBarWithBottomMargin(ll_parent, getString(R.string.password_mismatch))
+                        displaySnackBarWithBottomMargin(binding.llParent, getString(R.string.password_mismatch))
                         return@setOnClickListener
                     }
 
@@ -362,6 +361,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         if (isSave) {
             setResult(102)
         }
@@ -630,11 +630,11 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
 
     override fun locationCancelled() {
-        ll_parent.snackbar(getString(R.string.LocationOff), Snackbar.LENGTH_SHORT)
+        binding.llParent.snackbar(getString(R.string.LocationOff), Snackbar.LENGTH_SHORT)
     }
 
     override fun locationOn() {
-        ll_parent.snackbar(getString(R.string.LocationOn), Snackbar.LENGTH_SHORT)
+        binding.llParent.snackbar(getString(R.string.LocationOn), Snackbar.LENGTH_SHORT)
     }
 
     override fun currentLocation(location: Location) {

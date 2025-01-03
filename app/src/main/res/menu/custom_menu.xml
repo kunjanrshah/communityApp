@@ -1,7 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Relationship" />
-
-    <item android:title="First name" />
-
-    <item android:title="Last added" />
-</menu>

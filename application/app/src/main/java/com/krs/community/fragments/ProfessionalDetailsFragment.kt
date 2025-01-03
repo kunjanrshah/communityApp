@@ -44,7 +44,6 @@ import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
-import kotlinx.android.synthetic.main.fragment_professional_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -170,7 +169,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
                                 startSweetProgress(activity, getString(R.string.updatingLocationDetail), getString(R.string.PleasWaitDetails))
                                 profileDetailViewModel.updateProfile(profile, true)
                             } else {
-                                displaySnackBarWithBottomMargin(ll_main, getString(R.string.somethingwrong))
+                                displaySnackBarWithBottomMargin(binding.llMain, getString(R.string.somethingwrong))
                             }
                         }
                         .show()
@@ -280,7 +279,7 @@ class ProfessionalDetailsFragment : Fragment(), KodeinAware, EditMemberListener,
         })
 
         binding.imgLogo.setOnClickListener {
-            pickFromGallery(activity!!)
+            pickFromGallery(requireActivity())
         }
 
         binding.imgCancel.setOnClickListener {

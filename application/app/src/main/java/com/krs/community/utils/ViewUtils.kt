@@ -28,6 +28,7 @@ import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.BuildConfig
+
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
@@ -135,7 +136,7 @@ fun advancedConfig(uCrop: UCrop, context: Context): UCrop {
     //  options.setDimmedLayerColor(getResources().getColor(R.color.colorPrimary));
     //options.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
     options.setStatusBarColor(ContextCompat.getColor(context, R.color.white))
-    options.setActiveWidgetColor(ContextCompat.getColor(context, R.color.colorPrimary))
+    options.setActiveControlsWidgetColor(ContextCompat.getColor(context, R.color.colorPrimary))
     options.setToolbarWidgetColor(ContextCompat.getColor(context, R.color.colorPrimary))
     //options.setRootViewBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
 

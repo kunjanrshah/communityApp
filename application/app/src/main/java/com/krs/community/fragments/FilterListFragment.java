@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog;
+import com.krs.community.fancygifdialoglib.FancyGifDialog;
 import com.github.squti.guru.Guru;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayout;
@@ -197,10 +197,10 @@ public class FilterListFragment extends Fragment {
 
     private void noRecordDialog(String message) {
         int gif = R.drawable.gif_dialog;
-        new TTFancyGifDialog.Builder(getActivity())
+        new FancyGifDialog.Builder(getActivity())
                 .setMessage(message)
                 .setPositiveBtnText(getString(R.string.ok))
-                .setPositiveBtnBackground("#843f52")
+                .setPositiveBtnBackground(R.color.colorPrimary)
                 .setGifResource(gif)
                 .isCancellable(false)
                 .OnPositiveClicked(() -> {

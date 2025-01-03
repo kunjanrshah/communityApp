@@ -6,8 +6,6 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.telephony.SubscriptionInfo
-import android.telephony.SubscriptionManager
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -43,7 +41,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.krs.community.BuildConfig
+
 import com.krs.community.R
 import com.krs.community.adapter.ForgotAdapter
 import com.krs.community.adapter.PolicyAdapter
@@ -65,7 +63,7 @@ import com.krs.community.viewmodel.PasswordViewModel
 import com.krs.community.viewmodelfactory.LoginViewModelFactory
 import com.krs.community.viewmodelfactory.PasswordViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
-import kotlinx.android.synthetic.main.activity_loginwith.*
+
 import org.json.JSONException
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
@@ -73,7 +71,8 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.util.*
 
-class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSReceiver.OTPReceiveListener, PolicyAdapter.policyInterface, ForgotAdapter.ForgotInterface {
+class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware,
+    SMSReceiver.OTPReceiveListener, PolicyAdapter.policyInterface, ForgotAdapter.ForgotInterface {
 
 
     override val kodein by kodein()
@@ -100,9 +99,13 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
         if (isNetworkConnected(this)) {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
 
-            passwordViewModel = ViewModelProvider(this, passwordViewModelFactory).get(PasswordViewModel::class.java)
+            passwordViewModel =
+                ViewModelProvider(this, passwordViewModelFactory).get(PasswordViewModel::class.java)
             passwordViewModel.mLoginListener = this
 
             loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
@@ -157,7 +160,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
     private fun setScreenLayout() {
         if (isNetworkConnected(this)) {
-            binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(this@LoginActivity, R.layout.activity_loginwith)
+            binding = DataBindingUtil.setContentView<ActivityLoginwithBinding>(
+                this@LoginActivity,
+                R.layout.activity_loginwith
+            )
             binding.loginViewModel = loginViewModel
             binding.lifecycleOwner = this
 
@@ -165,7 +171,7 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             loginViewModel?.mAuth = FirebaseAuth.getInstance()
             var sourcestr = resources.getString(R.string.do_you_have_an_account_register_now)
             sourcestr = sourcestr + "<b>" + " " + getString(R.string.register_now) + "</b>"
-            have_acc.text = Html.fromHtml(sourcestr)
+            binding.haveAcc.text = Html.fromHtml(sourcestr)
 
             Guru.putBoolean(getString(R.string.isdialogshow), true)
 
@@ -192,10 +198,10 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (edt_mobile?.text!!.length > 10) {
-                        val str = edt_mobile?.text.toString().substring(0, 10)
-                        edt_mobile?.setText(str)
-                        edt_mobile.setSelection(str.length)
+                    if (binding.edtMobile.text!!.length > 10) {
+                        val str = binding.edtMobile.text.toString().substring(0, 10)
+                        binding.edtMobile.setText(str)
+                        binding.edtMobile.setSelection(str.length)
                     }
                 }
 
@@ -206,31 +212,31 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
             binding.edtMobile.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    btnContinue.performClick()
+                    binding.btnContinue.performClick()
                     true
                 }
                 false
             }
 
             binding.imgCancel.setOnClickListener {
-                card_view_otp.visibility = View.GONE
-                card_view_mobile.visibility = View.VISIBLE
+                binding.cardViewOtp.visibility = View.GONE
+                binding.cardViewOtp.visibility = View.VISIBLE
                 loginViewModel?.cancelTimer()
             }
 
-             binding.fabLogin.setOnClickListener {
+            binding.fabLogin.setOnClickListener {
 
 
-                 val adapter = PolicyAdapter(this, "login")
-                 val policyDialog = DialogPlus.newDialog(this)
-                     .setAdapter(adapter)
-                     .setGravity(Gravity.CENTER)
-                     .setCancelable(false)
-                     .setExpanded(false, 800)
-                     .setContentBackgroundResource(R.drawable.popup_corner)
-                     .create()
-                 policyDialog?.show()
-             }
+                val adapter = PolicyAdapter(this, "login")
+                val policyDialog = DialogPlus.newDialog(this)
+                    .setAdapter(adapter)
+                    .setGravity(Gravity.CENTER)
+                    .setCancelable(false)
+                    .setExpanded(false, 800)
+                    .setContentBackgroundResource(R.drawable.popup_corner)
+                    .create()
+                policyDialog?.show()
+            }
 
 //            binding.btnLoginFb.setOnClickListener { v0 ->
 //
@@ -284,142 +290,154 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
             }
             binding.tvResend.setOnClickListener {
                 ReceviedOTP = ""
-                btnContinue.performClick()
+                binding.btnContinue.performClick()
             }
 
             binding.ivHelp.setOnClickListener {
                 val intent = Intent(this, ContactUsActivity::class.java)
                 startActivity(intent)
             }
+            binding.btnContinue.setOnClickListener { v ->
 
-
-
+                startSweetProgress(
+                    this@LoginActivity,
+                    getString(R.string.seat_back_relax),
+                    getString(R.string.loading)
+                )
+                loginViewModel?.loginWithPassword()
                 /*if (!ReceviedOTP.isNullOrEmpty() && ReceviedOTP == squareField.text.toString()) {
-                    goToFamilyDetailScreen()
-                    return@setOnClickListener
-                }
+                  goToFamilyDetailScreen()
+                  return@setOnClickListener
+              }
 
-                if (tv_resend.isEnabled) {
-                    val mobilenumber = loginViewModel?.mobile
-                    if (mobilenumber!!.isEmpty()) {
-                        edt_mobile.error = getString(R.string.phoneNumber)
-                        edt_mobile.requestFocus()
-                        return@setOnClickListener
-                    }
+              if (binding.tvResend.isEnabled) {
+                  val mobilenumber = loginViewModel?.mobile
+                  if (mobilenumber!!.isEmpty()) {
+                      edt_mobile.error = getString(R.string.phoneNumber)
+                      edt_mobile.requestFocus()
+                      return@setOnClickListener
+                  }
 
-                    if (mobilenumber.length < 10 || !isValidMobile(mobilenumber)) {
-                        edt_mobile.error = getString(R.string.pleaseEnterValidPhone)
-                        edt_mobile.requestFocus()
-                        return@setOnClickListener
-                    }
+                  if (mobilenumber.length < 10 || !isValidMobile(mobilenumber)) {
+                      edt_mobile.error = getString(R.string.pleaseEnterValidPhone)
+                      edt_mobile.requestFocus()
+                      return@setOnClickListener
+                  }
 
-                    if (isNetworkConnected(this)) {
-                        startSweetProgress(this, getString(R.string.otp_send), getString(R.string.loading))
-                        loginViewModel?.loginWithOTP()
-                    }
-                }*/
-            }
-
-            binding.tvForgot.setOnClickListener {
-
-                val adapter = ForgotAdapter(this)
-                forgotDialog = DialogPlus.newDialog(this)
-                        .setAdapter(adapter)
-                        .setGravity(Gravity.BOTTOM)
-                        .setCancelable(true)
-                        .setExpanded(true, 900)
-                        .setContentBackgroundResource(R.drawable.popup_top_corner)
-                        .create()
-                forgotDialog?.show()
-
+                  if (isNetworkConnected(this)) {
+                      startSweetProgress(this, getString(R.string.otp_send), getString(R.string.loading))
+                      loginViewModel?.loginWithOTP()
+                  }
+              }*/
             }
 
 
-            loginViewModel?.stopTime?.observe(this, androidx.lifecycle.Observer { stopTIme ->
-                if (stopTIme == true) {
-                    tv_resend.isClickable = true
-                    tv_resend.isEnabled = true
-                    tv_resend.setTextColor(ContextCompat.getColor(this, R.color.black1))
-                }
-            })
-
-            loginViewModel?.status?.observe(this, androidx.lifecycle.Observer { status ->
-                if (status == false) {
-                    loginViewModel?.status?.value = null
-                    hideProgressDialog()
-                    hideSweetProgress()
-                    Snackbar.make(findViewById(R.id.ll_login), getString(R.string.Authenticationfailed), Snackbar.LENGTH_LONG).show()
-                }
-            })
-         //   requestPermissions(this@LoginActivity)
         }
+
+        binding.tvForgot.setOnClickListener {
+
+            val adapter = ForgotAdapter(this)
+            forgotDialog = DialogPlus.newDialog(this)
+                .setAdapter(adapter)
+                .setGravity(Gravity.BOTTOM)
+                .setCancelable(true)
+                .setExpanded(true, 900)
+                .setContentBackgroundResource(R.drawable.popup_top_corner)
+                .create()
+            forgotDialog?.show()
+
+        }
+
+
+        loginViewModel?.stopTime?.observe(this, androidx.lifecycle.Observer { stopTIme ->
+            if (stopTIme == true) {
+                binding.tvResend.isClickable = true
+                binding.tvResend.isEnabled = true
+                binding.tvResend.setTextColor(ContextCompat.getColor(this, R.color.black1))
+            }
+        })
+
+        loginViewModel?.status?.observe(this, androidx.lifecycle.Observer { status ->
+            if (status == false) {
+                loginViewModel?.status?.value = null
+                hideProgressDialog()
+                hideSweetProgress()
+                Snackbar.make(
+                    findViewById(R.id.ll_login),
+                    getString(R.string.Authenticationfailed),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        })
+        //   requestPermissions(this@LoginActivity)
+    }
 
 
     override fun agreed() {
         forgotDialog?.dismiss()
-     //   getNumber(binding)
+        //   getNumber(binding)
     }
 
     override fun disAgreed() {
         forgotDialog?.dismiss()
     }
 
- /*   private fun getNumber(binding: ActivityLoginwithBinding) {
-        val lstNumber = ArrayList<String>()
-        val lstCarrier = ArrayList<String>()
+    /*   private fun getNumber(binding: ActivityLoginwithBinding) {
+           val lstNumber = ArrayList<String>()
+           val lstCarrier = ArrayList<String>()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            if (checkReadPhoneStatePermission(this)) {
-                try {
-                    val subscriptionManager: SubscriptionManager = SubscriptionManager.from(applicationContext)
-                    val subsInfoList: List<SubscriptionInfo> = subscriptionManager.activeSubscriptionInfoList
+           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+               if (checkReadPhoneStatePermission(this)) {
+                   try {
+                       val subscriptionManager: SubscriptionManager = SubscriptionManager.from(applicationContext)
+                       val subsInfoList: List<SubscriptionInfo> = subscriptionManager.activeSubscriptionInfoList
 
-                    for (subscriptionInfo in subsInfoList) {
-                        var number: String = subscriptionInfo.number
-                        val carrier: String = subscriptionInfo.carrierName.toString()
-                        if (number.isNotEmpty()) {
-                            if (number.length > 10) {
-                                number = number.substring((number.length - 10), number.length)
-                            }
-                            lstNumber.add(number)
-                            lstCarrier.add(carrier)
-                        }
-                    }
-                } catch (e: java.lang.Exception) {
-                    Toast.makeText(this, "Feature not supported!", Toast.LENGTH_SHORT).show()
-                    Snackbar.make(findViewById(R.id.ll_login), "Feature not supported!", Snackbar.LENGTH_LONG).show()
-                }
-            } else {
-                requestPermissions(this@LoginActivity)
-            }
-        }
+                       for (subscriptionInfo in subsInfoList) {
+                           var number: String = subscriptionInfo.number
+                           val carrier: String = subscriptionInfo.carrierName.toString()
+                           if (number.isNotEmpty()) {
+                               if (number.length > 10) {
+                                   number = number.substring((number.length - 10), number.length)
+                               }
+                               lstNumber.add(number)
+                               lstCarrier.add(carrier)
+                           }
+                       }
+                   } catch (e: java.lang.Exception) {
+                       Toast.makeText(this, "Feature not supported!", Toast.LENGTH_SHORT).show()
+                       Snackbar.make(findViewById(R.id.ll_login), "Feature not supported!", Snackbar.LENGTH_LONG).show()
+                   }
+               } else {
+                   requestPermissions(this@LoginActivity)
+               }
+           }
 
-        if (lstNumber.size == 0) {
-            displaySnackBarWithBottomMargin(binding.llLogin, "SIMCard not found!")
-        } else if (lstNumber.size == 1) {
-            startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[0]}", getString(R.string.loading))
-            loginViewModel?.loginWithMobile(lstNumber[0])
-        } else if (lstNumber.size > 1) {
-            TTFancyGifDialog.Builder(this@LoginActivity)
-                    .setTitle("Choose Your SIM")
-                    .setMessage("User Authentication")
-                    .setPositiveBtnText(lstCarrier[0])
-                    .setPositiveBtnBackground("#22b573")
-                    .setNegativeBtnText(lstCarrier[1])
-                    .setNegativeBtnBackground("#c1272d")
-                    .setGifResource(R.drawable.gif_dialog)
-                    .isCancellable(true)
-                    .OnPositiveClicked {
-                        startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[0]}", getString(R.string.loading))
-                        loginViewModel?.loginWithMobile(lstNumber.get(0))
-                    }
-                    .OnNegativeClicked {
-                        startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[1]}", getString(R.string.loading))
-                        loginViewModel?.loginWithMobile(lstNumber.get(1))
-                    }
-                    .build()
-        }
-    }*/
+           if (lstNumber.size == 0) {
+               displaySnackBarWithBottomMargin(binding.llLogin, "SIMCard not found!")
+           } else if (lstNumber.size == 1) {
+               startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[0]}", getString(R.string.loading))
+               loginViewModel?.loginWithMobile(lstNumber[0])
+           } else if (lstNumber.size > 1) {
+               FancyGifDialog.Builder(this@LoginActivity)
+                       .setTitle("Choose Your SIM")
+                       .setMessage("User Authentication")
+                       .setPositiveBtnText(lstCarrier[0])
+                       .setPositiveBtnBackground("#22b573")
+                       .setNegativeBtnText(lstCarrier[1])
+                       .setNegativeBtnBackground("#c1272d")
+                       .setGifResource(R.drawable.gif_dialog)
+                       .isCancellable(true)
+                       .OnPositiveClicked {
+                           startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[0]}", getString(R.string.loading))
+                           loginViewModel?.loginWithMobile(lstNumber.get(0))
+                       }
+                       .OnNegativeClicked {
+                           startSweetProgress(this@LoginActivity, "Authenticating ${lstNumber[1]}", getString(R.string.loading))
+                           loginViewModel?.loginWithMobile(lstNumber.get(1))
+                       }
+                       .build()
+           }
+       }*/
 
     private fun startSMSListener() {
         try {
@@ -434,9 +452,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
             val task = client.startSmsRetriever()
             task.addOnSuccessListener {
-                tv_resend.isClickable = false
-                tv_resend.isEnabled = false
-                tv_resend.setTextColor(ContextCompat.getColor(this, R.color.light_gray))
+                binding.tvResend.isClickable = false
+                binding.tvResend.isEnabled = false
+                binding.tvResend.setTextColor(ContextCompat.getColor(this, R.color.light_gray))
                 loginViewModel?.cancelTimer()
                 loginViewModel?.startTimer()
                 //toast("API successfully started")
@@ -445,9 +463,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
             task.addOnFailureListener {
                 // Fail to start API
-                tv_resend.isEnabled = true
-                tv_resend.isClickable = true
-                tv_resend.setTextColor(ContextCompat.getColor(this, R.color.black1))
+                binding.tvResend.isEnabled = true
+                binding.tvResend.isClickable = true
+                binding.tvResend.setTextColor(ContextCompat.getColor(this, R.color.black1))
                 Log.d(TAG, "Fail to start API")
                 //toast("Fail to start API")
             }
@@ -456,13 +474,21 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             1 -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    Toast.makeText(this@LoginActivity, getString(R.string.SmsExternalStorage), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@LoginActivity,
+                        getString(R.string.SmsExternalStorage),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 return
             }
@@ -470,18 +496,18 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
     }
 
     override fun onOTPReceived(otp: String?) {
-     /*   val otp1 = otp?.substring(31, 35)
-        Log.i(TAG, "OTP Received: $otp1")
-        squareField.setText(otp1)
-        if (smsReceiver != null) {
-            unregisterReceiver(smsReceiver)
-            smsReceiver = null
-        }
-        if (ReceviedOTP != null) {
-            if (ReceviedOTP.equals(otp1)) {
-                goToFamilyDetailScreen()
-            }
-        }*/
+        /*   val otp1 = otp?.substring(31, 35)
+           Log.i(TAG, "OTP Received: $otp1")
+           squareField.setText(otp1)
+           if (smsReceiver != null) {
+               unregisterReceiver(smsReceiver)
+               smsReceiver = null
+           }
+           if (ReceviedOTP != null) {
+               if (ReceviedOTP.equals(otp1)) {
+                   goToFamilyDetailScreen()
+               }
+           }*/
     }
 
     override fun onOTPTimeOut() {
@@ -517,24 +543,25 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
                 .show()
         } else {
             member = response.data
-          /*  if (!response.otp.isNullOrBlank()) {
-                if (response.otp != "FAILED") {
-                    card_view_mobile.visibility = View.GONE
-                    card_view_otp.visibility = View.VISIBLE
-                    tv_otp.text = loginViewModel?.mobile
-                    startSMSListener()
-                    ReceviedOTP = response.otp
-                } else {
-                    Snackbar.make(findViewById(R.id.ll_login), "OTP sending fail!", Snackbar.LENGTH_LONG).show()
-                }
-            } else {*/
-                if (response.success) {
-                    goToDashboard(response)
-                    //  goToFamilyDetailScreen()
-                } else {
-                    Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG).show()
-                }
-         //   }
+            /*  if (!response.otp.isNullOrBlank()) {
+                  if (response.otp != "FAILED") {
+                      card_view_mobile.visibility = View.GONE
+                      card_view_otp.visibility = View.VISIBLE
+                      tv_otp.text = loginViewModel?.mobile
+                      startSMSListener()
+                      ReceviedOTP = response.otp
+                  } else {
+                      Snackbar.make(findViewById(R.id.ll_login), "OTP sending fail!", Snackbar.LENGTH_LONG).show()
+                  }
+              } else {*/
+            if (response.success) {
+                goToDashboard(response)
+                //  goToFamilyDetailScreen()
+            } else {
+                Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG)
+                    .show()
+            }
+            //   }
         }
     }
 
@@ -597,7 +624,11 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware, SMSRecei
 
         if (requestCode == RC_SIGN_IN && resultCode != 0) {
             try {
-                startSweetProgress(this@LoginActivity, getString(R.string.seat_back_relax), getString(R.string.loading))
+                startSweetProgress(
+                    this@LoginActivity,
+                    getString(R.string.seat_back_relax),
+                    getString(R.string.loading)
+                )
                 loginViewModel?.loginWithGoogle(data)
             } catch (e: ApiException) {
                 Log.w(TAG, "Google sign in failed", e)

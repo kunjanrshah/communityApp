@@ -1,0 +1,42 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="cn.pedant.SweetAlert.test" >
+4
+5    <uses-sdk
+5-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:5:5-74
+6        android:minSdkVersion="23"
+6-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:5:15-41
+7        android:targetSdkVersion="23" />
+7-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:5:42-71
+8
+9    <instrumentation
+9-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:11:5-15:75
+10        android:name="android.test.InstrumentationTestRunner"
+10-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:11:22-75
+11        android:functionalTest="false"
+11-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:14:22-52
+12        android:handleProfiling="false"
+12-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:13:22-53
+13        android:label="Tests for cn.pedant.SweetAlert.test"
+13-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:15:22-73
+14        android:targetPackage="cn.pedant.SweetAlert.test" />
+14-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:12:22-71
+15
+16    <application
+16-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:7:5-9:19
+17        android:allowBackup="true"
+17-->[com.pnikosis:materialish-progress:1.0] C:\Users\Kunjan\.gradle\caches\8.9\transforms\b43a4f3da6e8e11ef62703eafad733b8\transformed\jetified-materialish-progress-1.0\AndroidManifest.xml:12:9-35
+18        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+18-->[androidx.core:core:1.0.0] C:\Users\Kunjan\.gradle\caches\8.9\transforms\7f674c8c503e898f84d55f0b2bf81479\transformed\core-1.0.0\AndroidManifest.xml:22:18-86
+19        android:debuggable="true"
+20        android:extractNativeLibs="false"
+21        android:icon="@drawable/ic_launcher"
+21-->[com.pnikosis:materialish-progress:1.0] C:\Users\Kunjan\.gradle\caches\8.9\transforms\b43a4f3da6e8e11ef62703eafad733b8\transformed\jetified-materialish-progress-1.0\AndroidManifest.xml:13:9-45
+22        android:label="@string/app_name" >
+22-->[com.pnikosis:materialish-progress:1.0] C:\Users\Kunjan\.gradle\caches\8.9\transforms\b43a4f3da6e8e11ef62703eafad733b8\transformed\jetified-materialish-progress-1.0\AndroidManifest.xml:14:9-41
+23        <uses-library android:name="android.test.runner" />
+23-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:8:9-60
+23-->E:\community_management_and_administration-\application\sweetdialoglib\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest9050572175111473494.xml:8:23-57
+24    </application>
+25
+26</manifest>

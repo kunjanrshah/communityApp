@@ -34,8 +34,6 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
-import kotlinx.android.synthetic.main.activity_profile_detail.*
-import kotlinx.android.synthetic.main.fragment_main_details.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -227,7 +225,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
                                 Utility.startSweetProgress(activity, getString(R.string.updatingLocation), getString(R.string.PleaseWait))
                                 profileDetailViewModel.updateProfile(profile, true)
                             } else {
-                                Utility.displaySnackBarWithBottomMargin(ll_main, getString(R.string.OnlyFamilyHeadLocation))
+                                Utility.displaySnackBarWithBottomMargin(binding.llMain, getString(R.string.OnlyFamilyHeadLocation))
                             }
                         }
                         .show()
@@ -351,7 +349,7 @@ class MainDetailsFragment : Fragment(), KodeinAware, EditMemberListener {
     private fun setGender() {
         Coroutines.main {
             try {
-                val relation = sp_relation.text
+                val relation = binding.spRelation.text
                 if (!relation.isNullOrEmpty()) {
                     val rel = relation.toString()
                     if (rel == "Wife" || rel == "Son" || rel == "Daughter") {

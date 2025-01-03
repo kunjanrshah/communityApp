@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
-import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.squti.guru.Guru
@@ -31,6 +30,7 @@ import com.krs.community.activity.SplashActivity
 import com.krs.community.adapter.NavigationDrawerAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
+import com.krs.community.fancygifdialoglib.FancyGifDialog
 import com.krs.community.listeners.InnerLogoutListner
 import com.krs.community.model.Member
 import com.krs.community.model.NavDrawerItem
@@ -76,7 +76,7 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        titles = activity!!.resources.getStringArray(R.array.nav_drawer_labels)
+        titles = requireActivity().resources.getStringArray(R.array.nav_drawer_labels)
         familyDetailViewModel = ViewModelProvider(this, familyDetailViewModelFactory).get(FamilyDetailViewModel::class.java)
         familyDetailViewModel.innerLogoutListner = this
     }
@@ -111,18 +111,18 @@ class FragmentDrawer : Fragment(), KodeinAware, InnerLogoutListner {
 
         }
         val llLogout = layout.findViewById<LinearLayout>(R.id.ll_logout)
-        llLogout.setOnClickListener { v: View? ->
-            TTFancyGifDialog.Builder(activity)
+        llLogout.setOnClickListener {
+            FancyGifDialog.Builder(activity)
                     .setTitle(getString(R.string.you_sure))
                     .setMessage("Exit the " + getString(R.string.app_name))
                     .setPositiveBtnText("Yes")
-                    .setPositiveBtnBackground("#22b573")
+                    .setPositiveBtnBackground(R.color.fancy_positive)
                     .setNegativeBtnText("No")
-                    .setNegativeBtnBackground("#c1272d")
+                    .setNegativeBtnBackground(R.color.fancy_nagative)
                     .setGifResource(R.drawable.gif_dialog)
                     .isCancellable(false)
                     .OnPositiveClicked {
-                        if (isNetworkConnected(context as AppCompatActivity)) {
+                        if (isNetworkConnected(activity)) {
                             getMemberLogout()
                         }
                     }

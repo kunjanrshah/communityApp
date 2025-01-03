@@ -41,7 +41,6 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodelfactory.BrowseCityViewModelFactory
-import kotlinx.android.synthetic.main.fragment_browse_city.view.*
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -85,7 +84,7 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
 
         getStatesFromDB()
 
-        view.iv_cancel.setOnClickListener { v -> Utility.movetoFragment(activity, DashboardFragment()) }
+        binding.ivCancel.setOnClickListener { v -> Utility.movetoFragment(activity, DashboardFragment()) }
         return view
     }
 

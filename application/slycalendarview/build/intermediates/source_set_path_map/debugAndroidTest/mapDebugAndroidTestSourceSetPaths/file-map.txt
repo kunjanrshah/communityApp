@@ -1,0 +1,8 @@
+ru.slybeaver.slycalendarview.test.slycalendarview-appcompat-1.0.0-0 C:\Users\Kunjan\.gradle\caches\8.9\transforms\70a84a25a881d065e3183443bc047c50\transformed\appcompat-1.0.0\res
+ru.slybeaver.slycalendarview.test.slycalendarview-core-1.0.0-1 C:\Users\Kunjan\.gradle\caches\8.9\transforms\7f674c8c503e898f84d55f0b2bf81479\transformed\core-1.0.0\res
+ru.slybeaver.slycalendarview.test.slycalendarview-coordinatorlayout-1.0.0-2 C:\Users\Kunjan\.gradle\caches\8.9\transforms\994b83affc563d03a800171c7e32f58a\transformed\coordinatorlayout-1.0.0\res
+ru.slybeaver.slycalendarview.test.slycalendarview-androidTest-3 E:\community_management_and_administration-\application\slycalendarview\build\generated\res\resValues\androidTest\debug
+ru.slybeaver.slycalendarview.test.slycalendarview-mergeDebugAndroidTestResources-4 E:\community_management_and_administration-\application\slycalendarview\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+ru.slybeaver.slycalendarview.test.slycalendarview-mergeDebugAndroidTestResources-5 E:\community_management_and_administration-\application\slycalendarview\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+ru.slybeaver.slycalendarview.test.slycalendarview-debugAndroidTest-6 E:\community_management_and_administration-\application\slycalendarview\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
+ru.slybeaver.slycalendarview.test.slycalendarview-debug-7 E:\community_management_and_administration-\application\slycalendarview\build\intermediates\packaged_res\debug\packageDebugResources

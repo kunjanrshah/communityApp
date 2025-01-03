@@ -117,15 +117,15 @@
 
                 </RelativeLayout>
 
-<!--                <com.nightonke.boommenu.BoomMenuButton-->
-<!--                    android:id="@+id/bmb"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="-8dp"-->
-<!--                    app:bmb_buttonEnum="textInsideCircle"-->
-<!--                    app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"-->
-<!--                    app:bmb_inList="true"-->
-<!--                    app:bmb_piecePlaceEnum="piecePlace_dot_6_1" />-->
+                <com.nightonke.boommenu.BoomMenuButton
+                    android:id="@+id/bmb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="-8dp"
+                    app:bmb_buttonEnum="textInsideCircle"
+                    app:bmb_buttonPlaceEnum="buttonPlace_sc_6_1"
+                    app:bmb_inList="true"
+                    app:bmb_piecePlaceEnum="piecePlace_dot_6_1" />
 
 
                 <TextView

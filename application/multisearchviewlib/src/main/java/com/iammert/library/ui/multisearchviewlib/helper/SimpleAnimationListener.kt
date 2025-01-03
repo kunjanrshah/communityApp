@@ -2,7 +2,7 @@ package com.iammert.library.ui.multisearchviewlib.helper
 
 import android.animation.Animator
 
-open class SimpleAnimationListener : Animator.AnimatorListener {
+open class SimpleAnimationListener: Animator.AnimatorListener{
     override fun onAnimationRepeat(animation: Animator) {
     }
 

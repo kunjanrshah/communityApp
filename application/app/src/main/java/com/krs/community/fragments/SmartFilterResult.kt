@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.bestsoft32.tt_fancy_gif_dialog_lib.TTFancyGifDialog
+import com.krs.community.fancygifdialoglib.FancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -459,10 +459,10 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
         DashboardActivity.stop = true
         val gif: Int = R.drawable.gif_dialog
-        TTFancyGifDialog.Builder(activity)
+        FancyGifDialog.Builder(activity)
                 .setMessage(getString(R.string.noFoundNonActives))
                 .setPositiveBtnText("OK")
-                .setPositiveBtnBackground("#843f52")
+                .setPositiveBtnBackground(R.color.colorPrimary)
                 .setGifResource(gif)
                 .isCancellable(false)
                 .OnPositiveClicked {
@@ -587,7 +587,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
     private fun applyProfilePicture(holder: ViewHolder, member: Member) {
         if (!TextUtils.isEmpty(member.profilePic)) {
             val imgURL = context?.getString(R.string.base_url_thumb) + member.profilePic
-            Glide.with(activity!!).load(imgURL)
+            Glide.with(requireActivity()).load(imgURL)
                     .thumbnail(0.5f)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .apply(RequestOptions.circleCropTransform())
@@ -597,7 +597,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             holder.iconText.visibility = View.GONE
         } else {
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
-            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(activity!!, "400"))
+            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(requireActivity(), "400"))
             holder.iconText.visibility = View.VISIBLE
         }
     }
@@ -898,7 +898,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
 
     private fun enableActionMode(position: Int) {
         if (actionMode == null) {
-            actionMode = activity!!.startActionMode(actionModeCallback)!!
+            actionMode = requireActivity().startActionMode(actionModeCallback)!!
         }
         toggleSelection(position)
     }

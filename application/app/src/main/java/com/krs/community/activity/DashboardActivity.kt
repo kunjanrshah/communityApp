@@ -72,7 +72,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     private lateinit var smartFilterViewModel: SmartFilterViewModel
     private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
     private var isClicked = false
-
+    private lateinit var toolbar: Toolbar
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
@@ -116,9 +116,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             finish()
             //    fade(this)
         }
-
-        setSupportActionBar(binding.toolbar as Toolbar?)
-        (binding.toolbar as Toolbar?)?.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.home)
 
@@ -126,7 +126,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         binding.myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start()
 
         val drawerFragment = supportFragmentManager.findFragmentById(R.id.fragment_navigation_drawer) as FragmentDrawer?
-        drawerFragment!!.setUp(R.id.fragment_navigation_drawer, binding.drawerLayout, (binding.toolbar as Toolbar))
+        drawerFragment!!.setUp(R.id.fragment_navigation_drawer, binding.drawerLayout, (toolbar))
         drawerFragment.mDrawerToggle!!.isDrawerIndicatorEnabled = false
         val drawable = ResourcesCompat.getDrawable(resources, R.drawable.menu_slide1, theme)
         drawerFragment.mDrawerToggle!!.setHomeAsUpIndicator(drawable)

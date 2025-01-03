@@ -11,33 +11,34 @@ import android.view.animation.ScaleAnimation
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.krs.community.R
-import kotlinx.android.synthetic.main.notification_badge.view.*
+import com.krs.community.databinding.NotificationBadgeBinding
+
 
 class NotificationBadge(
         context: Context,
         attrs: AttributeSet? = null
 ) : FrameLayout(context, attrs) {
-
+    private lateinit var binding: NotificationBadgeBinding
     var animationEnabled: Boolean = DEFAULT_ANIMATION_ENABLED
     var animationDuration: Int = DEFAULT_ANIMATION_DURATION
     var maxTextLength: Int = DEFAULT_MAX_TEXT_LENGTH
     var ellipsizeText: String = DEFAULT_ELLIPSIZE_TEXT
 
     var textColor: Int
-        get() = tv_badge_text.currentTextColor
-        set(color) = tv_badge_text.setTextColor(color)
+        get() = binding.tvBadgeText.currentTextColor
+        set(color) = binding.tvBadgeText.setTextColor(color)
 
     val textView: TextView
-        get() = tv_badge_text
+        get() = binding.tvBadgeText
 
     var badgeBackgroundDrawable: Drawable?
-        get() = iv_badge_bg.drawable
-        set(drawable) = iv_badge_bg.setImageDrawable(drawable)
+        get() = binding.ivBadgeBg.drawable
+        set(drawable) = binding.ivBadgeBg.setImageDrawable(drawable)
 
     private var isVisible: Boolean
-        get() = fl_container.visibility == VISIBLE
+        get() = binding.flContainer.visibility == VISIBLE
         set(value) {
-            fl_container.visibility = if (value) View.VISIBLE else INVISIBLE
+            binding.flContainer.visibility = if (value) View.VISIBLE else INVISIBLE
         }
 
     private val update: Animation by lazy {
@@ -74,16 +75,16 @@ class NotificationBadge(
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.notification_badge, this, true)
-
+        binding = NotificationBadgeBinding.inflate(inflater)
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.NotificationBadge, 0, 0)
         try {
             val textColor = a.getColor(R.styleable.NotificationBadge_android_textColor,
                     DEFAULT_TEXT_COLOR.toInt())
-            tv_badge_text.setTextColor(textColor)
+            binding.tvBadgeText.setTextColor(textColor)
 
             val textSize = a.getDimension(R.styleable.NotificationBadge_android_textSize,
                     dpToPx(DEFAULT_TEXT_SIZE))
-            tv_badge_text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+            binding.tvBadgeText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
 
             animationEnabled = a.getBoolean(R.styleable.NotificationBadge_nbAnimationEnabled,
                     DEFAULT_ANIMATION_ENABLED)
@@ -91,7 +92,7 @@ class NotificationBadge(
                     DEFAULT_ANIMATION_DURATION)
 
             a.getDrawable(R.styleable.NotificationBadge_nbBackground)?.let {
-                iv_badge_bg.setImageDrawable(it)
+                binding.ivBadgeBg.setImageDrawable(it)
             }
 
             maxTextLength = a.getInt(R.styleable.NotificationBadge_nbMaxTextLength,
@@ -115,12 +116,12 @@ class NotificationBadge(
             clear(animation)
         } else if (animation) {
             if (isVisible) {
-                fl_container.startAnimation(update)
+                binding.flContainer.startAnimation(update)
             } else {
-                fl_container.startAnimation(show)
+                binding.flContainer.startAnimation(show)
             }
         }
-        tv_badge_text.text = badgeText
+        binding.tvBadgeText.text = badgeText
         isVisible = true
     }
 
@@ -138,7 +139,7 @@ class NotificationBadge(
         if (!isVisible) return
 
         if (animation) {
-            fl_container.startAnimation(hide)
+            binding.flContainer.startAnimation(hide)
         } else {
             isVisible = false
         }

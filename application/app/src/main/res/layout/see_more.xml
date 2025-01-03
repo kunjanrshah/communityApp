@@ -87,22 +87,22 @@
                 android:text="@string/profile_updatation_percentage"
                 android:textSize="14sp" />
 
-<!--            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar-->
-<!--                android:id="@+id/rangeUpdationBar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="5dp"-->
-<!--                app:bar_color="#C0C0C0"-->
-<!--                app:bar_highlight_color="#A9A9A9"-->
-<!--                app:corner_radius="10"-->
-<!--                app:data_type="_integer"-->
-<!--                app:gap="10"-->
-<!--                app:left_thumb_color="#808080"-->
-<!--                app:left_thumb_color_pressed="#696969"-->
-<!--                app:max_value="100"-->
-<!--                app:min_value="0"-->
-<!--                app:right_thumb_color="#808080"-->
-<!--                app:right_thumb_color_pressed="#696969" />-->
+            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/rangeUpdationBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:bar_color="#C0C0C0"
+                app:bar_highlight_color="#A9A9A9"
+                app:corner_radius="10"
+                app:data_type="_integer"
+                app:gap="10"
+                app:left_thumb_color="#808080"
+                app:left_thumb_color_pressed="#696969"
+                app:max_value="100"
+                app:min_value="0"
+                app:right_thumb_color="#808080"
+                app:right_thumb_color_pressed="#696969" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -58,7 +58,6 @@ import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
 import com.yalantis.ucrop.UCrop.*
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
-import kotlinx.android.synthetic.main.activity_register.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
@@ -452,92 +451,92 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
 
         if (filed == 13) {
-            root_layout.snackbar(getString(R.string.enter_father), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_father), Snackbar.LENGTH_LONG)
             return
         }
 
         if (filed == 14) {
-            root_layout.snackbar(getString(R.string.enter_bdate), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_bdate), Snackbar.LENGTH_LONG)
             return
         }
 
         if (filed == 15) {
-            root_layout.snackbar(getString(R.string.enter_native), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_native), Snackbar.LENGTH_LONG)
             return
         }
 
         if (filed == 16) {
-            root_layout.snackbar(getString(R.string.enter_marital), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_marital), Snackbar.LENGTH_LONG)
             return
         }
 
         if (message!!.contains(getString(R.string.fname), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.enter_firstname), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_firstname), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.lastnameId), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.enter_lastname), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_lastname), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.emailstr), ignoreCase = true)) {
             if (filed == 0) {
-                root_layout.snackbar(message, Snackbar.LENGTH_LONG)
+                binding.rootLayout.snackbar(message, Snackbar.LENGTH_LONG)
             } else {
-                root_layout.snackbar(getString(R.string.enter_email), Snackbar.LENGTH_LONG)
+                binding.rootLayout.snackbar(getString(R.string.enter_email), Snackbar.LENGTH_LONG)
             }
             return
         }
         if (message.contains(getString(R.string.genderstr), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.enter_gender), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_gender), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.mobilestr), ignoreCase = true)) {
             if (filed == 0) {
-                root_layout.snackbar(message, Snackbar.LENGTH_LONG)
+                binding.rootLayout.snackbar(message, Snackbar.LENGTH_LONG)
             } else {
-                root_layout.snackbar(getString(R.string.enter_mobile), Snackbar.LENGTH_LONG)
+                binding.rootLayout.snackbar(getString(R.string.enter_mobile), Snackbar.LENGTH_LONG)
             }
 
             return
         }
         if (message.equals(getString(R.string.pass), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.enter_password), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_password), Snackbar.LENGTH_LONG)
             return
         }
         if (message.equals(getString(R.string.passsecond), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
             return
         }
         if (message.equals(getString(R.string.cpass), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.confirm_password), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.confirm_password), Snackbar.LENGTH_LONG)
             return
         }
         if (message.equals(getString(R.string.cpasssecond), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.make_strong_pass), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.passequals), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.password_mismatch), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.password_mismatch), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.addressstr), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.enter_home_address), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.enter_home_address), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.stateis), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.select_state), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.select_state), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.cityid), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.select_city), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.select_city), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.subcommid), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.select_sub_comm), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.select_sub_comm), Snackbar.LENGTH_LONG)
             return
         }
         if (message.contains(getString(R.string.localcommid), ignoreCase = true)) {
-            root_layout.snackbar(getString(R.string.select_local), Snackbar.LENGTH_LONG)
+            binding.rootLayout.snackbar(getString(R.string.select_local), Snackbar.LENGTH_LONG)
             return
         }
 
@@ -575,7 +574,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         if (data.message.contains("create")) {
             goToFamilyDetailActivity(data)
         } else {
-            root_layout.snackbar(getString(R.string.RequestAdmin), Snackbar.LENGTH_INDEFINITE)
+            binding.rootLayout.snackbar(getString(R.string.RequestAdmin), Snackbar.LENGTH_INDEFINITE)
         }
     }
 
@@ -627,7 +626,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             clearAll()
             Utility.hideSweetProgress()
             successResponse(getString(R.string.RequestAdmin))
-            root_layout.snackbar("Photo not uploaded because of poor internet speed!", Snackbar.LENGTH_INDEFINITE)
+            binding.rootLayout.snackbar("Photo not uploaded because of poor internet speed!", Snackbar.LENGTH_INDEFINITE)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -635,7 +634,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     override suspend fun getFailure(message: String) {
         Utility.hideSweetProgress()
-        root_layout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
+        binding.rootLayout.snackbar(message, Snackbar.LENGTH_INDEFINITE)
     }
 
     override fun onDestroy() {

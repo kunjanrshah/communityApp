@@ -16,13 +16,12 @@ import com.iammert.library.ui.multisearchviewlib.extensions.*
 import com.iammert.library.ui.multisearchviewlib.helper.KeyboardHelper
 import com.iammert.library.ui.multisearchviewlib.helper.KeyboardHelper.hideKeyboard
 import com.iammert.library.ui.multisearchviewlib.helper.SimpleTextWatcher
-import kotlinx.android.synthetic.main.view_item.view.*
 
 
 class MultiSearchContainerView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     var searchTextStyle = 0
@@ -39,25 +38,25 @@ class MultiSearchContainerView @JvmOverloads constructor(
 
     private var isInSearchMode = false
 
-    var selectedTab: ViewItemBinding? = null
+    private var selectedTab: ViewItemBinding? = null
 
     private var multiSearchViewListener: MultiSearchView.MultiSearchViewListener? = null
 
     private val searchEnterScrollAnimation = ValueAnimator.ofInt()
-            .apply {
-                duration = DEFAULT_ANIM_DURATION
-                interpolator = LinearOutSlowInInterpolator()
-                addUpdateListener {
-                    binding.horizontalScrollView.smoothScrollTo(it.animatedValue as Int, 0)
-                }
+        .apply {
+            duration = DEFAULT_ANIM_DURATION
+            interpolator = LinearOutSlowInInterpolator()
+            addUpdateListener {
+                binding.horizontalScrollView.smoothScrollTo(it.animatedValue as Int, 0)
+            }
 
-                endListener {
-                    selectedTab?.let {
-                        it.root.editTextSearch.requestFocus()
-                        KeyboardHelper.showKeyboard(context)
-                    }
+            endListener {
+                selectedTab?.let {
+                    it.editTextSearch.requestFocus()
+                    KeyboardHelper.showKeyboard(context)
                 }
             }
+        }
 
     private val searchCompleteCollapseAnimator = ValueAnimator.ofInt().apply {
         duration = DEFAULT_ANIM_DURATION
@@ -79,7 +78,7 @@ class MultiSearchContainerView @JvmOverloads constructor(
         }
         endListener {
             selectedTab?.let {
-                it.root.editTextSearch.requestFocus()
+                it.editTextSearch.requestFocus()
                 KeyboardHelper.showKeyboard(context)
             }
         }
@@ -95,10 +94,10 @@ class MultiSearchContainerView @JvmOverloads constructor(
 
     init {
         binding.layoutItemContainer.layoutTransition = LayoutTransition()
-                .apply {
-                    disableTransitionType(LayoutTransition.APPEARING)
-                    disableTransitionType(LayoutTransition.CHANGE_APPEARING)
-                }
+            .apply {
+                disableTransitionType(LayoutTransition.APPEARING)
+                disableTransitionType(LayoutTransition.CHANGE_APPEARING)
+            }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -162,19 +161,19 @@ class MultiSearchContainerView @JvmOverloads constructor(
         }
 
         selectedTab?.let {
-            it.root.editTextSearch.isFocusable = false
-            it.root.editTextSearch.isFocusableInTouchMode = false
-            it.root.editTextSearch.clearFocus()
+            it.editTextSearch.isFocusable = false
+            it.editTextSearch.isFocusableInTouchMode = false
+            it.editTextSearch.clearFocus()
         }
 
         selectedTab?.let {
             val startWidthValue = it.root.measuredWidth
-            val endWidthValue = it.root.editTextSearch.measuredWidth + sizeRemoveIcon + defaultPadding
+            val endWidthValue = it.editTextSearch.measuredWidth + sizeRemoveIcon + defaultPadding
             searchCompleteCollapseAnimator.setIntValues(startWidthValue, endWidthValue)
             searchCompleteCollapseAnimator.start()
             multiSearchViewListener?.onSearchComplete(
-                    binding.layoutItemContainer.childCount - 1,
-                    it.root.editTextSearch.text
+                binding.layoutItemContainer.childCount - 1,
+                it.editTextSearch.text
             )
         }
 
@@ -193,18 +192,18 @@ class MultiSearchContainerView @JvmOverloads constructor(
         viewItem.root.setOnClickListener {
             if (viewItem != selectedTab) {
                 multiSearchViewListener?.onItemSelected(
-                        binding.layoutItemContainer.indexOfChild(viewItem.root),
-                        viewItem.editTextSearch.text
+                    binding.layoutItemContainer.indexOfChild(viewItem.root),
+                    viewItem.editTextSearch.text
                 )
                 changeSelectedTab(viewItem)
             }
         }
 
-        viewItem.root.editTextSearch.setOnClickListener {
+        viewItem.editTextSearch.setOnClickListener {
             if (viewItem != selectedTab) {
                 multiSearchViewListener?.onItemSelected(
-                        binding.layoutItemContainer.indexOfChild(viewItem.root),
-                        viewItem.editTextSearch.text
+                    binding.layoutItemContainer.indexOfChild(viewItem.root),
+                    viewItem.editTextSearch.text
                 )
                 changeSelectedTab(viewItem)
             }
@@ -217,7 +216,7 @@ class MultiSearchContainerView @JvmOverloads constructor(
             }
         })
 
-        viewItem.root.imageViewRemove.setOnClickListener {
+        viewItem.imageViewRemove.setOnClickListener {
             selectedTab?.let { removeTab(it) }
         }
 

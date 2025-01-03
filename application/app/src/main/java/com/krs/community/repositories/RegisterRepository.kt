@@ -18,7 +18,7 @@ class RegisterRepository(
 //        }
 //    }
 
-    suspend fun getUserRegister(profile: MultipartBody.Part?,fname: RequestBody?,father: RequestBody?,bdate: RequestBody?,lastName: RequestBody,email: RequestBody?,mobile: RequestBody?,gender: RequestBody?,pass: RequestBody?,address: RequestBody?,state: RequestBody,city: RequestBody,native: RequestBody?, subComm: RequestBody,local: RequestBody, marital: RequestBody?,relation: RequestBody,isAdmin: RequestBody): RegisterModel {
+    suspend fun getUserRegister(profile: MultipartBody.Part?,fname: RequestBody?,father: RequestBody?,bdate: RequestBody?,lastName: RequestBody?,email: RequestBody?,mobile: RequestBody?,gender: RequestBody?,pass: RequestBody?,address: RequestBody?,state: RequestBody?,city: RequestBody?,native: RequestBody?, subComm: RequestBody?,local: RequestBody?, marital: RequestBody?,relation: RequestBody?,isAdmin: RequestBody?): RegisterModel {
         return apiRequest {
             api.getUserRegister(profile,fname,father,bdate,lastName,email,mobile,gender,pass,address,state,city,native, subComm,local, marital,relation,isAdmin)
         }

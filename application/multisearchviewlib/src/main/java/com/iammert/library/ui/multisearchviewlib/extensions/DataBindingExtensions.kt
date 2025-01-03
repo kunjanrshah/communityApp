@@ -9,7 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-fun <T : ViewDataBinding> Context.inflate(@LayoutRes layoutRes: Int): T {
+fun <T: ViewDataBinding> Context.inflate(@LayoutRes layoutRes: Int): T {
     return DataBindingUtil.inflate(LayoutInflater.from(this), layoutRes, null, false)
 }
 

@@ -25,9 +25,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.adapters.ImageViewBindingAdapter.setImageDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +45,7 @@ import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.*
+import com.krs.community.adapter.SliderAdapterExample
 import com.krs.community.app.AppController
 import com.krs.community.app.NotificationBadge
 import com.krs.community.bkservice.ProcessMainClass
@@ -50,13 +53,14 @@ import com.krs.community.bkservice.restarter.RestartServiceBroadcastReceiver
 import com.krs.community.databinding.FragmentDashboardBinding
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
+import com.krs.community.model.SliderItem
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Utility
 import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
-import com.smarteist.autoimageslider.DefaultSliderView
-import com.smarteist.autoimageslider.IndicatorAnimations
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
+import com.smarteist.autoimageslider.IndicatorView.draw.controller.DrawController
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
 import org.json.JSONObject
@@ -64,6 +68,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.util.*
+
 
 class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
@@ -88,6 +93,9 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         }
     }
 
+
+    private var adapter: SliderAdapterExample? = null
+
     override val kodein by kodein()
 
     companion object {
@@ -109,9 +117,22 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
 
         Utility.changeStatusbarColor(activity, R.color.colorPrimary, true)
         binding.gridView.isExpanded = true
-        binding.imageSlider.setIndicatorAnimation(IndicatorAnimations.SWAP)
+
+        adapter = SliderAdapterExample(activity as AppCompatActivity);
+        binding.imageSlider.setSliderAdapter(adapter!!);
+        binding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.SWAP)
         binding.imageSlider.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION)
         binding.imageSlider.scrollTimeInSec = 3 //set scroll delay in seconds :
+        setSliderViews()
+        binding.imageSlider.setOnIndicatorClickListener(DrawController.ClickListener {
+            Log.i(
+                "GGG",
+                "onIndicatorClicked: " + binding.imageSlider.getCurrentPagePosition()
+            )
+            Utility.movetoFragment(activity, NewsListFragment())
+        })
+
+
         (activity as AppCompatActivity?)!!.supportActionBar!!.title = getString(R.string.home)
         binding.edtSearch.inputType = InputType.TYPE_NULL
         binding.edtSearch.keyListener = null
@@ -147,7 +168,7 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
             defaultProfiles.add(member)
         }
 
-        setSliderViews()
+
         setDefaultProfileList()
         getSharedProfileList()
         binding.gridView.adapter = MenuAdapter(requireActivity())
@@ -250,24 +271,41 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         isTouch = false
     }
 
+
     private fun setSliderViews() {
+
         for (i in 0..3) {
-            val sliderView = DefaultSliderView(activity)
+
+
+            val sliderItem = SliderItem()
+            sliderItem.description = "Advertise with us"
+
             when (i) {
-                0 -> sliderView.setImageDrawable(R.drawable.ic_launcher_background)
-                1 -> sliderView.imageUrl = "https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-                2 -> sliderView.imageUrl = "https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"
-                3 -> sliderView.imageUrl = "https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                0 -> sliderItem.imageUrl = "https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                1 -> sliderItem.imageUrl = "https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+                2 -> sliderItem.imageUrl = "https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"
+                3 -> sliderItem.imageUrl = "https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
             }
-            sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-            // sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
-            sliderView.description = "Advertise with us"
-            sliderView.setOnSliderClickListener { sliderView1: SliderView? ->
-                binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-                return@setOnSliderClickListener
-                Utility.movetoFragment(activity, NewsListFragment())
-            }
-            binding.imageSlider.addSliderView(sliderView)
+
+            adapter!!.addItem(sliderItem)
+
+
+//            val sliderView = DefaultSliderView(activity)
+//            when (i) {
+//                0 -> sliderView.setImageDrawable(R.drawable.ic_launcher_background)
+//                1 -> sliderView.imageUrl = "https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+//                2 -> sliderView.imageUrl = "https://images.pexels.com/photos/747964/pexels-photo-747964.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"
+//                3 -> sliderView.imageUrl = "https://images.pexels.com/photos/929778/pexels-photo-929778.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+//            }
+//            sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+//            // sliderView.description = "The quick brown fox jumps over the lazy dog.\n" + "Jackdaws love my big sphinx of quartz. " + (i + 1)
+//            sliderView.description = "Advertise with us"
+//            sliderView.setOnSliderClickListener { sliderView1: SliderView? ->
+//                binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+//                return@setOnSliderClickListener
+//                Utility.movetoFragment(activity, NewsListFragment())
+//            }
+//            binding.imageSlider.addSliderView(sliderView)
         }
     }
 

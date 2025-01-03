@@ -2,7 +2,7 @@ package com.krs.community.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.krs.community.entities.Native;
+import com.krs.community.entities.NativeList;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class NativeResponse {
     private String last_updated;
     @SerializedName("data")
     @Expose
-    private List<Native> data = null;
+    private List<NativeList> data = null;
 
     @SerializedName("deleted")
     @Expose
@@ -41,11 +41,11 @@ public class NativeResponse {
         this.message = message;
     }
 
-    public List<Native> getData() {
+    public List<NativeList> getData() {
         return data;
     }
 
-    public void setData(List<Native> data) {
+    public void setData(List<NativeList> data) {
         this.data = data;
     }
 

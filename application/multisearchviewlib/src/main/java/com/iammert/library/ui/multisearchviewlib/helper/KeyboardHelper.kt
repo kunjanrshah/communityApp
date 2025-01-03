@@ -9,8 +9,8 @@ object KeyboardHelper {
 
     fun showKeyboard(context: Context) {
         (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(
-                InputMethodManager.SHOW_FORCED,
-                InputMethodManager.HIDE_IMPLICIT_ONLY
+            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.HIDE_IMPLICIT_ONLY
         )
     }
 
@@ -19,8 +19,8 @@ object KeyboardHelper {
             (context as Activity).window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             if (context.currentFocus != null && context.currentFocus!!.windowToken != null) {
                 (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-                        context.currentFocus!!.windowToken,
-                        0
+                    context.currentFocus!!.windowToken,
+                    0
                 )
             }
         } catch (e: Exception) {

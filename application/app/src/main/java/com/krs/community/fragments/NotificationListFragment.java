@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
@@ -46,8 +44,8 @@ public class NotificationListFragment extends Fragment {
 
 //        FirebaseMessaging.getInstance().isAutoInitEnabled = true;
 
-        String fcmToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("FCMToken:", fcmToken);
+ //       String fcmToken = FirebaseInstanceId.getInstance().getToken();
+   //     Log.d("FCMToken:", fcmToken);
 
 //        FirebaseMessaging.getInstance().isAutoInitEnabled = true;
 //        FirebaseMessaging.getInstance().token
