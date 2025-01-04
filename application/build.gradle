@@ -22,6 +22,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.github.ben-manes:gradle-versions-plugin:0.47.0"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.google.gms:google-services:4.4.2'
        // classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
     }
 
@@ -29,7 +30,7 @@ buildscript {
 
 plugins {
     id("com.google.devtools.ksp") version "1.9.10-1.0.13" apply true
-
+//    id ("com.google.gms.google-services") version '4.4.2' apply false
    
 }
 

@@ -3,7 +3,7 @@
     "project_number": "317054014432",
     "firebase_url": "https://community-1dfcb.firebaseio.com",
     "project_id": "community-1dfcb",
-    "storage_bucket": "community-1dfcb.appspot.com"
+    "storage_bucket": "community-1dfcb.firebasestorage.app"
   },
   "client": [
     {

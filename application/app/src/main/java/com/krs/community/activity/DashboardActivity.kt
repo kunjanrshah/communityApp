@@ -453,6 +453,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     override fun getVersionResponse(response: UserStatusResponse) {
+        Log.d(TAG, "getVersionResponse: "+response.success)
         if (!response.success) {
             showVersionDialog(this)
         }

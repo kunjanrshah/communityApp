@@ -1,7 +1,10 @@
 package com.krs.community.service
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import com.github.squti.guru.Guru
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -11,6 +14,7 @@ import com.krs.community.activity.SplashActivity
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.NotificationUtils
+
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -22,7 +26,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
-        Log.e(TAG, "From: " + remoteMessage.from)
+        Log.d(TAG, "notification: " + remoteMessage.notification)
+        Log.d(TAG, "data: " + remoteMessage.data)
+        Log.d(TAG, "From: " + remoteMessage.from)
         if (remoteMessage.data.isNotEmpty()) {
             Log.e(TAG, "Data Payload: " + remoteMessage.data.toString())
             val user_id = remoteMessage.data["user_id"].toString()
@@ -54,6 +60,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(context: Context, intent: Intent, userId: String, message: String, fullname: String, mobile: String, email: String, photo: String, address: String, city: String) {
+
         val notificationUtils = NotificationUtils(context)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP

@@ -25,6 +25,7 @@ import com.github.squti.guru.GuruConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -173,7 +174,7 @@ class AppController : Application(), KodeinAware {
     @SuppressLint("CommitPrefEdits")
     override fun onCreate() {
         super.onCreate()
-
+        FirebaseApp.initializeApp(this);
         mApplication = this
         connectionLiveData = ConnectionLiveData(this)
         FacebookSdk.sdkInitialize(applicationContext)
