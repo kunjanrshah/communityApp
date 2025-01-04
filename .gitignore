@@ -9,3 +9,5 @@
 .externalNativeBuild
 /.idea
 app/src/androidTest/java/
+/application/slycalendarview/build
+/application/sweetdialoglib/build
