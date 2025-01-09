@@ -536,14 +536,14 @@ internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() 
                     }
                 }
                 9 -> {
-//                    binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
-//                        return@setOnClickListener
-                    if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
-                        Utility.movetoFragment(activity, ShareEventFragment())
-                    }
-                    else {
-                        binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
-                    }
+                    binding.llParent.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                        return@setOnClickListener
+//                    if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
+//                        Utility.movetoFragment(activity, ShareEventFragment())
+//                    }
+//                    else {
+//                        binding.llParent.snackbar(getString(R.string.admin_only), Snackbar.LENGTH_LONG)
+//                    }
 //                    Utility.movetoFragment(activity, ShareEventFragment())
                 }
                 10 -> {

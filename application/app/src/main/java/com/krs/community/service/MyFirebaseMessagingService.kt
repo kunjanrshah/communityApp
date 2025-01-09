@@ -26,9 +26,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
-        Log.d(TAG, "notification: " + remoteMessage.notification)
         Log.d(TAG, "data: " + remoteMessage.data)
-        Log.d(TAG, "From: " + remoteMessage.from)
         if (remoteMessage.data.isNotEmpty()) {
             Log.e(TAG, "Data Payload: " + remoteMessage.data.toString())
             val user_id = remoteMessage.data["user_id"].toString()

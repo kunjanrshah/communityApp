@@ -126,7 +126,7 @@ class NonActivesFragment : Fragment(), KodeinAware, RoomMemberListener, ByFilter
                     holder.swipe.setLockDrag(true)
                 }
 
-                if (member.headId.equals("0")) {
+                if (member.headId != null && member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)

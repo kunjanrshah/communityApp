@@ -1,5 +1,6 @@
 package com.krs.community.fragments
 
+import android.Manifest
 import android.content.Intent
 import android.location.Location
 import android.net.Uri
@@ -14,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
@@ -69,6 +71,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
+
 class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Listener, LocationData.AddressCallBack, ParallaxRecyclerAdapter.OnLoadMore, RoomMemberListener, LocationAdapter.SetLocationListner {
 
     lateinit var recyclerView: RecyclerView
@@ -104,15 +107,22 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
     var loginMem: Member? = null
     private var byDistanceAdapter: ParallaxRecyclerAdapter<Member>? = null
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                onPermissionGranted()
+            } else {
+                onPermissionDenied()
+            }
+        }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragmnet_search_by_distance, container, false)
 
         if (checkFineLocationPermission(activity)) {
-            getLocationDetail = GetLocationDetail(this, activity)
-            val request = LocationRequest()
-            request.interval = Utility.INTERVAL
-            request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-            easyWayLocation = EasyWayLocation(activity, request, false, this)
+            onPermissionGranted()
+        }else{
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
 
 
@@ -154,6 +164,20 @@ class SearchByDistanceFragment : Fragment(), KodeinAware, ByDistanceListener, Li
 
 
         return root
+    }
+
+    private fun onPermissionGranted() {
+        Toast.makeText(requireContext(), "Location permission granted!", Toast.LENGTH_SHORT).show()
+        getLocationDetail = GetLocationDetail(this, activity)
+        val request = LocationRequest()
+        request.interval = Utility.INTERVAL
+        request.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        easyWayLocation = EasyWayLocation(activity, request, false, this)
+    }
+
+    private fun onPermissionDenied() {
+        Toast.makeText(requireContext(), "Location permission denied!", Toast.LENGTH_SHORT).show()
+        Utility.movetoFragment(activity, DashboardFragment())
     }
 
     override fun onResume() {

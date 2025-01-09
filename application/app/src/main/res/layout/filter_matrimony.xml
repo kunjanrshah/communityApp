@@ -414,24 +414,24 @@
         </LinearLayout>
 
 
-<!--        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar-->
-<!--            android:id="@+id/rangeSeekbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            app:bar_color="@color/dark_color_primary"-->
-<!--            app:bar_highlight_color="@color/colorPrimary"-->
-<!--            app:corner_radius="10"-->
-<!--            app:data_type="_integer"-->
-<!--            app:gap="10"-->
-<!--            app:left_thumb_color="@color/colorPrimary"-->
-<!--            app:left_thumb_color_pressed="@color/colorPrimary"-->
-<!--            app:max_start_value="100"-->
-<!--            app:max_value="100"-->
-<!--            app:min_start_value="0"-->
-<!--            app:min_value="0"-->
-<!--            app:right_thumb_color="@color/colorPrimary"-->
-<!--            app:right_thumb_color_pressed="@color/colorPrimary" />-->
+        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+            android:id="@+id/rangeSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:bar_color="@color/dark_color_primary"
+            app:bar_highlight_color="@color/colorPrimary"
+            app:corner_radius="10"
+            app:data_type="_integer"
+            app:gap="10"
+            app:left_thumb_color="@color/colorPrimary"
+            app:left_thumb_color_pressed="@color/colorPrimary"
+            app:max_start_value="100"
+            app:max_value="100"
+            app:min_start_value="0"
+            app:min_value="0"
+            app:right_thumb_color="@color/colorPrimary"
+            app:right_thumb_color_pressed="@color/colorPrimary" />
     </LinearLayout>
 
     <LinearLayout
