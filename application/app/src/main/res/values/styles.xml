@@ -24,18 +24,22 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
 
+    <style name="AppTheme.AppBarOverlay" parent="AppTheme.NoActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="AppTheme.NoActionBar" />
+
+    <style name="MyMaterialTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">true</item>
 
-        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowDisablePreview">true</item>
+       <!-- <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="actionModeStyle">@style/ActionModeStyle</item>-->
         <item name="android:actionOverflowButtonStyle">@style/myoverflow</item>
 
         <item name="actionModeCloseButtonStyle">@style/myclosebutton</item>
@@ -62,6 +66,7 @@
 
     <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
@@ -88,6 +93,7 @@
 
     <style name="AppTheme.Purple" parent="MyMaterialTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:windowFullscreen">true</item>
         <item name="colorPrimaryDark">@color/dark_color_primary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/material_purple_200</item>

@@ -667,7 +667,7 @@ class DashboardRepository(
         }
     }
 
-    suspend fun fetchBusinessCategory(index: Int) {
+    suspend fun fetchBusinessCategory(count: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.business_category))
@@ -680,7 +680,7 @@ class DashboardRepository(
                 val response = apiRequest { api.getBusinessCategory(updated) }
                 //  Log.d(TAG, "response: $response")
                 if (response.success) {
-                    db.getMasterUpdateDao().updateBusinessCategoryIndex(index)
+                    db.getMasterUpdateDao().updateBusinessCategoryIndex(count)
                 }
                 if (!response.last_updated.isNullOrEmpty()) {
                     val lastdate = LastUpdated(AppController.mApplication.getString(R.string.business_category), response.last_updated)

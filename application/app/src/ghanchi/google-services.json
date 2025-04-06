@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "317054014432-dmpie498vfh60pvtadkkc4dk6h4v12qi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ghanchi.samaj",
+            "certificate_hash": "93a104259550736e69a441f4c5bda147af7a8b54"
+          }
+        },
+        {
           "client_id": "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com",
           "client_type": 3
         }

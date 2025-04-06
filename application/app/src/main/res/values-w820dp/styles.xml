@@ -24,7 +24,7 @@
     <style name="AppTheme.PopupOverlay" parent="AppTheme.NoActionBar" />
 
 
-    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+    <style name="MyMaterialTheme" parent="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>

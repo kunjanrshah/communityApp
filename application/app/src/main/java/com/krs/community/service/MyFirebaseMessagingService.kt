@@ -24,7 +24,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Guru.putString(AppConstants.DEVICE_TOKEN, s)
     }
 
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
+
+        remoteMessage.notification?.let {
+            Log.d(TAG, "Message Notification Body: ${it.body}")
+        }
 
         Log.d(TAG, "data: " + remoteMessage.data)
         if (remoteMessage.data.isNotEmpty()) {
