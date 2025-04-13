@@ -1,11 +1,45 @@
-*.iml
-.gradle
+# Built files
+/build/
+/app/build/
+**/build/
+# Gradle files
+.gradle/
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+
+# IDE files
+.idea/
+/*.iml
+
+# Log files
+*.log
+
+# Keystore files
+*.jks
+*.keystore
+
+# OS generated files
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-/.idea
-app/src/androidTest/java/
+Thumbs.db
+
+# Kotlin/Java compilation
+*.class
+
+# APKs
+*.apk
+*.ap_
+
+# Unit test reports
+/test-output/
+
+# Android Studio Navigation Editor temp files
+.navigation/
+
+# Apollo GraphQL
+**/generated/
+
+# KAPT
+**/build/tmp/kapt/
+
+# Others
+.cxx/
+

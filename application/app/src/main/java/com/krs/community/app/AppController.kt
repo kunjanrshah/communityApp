@@ -15,6 +15,7 @@ import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
+import com.apollographql.apollo3.ApolloClient
 import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
 import com.facebook.FacebookSdk
@@ -31,6 +32,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
+import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.repositories.*
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
@@ -75,6 +77,7 @@ class AppController : Application(), KodeinAware {
 
         bind() from singleton { ApiServices() }
         bind() from singleton { AppDatabase(instance()) }
+        bind<ApolloClient>() with singleton { GraphQLClientProvider.provideApolloClient() }
 
         bind() from singleton { RegisterRepository(instance()) }
         bind() from singleton { LoginRepository(instance()) }

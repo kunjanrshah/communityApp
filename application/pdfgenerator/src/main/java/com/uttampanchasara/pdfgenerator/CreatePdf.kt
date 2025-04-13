@@ -42,7 +42,7 @@ open class CreatePdf(private val mContext: Context) {
     /**
      * if content going to be load from assets or from other source
      */
-    fun setContentBaseUrl(@Nullable baseUrl: String?): CreatePdf {
+    fun setContentBaseUrl(baseUrl: String?): CreatePdf {
         this.mBaseURL = baseUrl
         return this
     }

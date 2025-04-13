@@ -1,0 +1,1093 @@
+type AuthResponse {
+  accessToken: String!
+
+  refreshToken: String
+
+  message: String!
+}
+
+"""
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+"""
+scalar String
+
+type UserAddressDTO {
+  id: Int!
+
+  user_id: Int!
+
+  address: String!
+
+  city_id: Int!
+
+  states_id: Int!
+
+  local_address: String
+
+  mosaad_id: Int
+
+  area: String
+
+  pincode: String
+
+  addr_type: AddrType!
+}
+
+"""
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+"""
+scalar Int
+
+"""
+The type of address (OWN or RENTED)
+"""
+enum AddrType {
+  OWN
+
+  RENTED
+}
+
+type UserMatrimonyDTO {
+  id: Int
+
+  user_id: Int!
+
+  birth_time: String
+
+  birth_place_id: Int!
+
+  hobby: String!
+
+  about_me: String
+
+  weight: Float
+
+  height: Float
+
+  is_spect: Boolean!
+
+  is_mangal: Boolean!
+
+  is_shani: Boolean!
+
+  facebook_profile: String
+
+  expectation: String
+}
+
+"""
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+"""
+scalar Float
+
+"""
+The `Boolean` scalar type represents `true` or `false`.
+"""
+scalar Boolean
+
+type UserPersonalDetailDTO {
+  id: Int!
+
+  user_id: Int!
+
+  is_donor: Boolean!
+
+  matrimony: Boolean!
+
+  birth_date: DateTime
+
+  native_place_id: Int
+
+  blood_group: String
+
+  current_activity_id: Int
+
+  marital_status: String
+
+  marriage_date: DateTime
+
+  gotra_id: Int
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type UserWorkDetailDTO {
+  id: Int!
+
+  user_id: Int!
+
+  business_category_id: Int
+
+  business_address: String
+
+  business_logo: String
+
+  company_name: String
+
+  website: String
+
+  work_details: String
+}
+
+type UserDTO {
+  id: Int!
+
+  role: Role!
+
+  head_id: Int!
+
+  member_code: String
+
+  email: String
+
+  mobile: String
+
+  password: String!
+
+  relation_id: Int
+
+  sub_community_id: Int
+
+  local_community_id: Int
+
+  first_name: String!
+
+  last_name_id: Int!
+
+  father_name: String
+
+  mother_name: String
+
+  status: Boolean!
+
+  gender: Boolean!
+
+  phone: String
+
+  profile_pic: String!
+
+  region: String
+
+  is_expired: Boolean!
+
+  expire_date: DateTime
+
+  education_id: Int
+
+  occupation_id: Int
+
+  deleted: Boolean!
+
+  login_status: Boolean
+
+  last_login: DateTime
+
+  profile_percent: Float!
+
+  updated: DateTime
+
+  userAddress: UserAddressDTO
+
+  userMatrimony: UserMatrimonyDTO
+
+  userPersonalDetail: UserPersonalDetailDTO
+
+  userWorkDetail: UserWorkDetailDTO
+
+  matchedFields: [String!]
+
+  distance: String
+
+  nearBy: String
+}
+
+enum Role {
+  ADMIN
+
+  USER
+}
+
+type ChangePasswordResponse {
+  message: String!
+}
+
+type StatusChangeResponseDto {
+  success: Boolean!
+
+  message: String!
+}
+
+type GetContactListResponse {
+  success: Boolean!
+
+  message: String!
+
+  members: [UserDTO!]
+}
+
+type MasterDTO {
+  id: String!
+
+  name: String!
+}
+
+type GetMastersResponseDTO {
+  success: Boolean!
+
+  message: String
+
+  data: [MasterDTO!]!
+
+  deleted: [String!]!
+
+  last_updated: Int!
+}
+
+type CityDto {
+  id: Int!
+
+  name: String!
+
+  count: Int!
+}
+
+type CityResponseDto {
+  data: [CityDto!]
+
+  deleted: [Int!]
+
+  last_updated: String
+}
+
+type StatisticsDataDto {
+  TotalFamily: Int!
+
+  TotalMembers: Int!
+
+  TotalMale: Int!
+
+  TotalFemale: Int!
+
+  TotalUnmarriedMale: Int!
+
+  TotalUnmarriedFemale: Int!
+
+  TotalInterestedMale: Int!
+
+  TotalInterestedFemale: Int!
+}
+
+type StatisticsResponseDto {
+  success: Boolean!
+
+  data: StatisticsDataDto!
+}
+
+type SearchResult {
+  totalRecords: Int!
+
+  members: [UserDTO!]!
+}
+
+type Reminder {
+  id: Int!
+
+  user_id: Int!
+
+  rem_date: DateTime!
+
+  rem_type: String!
+
+  message: String!
+}
+
+type UploadModel {
+  id: Int!
+
+  user_id: Int!
+
+  file_name: String!
+
+  file_path: String!
+
+  updated: DateTime!
+}
+
+type Query {
+  getFamilyMembers(head_id: Float!): [UserDTO!]!
+
+  usersByDateRange(fromDate: String!, toDate: String!, page: Float!, limit: Float!): [UserDTO!]!
+
+  getInactiveUsers(input: GetInactiveUsersInput!): [UserDTO!]!
+
+  getSharedProfiles(userId: Int!): [UserDTO!]!
+
+  getSharingProfiles(userId: Int!): [UserDTO!]!
+
+  getContactList(input: GetContactListInput!): GetContactListResponse!
+
+  getCities(date: String): GetMastersResponseDTO!
+
+  getStates(date: String): GetMastersResponseDTO!
+
+  getBusinessCategories(date: String): GetMastersResponseDTO!
+
+  getCommittees(date: String): GetMastersResponseDTO!
+
+  getDesignations(date: String): GetMastersResponseDTO!
+
+  getEducations(date: String): GetMastersResponseDTO!
+
+  getRelations(date: String): GetMastersResponseDTO!
+
+  getGotras(date: String): GetMastersResponseDTO!
+
+  getSubCasts(date: String): GetMastersResponseDTO!
+
+  getCitiesByState(stateId: Int!, date: String, subCommunityId: Int): CityResponseDto!
+
+  getStatistics(input: StatisticsInputDto!): StatisticsResponseDto!
+
+  reminders: [Reminder!]!
+
+  reminder(id: Int!): Reminder!
+
+  getUserFiles(user_id: Int!): [UploadModel!]!
+
+  smartSearch(input: SearchInput!): SearchResult!
+
+  smartFilter(input: SearchRequestDTO!): SearchResult!
+
+  nearByUsers(filter: GetNearbyUsersInput!): SearchResult!
+
+  isAppVersionExists(version: Float!): Boolean!
+}
+
+input GetInactiveUsersInput {
+  start: Int
+
+  limit: Int
+
+  subCommunityId: Int
+
+  localCommunityId: Int
+}
+
+input GetContactListInput {
+  mobiles: [String!]!
+}
+
+input StatisticsInputDto {
+  cityId: Int
+
+  subCommunityId: Int
+
+  localCommunityId: Int
+}
+
+input SearchInput {
+  start: Int! = 0
+
+  length: Int! = 10
+
+  filterBy: String
+}
+
+input SearchRequestDTO {
+  start: Int! = 0
+
+  length: Int! = 10
+
+  orderBy: String
+
+  orderByVal: String
+
+  filter_by: SmartFilterDto
+}
+
+input SmartFilterDto {
+  id: Int
+
+  last_name_id: Int
+
+  local_community_id: Int
+
+  sub_community_id: Int
+
+  native_place_id: Int
+
+  city_id: Int
+
+  member_code: String
+
+  head_name: String
+
+  first_name: String
+
+  father_name: String
+
+  mother_name: String
+
+  gender: Boolean
+
+  marital_status: String
+
+  min_age: Int
+
+  max_age: Int
+
+  min_height: Int
+
+  max_height: Int
+
+  min_weight: Int
+
+  max_weight: Int
+
+  min_percentage: Int
+
+  max_percentage: Int
+
+  state_id: Int
+
+  email_address: String
+
+  mobile: String
+
+  local_address: String
+
+  address: String
+
+  pincode: String
+
+  area: String
+
+  business_address: String
+
+  education_id: Int
+
+  gotra_id: Int
+
+  business_category_id: Int
+
+  occupation_id: Int
+
+  birth_place_id: Int
+
+  birth_date: String
+
+  marriage_date: String
+
+  expire_date: String
+
+  updated_dt: String
+
+  blood_group: String
+
+  is_donor: Boolean
+
+  is_rented: Boolean
+
+  is_expired: Boolean
+
+  is_spect: Boolean
+
+  matrimony: Boolean
+
+  is_shani: Boolean
+
+  is_mangal: Boolean
+
+  str_search: String
+
+  committee_id: Int
+
+  designation_id: Int
+
+  start_date: String
+
+  end_date: String
+}
+
+input GetNearbyUsersInput {
+  lat: Float!
+
+  lng: Float!
+
+  km: Int! = 10
+
+  nearBy: String
+
+  start: Int
+
+  length: Int
+
+  subCommunityId: Int
+}
+
+type Mutation {
+  sendNotification(userId: Float!, title: String!, message: String!): String!
+
+  changePassword(ChangePasswordInput: ChangePasswordInput!): ChangePasswordResponse!
+
+  upsertUser(upsertUserInput: UpsertUserInput!): UserDTO!
+
+  updateLastLogin(user_id: Int!): Boolean!
+
+  deleteUserById(userId: Int!): String!
+
+  changeRole(input: ChangeRoleInput!): String!
+
+  statusChange(data: StatusChangeInputDto!): StatusChangeResponseDto!
+
+  createReminder(input: CreateReminderInput!): Reminder!
+
+  updateReminder(input: UpdateReminderInput!): Reminder!
+
+  removeReminder(id: Int!): Reminder!
+
+  uploadFile(file: Upload!, user_id: Int!): UploadModel!
+
+  deleteUserFile(id: Int!, user_id: Int!): UploadModel!
+
+  register(RegisterInput: RegisterInput!): AuthResponse!
+
+  login(LoginInput: LoginInput!): AuthResponse!
+
+  refreshToken(token: String!): AuthResponse!
+
+  updateDeviceToken: Boolean!
+
+  forgotPassword(forgotPasswordInput: ForgotPasswordInput!): String!
+
+  resetPassword(resetPasswordInput: ResetPasswordInput!): String!
+}
+
+input ChangePasswordInput {
+  currentPassword: String!
+
+  newPassword: String!
+}
+
+input UpsertUserInput {
+  user_id: Int
+
+  role: Role! = USER
+
+  head_id: Int
+
+  member_code: String
+
+  email: String
+
+  mobile: String
+
+  password: String
+
+  relation_id: Int
+
+  sub_community_id: Int
+
+  local_community_id: Int
+
+  first_name: String
+
+  last_name_id: Int
+
+  father_name: String
+
+  mother_name: String
+
+  status: Boolean! = true
+
+  gender: Boolean
+
+  phone: String
+
+  profile_pic: String! = "noimage.png"
+
+  region: String
+
+  is_expired: Boolean! = false
+
+  expire_date: DateTime
+
+  education_id: Int
+
+  occupation_id: Int
+
+  deleted: Boolean! = false
+
+  login_status: Boolean
+
+  last_login: DateTime
+
+  profile_percent: Int! = 5
+
+  city_id: Int
+
+  states_id: Int
+
+  addr_type: AddrType! = OWN
+
+  address: String
+
+  area: String
+
+  pincode: String
+
+  local_address: String
+
+  mosaad_id: Int
+
+  is_donor: Boolean! = false
+
+  matrimony: Boolean! = false
+
+  birth_date: DateTime
+
+  native_place_id: Int
+
+  blood_group: String
+
+  current_activity_id: Int
+
+  marital_status: String
+
+  marriage_date: DateTime
+
+  gotra_id: Int
+
+  business_category_id: Int
+
+  business_address: String
+
+  business_logo: String
+
+  company_name: String
+
+  website: String
+
+  work_details: String
+
+  birth_time: String
+
+  birth_place_id: Float
+
+  hobby: String
+
+  about_me: String
+
+  weight: Float
+
+  height: Float
+
+  is_spect: Boolean! = false
+
+  is_mangal: Boolean! = false
+
+  is_shani: Boolean! = false
+
+  facebook_profile: String
+
+  expectation: String
+}
+
+input ChangeRoleInput {
+  idList: [Float!]!
+
+  role: String!
+
+  subCommunityId: Float
+
+  localCommunityId: Float
+}
+
+input StatusChangeInputDto {
+  idList: String!
+
+  status: Int!
+
+  extra_info: Int
+
+  password: String
+
+  relation_id: Int
+
+  head_id: Int
+}
+
+input CreateReminderInput {
+  user_id: Float!
+
+  rem_date: DateTime!
+
+  rem_type: String!
+
+  message: String!
+}
+
+input UpdateReminderInput {
+  user_id: Float
+
+  rem_date: DateTime
+
+  rem_type: String
+
+  message: String
+
+  id: Int!
+}
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
+
+input RegisterInput {
+  first_name: String!
+
+  last_name_id: Int!
+
+  email: String!
+
+  mobile: String!
+
+  password: String!
+
+  sub_community_id: Int!
+
+  local_community_id: Int!
+
+  gender: Boolean!
+
+  profile_pic: String! = "noimage.png"
+
+  states_id: Int!
+
+  city_id: Int!
+
+  address: String!
+}
+
+input LoginInput {
+  mobile: String!
+
+  password: String!
+}
+
+input ForgotPasswordInput {
+  email: String!
+}
+
+input ResetPasswordInput {
+  token: String!
+
+  password: String!
+}
+
+"""
+A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.
+"""
+type __Schema {
+  description: String
+
+  """
+  A list of all types supported by this server.
+  """
+  types: [__Type!]!
+
+  """
+  The type that query operations will be rooted at.
+  """
+  queryType: __Type!
+
+  """
+  If this server supports mutation, the type that mutation operations will be rooted at.
+  """
+  mutationType: __Type
+
+  """
+  If this server support subscription, the type that subscription operations will be rooted at.
+  """
+  subscriptionType: __Type
+
+  """
+  A list of all directives supported by this server.
+  """
+  directives: [__Directive!]!
+}
+
+"""
+The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.
+
+Depending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name, description and optional `specifiedByURL`, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.
+"""
+type __Type {
+  kind: __TypeKind!
+
+  name: String
+
+  description: String
+
+  specifiedByURL: String
+
+  fields(includeDeprecated: Boolean = false): [__Field!]
+
+  interfaces: [__Type!]
+
+  possibleTypes: [__Type!]
+
+  enumValues(includeDeprecated: Boolean = false): [__EnumValue!]
+
+  inputFields(includeDeprecated: Boolean = false): [__InputValue!]
+
+  ofType: __Type
+
+  isOneOf: Boolean
+}
+
+"""
+An enum describing what kind of type a given `__Type` is.
+"""
+enum __TypeKind {
+  """
+  Indicates this type is a scalar.
+  """
+  SCALAR
+
+  """
+  Indicates this type is an object. `fields` and `interfaces` are valid fields.
+  """
+  OBJECT
+
+  """
+  Indicates this type is an interface. `fields`, `interfaces`, and `possibleTypes` are valid fields.
+  """
+  INTERFACE
+
+  """
+  Indicates this type is a union. `possibleTypes` is a valid field.
+  """
+  UNION
+
+  """
+  Indicates this type is an enum. `enumValues` is a valid field.
+  """
+  ENUM
+
+  """
+  Indicates this type is an input object. `inputFields` is a valid field.
+  """
+  INPUT_OBJECT
+
+  """
+  Indicates this type is a list. `ofType` is a valid field.
+  """
+  LIST
+
+  """
+  Indicates this type is a non-null. `ofType` is a valid field.
+  """
+  NON_NULL
+}
+
+"""
+Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.
+"""
+type __Field {
+  name: String!
+
+  description: String
+
+  args(includeDeprecated: Boolean = false): [__InputValue!]!
+
+  type: __Type!
+
+  isDeprecated: Boolean!
+
+  deprecationReason: String
+}
+
+"""
+Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.
+"""
+type __InputValue {
+  name: String!
+
+  description: String
+
+  type: __Type!
+
+  """
+  A GraphQL-formatted string representing the default value for this input value.
+  """
+  defaultValue: String
+
+  isDeprecated: Boolean!
+
+  deprecationReason: String
+}
+
+"""
+One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.
+"""
+type __EnumValue {
+  name: String!
+
+  description: String
+
+  isDeprecated: Boolean!
+
+  deprecationReason: String
+}
+
+"""
+A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.
+
+In some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.
+"""
+type __Directive {
+  name: String!
+
+  description: String
+
+  isRepeatable: Boolean!
+
+  locations: [__DirectiveLocation!]!
+
+  args(includeDeprecated: Boolean = false): [__InputValue!]!
+}
+
+"""
+A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.
+"""
+enum __DirectiveLocation {
+  """
+  Location adjacent to a query operation.
+  """
+  QUERY
+
+  """
+  Location adjacent to a mutation operation.
+  """
+  MUTATION
+
+  """
+  Location adjacent to a subscription operation.
+  """
+  SUBSCRIPTION
+
+  """
+  Location adjacent to a field.
+  """
+  FIELD
+
+  """
+  Location adjacent to a fragment definition.
+  """
+  FRAGMENT_DEFINITION
+
+  """
+  Location adjacent to a fragment spread.
+  """
+  FRAGMENT_SPREAD
+
+  """
+  Location adjacent to an inline fragment.
+  """
+  INLINE_FRAGMENT
+
+  """
+  Location adjacent to a variable definition.
+  """
+  VARIABLE_DEFINITION
+
+  """
+  Location adjacent to a schema definition.
+  """
+  SCHEMA
+
+  """
+  Location adjacent to a scalar definition.
+  """
+  SCALAR
+
+  """
+  Location adjacent to an object type definition.
+  """
+  OBJECT
+
+  """
+  Location adjacent to a field definition.
+  """
+  FIELD_DEFINITION
+
+  """
+  Location adjacent to an argument definition.
+  """
+  ARGUMENT_DEFINITION
+
+  """
+  Location adjacent to an interface definition.
+  """
+  INTERFACE
+
+  """
+  Location adjacent to a union definition.
+  """
+  UNION
+
+  """
+  Location adjacent to an enum definition.
+  """
+  ENUM
+
+  """
+  Location adjacent to an enum value definition.
+  """
+  ENUM_VALUE
+
+  """
+  Location adjacent to an input object type definition.
+  """
+  INPUT_OBJECT
+
+  """
+  Location adjacent to an input object field definition.
+  """
+  INPUT_FIELD_DEFINITION
+}
+
+"""
+Directs the executor to include this field or fragment only when the `if` argument is true.
+"""
+directive @include ("Included when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+
+"""
+Directs the executor to skip this field or fragment when the `if` argument is true.
+"""
+directive @skip ("Skipped when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+
+"""
+Marks an element of a GraphQL schema as no longer supported.
+"""
+directive @deprecated ("Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax, as specified by [CommonMark](https:\/\/commonmark.org\/)." reason: String = "No longer supported") on FIELD_DEFINITION|ARGUMENT_DEFINITION|INPUT_FIELD_DEFINITION|ENUM_VALUE
+
+"""
+Exposes a URL that specifies the behavior of this scalar.
+"""
+directive @specifiedBy ("The URL that specifies the behavior of this scalar." url: String!) on SCALAR
+
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
+schema {
+  query: Query
+  mutation: Mutation
+}

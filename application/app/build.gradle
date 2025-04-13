@@ -22,7 +22,24 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id("com.google.devtools.ksp")
     id 'com.google.gms.google-services'
+
+    id 'com.apollographql.apollo3'
 }
+
+
+apollo {
+    service("graphql_service") {
+        packageName.set("com.krs.community.graphql")
+
+        introspection {
+            endpointUrl.set("http://localhost:3000/graphql")
+            schemaFile.set(file("src/main/graphql/com/krs/community/graphql/schema.graphqls"))
+        }
+
+        generateKotlinModels.set(true)
+    }
+}
+
 
 android {
     buildFeatures {
@@ -31,7 +48,9 @@ android {
     viewBinding {
         enabled = true
     }
-
+    dexOptions {
+        javaMaxHeapSize "4g" // Increase heap size for D8/DX
+    }
     compileSdkVersion 35
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
@@ -311,6 +330,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-auth'
+
+    implementation 'com.apollographql.apollo3:apollo-runtime:3.8.2'
+
   //  implementation 'com.google.firebase:firebase-core'
 
 //youtube player

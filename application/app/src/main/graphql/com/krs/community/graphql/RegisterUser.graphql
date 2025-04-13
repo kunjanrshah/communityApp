@@ -1,0 +1,21 @@
+mutation RegisterUser {
+    register(
+        RegisterInput: {
+            first_name: "kushal"
+            last_name_id: 2
+            email: "kushal@gmail.com"
+            mobile: "9427051419"
+            password: "123456"
+            sub_community_id: 2
+            local_community_id: 2
+            gender: true
+            states_id: 2
+            city_id: 2
+            address: "kunjan mension"
+        }
+    ) {
+        accessToken
+        refreshToken
+        message
+    }
+}
