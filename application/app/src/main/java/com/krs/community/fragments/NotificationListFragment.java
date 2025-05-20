@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.krs.community.R;
 import com.krs.community.app.AppController;
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter;
@@ -41,6 +42,18 @@ public class NotificationListFragment extends Fragment {
         AppController mApp = (AppController) getApplicationContext();
         mApp.firebaseAnalytics(getContext(), NotificationListFragment.class.getSimpleName());
         mApp.facebookAnalytics(getContext(), NotificationListFragment.class.getSimpleName());
+
+//        FirebaseMessaging.getInstance().getToken()
+//                .addOnCompleteListener(task -> {
+//                    if (!task.isSuccessful()) {
+//                        Log.w("FCMToken", "Fetching FCM registration token failed", task.getException());
+//                        return;
+//                    }
+//
+//                    // Get new FCM registration token
+//                    String token = task.getResult();
+//                    Log.d("FCMToken", token);
+//                });
 
 //        FirebaseMessaging.getInstance().isAutoInitEnabled = true;
 
