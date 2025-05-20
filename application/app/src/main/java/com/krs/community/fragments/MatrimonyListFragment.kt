@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -58,7 +59,9 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener, ParallaxRecyclerAdapter.OnLoadMore, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
+class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberListener,
+    ParallaxRecyclerAdapter.OnLoadMore, LocationAdapter.SetLocationListner,
+    ExportAdapter.exportPdfListener {
 
     private var lstMembers = ArrayList<Member>()
     override val kodein by kodein()
@@ -81,17 +84,27 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
     private var loginMember: Member? = null
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_matrimonylist, container, false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_matrimonylist, container, false)
 
         val mApp = (activity as AppCompatActivity).applicationContext as AppController
         mApp.firebaseAnalytics(context, MatrimonyListFragment::class.simpleName)
         mApp.facebookAnalytics(context, MatrimonyListFragment::class.simpleName)
 
-        smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
-        roomMemberViewModel = ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
-        profileDetailViewModel = ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
+        smartFilterViewModel = ViewModelProvider(
+            this,
+            smartFilterViewModelFactory
+        ).get(SmartFilterViewModel::class.java)
+        roomMemberViewModel =
+            ViewModelProvider(this, roomMemberFactory).get(RoomMemberViewModel::class.java)
+        profileDetailViewModel =
+            ViewModelProvider(this, profileDetailFactory).get(ProfileDetailViewModel::class.java)
         roomMemberViewModel.mRoomMemberListener = this
         smartFilterViewModel.mByFilterListener = this
         AppController.mApplication.start = 0
@@ -99,7 +112,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
         loginMember = Gson().fromJson<Member>(loginuser, Member::class.java)
 
-        val header = LayoutInflater.from(activity).inflate(R.layout.header_matrimony, container, false)
+        val header =
+            LayoutInflater.from(activity).inflate(R.layout.header_matrimony, container, false)
         val ivCancel = header.findViewById<ImageView>(R.id.iv_cancel)
         ivExport = header.findViewById<ImageView>(R.id.iv_export)
         tvRecords = header.findViewById<TextView>(R.id.tvCount)
@@ -121,10 +135,14 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
         edtSearch.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                jsonObj = JSONObject()
-                jsonObj.put(getString(R.string.first_name), edtSearch.text)
-                DashboardActivity.stop = false
-                searchMatrimonyList(jsonObj)
+                if (edtSearch.text.isEmpty()) {
+                    initialSearchMetrimonyMember(null)
+                } else {
+                    jsonObj = JSONObject()
+                    jsonObj.put(getString(R.string.first_name), edtSearch.text)
+                    DashboardActivity.stop = false
+                    searchMatrimonyList(jsonObj)
+                }
             }
             true
         }
@@ -135,12 +153,12 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 val adapter: ExportAdapter = ExportAdapter(activity as AppCompatActivity)
                 adapter.setExportListner(this@MatrimonyListFragment)
                 exportDialog = DialogPlus.newDialog(activity as AppCompatActivity)
-                        .setAdapter(adapter)
-                        .setGravity(Gravity.BOTTOM)
-                        .setCancelable(true)
-                        .setExpanded(true, 800)
-                        .setContentBackgroundResource(R.drawable.popup_top_corner)
-                        .create()
+                    .setAdapter(adapter)
+                    .setGravity(Gravity.BOTTOM)
+                    .setCancelable(true)
+                    .setExpanded(true, 800)
+                    .setContentBackgroundResource(R.drawable.popup_top_corner)
+                    .create()
                 exportDialog?.show()
             } else {
                 requestStoragePermission(activity as AppCompatActivity)
@@ -148,20 +166,28 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         }
 
         adapter = object : ParallaxRecyclerAdapter<Member>(lstMembers) {
-            override fun onBindViewHolderImpl(viewHolder: RecyclerView.ViewHolder, adapter: ParallaxRecyclerAdapter<Member>, position: Int) {
+            override fun onBindViewHolderImpl(
+                viewHolder: RecyclerView.ViewHolder,
+                adapter: ParallaxRecyclerAdapter<Member>,
+                position: Int
+            ) {
 
                 val holder = viewHolder as ListViewHolder
                 val member = lstMembers[position]
                 holder.tvName.text = member.firstName
                 Coroutines.io {
-                    val name = member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
+                    val name =
+                        member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(
+                            member.subCastId.toInt()
+                        )
                     Coroutines.main {
                         holder.tvName.text = name
                     }
                 }
                 if (!member.cityId.isNullOrEmpty()) {
                     Coroutines.io {
-                        val area = member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
+                        val area =
+                            member.area + " " + smartFilterViewModel.getCityNamebyId(member.cityId)
                         Coroutines.main {
                             holder.tvArea.text = area
                         }
@@ -228,45 +254,89 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 if (member.mobile.isNullOrEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.VISIBLE
-                    viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
+                    viewHolder.tvMobile.setTextColor(
+                        ContextCompat.getColor(
+                            activity as AppCompatActivity,
+                            R.color.gray_btn_bg_color
+                        )
+                    )
                 } else {
                     viewHolder.ivMobile.visibility = View.VISIBLE
                     viewHolder.tvMobile.text = member.mobile
-                    viewHolder.tvMobile.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.com_facebook_blue))
+                    viewHolder.tvMobile.setTextColor(
+                        ContextCompat.getColor(
+                            activity as AppCompatActivity,
+                            R.color.com_facebook_blue
+                        )
+                    )
                 }
 
                 if (member.emailAddress.isNullOrEmpty()) {
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = getString(R.string.email_not_available)
-                    viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.gray_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(
+                        ContextCompat.getColor(
+                            activity as AppCompatActivity,
+                            R.color.gray_btn_bg_color
+                        )
+                    )
                 } else {
-                    viewHolder.tvEmail.setTextColor(ContextCompat.getColor(activity as AppCompatActivity, R.color.red_btn_bg_color))
+                    viewHolder.tvEmail.setTextColor(
+                        ContextCompat.getColor(
+                            activity as AppCompatActivity,
+                            R.color.red_btn_bg_color
+                        )
+                    )
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
 
                 holder.boomMenuButton.clearBuilders()
                 for (i in 0 until viewHolder.boomMenuButton.piecePlaceEnum.pieceNumber()) {
-                    val builder: TextInsideCircleButton.Builder? = Utility.getTextInsideCircleButtonBuilder()
+                    val builder: TextInsideCircleButton.Builder? =
+                        Utility.getTextInsideCircleButtonBuilder()
                     builder?.listener {
                         if (it == 0) {
-                            createMemberPDF(activity as AppCompatActivity, member, profileDetailViewModel)
+                            createMemberPDF(
+                                activity as AppCompatActivity,
+                                member,
+                                profileDetailViewModel
+                            )
                             Handler().post(Runnable {
-                                Utility.startSweetProgress(activity, getString(R.string.ExportingList) + "  " + "${member.firstName}" + getString(R.string.DetailList), getString(R.string.please_wait))
+                                Utility.startSweetProgress(
+                                    activity,
+                                    getString(R.string.ExportingList) + "  " + "${member.firstName}" + getString(
+                                        R.string.DetailList
+                                    ),
+                                    getString(R.string.please_wait)
+                                )
                             })
                             Handler().postDelayed({
                                 Utility.hideSweetProgress()
                             }, 5000)
                         } else if (it == 1) {
-                            Toast.makeText(activity, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                activity,
+                                getString(R.string.coming_soon),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             return@listener
-                            val intent: Intent = Intent(activity, FamilyTreeListActivity::class.java)
+                            val intent: Intent =
+                                Intent(activity, FamilyTreeListActivity::class.java)
                             startActivity(intent)
                         } else if (it == 2) {
                             if (!member.mobile.isNullOrEmpty()) {
-                                Utility.sendWhatsAppMessage(activity as AppCompatActivity, member.mobile, getString(R.string.install_app) + BuildConfig.APPLICATION_ID)
+                                Utility.sendWhatsAppMessage(
+                                    activity as AppCompatActivity,
+                                    member.mobile,
+                                    getString(R.string.install_app) + BuildConfig.APPLICATION_ID
+                                )
                             } else {
-                                Toast.makeText(activity, getString(R.string.mobile_not_found), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    activity,
+                                    getString(R.string.mobile_not_found),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         } else if (it == 3) {
                             val mBundle = Bundle()
@@ -276,17 +346,25 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                             startActivity(intent)
                             //  Utility.fade(activity)
                         } else if (it == 4) {
-                            shareDetails(activity, viewHolder.tvName.text.toString(), member.mobile, member.emailAddress, viewHolder.tvArea.text.toString(), member.address)
+                            shareDetails(
+                                activity,
+                                viewHolder.tvName.text.toString(),
+                                member.mobile,
+                                member.emailAddress,
+                                viewHolder.tvArea.text.toString(),
+                                member.address
+                            )
                         } else if (it == 5) {
-                            val adapter: LocationAdapter = LocationAdapter(context as AppCompatActivity, member)
+                            val adapter: LocationAdapter =
+                                LocationAdapter(context as AppCompatActivity, member)
                             adapter.setLocationListner(this@MatrimonyListFragment)
                             setLocationDialog = DialogPlus.newDialog(context)
-                                    .setAdapter(adapter)
-                                    .setGravity(Gravity.BOTTOM)
-                                    .setCancelable(true)
-                                    .setExpanded(true, 600)
-                                    .setContentBackgroundResource(R.drawable.popup_top_corner)
-                                    .create()
+                                .setAdapter(adapter)
+                                .setGravity(Gravity.BOTTOM)
+                                .setCancelable(true)
+                                .setExpanded(true, 600)
+                                .setContentBackgroundResource(R.drawable.popup_top_corner)
+                                .create()
                             setLocationDialog?.show()
                         }
                     }
@@ -300,8 +378,15 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 applyProfilePicture(viewHolder, member)
             }
 
-            override fun onCreateViewHolderImpl(viewGroup: ViewGroup, adapter: ParallaxRecyclerAdapter<Member>, i: Int): RecyclerView.ViewHolder {
-                return ListViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.list_matrimony_profile, viewGroup, false))
+            override fun onCreateViewHolderImpl(
+                viewGroup: ViewGroup,
+                adapter: ParallaxRecyclerAdapter<Member>,
+                i: Int
+            ): RecyclerView.ViewHolder {
+                return ListViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.list_matrimony_profile, viewGroup, false)
+                )
             }
 
             override fun getItemCountImpl(adapter: ParallaxRecyclerAdapter<Member>): Int {
@@ -323,44 +408,75 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         binding.listMatrimony.setHasFixedSize(true)
         binding.listMatrimony.adapter = adapter
 
+        initialSearchMetrimonyMember(edtSearch)
+        return binding.root
+    }
+
+    private fun initialSearchMetrimonyMember(edtSearch: EditText?) {
+
         jsonObj = JSONObject()
         val filter = arguments?.getString("filter")
         if (!filter.isNullOrEmpty()) {
             jsonObj = JSONObject(filter)
             try {
-                val fname = jsonObj.getString(getString(R.string.first_name))
-                if (!fname.isNullOrEmpty()) {
-                    edtSearch.setText(fname)
+                if (edtSearch != null) {
+                    val fname = jsonObj.getString(getString(R.string.first_name))
+                    if (!fname.isNullOrEmpty()) {
+                        edtSearch.setText(fname)
+                    } else {
+                        edtSearch.setText("")
+                    }
                 } else {
-                    edtSearch.setText("")
+                    jsonObj.remove(getString(R.string.first_name))
                 }
             } catch (e: Exception) {
                 e.message
-                edtSearch.setText("")
+                edtSearch?.setText("")
             }
         }
         DashboardActivity.stop = false
+
         searchMatrimonyList(jsonObj)
-        return binding.root
     }
 
 
     private fun applyImportant(holder: ListViewHolder, member: Member) {
 
-        roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
-            try {
-                if (it != null) {
-                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_black_24dp))
-                    holder.iconImp.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_selected))
-                } else {
-                    holder.iconImp.setImageDrawable(ContextCompat.getDrawable(activity as AppCompatActivity, R.drawable.ic_star_border_black_24dp))
-                    holder.iconImp.setColorFilter(ContextCompat.getColor(activity as AppCompatActivity, R.color.icon_tint_normal))
+        roomMemberViewModel.getRoomMember(Integer.parseInt(member.id))
+            .observe(activity as AppCompatActivity, Observer {
+                try {
+                    if (it != null) {
+                        holder.iconImp.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                activity as AppCompatActivity,
+                                R.drawable.ic_star_black_24dp
+                            )
+                        )
+                        holder.iconImp.setColorFilter(
+                            ContextCompat.getColor(
+                                activity as AppCompatActivity,
+                                R.color.icon_tint_selected
+                            )
+                        )
+                    } else {
+                        holder.iconImp.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                activity as AppCompatActivity,
+                                R.drawable.ic_star_border_black_24dp
+                            )
+                        )
+                        holder.iconImp.setColorFilter(
+                            ContextCompat.getColor(
+                                activity as AppCompatActivity,
+                                R.color.icon_tint_normal
+                            )
+                        )
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
 
-        })
+            })
     }
 
     private fun applyClickEvents(holder: ListViewHolder, position: Int, member: Member) {
@@ -369,16 +485,17 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
             val member: Member = lstMembers.get(position)
             var flag = true
-            roomMemberViewModel.getRoomMember(Integer.parseInt(member.id)).observe(activity as AppCompatActivity, Observer {
-                if (flag) {
-                    flag = false
-                    if (it != null) {
-                        roomMemberViewModel.deleteRoomMember(Integer.parseInt(member.id))
-                    } else {
-                        roomMemberViewModel.insertRoomMember(getRoomMemberFromMember(member))
+            roomMemberViewModel.getRoomMember(Integer.parseInt(member.id))
+                .observe(activity as AppCompatActivity, Observer {
+                    if (flag) {
+                        flag = false
+                        if (it != null) {
+                            roomMemberViewModel.deleteRoomMember(Integer.parseInt(member.id))
+                        } else {
+                            roomMemberViewModel.insertRoomMember(getRoomMemberFromMember(member))
+                        }
                     }
-                }
-            })
+                })
         }
 
         holder.tvMobile.setOnClickListener {
@@ -410,14 +527,22 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
         if (!TextUtils.isEmpty(member.profilePic)) {
             holder.imgProfile.isClickable = true
             val url = resources.getString(R.string.base_url_thumb) + member.profilePic
-            activity?.let { Glide.with(it).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f).into(holder.imgProfile) }
+            activity?.let {
+                Glide.with(it).load(url).apply(RequestOptions.circleCropTransform()).thumbnail(1f)
+                    .into(holder.imgProfile)
+            }
             holder.imgProfile.colorFilter = null
             holder.iconText.visibility = View.GONE
 
         } else {
             holder.imgProfile.isClickable = false
             holder.imgProfile.setImageResource(R.drawable.bg_circle)
-            holder.imgProfile.setColorFilter(Utility.getRandomMaterialColor(requireActivity(), "400"))
+            holder.imgProfile.setColorFilter(
+                Utility.getRandomMaterialColor(
+                    requireActivity(),
+                    "400"
+                )
+            )
             holder.iconText.visibility = View.VISIBLE
         }
     }
@@ -439,7 +564,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             jsonObject.put(getString(R.string.filter_by), jsonObj)
             val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
             smartFilterViewModel.smartFilterSearch(updated)
-
+            Log.e("jsonObj", jsonObj.toString())
             Utility.hideKeyboard(activity)
 
             if (AppController.mApplication.start == 0) {
@@ -454,7 +579,11 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 lstMembers.clear()
                 adapter.notifyDataSetChanged()
             } else {
-                snackbar = Snackbar.make(binding.listMatrimony, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
+                snackbar = Snackbar.make(
+                    binding.listMatrimony,
+                    getString(R.string.load_more),
+                    Snackbar.LENGTH_INDEFINITE
+                )
                 snackbar?.show()
             }
         }
@@ -492,7 +621,10 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             tvRecords.visibility = View.VISIBLE
 
 
-            if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(R.string.LOCAL_ADMIN)) {
+            if (loginMember?.role.isNullOrEmpty() || loginMember?.role == getString(R.string.USER) || loginMember?.role == getString(
+                    R.string.LOCAL_ADMIN
+                )
+            ) {
                 ivExport.visibility = View.GONE
             } else {
                 ivExport.visibility = View.VISIBLE
@@ -502,19 +634,29 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 DashboardActivity.stop = false
                 // lstMembers.clear()
                 lstMembers.addAll(response.members)
+                binding.txtNoPRofileFound.visibility = View.GONE
                 adapter.notifyDataSetChanged()
                 binding.listMatrimony.layoutManager?.scrollToPosition(AppController.mApplication.start)
                 if (response.members.size < AppController.mApplication.length) {
                     DashboardActivity.stop = true
-                    Snackbar.make(binding.listMatrimony, getString(R.string.EndRecordList), Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(
+                        binding.listMatrimony,
+                        getString(R.string.EndRecordList),
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 }
             } else {
                 tvRecords.visibility = View.GONE
                 DashboardActivity.stop = true
-                Snackbar.make(binding.listMatrimony, getString(R.string.EndRecordList), Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    binding.listMatrimony,
+                    getString(R.string.EndRecordList),
+                    Snackbar.LENGTH_LONG
+                ).show()
                 ivExport.visibility = View.GONE
             }
         } else {
+            binding.txtNoPRofileFound.visibility = View.VISIBLE
             tvRecords.visibility = View.GONE
             DashboardActivity.stop = true
         }
@@ -559,9 +701,18 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
     override fun exportPdf(filters: ArrayList<String>) {
         if (lstMembers.size > 0) {
             Handler().post {
-                Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
+                Utility.startSweetProgress(
+                    activity,
+                    getString(R.string.exporting_search_list),
+                    getString(R.string.please_wait)
+                )
             }
-            createMemberListPDF(activity as AppCompatActivity, lstMembers, filters, profileDetailViewModel)
+            createMemberListPDF(
+                activity as AppCompatActivity,
+                lstMembers,
+                filters,
+                profileDetailViewModel
+            )
             Handler().postDelayed({
                 Utility.hideSweetProgress()
             }, 7000)

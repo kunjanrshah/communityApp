@@ -16,6 +16,9 @@ public class News {
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("profile_pic")
+    @Expose
+    private String profilePic;
     @SerializedName("location")
     @Expose
     private String location;
@@ -57,6 +60,14 @@ public class News {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
     public String getLocation() {
