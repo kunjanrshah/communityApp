@@ -154,6 +154,7 @@ class ShareEventViewModel(
                             return@launch
                         }
                     } catch (e: ApiException) {
+                        Log.e("ApiException",e.message.toString())
                         e.message?.let {
                             mCreateEventListener.onFailure(it)
                         }
@@ -162,6 +163,7 @@ class ShareEventViewModel(
                             mCreateEventListener.onFailure(it)
                         }
                     } catch (e: Exception) {
+                        Log.e("Exception",e.message.toString())
                         e.message?.let {
                             mCreateEventListener.onFailure(it)
                         }

@@ -1,14 +1,14 @@
 -- Merging decision tree log ---
 manifest
-ADDED from E:\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml:1:1-13
-INJECTED from E:\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml:1:1-13
+ADDED from D:\Android Projects\VanzaSamaz\application\slycalendarview\src\main\AndroidManifest.xml:1:1-13
+INJECTED from D:\Android Projects\VanzaSamaz\application\slycalendarview\src\main\AndroidManifest.xml:1:1-13
 	package
-		INJECTED from E:\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml
+		INJECTED from D:\Android Projects\VanzaSamaz\application\slycalendarview\src\main\AndroidManifest.xml
 uses-sdk
-INJECTED from E:\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from E:\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml
-INJECTED from E:\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml
+INJECTED from D:\Android Projects\VanzaSamaz\application\slycalendarview\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\Android Projects\VanzaSamaz\application\slycalendarview\src\main\AndroidManifest.xml
+INJECTED from D:\Android Projects\VanzaSamaz\application\slycalendarview\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from E:\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml
+		INJECTED from D:\Android Projects\VanzaSamaz\application\slycalendarview\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from E:\community_management_and_administration-\application\slycalendarview\src\main\AndroidManifest.xml
+		INJECTED from D:\Android Projects\VanzaSamaz\application\slycalendarview\src\main\AndroidManifest.xml

@@ -198,7 +198,6 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                     // status is empty, remove from view
                     holder.statusMsg.visibility = View.GONE
                 }
-                val profilePic = "https://api.androidhive.info/feed/img/time.png"
 
                 // Checking for null feed url
                 val url_ = "http://bit.ly/kunjan1"
@@ -213,14 +212,21 @@ class NewsListFragment : Fragment(), KodeinAware, NewsListener {
                 }*/
 
                 // user profile pic
-                val imageUrl = "https://api.androidhive.info/feed/img/cosmos.jpg"
-                Glide.with(activity!!).load(profilePic).thumbnail(0.5f).transition(DrawableTransitionOptions.withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.profilePic)
+                val imageUrl = "https://d12m9erqbesehq.cloudfront.net/wp-content/uploads/sites/2/2024/02/27231254/fitness-event-at-community-park-1.jpg"
+                Glide.with(activity!!).load(item.profilePic).thumbnail(0.5f).transition(DrawableTransitionOptions.withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.profilePic)
                 //   holder.profilePic.setImageUrl(item.profilePic, imageLoader)
                 // Feed image
                 // if (item.images != null) {
-                Glide.with(activity!!).load(imageUrl).thumbnail(0.5f).transition(DrawableTransitionOptions.withCrossFade()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(holder.feedImageView)
+                Glide.with(activity!!)
+                    .load(if (item.images.isNullOrEmpty()) "" else item.images[0])
+                    .thumbnail(0.5f)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL).centerCrop() )
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(holder.feedImageView)
                 //holder.feedImageView.setImageUrl(item.images[0], imageLoader)
                 holder.feedImageView.visibility = View.VISIBLE
+
                 /*holder.feedImageView.setResponseObserver(object : FeedImageView.ResponseObserver {
                     override fun onError() {}
                     override fun onSuccess() {}

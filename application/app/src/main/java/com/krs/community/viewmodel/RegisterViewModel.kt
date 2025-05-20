@@ -95,7 +95,7 @@ class RegisterViewModel(
             return
         }
 
-        if (email.isNullOrBlank() || !Utility.isEmailValid(email)) {
+        if (!email.isNullOrBlank() && !Utility.isEmailValid(email)) {
             iRegisterListener?.getRegisterFailure(app.applicationContext.getString(R.string.emailstr), 3)
             return
         }

@@ -145,7 +145,12 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:hint="name"
-                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:layout_marginRight="5dp"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="7sp"
+                            android:autoSizeMaxTextSize="14sp"
+                            android:autoSizeStepGranularity="1sp"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 

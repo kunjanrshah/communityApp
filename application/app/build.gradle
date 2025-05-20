@@ -235,7 +235,7 @@ dependencies {
     implementation 'com.github.smarteist:Android-Image-Slider:1.4.0'
 
     implementation 'com.github.gotev:android-upload-service:4.9.2'
-    implementation 'com.github.amitshekhariitbhu:PRDownloader:1.0.1'
+    implementation 'com.github.amitshekhariitbhu:PRDownloader:1.0.2'
     implementation 'dev.bandb.graphview:graphview:0.8.1'
     implementation("com.vanniktech:android-image-cropper:4.6.0")
     implementation 'de.hdodenhof:circleimageview:2.2.0'

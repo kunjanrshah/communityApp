@@ -620,6 +620,7 @@
     <string name="FindRecord">रिकॉर्ड खोजें</string>
 
     <string name="backmatrimony">वापस मैट्रीमोनी</string>
+    <string name="noProfileFound">कोई प्रोफ़ाइल नहीं मिली</string>
     <string name="AllNotification">सभी अधिसूचनाएं</string>
     <string name="AllFilter">सभी फ़िल्टर</string>
     <string name="youFilte">आप ऑफ़लाइन फ़िल्टर की सूची देख सकते हैं और इसे संपादित, हटा या लागू कर सकते हैं।</string>

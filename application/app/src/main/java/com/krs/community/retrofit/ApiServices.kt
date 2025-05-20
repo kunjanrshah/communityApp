@@ -180,7 +180,7 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.CREATE_EVENT)
 //    suspend fun createEvent(@Part file: List<MultipartBody.Part>, @Part("id") id: RequestBody, @Part("user_id") user_id: RequestBody, @Part("access_token") access_token: RequestBody, @Part("params") params: RequestBody, @Part("youtube[]") youtube: List<RequestBody>): Response<JsonObject>
     suspend fun createEvent(
-        @Part("images") images: List<MultipartBody.Part>,
+        @Part images: List<MultipartBody.Part>,
         @Part("id") id: RequestBody,
         @Part("title") title: RequestBody,
         @Part("description") description: RequestBody,

@@ -9,6 +9,8 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
+
         android:background="@color/color_mid_light_gray"
         android:scrollbars="none">
 
@@ -41,6 +43,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_margin="10dp"
+                    android:visibility="gone"
                     android:background="@drawable/share_icon" />
 
             </LinearLayout>
@@ -67,7 +70,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Title"
@@ -77,10 +79,11 @@
                 <EditText
                     android:id="@+id/edt_title"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="3dp"
                     android:background="@drawable/round1_corner_mid_gray"
                     android:fontFamily="@font/montserrat_regular"
-                    android:gravity="top"
+                    android:gravity="center_vertical"
                     android:padding="5dp"
                     android:singleLine="true"
                     android:textSize="16sp" />
@@ -89,8 +92,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
+
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -103,8 +106,9 @@
                         android:textSize="18sp" />
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+
                         android:layout_gravity="center"
                         android:background="@drawable/menu_location" />
 
@@ -116,6 +120,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/round1_corner_mid_gray"
                     android:fontFamily="@font/montserrat_regular"
+                    android:layout_marginTop="3dp"
                     android:gravity="top"
                     android:imeOptions="actionDone"
                     android:inputType="textMultiLine"
@@ -126,7 +131,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/montserrat_semibold"
                     android:text="Description"
@@ -137,6 +142,7 @@
                     android:id="@+id/edt_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
                     android:background="@drawable/round1_corner_mid_gray"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="top"
@@ -146,20 +152,37 @@
                     android:padding="5dp"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/montserrat_semibold"
-                    android:text="Reference Link"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp" />
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:text="Add Youtube URLs"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_add_url"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/add_plus" />
+
+                </LinearLayout>
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_parent"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                   />
 
 
                 <LinearLayout
@@ -167,7 +190,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -179,7 +202,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
+
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="Date"
                             android:textColor="@color/black1"
@@ -191,7 +214,8 @@
                             android:layout_height="40dp"
                             android:background="@drawable/round_mid_corner_white"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:gravity="center"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="3dp"
                             android:hint="DD/MM/YYYY"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
@@ -204,9 +228,10 @@
                             android:layout_marginTop="10dp"
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="End"
+                            android:visibility="gone"
                             android:textColor="@color/black1"
                             android:textSize="14sp"
-                            android:visibility="gone" />
+                             />
 
                         <TextView
                             android:layout_width="150dp"
@@ -216,9 +241,10 @@
                             android:gravity="center"
                             android:hint="DD/MM/YYYY"
                             android:paddingStart="10dp"
+                            android:visibility="gone"
                             android:paddingEnd="10dp"
                             android:textSize="14sp"
-                            android:visibility="gone" />
+                              />
 
 
                     </LinearLayout>
@@ -234,7 +260,6 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="Time"
                             android:textColor="@color/black1"
@@ -246,8 +271,9 @@
                             android:layout_height="40dp"
                             android:background="@drawable/round_mid_corner_white"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:gravity="center"
+                            android:gravity="center_vertical"
                             android:hint="HH:MM"
+                            android:layout_marginTop="3dp"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:textSize="14sp" />
@@ -259,9 +285,10 @@
                             android:layout_marginTop="10dp"
                             android:fontFamily="@font/montserrat_semibold"
                             android:text="Time"
+                            android:visibility="gone"
                             android:textColor="@color/black1"
                             android:textSize="14sp"
-                            android:visibility="gone" />
+                            />
 
                         <TextView
                             android:layout_width="100dp"
@@ -270,10 +297,11 @@
                             android:fontFamily="@font/montserrat_semibold"
                             android:gravity="center"
                             android:hint="HH:MM"
+                            android:visibility="gone"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:textSize="14sp"
-                            android:visibility="gone" />
+                            />
 
 
                     </LinearLayout>
@@ -282,14 +310,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:layout_weight="1"
                         android:fontFamily="@font/montserrat_semibold"
                         android:text="Upload Media"
@@ -298,8 +324,8 @@
 
                     <ImageView
                         android:id="@+id/iv_upload"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:layout_gravity="center"
                         android:background="@drawable/add_plus" />
 
@@ -308,33 +334,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_images"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/montserrat_semibold"
-                        android:text="Add Youtube URLs"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp" />
-
-                    <ImageView
-                        android:id="@+id/iv_add_url"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/add_plus" />
-
-                </LinearLayout>
+                    android:paddingBottom="50dp"
+                    />
 
 
             </LinearLayout>
@@ -345,18 +347,16 @@
 
     <com.krs.community.utils.MovableFloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:backgroundTint="@color/white"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_add_black_24dp"
-        app:borderWidth="0dp"
+        android:tint="@color/white"
         app:elevation="12dp"
-        app:fabSize="normal"
-        app:layout_anchorGravity="bottom|right|end"
-        app:maxImageSize="45dp" />
+       />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

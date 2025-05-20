@@ -625,6 +625,7 @@
 
 
     <string name="backmatrimony">પાછા લગ્ન</string>
+    <string name="noProfileFound">કોઈ પ્રોફાઇલ મળી નથી</string>
     <string name="AllNotification">બધી સૂચનાઓ</string>
     <string name="AllFilter">બધા ફિલ્ટર</string>
     <string name="youFilte">તમે ફલાઇન ફિલ્ટર્સની સૂચિ જોઈ શકો છો અને તેને સંપાદિત, કાઢી નાખો અથવા લાગુ કરી શકો છો.</string>
