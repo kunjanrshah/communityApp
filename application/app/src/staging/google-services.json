@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "833997187233",
+    "project_id": "vanza-samaj",
+    "storage_bucket": "vanza-samaj.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833997187233:android:b135e4254771ec75dda8e0",
+        "android_client_info": {
+          "package_name": "com.vanza.samaj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjRthATwTl2oqelQWXagjn6ZJNcYoBjRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

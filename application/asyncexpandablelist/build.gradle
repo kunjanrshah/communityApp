@@ -1,0 +1,113 @@
+apply plugin: 'com.android.library'
+//apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.jfrog.bintray'
+version = "1.1.0"
+
+android {
+     compileSdkVersion 35
+   // buildToolsVersion rootProject.buildToolsVersion
+    namespace "com.ericliu.asyncexpandablelist"
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 35
+        versionCode 1
+        versionName "1.0"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+   // buildToolsVersion '25.0.0'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api "com.android.support:recyclerview-v7:$rootProject.SUPPORT_LIBRARY_VERSION"
+
+    testImplementation 'junit:junit:4.12'
+
+}
+
+
+//def siteUrl = 'https://github.com/Ericliu001/async-expandable-list'	//Homepage URL of the library
+//def gitUrl = 'https://github.com/Ericliu001/async-expandable-list.git'	//Git repository url
+//def issueUrl = 'https://github.com/Ericliu001/async-expandable-list/issues'	//issue url of the library
+//group = 'com.ericliu.asyncexpandablelist'	//
+//
+//
+//install {
+//    repositories.mavenInstaller {
+//        // This generates POM.xml with proper parameters
+//        pom {
+//            project {
+//                packaging 'aar'
+//                // Add your description here
+//                name 'A custom recyclerview that handles expandable list and async loading'
+//                url siteUrl
+//                // Set your license
+//                licenses {
+//                    license {
+//                        name 'The MIT License (MIT)'
+//                        url 'https://opensource.org/licenses/MIT'
+//                    }
+//                }
+//                developers {
+//                    developer {
+//                        id 'ericliu001' //your user ID
+//                        name 'Eric Liu' //your name
+//                        email 'eric.liu.developer@gmail.com' //your email
+//                    }
+//                }
+//                scm {
+//                    connection gitUrl
+//                    developerConnection gitUrl
+//                    url siteUrl
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
+//}
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+//artifacts {
+//    archives javadocJar
+//    archives sourcesJar
+//}
+//
+//Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//
+//bintray {
+//    user = properties.getProperty("bintray.user")
+//    key = properties.getProperty("bintray.apikey")
+//    configurations = ['archives']
+//    pkg {
+//
+//        repo = 'maven'	//Bintray repository
+//        name = 'async-expandable-list'
+//        desc = 'A custom recyclerview that handles expandable list and async loading'	//Project description
+//        websiteUrl = siteUrl
+//        vcsUrl = gitUrl
+//        issueTrackerUrl = issueUrl
+//        licenses = ["MIT"]
+//        labels = ['android']	//标签
+//        publish = true
+//        publicDownloadNumbers = true
+//    }
+//}

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="@string/add_member"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+
+            android:background="@drawable/round_corner_primary"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Save"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/cancel_popup"
+            android:padding="5dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.5"
+        android:background="@color/colorGray" />
+
+    <EditText
+        android:id="@+id/edt_code"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/border"
+        android:digits="0123456789,"
+        android:drawableStart="@drawable/user_name"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:hint="Member Code"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:paddingStart="10dp"
+        android:paddingEnd="0dp"
+        android:singleLine="true"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/edt_password"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/border"
+        android:digits="@string/only_numbers"
+        android:text="123456"
+        android:drawableStart="@drawable/lock"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:hint="New Password"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="12"
+        android:paddingStart="10dp"
+        android:paddingEnd="0dp"
+        android:singleLine="true"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/border"
+        android:gravity="center"
+        android:textAlignment="center">
+
+        <com.krs.community.jrspinner.JRSpinner
+            android:id="@+id/sp_relation"
+            android:layout_width="220dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="10dp"
+            android:background="@null"
+            android:fontFamily="@font/montserrat_medium"
+            android:hint="@string/SelectRelation"
+            android:paddingRight="15dp"
+            android:singleLine="true"
+            android:textColor="@color/black1"
+            android:textSize="18sp"
+            app:backgroundTint="@color/colorPrimary"
+            app:jrs_icon_tint="@color/colorPrimary"
+            app:jrs_multiple="false"
+            app:jrs_title="@string/cityList" />
+
+    </RelativeLayout>
+
+</LinearLayout>
