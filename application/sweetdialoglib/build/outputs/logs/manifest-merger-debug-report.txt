@@ -1,23 +1,23 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:1:1-9:12
-INJECTED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:1:1-9:12
+ADDED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:1:1-9:12
+INJECTED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:1:1-9:12
 	package
-		INJECTED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml
 	android:versionName
-		ADDED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:3:5-30
+		ADDED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:3:5-30
 	xmlns:android
-		ADDED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:1:11-69
+		ADDED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:1:11-69
 	android:versionCode
-		ADDED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:2:5-28
+		ADDED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:2:5-28
 uses-sdk
-ADDED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
-INJECTED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
-INJECTED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
+ADDED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
+INJECTED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
+INJECTED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:5:5-47
 	android:targetSdkVersion
-		ADDED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:5:15-44
-		INJECTED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml
+		ADDED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:5:15-44
+		INJECTED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml
 application
-ADDED from D:\Android Projects\VanzaSamaz\application\sweetdialoglib\src\main\AndroidManifest.xml:7:5-20
+ADDED from C:\Users\4004\projects\communityApp\application\sweetdialoglib\src\main\AndroidManifest.xml:7:5-20

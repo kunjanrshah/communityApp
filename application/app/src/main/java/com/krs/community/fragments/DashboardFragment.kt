@@ -125,18 +125,18 @@ class DashboardFragment : Fragment(), KodeinAware, ByFilterListener {
         binding.gridView.isExpanded = true
 
         adapter = SliderAdapterExample(activity as AppCompatActivity);
-        binding.imageSlider.setSliderAdapter(adapter!!);
-        binding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.SWAP)
-        binding.imageSlider.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION)
-        binding.imageSlider.scrollTimeInSec = 3 //set scroll delay in seconds :
-        setSliderViews()
-        binding.imageSlider.setOnIndicatorClickListener(DrawController.ClickListener {
-            Log.i(
-                "GGG",
-                "onIndicatorClicked: " + binding.imageSlider.getCurrentPagePosition()
-            )
-            Utility.movetoFragment(activity, NewsListFragment())
-        })
+//        binding.imageSlider.setSliderAdapter(adapter!!);
+//        binding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.SWAP)
+//        binding.imageSlider.setSliderTransformAnimation(SliderAnimations.FADETRANSFORMATION)
+//        binding.imageSlider.scrollTimeInSec = 3 //set scroll delay in seconds :
+//        setSliderViews()
+//        binding.imageSlider.setOnIndicatorClickListener(DrawController.ClickListener {
+//            Log.i(
+//                "GGG",
+//                "onIndicatorClicked: " + binding.imageSlider.getCurrentPagePosition()
+//            )
+//            Utility.movetoFragment(activity, NewsListFragment())
+//        })
 
 
         (activity as AppCompatActivity?)!!.supportActionBar!!.title = getString(R.string.home)

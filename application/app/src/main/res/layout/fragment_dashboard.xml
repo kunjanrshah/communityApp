@@ -74,14 +74,23 @@
 
                     </LinearLayout>
 
-                    <com.smarteist.autoimageslider.SliderView
-                        android:id="@+id/imageSlider"
+<!--                    <com.smarteist.autoimageslider.SliderView-->
+<!--                        android:id="@+id/imageSlider"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_marginTop="16dp"-->
+<!--                        android:layout_height="150dp"-->
+<!--                        android:layout_alignParentTop="true"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginRight="10dp" />-->
+                    <ImageView
+                        android:id="@+id/imageView"
                         android:layout_width="match_parent"
-                        android:layout_marginTop="16dp"
                         android:layout_height="150dp"
-                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="16dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp" />
+                        android:layout_marginRight="10dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/vanza_dashboard_image" />
 
 
                     <FrameLayout
