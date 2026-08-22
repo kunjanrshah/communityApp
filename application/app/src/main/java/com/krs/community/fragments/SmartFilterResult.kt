@@ -7,8 +7,19 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.SparseBooleanArray
-import android.view.*
-import android.widget.*
+import android.view.ActionMode
+import android.view.Gravity
+import android.view.HapticFeedbackConstants
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
@@ -17,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.krs.community.fancygifdialoglib.FancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -41,6 +51,7 @@ import com.krs.community.adapter.MyRoleAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.NotificationBadge
 import com.krs.community.entities.RoomMember
+import com.krs.community.fancygifdialoglib.FancyGifDialog
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.RoomMemberListener
@@ -48,9 +59,18 @@ import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
-import com.krs.community.utils.*
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.MyPermissionChecker.Companion.checkReadStoragePermission
 import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
+import com.krs.community.utils.Utility
+import com.krs.community.utils.createMemberListPDF
+import com.krs.community.utils.createMemberPDF
+import com.krs.community.utils.getMemberCode
+import com.krs.community.utils.getRoomMemberFromMember
+import com.krs.community.utils.openImageDialog
+import com.krs.community.utils.shareDetails
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
@@ -517,7 +537,7 @@ class SmartFilterResult : Fragment(), KodeinAware, ByFilterListener, ParallaxRec
             shimmerFrameLayout.stopShimmerAnimation()
             shimmerFrameLayout.visibility = View.GONE
             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
-            if (message.toLowerCase().contains("successfully")) {
+            if (message.lowercase().contains("successfully")) {
                 isSimmerOn = true
                 clearSelections()
                 actionMode?.finish()

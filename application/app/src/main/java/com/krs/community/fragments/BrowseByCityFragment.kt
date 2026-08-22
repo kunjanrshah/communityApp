@@ -24,8 +24,6 @@ import com.ericliu.asyncexpandablelist.async.AsyncHeaderViewHolder
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.github.squti.guru.Guru
 import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
@@ -41,7 +39,6 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.BrowseCityViewModel
 import com.krs.community.viewmodelfactory.BrowseCityViewModelFactory
-import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -123,19 +120,13 @@ class BrowseByCityFragment : Fragment(), AsyncExpandableListViewCallbacks<String
         val loginMember = Guru.getString(getString(R.string.loginMember), "")
         val loginMem = Gson().fromJson(loginMember, Member::class.java)
 
-        val mJson = JSONObject()
-        mJson.put(getString(R.string.state_id), stateId)
-
-        if (loginMem.role != activity?.getString(R.string.super_admin)) {
-            mJson.put(getString(R.string.sub_community_id), loginMem.subCommunityId)
+        val subCommunityId = if (loginMem.role != activity?.getString(R.string.super_admin)) {
+            loginMem.subCommunityId.toInt()
         } else {
-            mJson.put(getString(R.string.sub_community_id), 0)
+            0
         }
-
-        val updated = JsonParser().parse(mJson.toString()) as JsonObject
-        browseCityViewModel?.getCitiesByState(updated)
+        browseCityViewModel?.getCitiesByState(stateId, subCommunityId)
     }
-
 
     override fun onResume() {
         super.onResume()

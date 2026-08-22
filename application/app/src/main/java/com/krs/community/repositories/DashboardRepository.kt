@@ -2,23 +2,52 @@ package com.krs.community.repositories
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Optional
+import com.krs.community.GetBusinessCategoriesQuery
+import com.krs.community.GetCitiesQuery
+import com.krs.community.GetCommitteesQuery
+import com.krs.community.GetDesignationsQuery
+import com.krs.community.GetEducationsQuery
+import com.krs.community.GetGotrasQuery
+import com.krs.community.GetLocalCommunitiesQuery
+import com.krs.community.GetMastersCountsQuery
+import com.krs.community.GetRelationsQuery
+import com.krs.community.GetStatesQuery
+import com.krs.community.GetSubCastsQuery
+import com.krs.community.GetSubCommunitiesQuery
+import com.krs.community.IsAppVersionExistsQuery
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
-import com.krs.community.entities.*
+import com.krs.community.entities.BusinessCategory
+import com.krs.community.entities.BusinessSubCategory
+import com.krs.community.entities.City
+import com.krs.community.entities.Committee
+import com.krs.community.entities.CurrentActivity
+import com.krs.community.entities.Designation
+import com.krs.community.entities.Educations
+import com.krs.community.entities.Gotra
+import com.krs.community.entities.LastName
+import com.krs.community.entities.LastUpdated
+import com.krs.community.entities.LocalCommunity
+import com.krs.community.entities.MasterCounts
+import com.krs.community.entities.NativeList
+import com.krs.community.entities.Occupations
+import com.krs.community.entities.Relations
+import com.krs.community.entities.States
+import com.krs.community.entities.SubCommunity
+import com.krs.community.responses.CountList
 import com.krs.community.responses.MasterUpdateResponse
-import com.krs.community.responses.UserStatusResponse
-import com.krs.community.retrofit.ApiServices
+import com.krs.community.responses.UserCounts
+import com.krs.community.type.DateInputDto
 import com.krs.community.utils.Coroutines
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 
 class DashboardRepository(
-        private val api: ApiServices,
-        private val db: AppDatabase
+    private val apolloClient: ApolloClient,
+    private val db: AppDatabase
 ) : SafeApiRequest() {
 
     private val subCommunity = MutableLiveData<List<SubCommunity>>()
@@ -390,242 +419,460 @@ class DashboardRepository(
         return db.getCityDao().getCityCount()
     }
 
-    suspend fun getUpdatedVersion(jsonObject: JsonObject): UserStatusResponse {
-        return apiRequest {
-            api.getUpdatedVersion(jsonObject)
+    suspend fun getUpdatedVersion(version: Double): Boolean {
+        return try {
+            val response = apolloClient.query(IsAppVersionExistsQuery(version)).execute()
+            response.data?.isAppVersionExists ?: false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 
-    suspend fun getMasterUpdate(jsonObject: JsonObject): MasterUpdateResponse {
-        return apiRequest {
-            api.getMasterUpdate(jsonObject)
+    suspend fun getMastersCounts(): MasterUpdateResponse? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apolloClient.query(GetMastersCountsQuery()).execute()
+
+                val data = response.data?.getMastersCounts ?: return@withContext null
+
+                val countList = CountList().apply {
+                    businessCategories = data.countList.business_categories
+                    cities = data.countList.cities
+                    committees = data.countList.committees
+                    currentActivity = data.countList.current_activity
+                    designations = data.countList.designations
+                    districts = data.countList.districts
+                    educations = data.countList.educations
+                    localCommunity = data.countList.local_community
+                    occupation = data.countList.occupation
+                    relations = data.countList.relations
+                    states = data.countList.states
+                    subCasts = data.countList.sub_casts
+                    subCommunity = data.countList.sub_community
+                    gotra = data.countList.gotra
+                }
+
+                val userCounts = UserCounts().apply {
+                    matrimonyCounts = data.userCounts.matrimony_counts
+                    statusCounts = data.userCounts.status_counts
+                }
+
+                return@withContext MasterUpdateResponse().apply {
+                    success = data.success
+                    message = data.message
+                    setCountList(countList)
+                    setUserCounts(userCounts)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return@withContext null
+            }
         }
     }
+
 
     suspend fun fetchDesignation(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
-                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.designation))
-                if (!date.isNullOrEmpty()) {
+                var date = db.getLastUpdatedDao()
+                    .getLastUpdatedDate(AppController.mApplication.getString(R.string.designation))
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getDesignation(updated) }
-                //  Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                val response = apolloClient.query(
+                    GetDesignationsQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getDesignation = response.data?.getDesignations
+
+                if (getDesignation != null && getDesignation.success) {
                     db.getMasterUpdateDao().updateDesignationIndex(index)
+
+                    val list: List<Designation> = mapToDesignationList(getDesignation.data)
+                    designation.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.designation), response.last_updated)
+
+                if (getDesignation != null && getDesignation.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.designation),
+                        getDesignation?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    designation.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedDesignation.postValue(response.deleted)
+
+                if (!getDesignation?.deleted.isNullOrEmpty()) {
+                    removedDesignation.postValue(getDesignation?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    private fun mapToDesignationList(apolloList: List<GetDesignationsQuery.Data1?>?): List<Designation> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                Designation(
+                    id = it.id.toInt(),
+                    name = it.name
+                )
+            }
+        } ?: emptyList()
+    }
+
 
     suspend fun fetchCommittee(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
-                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.committee))
-                if (!date.isNullOrEmpty()) {
+                var date = db.getLastUpdatedDao()
+                    .getLastUpdatedDate(AppController.mApplication.getString(R.string.committee))
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getCommittee(updated) }
-                //  Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                val response = apolloClient.query(
+                    GetCommitteesQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getCommittee = response.data?.getCommittees
+
+                if (getCommittee != null && getCommittee.success) {
                     db.getMasterUpdateDao().updateCommiteesIndex(index)
+
+                    val list: List<Committee> = mapToCommitteeList(getCommittee.data)
+                    committee.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.committee), response.last_updated)
+
+                if (getCommittee != null && getCommittee.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.committee),
+                        getCommittee?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    committee.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedCommittee.postValue(response.deleted)
+
+                if (!getCommittee?.deleted.isNullOrEmpty()) {
+                    removedCommittee.postValue(getCommittee?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
+    private fun mapToCommitteeList(apolloList: List<GetCommitteesQuery.Data1?>?): List<Committee> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                Committee(
+                    id = it.id.toInt(),
+                    name = it.name
+                )
+            }
+        } ?: emptyList()
+    }
+
+
+
     suspend fun fetchSubCommunities(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
-                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.sub_community))
-                if (!date.isNullOrEmpty()) {
+                var date = db.getLastUpdatedDao()
+                    .getLastUpdatedDate(AppController.mApplication.getString(R.string.sub_community))
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getSubCommunity(updated) }
-                // Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                val response = apolloClient.query(
+                    GetSubCommunitiesQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getSubCommunities = response.data?.getSubCommunities
+
+                if (getSubCommunities != null && getSubCommunities.success) {
                     db.getMasterUpdateDao().updateSubCommIndex(index)
+
+                    val list: List<SubCommunity> = mapToSubCommunityList(getSubCommunities.data)
+                    subCommunity.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.sub_community), response.last_updated)
+
+                if (getSubCommunities != null && getSubCommunities.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.sub_community),
+                        getSubCommunities?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    subCommunity.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedSubCommunity.postValue(response.deleted)
+
+                if (!getSubCommunities?.deleted.isNullOrEmpty()) {
+                    removedSubCommunity.postValue(getSubCommunities?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun mapToSubCommunityList(apolloList: List<GetSubCommunitiesQuery.Data1?>?): List<SubCommunity> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                SubCommunity(
+                    id = it.id.toInt(),
+                    name = it.name
+                )
+            }
+        } ?: emptyList()
     }
 
     suspend fun fetchLocalCommunities(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
-                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.local_community))
-                if (!date.isNullOrEmpty()) {
+                var date = db.getLastUpdatedDao()
+                    .getLastUpdatedDate(AppController.mApplication.getString(R.string.local_community))
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getListLocalCommunity(updated) }
-                //   Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                val response = apolloClient.query(
+                    GetLocalCommunitiesQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getLocalCommunities = response.data?.getLocalCommunities
+
+                if (getLocalCommunities != null && getLocalCommunities.success) {
                     db.getMasterUpdateDao().updateLocalCommIndex(index)
+
+                    val list: List<LocalCommunity> =
+                        mapToLocalCommunityList(getLocalCommunities.data)
+                    localCommunity.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.local_community), response.last_updated)
+
+                if (getLocalCommunities != null && getLocalCommunities.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.local_community),
+                        getLocalCommunities?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    localCommunity.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedLocalCommunity.postValue(response.deleted)
+
+                if (!getLocalCommunities?.deleted.isNullOrEmpty()) {
+                    removedLocalCommunity.postValue(getLocalCommunities?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    private fun mapToLocalCommunityList(apolloList: List<GetLocalCommunitiesQuery.Data1?>?): List<LocalCommunity> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                LocalCommunity(
+                    id = it.id.toInt(),
+                    name = it.name,
+                    parent_id = it.sub_community_id!!
+                )
+            }
+        } ?: emptyList()
+    }
+
+
 
     suspend fun fetchLastName(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.last_name))
-                if (!date.isNullOrEmpty()) {
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getUserLastName(updated) }
-                // Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                val response = apolloClient.query(
+                    GetSubCastsQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getSubCasts = response.data?.getSubCasts
+
+                if (getSubCasts != null && getSubCasts.success) {
                     db.getMasterUpdateDao().updateSubCastIndex(index)
+                    val list: List<LastName> = mapToLastNameList(getSubCasts.data)
+                    lastName.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.last_name), response.last_updated)
+
+                if (getSubCasts != null && getSubCasts.last_updated != 0) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.last_name),
+                        getSubCasts.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    lastName.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedLastName.postValue(response.deleted)
+                if (!getSubCasts?.deleted.isNullOrEmpty()) {
+                    removedLastName.postValue(getSubCasts?.deleted)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    private fun mapToLastNameList(apolloList: List<GetSubCastsQuery.Data1?>?): List<LastName> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                LastName(it.id.toInt(), it.name)
+            }
+        } ?: emptyList()
+    }
+
 
     suspend fun fetchEducation(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.education))
-                if (!date.isNullOrEmpty()) {
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getEducation(updated) }
-                //  Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                // Execute GraphQL query
+                val response = apolloClient.query(
+                    GetEducationsQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getEducation = response.data?.getEducations
+
+                // If success, update DB and post data
+                if (getEducation != null && getEducation.success) {
                     db.getMasterUpdateDao().updateEducationIndex(index)
+
+                    val list: List<Educations> = mapToEducationList(getEducation.data)
+                    education.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.education), response.last_updated)
+
+                // Update last updated
+                if (getEducation != null && getEducation.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.education),
+                        getEducation?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    education.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedEducation.postValue(response.deleted)
+
+                // Post deleted items if any
+                if (!getEducation?.deleted.isNullOrEmpty()) {
+                    removedEducation.postValue(getEducation?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    private fun mapToEducationList(apolloList: List<GetEducationsQuery.Data1?>?): List<Educations> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                Educations(
+                    id = it.id.toInt(),
+                    name = it.name
+                )
+            }
+        } ?: emptyList()
+    }
+
 
     suspend fun fetchGotra(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.gotra))
-                if (!date.isNullOrEmpty()) {
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getGotra(updated) }
-                //   Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                val response = apolloClient.query(
+                    GetGotrasQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getGotra = response.data?.getGotras
+
+                if (getGotra != null && getGotra.success) {
                     db.getMasterUpdateDao().updateGotraIndex(index)
+
+                    val list: List<Gotra> = mapToGotraList(getGotra.data)
+                    gotra.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.gotra), response.last_updated)
+
+                if (getGotra != null && getGotra.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.gotra),
+                        getGotra?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    gotra.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedGotra.postValue(response.deleted)
+
+                if (!getGotra?.deleted.isNullOrEmpty()) {
+                    removedGotra.postValue(getGotra?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    private fun mapToGotraList(apolloList: List<GetGotrasQuery.Data1?>?): List<Gotra> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                Gotra(
+                    id = it.id.toInt(),
+                    name = it.name
+                )
+            }
+        } ?: emptyList()
+    }
+
 
     suspend fun fetchState(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.state))
-                if (!date.isNullOrEmpty()) {
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getUserState(updated) }
-                if (response.success) {
+                Log.v("getMastersResponse3:", "" + date)
+                val response = apolloClient.query(
+                    GetStatesQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getUserState = response.data?.getStates
+                Log.v(TAG, "getMastersResponse4: $getUserState")
+                if (getUserState != null && getUserState.success) {
                     db.getMasterUpdateDao().updateStateIndex(index)
+
+                    val list: List<States> = mapToStateList(getUserState.data)
+                    state.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.state), response.last_updated)
+
+                if (getUserState != null && getUserState.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.state),
+                        getUserState?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    state.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedStates.postValue(response.deleted)
+
+                if (!getUserState?.deleted.isNullOrEmpty()) {
+                    removedStates.postValue(getUserState?.deleted)
                 }
 
             } catch (e: Exception) {
@@ -633,211 +880,297 @@ class DashboardRepository(
             }
         }
     }
+
+    private fun mapToStateList(apolloList: List<GetStatesQuery.Data1?>?): List<States> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                States(
+                    id = it.id.toInt(),
+                    name = it.name
+                )
+            }
+        } ?: emptyList()
+    }
+
 
     suspend fun fetchCity(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.city))
                 try {
-                    if (!date.isNullOrEmpty()) {
+                    if (!date.isNullOrEmpty() && date != "null") {
                         date = (Integer.parseInt(date) + 1).toString()
                     }
-                } catch (e: java.lang.Exception) {
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getListCity(updated) }
-                //   Log.d(TAG, "city response: $response")
-                if (response.success) {
+
+                // Execute GraphQL query
+                val response = apolloClient.query(
+                    GetCitiesQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getCities = response.data?.getCities
+
+                if (getCities != null && getCities.success) {
                     db.getMasterUpdateDao().updateCitiesIndex(index)
+
+                    val list: List<City> = mapToCityList(getCities.data)
+                    city.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.city), response.last_updated)
+
+                if (getCities != null && getCities.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.city),
+                        getCities?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    city.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedCity.postValue(response.deleted)
+
+                if (!getCities?.deleted.isNullOrEmpty()) {
+                    removedCity.postValue(getCities?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
+    private fun mapToCityList(apolloList: List<GetCitiesQuery.Data1?>?): List<City> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                it.states_id?.let { it1 ->
+                    City(
+                        id = it.id.toInt(),
+                        name = it.name,
+                        parent_id = it1,
+                    )
+                }
+            }
+        } ?: emptyList()
+    }
+
+
 
     suspend fun fetchBusinessCategory(count: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.business_category))
-                if (!date.isNullOrEmpty()) {
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getBusinessCategory(updated) }
-                //  Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                val response = apolloClient.query(
+                    GetBusinessCategoriesQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getBusinessCategory = response.data?.getBusinessCategories
+
+                if (getBusinessCategory != null && getBusinessCategory.success) {
                     db.getMasterUpdateDao().updateBusinessCategoryIndex(count)
+
+                    val list: List<BusinessCategory> =
+                        mapToBusinessCategoryList(getBusinessCategory.data)
+                    businessCategory.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.business_category), response.last_updated)
+
+                if (getBusinessCategory != null && getBusinessCategory.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.business_category),
+                        getBusinessCategory?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    businessCategory.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedBusinessCategory.postValue(response.deleted)
+
+                if (!getBusinessCategory?.deleted.isNullOrEmpty()) {
+                    removedBusinessCategory.postValue(getBusinessCategory?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
-    suspend fun fetchBusinessSubCategory(index: Int) {
-        return withContext(Dispatchers.IO) {
-            try {
-                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.business_sub_category))
-                if (!date.isNullOrEmpty()) {
-                    date = (Integer.parseInt(date) + 1).toString()
-                }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getListBusinessSubCategory(updated) }
-                //   Log.d(TAG, "response: $response")
-                if (response.success) {
-                    db.getMasterUpdateDao().updateBusinessSubCategoryIndex(index)
-                }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.business_sub_category), response.last_updated)
-                    lastUpdated.postValue(lastdate)
-                    businessSubCategory.postValue(response.data)
-                }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedBusinessSubCategory.postValue(response.deleted)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private fun mapToBusinessCategoryList(apolloList: List<GetBusinessCategoriesQuery.Data1?>?): List<BusinessCategory> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                BusinessCategory(
+                    id = it.id.toInt(),
+                    name = it.name
+                )
             }
-        }
-    }
-
-    suspend fun fetchNative(index: Int) {
-        return withContext(Dispatchers.IO) {
-            try {
-                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string._native))
-                if (!date.isNullOrEmpty()) {
-                    date = (Integer.parseInt(date) + 1).toString()
-                }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getNative(updated) }
-                Log.d(TAG, "response: $response")
-                if (response.success) {
-                    db.getMasterUpdateDao().updateNativeIndex(index)
-                }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string._native), response.last_updated)
-                    lastUpdated.postValue(lastdate)
-                    native.postValue(response.data)
-                }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedNative.postValue(response.deleted)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    suspend fun fetchOccupation(index: Int) {
-        return withContext(Dispatchers.IO) {
-            try {
-                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.occupation))
-                if (!date.isNullOrEmpty()) {
-                    date = (Integer.parseInt(date) + 1).toString()
-                }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getOccupation(updated) }
-                Log.d(TAG, "response: $response")
-                if (response.success) {
-                    db.getMasterUpdateDao().updateOccupationIndex(index)
-                }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.occupation), response.last_updated)
-                    lastUpdated.postValue(lastdate)
-                    occupation.postValue(response.data)
-                }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedOccupation.postValue(response.deleted)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+        } ?: emptyList()
     }
 
     suspend fun fetchRelations(index: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.relation))
-                if (!date.isNullOrEmpty()) {
+                if (!date.isNullOrEmpty() && date != "null") {
                     date = (Integer.parseInt(date) + 1).toString()
                 }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getRelations(updated) }
-                Log.d(TAG, "response: $response")
-                if (response.success) {
+
+                // Execute GraphQL query
+                val response = apolloClient.query(
+                    GetRelationsQuery(
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                    )
+                ).execute()
+                val getRelations = response.data?.getRelations
+
+                if (getRelations != null && getRelations.success) {
                     db.getMasterUpdateDao().updateRelationIndex(index)
+
+                    val list: List<Relations> = mapToRelationList(getRelations.data)
+                    relations.postValue(list)
                 }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.relation), response.last_updated)
+
+                if (getRelations != null && getRelations.last_updated.toLong() != 0L) {
+                    val lastdate = LastUpdated(
+                        AppController.mApplication.getString(R.string.relation),
+                        getRelations?.last_updated.toString()
+                    )
                     lastUpdated.postValue(lastdate)
-                    relations.postValue(response.data)
                 }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedRelations.postValue(response.deleted)
+
+                if (!getRelations?.deleted.isNullOrEmpty()) {
+                    removedRelations.postValue(getRelations?.deleted)
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
-    suspend fun fetchCurrentActivity(index: Int) {
-        return withContext(Dispatchers.IO) {
-            try {
-                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.current_activity))
-                if (!date.isNullOrEmpty()) {
-                    date = (Integer.parseInt(date) + 1).toString()
-                }
-                val mJSONObject = JSONObject()
-                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
-                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
-                val response = apiRequest { api.getActivity(updated) }
-                Log.d(TAG, "response: $response")
-                if (response.success) {
-                    db.getMasterUpdateDao().updateCurrentActivityIndex(index)
-                }
-                if (!response.last_updated.isNullOrEmpty()) {
-                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.current_activity), response.last_updated)
-                    lastUpdated.postValue(lastdate)
-                    currentActivity.postValue(response.data)
-                }
-                if (!response.deleted.isNullOrEmpty()) {
-                    removedActivity.postValue(response.deleted)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private fun mapToRelationList(apolloList: List<GetRelationsQuery.Data1?>?): List<Relations> {
+        return apolloList?.mapNotNull { item ->
+            item?.let {
+                Relations(
+                    id = it.id.toInt(),
+                    name = it.name
+                )
             }
-        }
+        } ?: emptyList()
     }
+
+//    suspend fun fetchBusinessSubCategory(index: Int) {
+//        return withContext(Dispatchers.IO) {
+//            try {
+//                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.business_sub_category))
+//                if (!date.isNullOrEmpty()) {
+//                    date = (Integer.parseInt(date) + 1).toString()
+//                }
+//                val mJSONObject = JSONObject()
+//                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
+//                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
+//                val response = apiRequest { api.getListBusinessSubCategory(updated) }
+//                //   Log.d(TAG, "response: $response")
+//                if (response.success) {
+//                    db.getMasterUpdateDao().updateBusinessSubCategoryIndex(index)
+//                }
+//                if (!response.last_updated.isNullOrEmpty()) {
+//                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.business_sub_category), response.last_updated)
+//                    lastUpdated.postValue(lastdate)
+//                    businessSubCategory.postValue(response.data)
+//                }
+//                if (!response.deleted.isNullOrEmpty()) {
+//                    removedBusinessSubCategory.postValue(response.deleted)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
+//
+//    suspend fun fetchNative(index: Int) {
+//        return withContext(Dispatchers.IO) {
+//            try {
+//                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string._native))
+//                if (!date.isNullOrEmpty()) {
+//                    date = (Integer.parseInt(date) + 1).toString()
+//                }
+//                val mJSONObject = JSONObject()
+//                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
+//                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
+//                val response = apiRequest { api.getNative(updated) }
+//                Log.d(TAG, "response: $response")
+//                if (response.success) {
+//                    db.getMasterUpdateDao().updateNativeIndex(index)
+//                }
+//                if (!response.last_updated.isNullOrEmpty()) {
+//                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string._native), response.last_updated)
+//                    lastUpdated.postValue(lastdate)
+//                    native.postValue(response.data)
+//                }
+//                if (!response.deleted.isNullOrEmpty()) {
+//                    removedNative.postValue(response.deleted)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
+//
+//    suspend fun fetchOccupation(index: Int) {
+//        return withContext(Dispatchers.IO) {
+//            try {
+//                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.occupation))
+//                if (!date.isNullOrEmpty()) {
+//                    date = (Integer.parseInt(date) + 1).toString()
+//                }
+//                val mJSONObject = JSONObject()
+//                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
+//                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
+//                val response = apiRequest { api.getOccupation(updated) }
+//                Log.d(TAG, "response: $response")
+//                if (response.success) {
+//                    db.getMasterUpdateDao().updateOccupationIndex(index)
+//                }
+//                if (!response.last_updated.isNullOrEmpty()) {
+//                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.occupation), response.last_updated)
+//                    lastUpdated.postValue(lastdate)
+//                    occupation.postValue(response.data)
+//                }
+//                if (!response.deleted.isNullOrEmpty()) {
+//                    removedOccupation.postValue(response.deleted)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
+//
+//    suspend fun fetchCurrentActivity(index: Int) {
+//        return withContext(Dispatchers.IO) {
+//            try {
+//                var date = db.getLastUpdatedDao().getLastUpdatedDate(AppController.mApplication.getString(R.string.current_activity))
+//                if (!date.isNullOrEmpty()) {
+//                    date = (Integer.parseInt(date) + 1).toString()
+//                }
+//                val mJSONObject = JSONObject()
+//                mJSONObject.put(AppController.mApplication.getString(R.string.date), date)
+//                val updated = JsonParser().parse(mJSONObject.toString()) as JsonObject
+//                val response = apiRequest { api.getActivity(updated) }
+//                Log.d(TAG, "response: $response")
+//                if (response.success) {
+//                    db.getMasterUpdateDao().updateCurrentActivityIndex(index)
+//                }
+//                if (!response.last_updated.isNullOrEmpty()) {
+//                    val lastdate = LastUpdated(AppController.mApplication.getString(R.string.current_activity), response.last_updated)
+//                    lastUpdated.postValue(lastdate)
+//                    currentActivity.postValue(response.data)
+//                }
+//                if (!response.deleted.isNullOrEmpty()) {
+//                    removedActivity.postValue(response.deleted)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
 }

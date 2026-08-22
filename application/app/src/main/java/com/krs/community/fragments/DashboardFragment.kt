@@ -441,7 +441,7 @@ internal inner class MenuAdapter(private val mContext: Context) : BaseAdapter() 
                     if (!loginMember?.role.isNullOrEmpty() && loginMember?.role != getString(R.string.USER)) {
                         val intent = Intent(activity, RegisterActivty::class.java)
                         val bundle = Bundle()
-                        bundle.putBoolean(getString(R.string.is_logged_in), false)
+                        bundle.putBoolean(getString(R.string.is_admin), true)
                         intent.putExtras(bundle)
                         startActivity(intent)
                         //    Utility.fade(activity)

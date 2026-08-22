@@ -3,7 +3,6 @@ package com.krs.community.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -43,8 +42,17 @@ import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.listeners.UpdateListener
 import com.krs.community.model.RegisterModel
 import com.krs.community.responses.MasterUpdateResponse
-import com.krs.community.responses.UserStatusResponse
-import com.krs.community.utils.*
+import com.krs.community.utils.AppConstants
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.CountryData
+import com.krs.community.utils.Logger
+import com.krs.community.utils.Utility
+import com.krs.community.utils.handleCropError
+import com.krs.community.utils.handleCropResult
+import com.krs.community.utils.pickFromGallery
+import com.krs.community.utils.showVersionDialog
+import com.krs.community.utils.snackbar
+import com.krs.community.utils.startCrop
 import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RegisterViewModel
@@ -55,7 +63,9 @@ import com.orhanobut.dialogplus.DialogPlus
 import com.tsongkha.spinnerdatepicker.DatePicker
 import com.tsongkha.spinnerdatepicker.DatePickerDialog
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
-import com.yalantis.ucrop.UCrop.*
+import com.yalantis.ucrop.UCrop.REQUEST_CROP
+import com.yalantis.ucrop.UCrop.RESULT_ERROR
+import com.yalantis.ucrop.UCrop.getOutput
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragmentCallback
 import org.kodein.di.KodeinAware
@@ -65,7 +75,8 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterListener, KodeinAware, ImageUploadListener, UpdateListener, DatePickerDialog.OnDateSetListener {
 
@@ -77,7 +88,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private lateinit var dashboardViewModel: DashboardViewModel
     private var resultUri: Uri? = null
-    private var isLogin: Boolean = true
+    private var isAdmin: Boolean = false
     private var datepicker = SpinnerDatePickerDialogBuilder()
 
     companion object {
@@ -93,7 +104,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        isLogin = intent.getBooleanExtra(getString(R.string.is_logged_in), true)
+        isAdmin = intent.getBooleanExtra(getString(R.string.is_admin), false)
 
         val mApp = applicationContext as AppController
         mApp.firebaseAnalytics(this@RegisterActivty, RegisterActivty.javaClass.simpleName)
@@ -170,7 +181,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                 binding.imgHeader.visibility = View.VISIBLE
             }
 
-            if (isLogin) {
+            if (!isAdmin) {
                 val str = resources.getString(R.string.already_have_a_account_sign_in) + "<b>" + " " + getString(R.string.login) + "</b>"
                 binding.txtAlready.text = Html.fromHtml(str)
                 binding.txtAlready.visibility = View.VISIBLE
@@ -179,8 +190,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             }
 
             binding.btnRegister.setOnClickListener {
-                Utility.startSweetProgress(this, getString(R.string.RegisterFamily), resources.getString(R.string.loading))
-                registerViewModel.getUserRegistration(isLogin)
+                registerViewModel.getUserRegistration(isAdmin)
             }
             binding.txtAlready.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
             binding.txtHowRegister.setOnClickListener { registerViewModel.onHowRegisterClicked(this) }
@@ -193,8 +203,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             }
 
             if (isNetworkConnected(this)) {
-                val jsonObject = JsonObject()
-                dashboardViewModel.getMasterUpdate(jsonObject)
+                dashboardViewModel.getMasterUpdate()
             }
 
             binding.spinnerCountries.setOnItemClickListener { pos ->
@@ -209,7 +218,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                     binding.spinnerCities.clear()
                     registerViewModel.cityId = null
                     binding.edtMobile.setText("")
-                    if (binding.spinnerStates.text.toString().toLowerCase() == "foreign") {
+                    if (binding.spinnerStates.text.toString().lowercase() == "foreign") {
                         binding.edtMobile.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(15))
                     } else {
                         binding.edtMobile.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
@@ -560,18 +569,18 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         }
     }
 
-    override fun getRegisterSuccess(data: RegisterModel) {
+    override fun getRegisterSuccess(data: RegisterModel, isAdmin: Boolean) {
         Utility.hideSweetProgress()
-        successResponse(data)
+        successResponse(data, isAdmin)
     }
 
     private fun successResponse(message: String) {
         Snackbar.make(binding.rootLayout, message, Snackbar.LENGTH_INDEFINITE).show()
     }
 
-    private fun successResponse(data: RegisterModel) {
+    private fun successResponse(data: RegisterModel, isAdmin: Boolean) {
         clearAll()
-        if (data.message.contains("create")) {
+        if (isAdmin) {
             goToFamilyDetailActivity(data)
         } else {
             binding.rootLayout.snackbar(getString(R.string.RequestAdmin), Snackbar.LENGTH_INDEFINITE)
@@ -580,7 +589,7 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     private fun goToFamilyDetailActivity(data: RegisterModel) {
         val intent = Intent(this, FamilyDetailActivity::class.java)
-        intent.putExtra(getString(R.string.id), data.userId.toString())
+        intent.putExtra(getString(R.string.id), data.userId)
         intent.putExtra(getString(R.string.is_finish), true)
         startActivity(intent)
         //finish()
@@ -697,73 +706,79 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         mShowLoader = showLoader
     }
 
-    override fun getVersionResponse(response: UserStatusResponse) {
-        showVersionDialog(this)
+    override fun getVersionResponse(response: Boolean) {
+        if (!response) {
+            showVersionDialog(this)
+        }
     }
 
-    override fun getMastersResponse(response: MasterUpdateResponse) {
-        Log.v(TAG, "getMastersResponse")
-        if (response.success) {
-            Coroutines.io {
-                val counts = MasterCounts()
-                counts.business_categories = -1
-                counts.business_sub_categories = -1
-                counts.committees = -1
-                counts.current_activity = -1
-                counts.designations = -1
-                counts.districts = -1
-                counts.educations = -1
-                counts.gotra = -1
-                counts.native_place = -1
-                counts.occupation = -1
-                counts.relations = -1
-                counts.states = Integer.parseInt(response.countList.states)
-                counts.cities = Integer.parseInt(response.countList.cities)
-                counts.sub_casts = Integer.parseInt(response.countList.subCasts)
-                counts.sub_community = Integer.parseInt(response.countList.subCommunity)
-                counts.local_community = Integer.parseInt(response.countList.localCommunity)
+    override fun getMastersResponse(response: MasterUpdateResponse?) {
+        Log.v(TAG, "getMastersResponse: ${response?.success}")
+        if (response != null) {
+            if (response.success) {
+                Coroutines.io {
+                    val counts = MasterCounts()
+                    counts.business_categories = -1
+                    counts.business_sub_categories = -1
+                    counts.committees = -1
+                    counts.current_activity = -1
+                    counts.designations = -1
+                    counts.districts = -1
+                    counts.educations = -1
+                    counts.gotra = -1
+                    counts.native_place = -1
+                    counts.occupation = -1
+                    counts.relations = -1
+                    counts.states = Integer.parseInt(response.countList.states)
+                    counts.cities = Integer.parseInt(response.countList.cities)
+                    counts.sub_casts = Integer.parseInt(response.countList.subCasts)
+                    counts.sub_community = Integer.parseInt(response.countList.subCommunity)
+                    counts.local_community = Integer.parseInt(response.countList.localCommunity)
 
-                val dbCount = dashboardViewModel.getMasterCounts()
-                if (dbCount == null) {
-                    dashboardViewModel.insertMasterCounts(counts)
-                    dashboardViewModel.fetchState(counts.states)
-                    dashboardViewModel.fetchCity(counts.cities)
-                    dashboardViewModel.fetchSubCommunities(counts.sub_community)
-                    dashboardViewModel.fetchLocalCommunities(counts.local_community)
-                    dashboardViewModel.fetchLastName(counts.sub_casts)
-                    dashboardViewModel.fetchNative(counts.native_place)
-                } else {
-                    val statesCount = dashboardViewModel.getStatesCount()
-                    if (dbCount.states != counts.states || statesCount == 0) {
+                    val dbCount = dashboardViewModel.getMasterCounts()
+                    if (dbCount == null) {
+                        dashboardViewModel.insertMasterCounts(counts)
                         dashboardViewModel.fetchState(counts.states)
-                    }
-
-                    val citiesCount = dashboardViewModel.getCitiesCount()
-                    if (dbCount.cities != counts.cities || citiesCount == 0) {
                         dashboardViewModel.fetchCity(counts.cities)
-                    }
-
-                    val subCommCount = dashboardViewModel.getSubCommCount()
-                    if (dbCount.sub_community != counts.sub_community || subCommCount == 0) {
                         dashboardViewModel.fetchSubCommunities(counts.sub_community)
-                    }
-
-                    val localCommCount = dashboardViewModel.getLocalCommCount()
-                    if (dbCount.local_community != counts.local_community || localCommCount == 0) {
                         dashboardViewModel.fetchLocalCommunities(counts.local_community)
-                    }
-
-                    val lnameCount = dashboardViewModel.getLastNameCount()
-                    if (dbCount.sub_casts != counts.sub_casts || lnameCount == 0) {
                         dashboardViewModel.fetchLastName(counts.sub_casts)
-                    }
-
-                    val nativeCount = dashboardViewModel.getNativeCount()
-                    if (dbCount.native_place != counts.native_place || nativeCount == 0) {
                         dashboardViewModel.fetchNative(counts.native_place)
+                    } else {
+                        val statesCount = dashboardViewModel.getStatesCount()
+                        Log.v(TAG, "getMastersResponse1")
+                        if (dbCount.states != counts.states || statesCount == 0) {
+                            Log.v(TAG, "getMastersResponse2:" + counts.states)
+                            dashboardViewModel.fetchState(counts.states)
+                        }
+
+//                        val citiesCount = dashboardViewModel.getCitiesCount()
+//                        if (dbCount.cities != counts.cities || citiesCount == 0) {
+//                            dashboardViewModel.fetchCity(counts.cities)
+//                        }
+//
+//                        val subCommCount = dashboardViewModel.getSubCommCount()
+//                        if (dbCount.sub_community != counts.sub_community || subCommCount == 0) {
+//                            dashboardViewModel.fetchSubCommunities(counts.sub_community)
+//                        }
+//
+//                        val localCommCount = dashboardViewModel.getLocalCommCount()
+//                        if (dbCount.local_community != counts.local_community || localCommCount == 0) {
+//                            dashboardViewModel.fetchLocalCommunities(counts.local_community)
+//                        }
+//
+//                        val lnameCount = dashboardViewModel.getLastNameCount()
+//                        if (dbCount.sub_casts != counts.sub_casts || lnameCount == 0) {
+//                            dashboardViewModel.fetchLastName(counts.sub_casts)
+//                        }
+//
+//                        val nativeCount = dashboardViewModel.getNativeCount()
+//                        if (dbCount.native_place != counts.native_place || nativeCount == 0) {
+//                            dashboardViewModel.fetchNative(counts.native_place)
+//                        }
                     }
+                    setDropDownList()
                 }
-                setDropDownList()
             }
         }
     }

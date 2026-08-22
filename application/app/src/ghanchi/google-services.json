@@ -1,45 +1,26 @@
-{
+﻿{
   "project_info": {
-    "project_number": "317054014432",
-    "firebase_url": "https://community-1dfcb.firebaseio.com",
-    "project_id": "community-1dfcb",
-    "storage_bucket": "community-1dfcb.firebasestorage.app"
+    "project_number": "880736251672",
+    "project_id": "ghanchi-community1",
+    "storage_bucket": "ghanchi-community1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:317054014432:android:58b785291bcad60d6f5185",
+        "mobilesdk_app_id": "1:880736251672:android:cf77325f3945f93036786d",
         "android_client_info": {
           "package_name": "com.ghanchi.samaj"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "317054014432-dmpie498vfh60pvtadkkc4dk6h4v12qi.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ghanchi.samaj",
-            "certificate_hash": "93a104259550736e69a441f4c5bda147af7a8b54"
-          }
-        },
-        {
-          "client_id": "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDci3uC0jldqqy0I4g4D1QpEauiVONXa1Y"
+          "current_key": "AIzaSyA3lS1QrNVJ6S5Hz5q10JQZ5lzYO_xorBI"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "317054014432-5iifnd2s60mbd9ttdiqc0bfubpnhpen9.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

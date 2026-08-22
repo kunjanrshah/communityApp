@@ -2,7 +2,11 @@ package com.krs.community.fragments
 
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.text.*
+import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.view.KeyEvent
@@ -119,7 +123,7 @@ class MatrimonyDetailsFragment : Fragment(), KodeinAware {
         } else {
             binding.chkInterested.isEnabled = true
             binding.chkInterested.isClickable = true
-            binding.chkInterested.isChecked = member.matrimony.toString().toLowerCase() == "yes"
+            binding.chkInterested.isChecked = member.matrimony.toString().lowercase() == "yes"
         }
 
         binding.chkInterested.setOnClickListener {

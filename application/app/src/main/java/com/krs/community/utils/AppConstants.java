@@ -18,11 +18,13 @@ public class AppConstants {
         String GET_SUB_COMM = "GetSubCommunity";
         String GET_LOCAL_COMM = "GetLocalCommunity";
         String GET_LIST_LOCAL_COMM = "GetListLocalCommunity";
-        String GET_LIST_CITY = "GetListCity";
+
         String GET_LIST_BUSINESS_SUB_CATEGORY = "GetListBusinessSubCategory";
         String GET_RELATIONS = "GetRelations";
         String GET_STATE = "GetState";
-        String GET_CITIES = "GetCities";
+        String GET_LIST_CITY = "GetListCity";  //city1
+        String GET_CITIES = "GetCities";    //city2
+        String GET_SEARCH_BY_CITY = "SearchByCity"; //city3
         String GET_SUBCASTE = "GetSurname";
         String GET_NATIVE = "GetNative";
         String GET_GOTRA = "getGotra";
@@ -50,7 +52,7 @@ public class AppConstants {
         String GET_EVENTS = "getEvents";
         String GET_SHARED_PROFILE = "GetSharedProfile";
         String GET_SEARCH_NEAR_BY = "GetNearByUsers";
-        String GET_SEARCH_BY_CITY = "SearchByCity";
+
         String GET_FAMILY_MEMBER = "GetFamilyMembers";
         String GET_REGISTER = "Registration";
         String GET_LOGIN = "Login";

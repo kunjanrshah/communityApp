@@ -42,15 +42,36 @@ import com.krs.community.app.AppController
 import com.krs.community.app.AppController.Companion.mApplication
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.ActivityProfileDetailBinding
-import com.krs.community.fragments.*
+import com.krs.community.fragments.FamilyDetailActivity
+import com.krs.community.fragments.MainDetailsFragment
+import com.krs.community.fragments.MatrimonyDetailsFragment
+import com.krs.community.fragments.PersonalDetailsFragment
+import com.krs.community.fragments.ProfessionalDetailsFragment
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.UpdateProfileResponse
-import com.krs.community.utils.*
+import com.krs.community.utils.ImageSteps
+import com.krs.community.utils.Logger
+import com.krs.community.utils.MyPermissionChecker
 import com.krs.community.utils.MyPermissionChecker.Companion.checkFineLocationPermission
-import com.krs.community.utils.Utility.*
+import com.krs.community.utils.Utility
+import com.krs.community.utils.Utility.FINE_LOCATION_REQUEST
+import com.krs.community.utils.Utility.INTERVAL
+import com.krs.community.utils.Utility.PICK_GALLERY_REQUEST
+import com.krs.community.utils.Utility.calculatePercentage
+import com.krs.community.utils.Utility.changeStatusbarColor
+import com.krs.community.utils.Utility.displaySnackBarWithBottomMargin
+import com.krs.community.utils.Utility.hideKeyboard
+import com.krs.community.utils.Utility.hideSweetProgress
+import com.krs.community.utils.Utility.startSweetDialog
+import com.krs.community.utils.Utility.startSweetProgress
+import com.krs.community.utils.handleCropError
+import com.krs.community.utils.handleCropResult
+import com.krs.community.utils.pickFromGallery
+import com.krs.community.utils.snackbar
+import com.krs.community.utils.startCrop
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
 import com.yalantis.ucrop.UCrop
@@ -243,7 +264,9 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
                     }*/
                 }
 
-                if (binding.tvSave.text.toString().toLowerCase().contains(getString(R.string.save).toLowerCase())) {
+                if (binding.tvSave.text.toString().lowercase()
+                        .contains(getString(R.string.save).lowercase())
+                ) {
 
                     SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(getString(R.string.updateprofile))
@@ -472,10 +495,10 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         hideSweetProgress()
-        if (response.message.toString().toLowerCase().contains("added")) {
+        if (response.message.toString().lowercase().contains("added")) {
             member?.headId = response.member.headId
             goToFamilyDetailActivity()
-        } else if (response.message.toString().toLowerCase().contains("updated")) {
+        } else if (response.message.toString().lowercase().contains("updated")) {
             val member = response.member
             val memberString = Guru.getString(getString(R.string.loginMember), "")
             val loginMember = Gson().fromJson(memberString, Member::class.java)

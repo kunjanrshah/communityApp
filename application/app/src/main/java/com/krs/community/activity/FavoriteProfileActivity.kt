@@ -7,8 +7,18 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
-import android.view.*
-import android.widget.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -31,7 +41,15 @@ import com.krs.community.databinding.ActivityFavoriteBinding
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
-import com.krs.community.utils.*
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.MyPermissionChecker
+import com.krs.community.utils.Utility
+import com.krs.community.utils.createMemberListPDF
+import com.krs.community.utils.createMemberPDF
+import com.krs.community.utils.getMemberFromRoomMember
+import com.krs.community.utils.openImageDialog
+import com.krs.community.utils.shareDetails
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
@@ -43,7 +61,7 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import java.text.Normalizer
-import java.util.*
+import java.util.Locale
 
 class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListener, KodeinAware, RoomMemberListener, LocationAdapter.SetLocationListner, ExportAdapter.exportPdfListener {
 
@@ -417,14 +435,14 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
 
         fun searchMembers(charText: CharSequence) {
             var charText = charText
-            charText = removeAccent(charText as String).toLowerCase(Locale.getDefault())
+            charText = removeAccent(charText as String).lowercase(Locale.getDefault())
             mMembers.clear()
             if (charText.isEmpty()) {
                 mMembers.addAll(mSearchMembers)
             } else {
                 for (Member in mSearchMembers) {
                     val name = removeAccent(Member.firstName)
-                    if (name.toLowerCase(Locale.getDefault()).contains(charText)) {
+                    if (name.lowercase(Locale.getDefault()).contains(charText)) {
                         mMembers.add(Member)
                     }
                 }

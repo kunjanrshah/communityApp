@@ -232,6 +232,10 @@ type MasterDTO {
   id: String!
 
   name: String!
+
+    states_id: Int
+
+    sub_community_id: Int
 }
 
 type GetMastersResponseDTO {
@@ -316,6 +320,35 @@ type UploadModel {
   updated: DateTime!
 }
 
+type CountListDTO {
+    business_categories: String!
+    cities: String!
+    committees: String!
+    current_activity: String!
+    designations: String!
+    districts: String!
+    educations: String!
+    local_community: String!
+    occupation: String!
+    relations: String!
+    states: String!
+    sub_casts: String!
+    sub_community: String!
+    gotra: String!
+}
+
+type UserCountsDTO {
+    matrimony_counts: String!
+    status_counts: String!
+}
+
+type MastersCountResponseDTO {
+    success: Boolean!
+    message: String!
+    countList: CountListDTO!
+    userCounts: UserCountsDTO!
+}
+
 type Query {
   getFamilyMembers(head_id: Float!): [UserDTO!]!
 
@@ -329,25 +362,25 @@ type Query {
 
   getContactList(input: GetContactListInput!): GetContactListResponse!
 
-  getCities(date: String): GetMastersResponseDTO!
+    getCities(date: DateInputDto): GetMastersResponseDTO!
 
-  getStates(date: String): GetMastersResponseDTO!
+    getStates(date: DateInputDto): GetMastersResponseDTO!
 
-  getBusinessCategories(date: String): GetMastersResponseDTO!
+    getBusinessCategories(date: DateInputDto): GetMastersResponseDTO!
 
-  getCommittees(date: String): GetMastersResponseDTO!
+    getCommittees(date: DateInputDto): GetMastersResponseDTO!
 
-  getDesignations(date: String): GetMastersResponseDTO!
+    getDesignations(date: DateInputDto): GetMastersResponseDTO!
 
-  getEducations(date: String): GetMastersResponseDTO!
+    getEducations(date: DateInputDto): GetMastersResponseDTO!
 
-  getRelations(date: String): GetMastersResponseDTO!
+    getRelations(date: DateInputDto): GetMastersResponseDTO!
 
-  getGotras(date: String): GetMastersResponseDTO!
+    getGotras(date: DateInputDto): GetMastersResponseDTO!
 
-  getSubCasts(date: String): GetMastersResponseDTO!
+    getSubCasts(date: DateInputDto): GetMastersResponseDTO!
 
-  getCitiesByState(stateId: Int!, date: String, subCommunityId: Int): CityResponseDto!
+    getCitiesByState(stateId: Int!, date: DateInputDto, subCommunityId: Int): CityResponseDto!
 
   getStatistics(input: StatisticsInputDto!): StatisticsResponseDto!
 
@@ -364,6 +397,16 @@ type Query {
   nearByUsers(filter: GetNearbyUsersInput!): SearchResult!
 
   isAppVersionExists(version: Float!): Boolean!
+
+    getMastersCounts: MastersCountResponseDTO!
+
+    getSubCommunities(date: DateInputDto): GetMastersResponseDTO!
+
+    getLocalCommunities(date: DateInputDto): GetMastersResponseDTO!
+}
+
+input DateInputDto {
+    date: String
 }
 
 input GetInactiveUsersInput {
@@ -771,6 +814,8 @@ input RegisterInput {
   city_id: Int!
 
   address: String!
+
+    status: Boolean!
 }
 
 input LoginInput {

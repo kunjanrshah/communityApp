@@ -3,7 +3,6 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.google.gson.JsonObject
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.entities.States
 import com.krs.community.listeners.IbrowseCityRecordsListener
@@ -11,7 +10,12 @@ import com.krs.community.model.SearchByCityData
 import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BrowseCityViewModel(
         private val browsCityRepository: BrowseCityRepository,
@@ -42,13 +46,13 @@ class BrowseCityViewModel(
     }
 
 
-    fun getCitiesByState(request: JsonObject) {
+    fun getCitiesByState(stateId: Int, subCommunityId: Int) {
         if (isNetworkConnected(app.applicationContext)) {
             job_users = Job()
             job_users.let { thejob ->
                 CoroutineScope(Dispatchers.IO + thejob!!).launch {
                     try {
-                        val response = browsCityRepository.cityByState(request)
+                        val response = browsCityRepository.getCitiesByState(stateId, subCommunityId)
                         response.let {
                             withContext(Dispatchers.Main) {
                                 ibrowseCityRecordsListener?.getCitiesByState(response)

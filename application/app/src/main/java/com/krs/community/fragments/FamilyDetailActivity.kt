@@ -14,7 +14,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
@@ -24,7 +28,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.krs.community.fancygifdialoglib.FancyGifDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chauthai.swipereveallayout.SwipeRevealLayout
@@ -36,13 +39,19 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.BuildConfig
 import com.krs.community.R
-import com.krs.community.activity.*
+import com.krs.community.activity.DashboardActivity
+import com.krs.community.activity.MapTrackingActivity
+import com.krs.community.activity.PinViewActivity
+import com.krs.community.activity.ProfileDetailActivity
+import com.krs.community.activity.QRCodeActivity
+import com.krs.community.activity.SplashActivity
 import com.krs.community.adapter.AddFamilyHeadAdapter
 import com.krs.community.adapter.AddMemberAdapter
 import com.krs.community.adapter.ChangeFamilyHeadAdapter
 import com.krs.community.adapter.LocationAdapter
 import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
+import com.krs.community.fancygifdialoglib.FancyGifDialog
 import com.krs.community.listeners.IFamilyMembersListener
 import com.krs.community.listeners.RefreshListListener
 import com.krs.community.model.Member
@@ -50,8 +59,22 @@ import com.krs.community.parallaxrecyclerview.HeaderLayoutManagerFixed
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.FamilyDetailResponse
-import com.krs.community.utils.*
-import com.krs.community.utils.Utility.*
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.MyPermissionChecker
+import com.krs.community.utils.Utility
+import com.krs.community.utils.Utility.changeStatusbarColor
+import com.krs.community.utils.Utility.getRandomMaterialColor
+import com.krs.community.utils.Utility.getTextInsideCircleButtonBuilder
+import com.krs.community.utils.Utility.hideKeyboard
+import com.krs.community.utils.Utility.hideSweetProgress
+import com.krs.community.utils.Utility.isEmailValid
+import com.krs.community.utils.Utility.sendWhatsAppMessage
+import com.krs.community.utils.Utility.startSweetProgress
+import com.krs.community.utils.createMemberPDF
+import com.krs.community.utils.getMemberCode
+import com.krs.community.utils.openImageDialog
+import com.krs.community.utils.shareDetails
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.FamilyDetailViewModel
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
@@ -743,7 +766,7 @@ class FamilyDetailActivity : AppCompatActivity(), KodeinAware, IFamilyMembersLis
                         val member = Member()
                         member.subCastId = members[0].subCastId
                         member.gotraId = members[0].gotraId
-                        if (members[0].gender.toString().toLowerCase() == "male") {
+                        if (members[0].gender.toString().lowercase() == "male") {
                             member.fatherName = members[0].firstName
                         }
                         member.nativePlaceId = members[0].nativePlaceId

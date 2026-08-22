@@ -109,7 +109,7 @@ class AddFamilyHeadAdapter(private val mContext: Context, val profileDetailViewM
 
     override fun getUpdateOrAddResult(response: UpdateProfileResponse) {
         Utility.hideSweetProgress()
-        if (response.message.toString().toLowerCase().contains("updated")) {
+        if (response.message.toString().lowercase().contains("updated")) {
             refreshListListener?.refreshList()
             Utility.startSweetDialog(mContext, SweetAlertDialog.SUCCESS_TYPE, "Success", "${member.firstName} removed")
         }

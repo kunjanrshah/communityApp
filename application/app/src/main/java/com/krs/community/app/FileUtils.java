@@ -18,6 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
+import com.auth0.android.jwt.JWT;
+
+import org.json.JSONObject;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -708,4 +712,23 @@ public class FileUtils {
         int index = filename.lastIndexOf('/');
         return filename.substring(index + 1);
     }
+
+    public static JSONObject decodeJwtPayload(String token) {
+
+        JSONObject json = new JSONObject();
+
+        try {
+            JWT jwt = new JWT(token);
+
+            json.put("userId", jwt.getClaim("id").asString());
+            json.put("mobile", jwt.getClaim("mobile").asString());
+            json.put("role", jwt.getClaim("role").asString());
+            json.put("expiresAt", jwt.getExpiresAt());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
 }

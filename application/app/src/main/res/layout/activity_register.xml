@@ -119,12 +119,14 @@
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/img_profile"
                             android:layout_width="80dp"
+                            android:visibility="invisible"
                             android:layout_height="80dp"
                             android:layout_marginStart="20dp"
                             android:src="@drawable/man_reg" />
 
                         <ImageView
                             android:id="@+id/img_cancel"
+                            android:visibility="invisible"
                             android:layout_width="25dip"
                             android:layout_height="25dip"
                             android:layout_marginStart="85dp"
@@ -168,6 +170,7 @@
                         tools:ignore="Autofill" />
 
                     <EditText
+                        android:visibility="gone"
                         android:id="@+id/edt_father_name"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
@@ -250,6 +253,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
+                        android:visibility="gone"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/calendar_gradient_spinner"
                         android:orientation="vertical">
@@ -285,6 +289,7 @@
 
 
                     <RelativeLayout
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"
                         android:layout_gravity="center|bottom"
@@ -480,6 +485,7 @@
 
 
                     <RelativeLayout
+                        android:visibility="gone"
                         android:id="@+id/rl_native"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/register_field_height"

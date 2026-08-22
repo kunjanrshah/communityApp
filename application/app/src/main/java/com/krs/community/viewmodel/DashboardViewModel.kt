@@ -2,15 +2,18 @@ package com.krs.community.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.google.gson.JsonObject
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.entities.MasterCounts
 import com.krs.community.listeners.UpdateListener
 import com.krs.community.repositories.DashboardRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DashboardViewModel(
         private val mDashboardRepository: DashboardRepository,
@@ -21,14 +24,14 @@ class DashboardViewModel(
     private lateinit var completableJob: CompletableJob
     lateinit var listener: UpdateListener
 
-    fun getUpdatedVersion(jsonObject: JsonObject) {
+    fun getUpdatedVersion(version: Double) {
         if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()
             completableJob.let { thejob ->
 
                 CoroutineScope(Dispatchers.IO + thejob).launch {
                     try {
-                        val response = mDashboardRepository.getUpdatedVersion(jsonObject)
+                        val response = mDashboardRepository.getUpdatedVersion(version)
                         response.let {
                             withContext(Dispatchers.Main) {
                                 listener.getVersionResponse(response)
@@ -55,14 +58,14 @@ class DashboardViewModel(
         }
     }
 
-    fun getMasterUpdate(jsonObject: JsonObject) {
+    fun getMasterUpdate() {
         if (isNetworkConnected(app.applicationContext)) {
             completableJob = Job()
             completableJob.let { thejob ->
 
                 CoroutineScope(Dispatchers.IO + thejob).launch {
                     try {
-                        val response = mDashboardRepository.getMasterUpdate(jsonObject)
+                        val response = mDashboardRepository.getMastersCounts()
                         response.let {
                             withContext(Dispatchers.Main) {
                                 listener.getMastersResponse(response)
@@ -182,33 +185,34 @@ class DashboardViewModel(
         }
     }
 
-    suspend fun fetchBusinessSubCategory(index: Int) {
-        if (isNetworkConnected(app.applicationContext)) {
-            mDashboardRepository.fetchBusinessSubCategory(index)
-        }
-    }
-
-    suspend fun fetchNative(index: Int) {
-        if (isNetworkConnected(app.applicationContext)) {
-            mDashboardRepository.fetchNative(index)
-        }
-    }
-
-    suspend fun fetchOccupation(index: Int) {
-        if (isNetworkConnected(app.applicationContext)) {
-            mDashboardRepository.fetchOccupation(index)
-        }
-    }
-
     suspend fun fetchRelations(index: Int) {
         if (isNetworkConnected(app.applicationContext)) {
             mDashboardRepository.fetchRelations(index)
         }
     }
 
+    suspend fun fetchBusinessSubCategory(index: Int) {
+        if (isNetworkConnected(app.applicationContext)) {
+            //  mDashboardRepository.fetchBusinessSubCategory(index)
+        }
+    }
+
+    suspend fun fetchNative(index: Int) {
+        if (isNetworkConnected(app.applicationContext)) {
+            //   mDashboardRepository.fetchNative(index)
+        }
+    }
+
+    suspend fun fetchOccupation(index: Int) {
+        if (isNetworkConnected(app.applicationContext)) {
+            //   mDashboardRepository.fetchOccupation(index)
+        }
+    }
+
+
     suspend fun fetchCurrentActivity(index: Int) {
         if (isNetworkConnected(app.applicationContext)) {
-            mDashboardRepository.fetchCurrentActivity(index)
+            //   mDashboardRepository.fetchCurrentActivity(index)
         }
     }
 }

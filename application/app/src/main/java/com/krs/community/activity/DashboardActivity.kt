@@ -1,9 +1,6 @@
 package com.krs.community.activity
 
-import android.Manifest
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Build
@@ -16,7 +13,6 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
@@ -41,16 +37,32 @@ import com.krs.community.app.AppController
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.databinding.ActivityDashboardBinding
 import com.krs.community.entities.MasterCounts
-import com.krs.community.fragments.*
+import com.krs.community.fragments.CalendarFragment
+import com.krs.community.fragments.CommitteeFragment
+import com.krs.community.fragments.DashboardFragment
+import com.krs.community.fragments.ExpandableFilterListFragment
+import com.krs.community.fragments.FilterListFragment
+import com.krs.community.fragments.FragmentDrawer
 import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
+import com.krs.community.fragments.NonActivesFragment
+import com.krs.community.fragments.NotificationListFragment
+import com.krs.community.fragments.StatisticFragment
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.UpdateListener
 import com.krs.community.model.Member
 import com.krs.community.responses.MasterUpdateResponse
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.responses.UserStatusResponse
-import com.krs.community.utils.*
-import com.krs.community.utils.Utility.*
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.NotificationUtils
+import com.krs.community.utils.Utility.backNavigation
+import com.krs.community.utils.Utility.changeLang
+import com.krs.community.utils.Utility.getAppVersionCode
+import com.krs.community.utils.Utility.hideSweetProgress
+import com.krs.community.utils.Utility.movetoFragment
+import com.krs.community.utils.Utility.startSweetProgress
+import com.krs.community.utils.shareApp
+import com.krs.community.utils.showVersionDialog
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.DashboardViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
 import com.krs.community.viewmodelfactory.DashboardViewModelFactory
@@ -205,26 +217,11 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
 
         if (isNetworkConnected(this)) {
-            val JsonObj = JSONObject()
-            JsonObj.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-            JsonObj.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-            JsonObj.put("insert", "")
-            JsonObj.put("version", getAppVersionCode(this))
-            val updated = JsonParser().parse(JsonObj.toString()) as JsonObject
-            dashboardViewModel.getUpdatedVersion(updated)
+            dashboardViewModel.getUpdatedVersion(getAppVersionCode(this).toDouble())
 
             val loginuser = Guru.getString(getString(R.string.loginMember), "")
             val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
-            val JsonObj1 = JSONObject()
-            if (loginMem.role == getString(R.string.super_admin)) {
-                JsonObj1.put(getString(R.string.sub_community_id), 0)
-            } else {
-                JsonObj1.put(getString(R.string.sub_community_id), loginMem.subCommunityId)
-            }
-
-            val updated1 = JsonParser().parse(JsonObj1.toString()) as JsonObject
-            dashboardViewModel.getMasterUpdate(updated1)
-
+            dashboardViewModel.getMasterUpdate()
         }
 
         if (isNetworkConnected(this)) {
@@ -452,109 +449,113 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         //    curAddr.postValue(locationData.full_address)
     }
 
-    override fun getVersionResponse(response: UserStatusResponse) {
-        Log.d(TAG, "getVersionResponse: "+response.success)
-        if (!response.success) {
+    override fun getVersionResponse(response: Boolean) {
+        Log.d(TAG, "getVersionResponse: $response")
+        if (!response) {
             showVersionDialog(this)
         }
     }
 
-    override fun getMastersResponse(response: MasterUpdateResponse) {
-        if (response.success) {
+    override fun getMastersResponse(response: MasterUpdateResponse?) {
+        if (response != null) {
+            if (response.success) {
 
-            Coroutines.io {
-                if (!response.userCounts.matrimonyCounts.isNullOrEmpty()) {
-                    matrimonyCounts.postValue(response.userCounts.matrimonyCounts)
-                }
-                /* if (!response.userCounts.statusCounts.isNullOrEmpty()) {
-                     statusCounts.postValue(response.userCounts.statusCounts)
-                 }*/
-
-                val counts = MasterCounts()
-                counts.business_categories = Integer.parseInt(response.countList.businessCategories)
-                counts.business_sub_categories = Integer.parseInt(response.countList.businessSubCategories)
-                counts.cities = Integer.parseInt(response.countList.cities)
-                counts.committees = Integer.parseInt(response.countList.committees)
-                counts.current_activity = Integer.parseInt(response.countList.currentActivity)
-                counts.designations = Integer.parseInt(response.countList.designations)
-                counts.districts = Integer.parseInt(response.countList.districts)
-                counts.educations = Integer.parseInt(response.countList.educations)
-                counts.local_community = Integer.parseInt(response.countList.localCommunity)
-                counts.native_place = Integer.parseInt(response.countList.native)
-                counts.occupation = Integer.parseInt(response.countList.occupation)
-                counts.relations = Integer.parseInt(response.countList.relations)
-                counts.states = Integer.parseInt(response.countList.states)
-                counts.sub_casts = Integer.parseInt(response.countList.subCasts)
-                counts.sub_community = Integer.parseInt(response.countList.subCommunity)
-                counts.gotra = Integer.parseInt(response.countList.gotra)
-                val dbCount = dashboardViewModel.getMasterCounts()
-
-                if (dbCount == null) {
-                    dashboardViewModel.fetchBusinessCategory(counts.business_categories)
-                    dashboardViewModel.fetchBusinessSubCategory(counts.business_sub_categories)
-                    dashboardViewModel.fetchState(counts.states)
-                    dashboardViewModel.fetchCity(counts.cities)
-                    dashboardViewModel.fetchRelations(counts.relations)
-                    dashboardViewModel.fetchSubCommunities(counts.sub_community)
-                    dashboardViewModel.fetchLocalCommunities(counts.local_community)
-                    dashboardViewModel.fetchLastName(counts.sub_casts)
-                    dashboardViewModel.fetchEducation(counts.educations)
-                    dashboardViewModel.fetchNative(counts.native_place)
-                    dashboardViewModel.fetchCurrentActivity(counts.current_activity)
-                    dashboardViewModel.fetchOccupation(counts.occupation)
-                    dashboardViewModel.fetchCommittee(counts.committees)
-                    dashboardViewModel.fetchDesignation(counts.designations)
-                    if (BuildConfig.FLAVOR != "ghanchi") {
-                        dashboardViewModel.fetchGotra(counts.gotra)
+                Coroutines.io {
+                    if (!response.userCounts.matrimonyCounts.isNullOrEmpty()) {
+                        matrimonyCounts.postValue(response.userCounts.matrimonyCounts)
                     }
+                    /* if (!response.userCounts.statusCounts.isNullOrEmpty()) {
+                         statusCounts.postValue(response.userCounts.statusCounts)
+                     }*/
 
-                    dashboardViewModel.insertMasterCounts(counts)
-                } else {
-                    if (dbCount.business_categories != counts.business_categories) {
+                    val counts = MasterCounts()
+                    counts.business_categories =
+                        Integer.parseInt(response.countList.businessCategories)
+                    counts.business_sub_categories =
+                        Integer.parseInt(response.countList.businessSubCategories)
+                    counts.cities = Integer.parseInt(response.countList.cities)
+                    counts.committees = Integer.parseInt(response.countList.committees)
+                    counts.current_activity = Integer.parseInt(response.countList.currentActivity)
+                    counts.designations = Integer.parseInt(response.countList.designations)
+                    counts.districts = Integer.parseInt(response.countList.districts)
+                    counts.educations = Integer.parseInt(response.countList.educations)
+                    counts.local_community = Integer.parseInt(response.countList.localCommunity)
+                    counts.native_place = Integer.parseInt(response.countList.native)
+                    counts.occupation = Integer.parseInt(response.countList.occupation)
+                    counts.relations = Integer.parseInt(response.countList.relations)
+                    counts.states = Integer.parseInt(response.countList.states)
+                    counts.sub_casts = Integer.parseInt(response.countList.subCasts)
+                    counts.sub_community = Integer.parseInt(response.countList.subCommunity)
+                    counts.gotra = Integer.parseInt(response.countList.gotra)
+                    val dbCount = dashboardViewModel.getMasterCounts()
+
+                    if (dbCount == null) {
                         dashboardViewModel.fetchBusinessCategory(counts.business_categories)
-                    }
-                    if (dbCount.business_sub_categories != counts.business_sub_categories) {
                         dashboardViewModel.fetchBusinessSubCategory(counts.business_sub_categories)
-                    }
-                    if (dbCount.states != counts.states) {
                         dashboardViewModel.fetchState(counts.states)
-                    }
-                    if (dbCount.cities != counts.cities) {
                         dashboardViewModel.fetchCity(counts.cities)
-                    }
-                    if (dbCount.relations != counts.relations) {
                         dashboardViewModel.fetchRelations(counts.relations)
-                    }
-                    if (dbCount.sub_community != counts.sub_community) {
                         dashboardViewModel.fetchSubCommunities(counts.sub_community)
-                    }
-                    if (dbCount.local_community != counts.local_community) {
                         dashboardViewModel.fetchLocalCommunities(counts.local_community)
-                    }
-                    if (dbCount.sub_casts != counts.sub_casts) {
                         dashboardViewModel.fetchLastName(counts.sub_casts)
-                    }
-                    if (dbCount.educations != counts.educations) {
                         dashboardViewModel.fetchEducation(counts.educations)
-                    }
-                    if (dbCount.native_place != counts.native_place) {
                         dashboardViewModel.fetchNative(counts.native_place)
-                    }
-                    if (dbCount.current_activity != counts.current_activity) {
                         dashboardViewModel.fetchCurrentActivity(counts.current_activity)
-                    }
-                    if (dbCount.occupation != counts.occupation) {
                         dashboardViewModel.fetchOccupation(counts.occupation)
-                    }
-                    if (dbCount.committees != counts.committees) {
                         dashboardViewModel.fetchCommittee(counts.committees)
-                    }
-                    if (dbCount.designations != counts.designations) {
                         dashboardViewModel.fetchDesignation(counts.designations)
-                    }
-                    if (BuildConfig.FLAVOR != "ghanchi") {
-                        if (dbCount.gotra != counts.gotra) {
+                        if (BuildConfig.FLAVOR != "ghanchi") {
                             dashboardViewModel.fetchGotra(counts.gotra)
+                        }
+
+                        dashboardViewModel.insertMasterCounts(counts)
+                    } else {
+                        if (dbCount.business_categories != counts.business_categories) {
+                            dashboardViewModel.fetchBusinessCategory(counts.business_categories)
+                        }
+                        if (dbCount.business_sub_categories != counts.business_sub_categories) {
+                            dashboardViewModel.fetchBusinessSubCategory(counts.business_sub_categories)
+                        }
+                        if (dbCount.states != counts.states) {
+                            dashboardViewModel.fetchState(counts.states)
+                        }
+                        if (dbCount.cities != counts.cities) {
+                            dashboardViewModel.fetchCity(counts.cities)
+                        }
+                        if (dbCount.relations != counts.relations) {
+                            dashboardViewModel.fetchRelations(counts.relations)
+                        }
+                        if (dbCount.sub_community != counts.sub_community) {
+                            dashboardViewModel.fetchSubCommunities(counts.sub_community)
+                        }
+                        if (dbCount.local_community != counts.local_community) {
+                            dashboardViewModel.fetchLocalCommunities(counts.local_community)
+                        }
+                        if (dbCount.sub_casts != counts.sub_casts) {
+                            dashboardViewModel.fetchLastName(counts.sub_casts)
+                        }
+                        if (dbCount.educations != counts.educations) {
+                            dashboardViewModel.fetchEducation(counts.educations)
+                        }
+                        if (dbCount.native_place != counts.native_place) {
+                            dashboardViewModel.fetchNative(counts.native_place)
+                        }
+                        if (dbCount.current_activity != counts.current_activity) {
+                            dashboardViewModel.fetchCurrentActivity(counts.current_activity)
+                        }
+                        if (dbCount.occupation != counts.occupation) {
+                            dashboardViewModel.fetchOccupation(counts.occupation)
+                        }
+                        if (dbCount.committees != counts.committees) {
+                            dashboardViewModel.fetchCommittee(counts.committees)
+                        }
+                        if (dbCount.designations != counts.designations) {
+                            dashboardViewModel.fetchDesignation(counts.designations)
+                        }
+                        if (BuildConfig.FLAVOR != "ghanchi") {
+                            if (dbCount.gotra != counts.gotra) {
+                                dashboardViewModel.fetchGotra(counts.gotra)
+                            }
                         }
                     }
                 }

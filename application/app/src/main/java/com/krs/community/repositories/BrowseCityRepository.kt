@@ -1,7 +1,8 @@
-package com.krs.community.repositories
+﻿package com.krs.community.repositories
 
 import androidx.lifecycle.LiveData
-import com.google.gson.JsonObject
+import com.apollographql.apollo.ApolloClient
+import com.krs.community.GetCitiesByStateQuery
 import com.krs.community.app.AppDatabase
 import com.krs.community.entities.City
 import com.krs.community.entities.States
@@ -12,7 +13,9 @@ import com.krs.community.retrofit.ApiServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class BrowseCityRepository(private val api: ApiServices, private val db: AppDatabase
+class BrowseCityRepository(
+    private val api: ApiServices,
+    private val apolloClient: ApolloClient, private val db: AppDatabase
 ) : SafeApiRequest() {
 
 
@@ -46,9 +49,35 @@ class BrowseCityRepository(private val api: ApiServices, private val db: AppData
         }
     }
 
-    suspend fun cityByState(request: JsonObject): CityResponse {
-        return apiRequest {
-            api.getUserCities(request)
+    suspend fun getCitiesByState(stateId: Int, subCommunityId: Int): CityResponse {
+        return try {
+            val response = apolloClient.query(
+                GetCitiesByStateQuery(stateId, subCommunityId)
+            ).execute()
+
+            val result = response.data?.getCitiesByState
+
+            CityResponse().apply {
+                success = true
+                message = null
+                last_updated = result?.last_updated
+                deleted = result?.deleted?.map { it.toString() }
+
+                data = result?.data?.map {
+                    City(
+                        id = it.id,
+                        name = it.name,
+                        parent_id = subCommunityId ?: 0,
+                        count = it.count
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            CityResponse().apply {
+                success = false
+                message = e.message
+            }
         }
     }
 
@@ -57,5 +86,4 @@ class BrowseCityRepository(private val api: ApiServices, private val db: AppData
             api.getSearchByCity(data)
         }
     }
-
 }

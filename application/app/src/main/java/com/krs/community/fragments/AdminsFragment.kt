@@ -8,8 +8,20 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.SparseBooleanArray
-import android.view.*
-import android.widget.*
+import android.view.ActionMode
+import android.view.Gravity
+import android.view.HapticFeedbackConstants
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -43,9 +55,18 @@ import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.utils.*
+import com.krs.community.utils.Coroutines
+import com.krs.community.utils.FlipAnimator
 import com.krs.community.utils.MyPermissionChecker.Companion.checkReadStoragePermission
 import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
+import com.krs.community.utils.Utility
+import com.krs.community.utils.createMemberListPDF
+import com.krs.community.utils.createMemberPDF
+import com.krs.community.utils.getMemberCode
+import com.krs.community.utils.getRoomMemberFromMember
+import com.krs.community.utils.openImageDialog
+import com.krs.community.utils.shareDetails
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
@@ -427,7 +448,7 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     }
 
     override suspend fun getFailure(message: String) {
-        if (message.toLowerCase().contains("success")) {
+        if (message.lowercase().contains("success")) {
             getSubAdmin()
         } else {
             llRoot.snackbar(getString(R.string.went_wrong), Snackbar.LENGTH_LONG)

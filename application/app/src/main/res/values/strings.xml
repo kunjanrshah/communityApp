@@ -1089,7 +1089,7 @@
     <string name="smart_filter">Smart Filter</string>
     <string name="isdialogshow">isDialogShow</string>
     <string name="filename">filename</string>
-    <string name="is_logged_in">isLogin</string>
+    <string name="is_Admin">isAdmin</string>
     <string name="notification_channel_id" translatable="false">101</string>
     <string name="mycontacts">My Contacts</string>
     <string name="fetchingcontacts">Fetching Your Contacts</string>

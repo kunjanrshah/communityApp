@@ -266,34 +266,25 @@ public class ViewPagerFragmentBase extends Fragment {
         });
 
         speedDialView.setOnActionSelectedListener(actionItem -> {
-            switch (actionItem.getId()) {
-                case R.id.fab_add_photo:
-                    Intent intent = new Intent(getActivity(), ImagesSelectorActivity.class);
-                    intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 15);
-                    intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
-                    intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
-                    intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, imgListUrls);
-                    startActivityForResult(intent, REQUEST_CODE);
-                    break;
-
-                case R.id.fab_add_fact:
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit);
-                    ft.replace(android.R.id.content, new AddFactsFragment());
-                    ft.commit();
-                    break;
-
-                case R.id.fab_add_relative:
-                    ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit);
-                    ft.replace(android.R.id.content, new AddRelativeFragment());
-                    ft.commit();
-                    break;
-
-                case R.id.fab_add_audio:
-                    break;
-                default:
-                    break;
+            int actionId = actionItem.getId();
+            if (actionId == R.id.fab_add_photo) {
+                Intent intent = new Intent(getActivity(), ImagesSelectorActivity.class);
+                intent.putExtra(SelectorSettings.SELECTOR_MAX_IMAGE_NUMBER, 15);
+                intent.putExtra(SelectorSettings.SELECTOR_MIN_IMAGE_SIZE, 100000);
+                intent.putExtra(SelectorSettings.SELECTOR_SHOW_CAMERA, true);
+                intent.putStringArrayListExtra(SelectorSettings.SELECTOR_INITIAL_SELECTED_LIST, imgListUrls);
+                startActivityForResult(intent, REQUEST_CODE);
+            } else if (actionId == R.id.fab_add_fact) {
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit);
+                ft.replace(android.R.id.content, new AddFactsFragment());
+                ft.commit();
+            } else if (actionId == R.id.fab_add_relative) {
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.fade_enter, R.anim.fade_exit, R.anim.fade_enter, R.anim.fade_exit);
+                ft.replace(android.R.id.content, new AddRelativeFragment());
+                ft.commit();
+            } else if (actionId == R.id.fab_add_audio) {
             }
             return true; // To keep the Speed Dial open
         });

@@ -1,57 +1,32 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-        maven { url 'https://jitpack.io' }
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-    }
-
-    dependencies {
-        classpath 'com.google.gms:google-services:4.4.2'
-       // classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
-    }
-
-}
-
-
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
-  //  id 'com.google.firebase.crashlytics'
-    id 'org.jetbrains.kotlin.android'
     id("com.google.devtools.ksp")
     id 'com.google.gms.google-services'
-
-    id 'com.apollographql.apollo3'
+    id("com.apollographql.apollo") version "4.4.3"
 }
 
-
 apollo {
-    service("graphql_service") {
-        packageName.set("com.krs.community.graphql")
+    service("service") {
+        packageName.set("com.krs.community")
 
         introspection {
             endpointUrl.set("http://localhost:3000/graphql")
-            schemaFile.set(file("src/main/graphql/com/krs/community/graphql/schema.graphqls"))
+            schemaFile.set(file("src/main/graphql/com/krs/community/schema.graphqls"))
         }
 
         generateKotlinModels.set(true)
     }
 }
 
-
 android {
     buildFeatures {
         buildConfig true
+        resValues true
     }
     viewBinding {
         enabled = true
     }
-    dexOptions {
-        javaMaxHeapSize "4g" // Increase heap size for D8/DX
-    }
-    compileSdkVersion 35
+    compileSdk 35
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.krs.community"
@@ -133,7 +108,8 @@ android {
             resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
             resValue "string", "facebook_app_id", "2264814596961704"
             resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
-            buildConfigField "String", "BASE_URL", '"https://muslimghanchi.samajapp.in/API/"'
+            buildConfigField "String", "BASE_URL", '"http://192.168.1.5:3000/graphql/"'
+            //https://muslimghanchi.samajapp.in/API/
         }
         medk {
             applicationId "com.medk.samaj"
@@ -194,8 +170,10 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
 
     dataBinding {
@@ -254,7 +232,7 @@ dependencies {
     implementation 'com.github.smarteist:Android-Image-Slider:1.4.0'
 
     implementation 'com.github.gotev:android-upload-service:4.9.2'
-    implementation 'com.github.amitshekhariitbhu:PRDownloader:1.0.1'
+    implementation 'com.github.amitshekhariitbhu:PRDownloader:1.0.2'
     implementation 'dev.bandb.graphview:graphview:0.8.1'
     implementation("com.vanniktech:android-image-cropper:4.6.0")
     implementation 'de.hdodenhof:circleimageview:2.2.0'
@@ -281,7 +259,9 @@ dependencies {
     implementation "com.leinardi.android:speed-dial:3.3.0"
 
 
-    debugImplementation 'com.github.kk121:Android-Debug-Tools:1.0'
+    // This library registers a fixed ContentProvider authority. Keeping it out
+    // of the app prevents install conflicts when another flavor is installed.
+    // debugImplementation 'com.github.kk121:Android-Debug-Tools:1.0'
 
     implementation 'com.github.angads25:toggle:1.1.0'
     implementation 'com.github.krokyze:ucropnedit:2.2.8'
@@ -317,6 +297,7 @@ dependencies {
     implementation 'com.github.drawers:SpinnerDatePicker:2.0.1'
     debugImplementation 'com.github.amitshekhariitbhu.Android-Debug-Database:debug-db:1.0.7'
     implementation "com.github.VaibhavLakhera:Circular-Progress-View:0.1.2"
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'com.github.yuriy-budiyev:code-scanner:2.3.0'
 
     implementation 'com.github.dewinjm:monthyear-picker:1.0.2'
@@ -331,7 +312,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-auth'
 
-    implementation 'com.apollographql.apollo3:apollo-runtime:3.8.2'
+    implementation 'com.apollographql.apollo:apollo-runtime:4.4.3'
+    implementation 'com.auth0.android:jwtdecode:2.0.1'
 
   //  implementation 'com.google.firebase:firebase-core'
 

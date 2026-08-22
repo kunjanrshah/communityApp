@@ -80,4 +80,10 @@
     <color name="search_liveo_text_hint">#35000000</color>
     <color name="search_liveo_primary_dark">#AFAFAF</color>
 
+    <color name="com_facebook_blue">#3b5998</color>
+    <color name="com_facebook_green">#00a700</color>
+    <color name="com_facebook_grey_dark">#3b5998</color>
+    <color name="gray_btn_bg_color">#757575</color>
+    <color name="red_btn_bg_color">#d32f2f</color>
+    <color name="gray_btn_bg_pressed_color">#B6B6B6</color>
 </resources>

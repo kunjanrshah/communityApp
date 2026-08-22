@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-kapt'
 
 android {
@@ -23,8 +21,10 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
 
     viewBinding {

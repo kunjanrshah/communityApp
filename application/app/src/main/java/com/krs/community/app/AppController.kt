@@ -15,7 +15,7 @@ import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.multidex.BuildConfig
 import androidx.multidex.MultiDex
-import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo.ApolloClient
 import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
 import com.facebook.FacebookSdk
@@ -33,13 +33,47 @@ import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.graphql.GraphQLClientProvider
-import com.krs.community.repositories.*
+import com.krs.community.repositories.BrowseCityRepository
+import com.krs.community.repositories.ByDistanceRepository
+import com.krs.community.repositories.CalendarSearchRepository
+import com.krs.community.repositories.CommitteeRepository
+import com.krs.community.repositories.ContactListRepository
+import com.krs.community.repositories.DashboardRepository
+import com.krs.community.repositories.DocumentListRepository
+import com.krs.community.repositories.FamilyDetailRepository
+import com.krs.community.repositories.LoginRepository
+import com.krs.community.repositories.NewsRepository
+import com.krs.community.repositories.PasswordRepository
+import com.krs.community.repositories.ProfileDetailRepository
+import com.krs.community.repositories.RegisterRepository
+import com.krs.community.repositories.RoomMemberRepository
+import com.krs.community.repositories.ShareEventRepository
+import com.krs.community.repositories.SmartFilterRepository
+import com.krs.community.repositories.SmartSearchRepository
+import com.krs.community.repositories.StatisticsRepository
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.LocaleHelper
-import com.krs.community.viewmodelfactory.*
+import com.krs.community.viewmodelfactory.BrowseCityViewModelFactory
+import com.krs.community.viewmodelfactory.ByDistanceViewModelFactory
+import com.krs.community.viewmodelfactory.CalendarSearchViewModelFactory
+import com.krs.community.viewmodelfactory.CommiteeViewModelFactory
+import com.krs.community.viewmodelfactory.ContactListViewModelFactory
+import com.krs.community.viewmodelfactory.DashboardViewModelFactory
+import com.krs.community.viewmodelfactory.DocumentListViewModelFactory
+import com.krs.community.viewmodelfactory.FamilyDetailViewModelFactory
+import com.krs.community.viewmodelfactory.LoginViewModelFactory
+import com.krs.community.viewmodelfactory.NewsModelFactory
+import com.krs.community.viewmodelfactory.PasswordViewModelFactory
+import com.krs.community.viewmodelfactory.ProfileDetailViewModelFactory
+import com.krs.community.viewmodelfactory.RegisterViewModelFactory
+import com.krs.community.viewmodelfactory.RoomMemberViewModelFactory
+import com.krs.community.viewmodelfactory.ShareEventViewModelFactory
+import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
+import com.krs.community.viewmodelfactory.SmartSearchViewModelFactory
+import com.krs.community.viewmodelfactory.StatisticsViewModelFactory
 import net.gotev.uploadservice.UploadServiceConfig
 import org.json.JSONObject
 import org.kodein.di.Kodein
@@ -83,7 +117,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { LoginRepository(instance()) }
         bind() from singleton { PasswordRepository(instance()) }
         bind() from singleton { ShareEventRepository(instance()) }
-        bind() from singleton { BrowseCityRepository(instance(), instance()) }
+        bind() from singleton { BrowseCityRepository(instance(), instance(), instance()) }
         bind() from singleton { ByDistanceRepository(instance(), instance()) }
         bind() from singleton { FamilyDetailRepository(instance()) }
         bind() from singleton { ProfileDetailRepository(instance(), instance()) }
