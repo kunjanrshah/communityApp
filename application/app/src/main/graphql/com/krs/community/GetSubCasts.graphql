@@ -1,0 +1,14 @@
+query GetSubCasts($date: DateInputDto) {
+    getSubCasts(date: $date) {
+        success
+        message
+        data {
+            id
+            name
+        }
+        deleted
+        last_updated
+    }
+}
+
+

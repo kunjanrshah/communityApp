@@ -1,0 +1,14 @@
+query GetRelations($date: DateInputDto) {
+    getRelations(date: $date) {
+        success
+        message
+        data {
+            id
+            name
+        }
+        deleted
+        last_updated
+    }
+}
+
+

@@ -1,0 +1,26 @@
+query GetMastersCounts {
+    getMastersCounts {
+        success
+        message
+        countList {
+            business_categories
+            cities
+            committees
+            current_activity
+            designations
+            districts
+            educations
+            local_community
+            occupation
+            relations
+            states
+            sub_casts
+            sub_community
+            gotra
+        }
+        userCounts {
+            matrimony_counts
+            status_counts
+        }
+    }
+}

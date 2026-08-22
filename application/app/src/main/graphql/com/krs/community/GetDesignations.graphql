@@ -1,0 +1,14 @@
+query GetDesignations($date: DateInputDto) {
+    getDesignations(date: $date) {
+        success
+        message
+        data {
+            id
+            name
+        }
+        deleted
+        last_updated
+    }
+}
+
+

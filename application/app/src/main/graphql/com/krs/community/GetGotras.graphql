@@ -1,0 +1,14 @@
+query GetGotras($date: DateInputDto) {
+    getGotras(date: $date) {
+        success
+        message
+        data {
+            id
+            name
+        }
+        deleted
+        last_updated
+    }
+}
+
+

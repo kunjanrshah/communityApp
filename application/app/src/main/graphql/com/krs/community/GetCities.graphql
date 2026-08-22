@@ -1,0 +1,15 @@
+query GetCities($date: DateInputDto) {
+    getCities(date: $date) {
+        success
+        message
+        data {
+            id
+            name
+            states_id
+        }
+        deleted
+        last_updated
+    }
+}
+
+

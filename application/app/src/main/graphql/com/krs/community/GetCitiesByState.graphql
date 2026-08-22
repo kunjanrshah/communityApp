@@ -1,0 +1,11 @@
+query GetCitiesByState($stateId: Int!, $subCommunityId: Int!) {
+    getCitiesByState(stateId: $stateId, subCommunityId: $subCommunityId) {
+        data {
+            id
+            name
+            count
+        }
+        deleted
+        last_updated
+    }
+}

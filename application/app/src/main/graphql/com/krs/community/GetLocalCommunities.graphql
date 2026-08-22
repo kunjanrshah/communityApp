@@ -1,0 +1,15 @@
+query GetLocalCommunities($date: DateInputDto) {
+    getLocalCommunities(date: $date) {
+        success
+        message
+        data {
+            id
+            name
+            sub_community_id
+        }
+        deleted
+        last_updated
+    }
+}
+
+

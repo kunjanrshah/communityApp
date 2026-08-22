@@ -1,0 +1,14 @@
+query GetStates($date: DateInputDto) {
+    getStates(date: $date) {
+        success
+        message
+        data {
+            id
+            name
+        }
+        deleted
+        last_updated
+    }
+}
+
+

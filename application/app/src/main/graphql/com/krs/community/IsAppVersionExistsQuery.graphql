@@ -1,0 +1,3 @@
+query IsAppVersionExistsQuery($version: Float!) {
+    isAppVersionExists(version: $version)
+}
