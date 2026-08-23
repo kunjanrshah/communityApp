@@ -15,13 +15,21 @@ import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ILoginListener
+import com.krs.community.model.LoginModel
+import com.krs.community.model.LoginResponse
+import com.krs.community.model.Member
 import com.krs.community.repositories.LoginRepository
+import com.krs.community.type.LoginInput
 import com.krs.community.utils.ApiException
-import com.krs.community.utils.AppConstants
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class LoginViewModel(private val loginRepository: LoginRepository,
@@ -92,11 +100,11 @@ class LoginViewModel(private val loginRepository: LoginRepository,
 
     fun loginWithOTP() {
         try {
-            val loginRequest = AppConstants.LoginRequest()
-            loginRequest.username = mobile
-            loginRequest.hashcode = Guru.getString(app.applicationContext.getString(R.string.hash_key), "")
-            loginRequest.login_type = "1"
-            getLoginUser(loginRequest)
+            val loginInput = LoginInput(
+                mobile = mobile!!,
+                password = password ?: ""
+            )
+            getLoginUser(loginInput)
         } catch (e: Exception) {
             Utility.hideSweetProgress()
             e.printStackTrace()
@@ -105,11 +113,11 @@ class LoginViewModel(private val loginRepository: LoginRepository,
 
     fun loginWithPassword() {
         try {
-            val loginRequest = AppConstants.LoginRequest()
-            loginRequest.username = mobile
-            loginRequest.login_type = "3"
-            loginRequest.password = password
-            getLoginUser(loginRequest)
+            val loginInput = LoginInput(
+                mobile = mobile!!,
+                password = password!!
+            )
+            getLoginUser(loginInput)
         } catch (e: Exception) {
             Utility.hideSweetProgress()
             e.printStackTrace()
@@ -118,10 +126,11 @@ class LoginViewModel(private val loginRepository: LoginRepository,
 
     fun loginWithMobile(number: String) {
         try {
-            val loginRequest = AppConstants.LoginRequest()
-            loginRequest.username = number
-            loginRequest.login_type = "2"
-            getLoginUser(loginRequest)
+            val loginInput = LoginInput(
+                mobile = number,
+                password = password ?: ""
+            )
+            getLoginUser(loginInput)
         } catch (e: Exception) {
             Utility.hideSweetProgress()
             e.printStackTrace()
@@ -137,12 +146,13 @@ class LoginViewModel(private val loginRepository: LoginRepository,
             if (task.isSuccessful) {
                 val user = mAuth?.currentUser
                 if (user != null) {
-                    val loginRequest = AppConstants.LoginRequest()
                     val loginuser = user.email.toString()
                     if (loginuser.isNotEmpty() && loginuser.isNotBlank()) {
-                        loginRequest.username = loginuser
-                        loginRequest.login_type = "0"
-                        getLoginUser(loginRequest)
+                        val loginInput = LoginInput(
+                            mobile = loginuser,
+                            password = password ?: ""
+                        )
+                        getLoginUser(loginInput)
                     } else {
                         status.value = false
                         Utility.hideSweetProgress()
@@ -158,31 +168,60 @@ class LoginViewModel(private val loginRepository: LoginRepository,
 
     fun loginWithFB(email: String) {
         try {
-            val loginRequest = AppConstants.LoginRequest()
-            //fb_profile_url = data.getString("url")
             if (email.isEmpty()) {
                 status.value = false
                 return
             }
-            loginRequest.username = email
-            loginRequest.login_type = "0"
-            getLoginUser(loginRequest)
+            val loginInput = LoginInput(
+                mobile = email,
+                password = password ?: ""
+            )
+            getLoginUser(loginInput)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun getLoginUser(req_login: AppConstants.LoginRequest) {
+    private fun getLoginUser(input: LoginInput) {
         if (isNetworkConnected(app.applicationContext)) {
             job_login = Job()
             job_login.let { thejob ->
                 CoroutineScope(IO + thejob!!).launch {
 
                     try {
-                        val response = loginRepository.getLogin(req_login)
-                        response.let {
+                        val result: kotlin.Result<LoginModel> =
+                            loginRepository.getLogin(input)
+                        result.let {
                             withContext(Dispatchers.Main) {
-                                iLoginListener.userLogin(response, false)
+                                result.onSuccess { loginModel ->
+                                    if (loginModel.message.equals("success", ignoreCase = true)) {
+                                        Guru.putString(
+                                            app.applicationContext.getString(R.string.access_token),
+                                            loginModel.authToken
+                                        )
+                                        loginModel.refreshToken?.let { refreshToken ->
+                                            Guru.putString(
+                                                app.applicationContext.getString(R.string.refresh_token),
+                                                refreshToken
+                                            )
+                                        }
+                                        val member = Member()
+                                        member.accessToken = loginModel.authToken
+                                        val loginResponse = LoginResponse()
+                                        loginResponse.success = true
+                                        loginResponse.message = loginModel.message
+                                        loginResponse.data = member
+                                        iLoginListener.userLogin(loginResponse, false)
+                                    } else {
+                                        iLoginListener.getFailure(loginModel.message)
+                                    }
+                                }
+                                result.onFailure { exception ->
+                                    iLoginListener.getFailure(
+                                        exception.message
+                                            ?: app.applicationContext.getString(R.string.Authenticationfailed)
+                                    )
+                                }
                                 thejob.complete()
                             }
                             return@launch

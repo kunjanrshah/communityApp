@@ -108,7 +108,7 @@ android {
             resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
             resValue "string", "facebook_app_id", "2264814596961704"
             resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
-            buildConfigField "String", "BASE_URL", '"http://192.168.1.5:3000/graphql/"'
+            buildConfigField "String", "BASE_URL", '"http://192.168.1.3:3000/graphql/"'
             //https://muslimghanchi.samajapp.in/API/
         }
         medk {
@@ -193,7 +193,25 @@ android {
     }
 }
 
+def hasSoFiles = { File dir ->
+    if (dir == null || !dir.exists()) return false
+    def stack = [] as Stack<File>
+    stack.push(dir)
+    while (!stack.empty) {
+        File cur = stack.pop()
+        if (cur.isFile()) {
+            if (cur.name.endsWith('.so')) return true
+        } else if (cur.exists()) {
+            for (File child : cur.listFiles()) {
+                stack.push(child)
+            }
+        }
+    }
+    return false
+}
+
 def patchScript = rootProject.file('scripts/patch_elf_16kb.py').absolutePath
+def buildDirPath = project.buildDir.absolutePath
 
 tasks.whenTaskAdded { task ->
     if (task.name.startsWith('merge') && task.name.endsWith('NativeLibs')) {
@@ -208,21 +226,21 @@ tasks.whenTaskAdded { task ->
             if (intermediateDirPath != null) {
                 File intDir = new File(intermediateDirPath)
                 File outDir = new File(intDir, 'out')
-                if (outDir.exists() && hasSoFiles(outDir)) {
+                if (outDir.exists() && hasSoFiles.call(outDir)) {
                     mergedNativeLibsDir = outDir
-                } else if (intDir.exists() && hasSoFiles(intDir)) {
+                } else if (intDir.exists() && hasSoFiles.call(intDir)) {
                     mergedNativeLibsDir = intDir
                 }
             }
             if (mergedNativeLibsDir == null) {
-                def intBase = new File(project.buildDir, "intermediates/merged_native_libs")
+                def intBase = new File(buildDirPath, "intermediates/merged_native_libs")
                 if (intBase.exists()) {
                     for (variantDir in intBase.listFiles()) {
                         if (variantDir.isDirectory()) {
                             File taskDir = new File(variantDir, taskName)
                             if (taskDir.exists()) {
                                 File outDir = new File(taskDir, 'out')
-                                if (outDir.exists() && hasSoFiles(outDir)) {
+                                if (outDir.exists() && hasSoFiles.call(outDir)) {
                                     mergedNativeLibsDir = outDir
                                     break
                                 }
@@ -249,19 +267,6 @@ tasks.whenTaskAdded { task ->
             }
         }
     }
-}
-
-def hasSoFiles(File dir) {
-    if (dir == null || !dir.exists()) return false
-    if (dir.isFile()) return dir.name.endsWith('.so')
-    for (File child : dir.listFiles()) {
-        if (child.isDirectory()) {
-            if (hasSoFiles(child)) return true
-        } else if (child.name.endsWith('.so')) {
-            return true
-        }
-    }
-    return false
 }
 
 dependencies {

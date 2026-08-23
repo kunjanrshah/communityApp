@@ -26,11 +26,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.GraphRequest
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.github.squti.guru.Guru
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.ApiException
@@ -41,7 +36,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-
 import com.krs.community.R
 import com.krs.community.adapter.ForgotAdapter
 import com.krs.community.adapter.PolicyAdapter
@@ -56,20 +50,19 @@ import com.krs.community.model.Member
 import com.krs.community.utils.AppConstants
 import com.krs.community.utils.MyPermissionChecker.Companion.checkRequestNotificationPermissions
 import com.krs.community.utils.NotificationUtils
-import com.krs.community.utils.Utility.*
+import com.krs.community.utils.Utility.hideProgressDialog
+import com.krs.community.utils.Utility.hideSweetProgress
+import com.krs.community.utils.Utility.startSweetProgress
 import com.krs.community.utils.toast
 import com.krs.community.viewmodel.LoginViewModel
 import com.krs.community.viewmodel.PasswordViewModel
 import com.krs.community.viewmodelfactory.LoginViewModelFactory
 import com.krs.community.viewmodelfactory.PasswordViewModelFactory
 import com.orhanobut.dialogplus.DialogPlus
-
-import org.json.JSONException
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
-import java.util.*
 
 class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware,
     SMSReceiver.OTPReceiveListener, PolicyAdapter.policyInterface, ForgotAdapter.ForgotInterface {
@@ -528,7 +521,6 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware,
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
-            //   fade(this)
         } else {
             Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
         }
@@ -537,31 +529,17 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware,
     override fun userLogin(response: LoginResponse, isForgot: Boolean) {
         hideSweetProgress()
         hideProgressDialog()
-        //  Log.d(TAG, "login data: $response")
         if (isForgot) {
             Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG)
                 .show()
         } else {
             member = response.data
-            /*  if (!response.otp.isNullOrBlank()) {
-                  if (response.otp != "FAILED") {
-                      card_view_mobile.visibility = View.GONE
-                      card_view_otp.visibility = View.VISIBLE
-                      tv_otp.text = loginViewModel?.mobile
-                      startSMSListener()
-                      ReceviedOTP = response.otp
-                  } else {
-                      Snackbar.make(findViewById(R.id.ll_login), "OTP sending fail!", Snackbar.LENGTH_LONG).show()
-                  }
-              } else {*/
             if (response.success) {
                 goToDashboard(response)
-                //  goToFamilyDetailScreen()
             } else {
                 Snackbar.make(findViewById(R.id.ll_login), response.message, Snackbar.LENGTH_LONG)
                     .show()
             }
-            //   }
         }
     }
 

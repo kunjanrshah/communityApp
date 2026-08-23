@@ -380,6 +380,7 @@
     <string name="user_id" translatable="false">user_id</string>
     <string name="profile_percentage" translatable="false">profile_percent</string>
     <string name="access_token" translatable="false">access_token</string>
+    <string name="refresh_token" translatable="false">refresh_token</string>
     <string name="date" translatable="false">date</string>
     <string name="state" translatable="false">state</string>
     <string name="designation" translatable="false">designation</string>

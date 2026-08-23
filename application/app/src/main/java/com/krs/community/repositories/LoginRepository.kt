@@ -1,21 +1,37 @@
 package com.krs.community.repositories
 
-import com.google.gson.JsonObject
-import com.krs.community.model.LoginResponse
-import com.krs.community.retrofit.ApiServices
-import com.krs.community.utils.AppConstants
+import com.apollographql.apollo.ApolloClient
+import com.krs.community.LoginMutation
+import com.krs.community.app.FileUtils.decodeJwtPayload
+import com.krs.community.model.LoginModel
+import com.krs.community.type.LoginInput
 
-class LoginRepository(private val api: ApiServices) : SafeApiRequest() {
+class LoginRepository(
+    private val apolloClient: ApolloClient
+) : SafeApiRequest() {
 
-    suspend fun getLogin(userLogin: AppConstants.LoginRequest): LoginResponse {
-        return apiRequest {
-            api.getUserLogin(userLogin)
-        }
-    }
+    private val TAG: String = DashboardRepository::class.java.simpleName
 
-    suspend fun innerLogin(data: JsonObject): LoginResponse {
-        return apiRequest {
-            api.innerLogin(data)
+    suspend fun getLogin(input: LoginInput): kotlin.Result<LoginModel> {
+        return try {
+            val response = apolloClient.mutation(LoginMutation(input)).execute()
+            val loginData = response.data?.login
+
+            if (loginData != null) {
+                val json = decodeJwtPayload(loginData.accessToken)
+
+                val loginModel = LoginModel(
+                    authToken = json.getString("userId"),
+                    refreshToken = loginData.refreshToken,
+                    message = loginData.message
+                )
+                kotlin.Result.success(loginModel)
+            } else {
+                val errorMessage = response.errors?.firstOrNull()?.message ?: "Unknown error"
+                kotlin.Result.failure(Exception(errorMessage))
+            }
+        } catch (e: Exception) {
+            kotlin.Result.failure(e)
         }
     }
 
