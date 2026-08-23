@@ -631,7 +631,7 @@ class DashboardRepository(
         } ?: emptyList()
     }
 
-    suspend fun fetchLocalCommunities(index: Int) {
+    suspend fun fetchLocalCommunities(index: Int, subCommunityId: Int) {
         return withContext(Dispatchers.IO) {
             try {
                 var date = db.getLastUpdatedDao()
@@ -642,7 +642,8 @@ class DashboardRepository(
 
                 val response = apolloClient.query(
                     GetLocalCommunitiesQuery(
-                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent,
+                        subCommunityId
                     )
                 ).execute()
                 val getLocalCommunities = response.data?.getLocalCommunities
@@ -911,13 +912,19 @@ class DashboardRepository(
                         if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
                     )
                 ).execute()
+
+                Log.d(TAG, "fetchCity response errors: ${response.hasErrors()}")
+
                 val getCities = response.data?.getCities
 
                 if (getCities != null && getCities.success) {
                     db.getMasterUpdateDao().updateCitiesIndex(index)
 
                     val list: List<City> = mapToCityList(getCities.data)
+                    Log.d(TAG, "fetchCity cities count: ${list.size}")
                     city.postValue(list)
+                } else {
+                    Log.w(TAG, "fetchCity failed: data is null or success is false")
                 }
 
                 if (getCities != null && getCities.last_updated.toLong() != 0L) {
@@ -941,13 +948,11 @@ class DashboardRepository(
     private fun mapToCityList(apolloList: List<GetCitiesQuery.Data1?>?): List<City> {
         return apolloList?.mapNotNull { item ->
             item?.let {
-                it.states_id?.let { it1 ->
-                    City(
-                        id = it.id.toInt(),
-                        name = it.name,
-                        parent_id = it1,
-                    )
-                }
+                City(
+                    id = it.id.toInt(),
+                    name = it.name,
+                    parent_id = it.states_id ?: 0,
+                )
             }
         } ?: emptyList()
     }

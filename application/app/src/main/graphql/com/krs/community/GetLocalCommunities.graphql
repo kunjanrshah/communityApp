@@ -1,5 +1,5 @@
-query GetLocalCommunities($date: DateInputDto) {
-    getLocalCommunities(date: $date) {
+query GetLocalCommunities($date: DateInputDto, $subCommunityId: Int!) {
+    getLocalCommunities(date: $date, subCommunityId: $subCommunityId) {
         success
         message
         data {

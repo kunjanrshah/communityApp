@@ -143,9 +143,9 @@ class DashboardViewModel(
         }
     }
 
-    suspend fun fetchLocalCommunities(index: Int) {
+    suspend fun fetchLocalCommunities(index: Int, subCommunityId: Int) {
         if (isNetworkConnected(app.applicationContext)) {
-            mDashboardRepository.fetchLocalCommunities(index)
+            mDashboardRepository.fetchLocalCommunities(index, subCommunityId)
         }
     }
 

@@ -185,6 +185,83 @@ android {
         abortOnError false
         checkReleaseBuilds false
     }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging false
+        }
+    }
+}
+
+def patchScript = rootProject.file('scripts/patch_elf_16kb.py').absolutePath
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('merge') && task.name.endsWith('NativeLibs')) {
+        def taskName = task.name
+        def intermediateDirPath = null
+        try {
+            intermediateDirPath = task.intermediateDir
+        } catch (Exception ignored) {
+        }
+        task.doLast {
+            def mergedNativeLibsDir = null
+            if (intermediateDirPath != null) {
+                File intDir = new File(intermediateDirPath)
+                File outDir = new File(intDir, 'out')
+                if (outDir.exists() && hasSoFiles(outDir)) {
+                    mergedNativeLibsDir = outDir
+                } else if (intDir.exists() && hasSoFiles(intDir)) {
+                    mergedNativeLibsDir = intDir
+                }
+            }
+            if (mergedNativeLibsDir == null) {
+                def intBase = new File(project.buildDir, "intermediates/merged_native_libs")
+                if (intBase.exists()) {
+                    for (variantDir in intBase.listFiles()) {
+                        if (variantDir.isDirectory()) {
+                            File taskDir = new File(variantDir, taskName)
+                            if (taskDir.exists()) {
+                                File outDir = new File(taskDir, 'out')
+                                if (outDir.exists() && hasSoFiles(outDir)) {
+                                    mergedNativeLibsDir = outDir
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (mergedNativeLibsDir != null && mergedNativeLibsDir.exists()) {
+                def cmd = "python \"${patchScript}\" \"${mergedNativeLibsDir.absolutePath}\""
+                println "16KB ELF patch: scanning ${mergedNativeLibsDir.absolutePath}"
+                try {
+                    def proc = cmd.execute()
+                    proc.waitFor()
+                    def stdout = proc.in.text
+                    if (stdout) println stdout
+                    def stderr = proc.err.text
+                    if (stderr) println stderr
+                } catch (Exception e) {
+                    println "16KB ELF patch (${taskName}): error - ${e.message}"
+                }
+            } else {
+                println "16KB ELF patch (${taskName}): no .so files found in output"
+            }
+        }
+    }
+}
+
+def hasSoFiles(File dir) {
+    if (dir == null || !dir.exists()) return false
+    if (dir.isFile()) return dir.name.endsWith('.so')
+    for (File child : dir.listFiles()) {
+        if (child.isDirectory()) {
+            if (hasSoFiles(child)) return true
+        } else if (child.name.endsWith('.so')) {
+            return true
+        }
+    }
+    return false
 }
 
 dependencies {

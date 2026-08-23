@@ -29,6 +29,7 @@ import com.github.squti.guru.Guru
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.krs.community.BuildConfig
 import com.krs.community.R
@@ -40,6 +41,7 @@ import com.krs.community.fragments.FamilyDetailActivity
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.listeners.UpdateListener
+import com.krs.community.model.Member
 import com.krs.community.model.RegisterModel
 import com.krs.community.responses.MasterUpdateResponse
 import com.krs.community.utils.AppConstants
@@ -212,13 +214,19 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
             binding.spinnerStates.setOnItemClickListener {
                 Coroutines.main {
-                    val stateId = profileDetailViewModel.getstateIdByName(binding.spinnerStates.text.toString())
+                    val stateName = binding.spinnerStates.text.toString()
+                    val stateId = profileDetailViewModel.getstateIdByName(stateName)
+                    Log.d(TAG, "State selected: $stateName, stateId: $stateId")
                     val lstCity = profileDetailViewModel.getCityNamebyState(stateId)
+                    Log.d(
+                        TAG,
+                        "Cities fetched for stateId $stateId: ${lstCity.size} items -> $lstCity"
+                    )
                     registerViewModel.stateId = stateId
                     binding.spinnerCities.clear()
                     registerViewModel.cityId = null
                     binding.edtMobile.setText("")
-                    if (binding.spinnerStates.text.toString().lowercase() == "foreign") {
+                    if (stateName.lowercase() == "foreign") {
                         binding.edtMobile.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(15))
                     } else {
                         binding.edtMobile.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
@@ -234,6 +242,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                         lstcityName.addAll(lst)
                         binding.spinnerCities.setItems(lstcityName.toTypedArray())
                         binding.spinnerCities.setExpandTint(R.color.black)
+                    } else {
+                        binding.spinnerCities.setItems(arrayOf(getString(R.string.other)))
+                        binding.spinnerCities.setExpandTint(R.color.black)
+                        Log.w(TAG, "No cities found for stateId: $stateId")
                     }
                 }
             }
@@ -717,6 +729,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         if (response != null) {
             if (response.success) {
                 Coroutines.io {
+                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                    val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+                    val subCommunityId = loginMem?.subCommunityId?.toIntOrNull() ?: 0
+
                     val counts = MasterCounts()
                     counts.business_categories = -1
                     counts.business_sub_categories = -1
@@ -741,7 +757,10 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                         dashboardViewModel.fetchState(counts.states)
                         dashboardViewModel.fetchCity(counts.cities)
                         dashboardViewModel.fetchSubCommunities(counts.sub_community)
-                        dashboardViewModel.fetchLocalCommunities(counts.local_community)
+                        dashboardViewModel.fetchLocalCommunities(
+                            counts.local_community,
+                            subCommunityId
+                        )
                         dashboardViewModel.fetchLastName(counts.sub_casts)
                         dashboardViewModel.fetchNative(counts.native_place)
                     } else {
@@ -752,30 +771,33 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
                             dashboardViewModel.fetchState(counts.states)
                         }
 
-//                        val citiesCount = dashboardViewModel.getCitiesCount()
-//                        if (dbCount.cities != counts.cities || citiesCount == 0) {
-//                            dashboardViewModel.fetchCity(counts.cities)
-//                        }
-//
-//                        val subCommCount = dashboardViewModel.getSubCommCount()
-//                        if (dbCount.sub_community != counts.sub_community || subCommCount == 0) {
-//                            dashboardViewModel.fetchSubCommunities(counts.sub_community)
-//                        }
-//
-//                        val localCommCount = dashboardViewModel.getLocalCommCount()
-//                        if (dbCount.local_community != counts.local_community || localCommCount == 0) {
-//                            dashboardViewModel.fetchLocalCommunities(counts.local_community)
-//                        }
-//
-//                        val lnameCount = dashboardViewModel.getLastNameCount()
-//                        if (dbCount.sub_casts != counts.sub_casts || lnameCount == 0) {
-//                            dashboardViewModel.fetchLastName(counts.sub_casts)
-//                        }
-//
-//                        val nativeCount = dashboardViewModel.getNativeCount()
-//                        if (dbCount.native_place != counts.native_place || nativeCount == 0) {
-//                            dashboardViewModel.fetchNative(counts.native_place)
-//                        }
+                        val citiesCount = dashboardViewModel.getCitiesCount()
+                        if (dbCount.cities != counts.cities || citiesCount == 0) {
+                            dashboardViewModel.fetchCity(counts.cities)
+                        }
+
+                        val subCommCount = dashboardViewModel.getSubCommCount()
+                        if (dbCount.sub_community != counts.sub_community || subCommCount == 0) {
+                            dashboardViewModel.fetchSubCommunities(counts.sub_community)
+                        }
+
+                        val localCommCount = dashboardViewModel.getLocalCommCount()
+                        if (dbCount.local_community != counts.local_community || localCommCount == 0) {
+                            dashboardViewModel.fetchLocalCommunities(
+                                counts.local_community,
+                                subCommunityId
+                            )
+                        }
+
+                        val lnameCount = dashboardViewModel.getLastNameCount()
+                        if (dbCount.sub_casts != counts.sub_casts || lnameCount == 0) {
+                            dashboardViewModel.fetchLastName(counts.sub_casts)
+                        }
+
+                        val nativeCount = dashboardViewModel.getNativeCount()
+                        if (dbCount.native_place != counts.native_place || nativeCount == 0) {
+                            dashboardViewModel.fetchNative(counts.native_place)
+                        }
                     }
                     setDropDownList()
                 }

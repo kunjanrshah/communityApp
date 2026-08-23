@@ -468,6 +468,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                          statusCounts.postValue(response.userCounts.statusCounts)
                      }*/
 
+                    val loginuser = Guru.getString(getString(R.string.loginMember), "")
+                    val loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
+                    val subCommunityId = loginMem?.subCommunityId?.toIntOrNull() ?: 0
+
                     val counts = MasterCounts()
                     counts.business_categories =
                         Integer.parseInt(response.countList.businessCategories)
@@ -496,7 +500,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                         dashboardViewModel.fetchCity(counts.cities)
                         dashboardViewModel.fetchRelations(counts.relations)
                         dashboardViewModel.fetchSubCommunities(counts.sub_community)
-                        dashboardViewModel.fetchLocalCommunities(counts.local_community)
+                        dashboardViewModel.fetchLocalCommunities(
+                            counts.local_community,
+                            subCommunityId
+                        )
                         dashboardViewModel.fetchLastName(counts.sub_casts)
                         dashboardViewModel.fetchEducation(counts.educations)
                         dashboardViewModel.fetchNative(counts.native_place)
@@ -529,7 +536,10 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                             dashboardViewModel.fetchSubCommunities(counts.sub_community)
                         }
                         if (dbCount.local_community != counts.local_community) {
-                            dashboardViewModel.fetchLocalCommunities(counts.local_community)
+                            dashboardViewModel.fetchLocalCommunities(
+                                counts.local_community,
+                                subCommunityId
+                            )
                         }
                         if (dbCount.sub_casts != counts.sub_casts) {
                             dashboardViewModel.fetchLastName(counts.sub_casts)

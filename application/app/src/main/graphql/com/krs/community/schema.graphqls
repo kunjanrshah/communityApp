@@ -402,7 +402,7 @@ type Query {
 
     getSubCommunities(date: DateInputDto): GetMastersResponseDTO!
 
-    getLocalCommunities(date: DateInputDto): GetMastersResponseDTO!
+    getLocalCommunities(date: DateInputDto, subCommunityId: Int!): GetMastersResponseDTO!
 }
 
 input DateInputDto {
