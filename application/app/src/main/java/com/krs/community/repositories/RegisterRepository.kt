@@ -33,6 +33,7 @@ class RegisterRepository(
                 val json = decodeJwtPayload(registerData.accessToken)
 
                 val registerModel = RegisterModel(
+                    accessToken = registerData.accessToken,
                     userId = json.getString("userId"),
                     mobile = json.getString("mobile"),
                     role = json.getString("role"),

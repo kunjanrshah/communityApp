@@ -192,6 +192,11 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
             }
 
             binding.btnRegister.setOnClickListener {
+                Utility.startSweetProgress(
+                    this,
+                    getString(R.string.app_name),
+                    getString(R.string.please_wait)
+                )
                 registerViewModel.getUserRegistration(isAdmin)
             }
             binding.txtAlready.setOnClickListener { registerViewModel.onTextAlreadyClicked(this) }
@@ -591,6 +596,18 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     }
 
     private fun successResponse(data: RegisterModel, isAdmin: Boolean) {
+        Guru.putString(getString(R.string.user_id), data.userId)
+        Guru.putString(getString(R.string.access_token), data.accessToken)
+        data.refreshToken?.let { refreshToken ->
+            Guru.putString(getString(R.string.refresh_token), refreshToken)
+        }
+        val member = Member()
+        member.id = data.userId
+        member.accessToken = data.accessToken
+        member.mobile = data.mobile
+        member.role = data.role
+        val json = Gson().toJson(member)
+        Guru.putString(getString(R.string.loginMember), json)
         clearAll()
         if (isAdmin) {
             goToFamilyDetailActivity(data)

@@ -311,11 +311,16 @@ class RegisterViewModel(
                             withContext(Main) {
 
                                 it.onSuccess {
-                                    if (it.message == "success") {
+                                    if (it.message.equals("success", ignoreCase = true)) {
                                         iRegisterListener?.getRegisterSuccess(it, isAdmin)
                                     } else {
                                         iRegisterListener?.getRegisterFailure(it.message, 0)
                                     }
+                                }
+                                it.onFailure { throwable ->
+                                    iRegisterListener?.getFailure(
+                                        throwable.message ?: "Unknown error"
+                                    )
                                 }
                                 thejob.complete()
                             }
@@ -323,11 +328,23 @@ class RegisterViewModel(
                         }
 
                     } catch (e: ApiException) {
-                        e.message?.let { iRegisterListener?.getFailure(it) }
+                        e.message?.let { msg ->
+                            withContext(Main) {
+                                iRegisterListener?.getFailure(msg)
+                            }
+                        }
                     } catch (e: NoInternetException) {
-                        e.message?.let { iRegisterListener?.getFailure(it) }
+                        e.message?.let { msg ->
+                            withContext(Main) {
+                                iRegisterListener?.getFailure(msg)
+                            }
+                        }
                     } catch (e: Exception) {
-                        e.message?.let { iRegisterListener?.getFailure(it) }
+                        e.message?.let { msg ->
+                            withContext(Main) {
+                                iRegisterListener?.getFailure(msg)
+                            }
+                        }
                     }
                     thejob.complete()
                 }
