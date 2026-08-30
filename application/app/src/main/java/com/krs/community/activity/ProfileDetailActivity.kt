@@ -47,6 +47,7 @@ import com.krs.community.fragments.MainDetailsFragment
 import com.krs.community.fragments.MatrimonyDetailsFragment
 import com.krs.community.fragments.PersonalDetailsFragment
 import com.krs.community.fragments.ProfessionalDetailsFragment
+import com.krs.community.auth.SessionExpirationHandler
 import com.krs.community.listeners.EditMemberListener
 import com.krs.community.listeners.ImageUploadListener
 import com.krs.community.model.Member
@@ -87,6 +88,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     private lateinit var profileDetailViewModel: ProfileDetailViewModel
     private val factory: ProfileDetailViewModelFactory by instance<ProfileDetailViewModelFactory>()
+    private val sessionExpirationHandler: SessionExpirationHandler by instance()
     private val listFragments = mutableListOf<Fragment>()
     private var isProfileImage = false
     private var member: Member? = null
@@ -555,6 +557,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override fun onResume() {
         super.onResume()
+        sessionExpirationHandler.attach(this)
         if (checkFineLocationPermission(this)) {
             easyWayLocation.startLocation()
         }
@@ -562,6 +565,7 @@ class ProfileDetailActivity : AppCompatActivity(), KodeinAware, EditMemberListen
 
     override fun onPause() {
         super.onPause()
+        sessionExpirationHandler.detach()
         try {
             easyWayLocation.endUpdates()
         } catch (e: Exception) {

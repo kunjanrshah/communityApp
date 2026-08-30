@@ -12,6 +12,7 @@ import com.krs.community.R;
 import com.krs.community.listeners.RetrofitListener;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.utils.AppConstants;
+import com.krs.community.utils.ApiLogInterceptor;
 import com.krs.community.utils.Logger;
 import com.krs.community.utils.Utility;
 
@@ -47,6 +48,7 @@ public class RetrofitBase {
 
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient().newBuilder()
                 .addNetworkInterceptor(interceptor)
+                .addInterceptor(new ApiLogInterceptor("Retrofit"))
                 .addInterceptor(new Interceptor() {
                     @NonNull
                     @Override

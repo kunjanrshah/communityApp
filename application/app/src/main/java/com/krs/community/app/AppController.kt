@@ -32,6 +32,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
+import com.krs.community.auth.SessionExpirationHandler
+import com.krs.community.auth.TokenManager
 import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.repositories.ByDistanceRepository
@@ -111,7 +113,9 @@ class AppController : Application(), KodeinAware {
 
         bind() from singleton { ApiServices() }
         bind() from singleton { AppDatabase(instance()) }
-        bind<ApolloClient>() with singleton { GraphQLClientProvider.provideApolloClient() }
+        bind<ApolloClient>() with singleton { GraphQLClientProvider.provideApolloClient(this@AppController) }
+        bind<TokenManager>() with singleton { TokenManager(this@AppController) }
+        bind<SessionExpirationHandler>() with singleton { SessionExpirationHandler() }
 
         bind() from singleton { RegisterRepository(instance()) }
         bind() from singleton { LoginRepository(instance()) }

@@ -21,9 +21,12 @@ class LoginRepository(
                 val json = decodeJwtPayload(loginData.accessToken)
 
                 val loginModel = LoginModel(
-                    authToken = json.getString("userId"),
+                    authToken = loginData.accessToken,
                     refreshToken = loginData.refreshToken,
-                    message = loginData.message
+                    message = loginData.message,
+                    userId = json.optString("userId", ""),
+                    mobile = json.optString("mobile", ""),
+                    role = json.optString("role", "")
                 )
                 kotlin.Result.success(loginModel)
             } else {

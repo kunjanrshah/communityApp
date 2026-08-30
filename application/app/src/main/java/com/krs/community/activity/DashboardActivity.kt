@@ -47,6 +47,7 @@ import com.krs.community.fragments.FragmentDrawer.FragmentDrawerListener
 import com.krs.community.fragments.NonActivesFragment
 import com.krs.community.fragments.NotificationListFragment
 import com.krs.community.fragments.StatisticFragment
+import com.krs.community.auth.SessionExpirationHandler
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.UpdateListener
 import com.krs.community.model.Member
@@ -75,16 +76,19 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 
-class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener, UpdateListener, LocationData.AddressCallBack, ByFilterListener {
+class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAware, Listener,
+    UpdateListener, LocationData.AddressCallBack, ByFilterListener {
 
     private val TAG = DashboardActivity::class.java.simpleName
     private lateinit var dashboardViewModel: DashboardViewModel
     private val factory: DashboardViewModelFactory by instance()
+    private val sessionExpirationHandler: SessionExpirationHandler by instance()
     private var menu: Menu? = null
     private lateinit var smartFilterViewModel: SmartFilterViewModel
     private val smartFilterViewModelFactory: SmartFilterViewModelFactory by instance()
     private var isClicked = false
     private lateinit var toolbar: Toolbar
+
     companion object {
         var stop: Boolean = false
         lateinit var binding: ActivityDashboardBinding
@@ -112,10 +116,14 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
+        binding =
+            DataBindingUtil.setContentView(this@DashboardActivity, R.layout.activity_dashboard)
         dashboardViewModel = ViewModelProvider(this, factory).get(DashboardViewModel::class.java)
         dashboardViewModel.listener = this
-        smartFilterViewModel = ViewModelProvider(this, smartFilterViewModelFactory).get(SmartFilterViewModel::class.java)
+        smartFilterViewModel = ViewModelProvider(
+            this,
+            smartFilterViewModelFactory
+        ).get(SmartFilterViewModel::class.java)
         smartFilterViewModel.mByFilterListener = this
 
         val mApp = applicationContext as AppController
@@ -126,6 +134,7 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
             val mIntent = Intent(this@DashboardActivity, SplashActivity::class.java)
             startActivity(mIntent)
             finish()
+            return
             //    fade(this)
         }
         toolbar = findViewById(R.id.toolbar)
@@ -137,20 +146,22 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         binding.myAppBar.translationY = -toolbarHeight.toFloat()
         binding.myAppBar.animate().translationY(0f).alpha(1f).setDuration(2000).start()
 
-        val drawerFragment = supportFragmentManager.findFragmentById(R.id.fragment_navigation_drawer) as FragmentDrawer?
+        val drawerFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_navigation_drawer) as FragmentDrawer?
         drawerFragment!!.setUp(R.id.fragment_navigation_drawer, binding.drawerLayout, (toolbar))
         drawerFragment.mDrawerToggle!!.isDrawerIndicatorEnabled = false
         val drawable = ResourcesCompat.getDrawable(resources, R.drawable.menu_slide1, theme)
         drawerFragment.mDrawerToggle!!.setHomeAsUpIndicator(drawable)
         drawerFragment.setDrawerListener(this)
         if (drawerFragment.mDrawerToggle != null) {
-            drawerFragment.mDrawerToggle!!.toolbarNavigationClickListener = View.OnClickListener { v: View? ->
-                if (binding.drawerLayout.isDrawerVisible(GravityCompat.START)) {
-                    binding.drawerLayout.closeDrawer(GravityCompat.START)
-                } else {
-                    binding.drawerLayout.openDrawer(GravityCompat.START)
+            drawerFragment.mDrawerToggle!!.toolbarNavigationClickListener =
+                View.OnClickListener { v: View? ->
+                    if (binding.drawerLayout.isDrawerVisible(GravityCompat.START)) {
+                        binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    } else {
+                        binding.drawerLayout.openDrawer(GravityCompat.START)
+                    }
                 }
-            }
         }
 
         binding.space.initWithSaveInstanceState(savedInstanceState)
@@ -168,12 +179,14 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
             override fun onItemClick(itemIndex: Int, itemName: String) {
                 if (itemIndex == 1) {
-                    val fragment = supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName)
+                    val fragment =
+                        supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
                         movetoFragment(this@DashboardActivity, CalendarFragment())
                     }
                 } else if (itemIndex == 0) {
-                    val fragment = supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName)
+                    val fragment =
+                        supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
                         movetoFragment(this@DashboardActivity, DashboardFragment())
                     }
@@ -182,12 +195,14 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
             override fun onItemReselected(itemIndex: Int, itemName: String) {
                 if (itemIndex == 1) {
-                    val fragment = supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName)
+                    val fragment =
+                        supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
                         movetoFragment(this@DashboardActivity, CalendarFragment())
                     }
                 } else if (itemIndex == 0) {
-                    val fragment = supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName)
+                    val fragment =
+                        supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName)
                     if (fragment == null || !fragment.isVisible) {
                         movetoFragment(this@DashboardActivity, DashboardFragment())
                     }
@@ -232,10 +247,19 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
                 if (loginMem?.role.equals("SUB_ADMIN")) {
                     jsonObject.put(getString(R.string.sub_community_id), loginMem?.subCommunityId)
                 } else if (loginMem?.role.equals("LOCAL_ADMIN")) {
-                    jsonObject.put(getString(R.string.local_community_id), loginMem?.localCommunityId)
+                    jsonObject.put(
+                        getString(R.string.local_community_id),
+                        loginMem?.localCommunityId
+                    )
                 }
-                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
+                jsonObject.put(
+                    getString(R.string.access_token),
+                    Guru.getString(getString(R.string.access_token), "")
+                )
+                jsonObject.put(
+                    getString(R.string.user_id),
+                    Guru.getString(getString(R.string.user_id), "")
+                )
                 val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                 smartFilterViewModel.getInActiveRecords(updated)
             }
@@ -260,33 +284,39 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     override fun onResume() {
         super.onResume()
+        sessionExpirationHandler.attach(this)
         loadProfile()
         NotificationUtils.clearNotifications(applicationContext)
         hideSweetProgress()
 
-        val locale = Guru.getString(resources.getString(R.string.locale_sp), resources.getString(R.string._english))
+        val locale = Guru.getString(
+            resources.getString(R.string.locale_sp),
+            resources.getString(R.string._english)
+        )
         Log.e("Lang", "" + locale)
         when {
             locale.equals(resources.getString(R.string._gujarati), ignoreCase = true) -> {
                 changeLang(applicationContext, "ગુજરાતી")
             }
+
             locale.equals(resources.getString(R.string._hindi), ignoreCase = true) -> {
                 changeLang(applicationContext, "हिन्दी")
             }
+
             else -> {
                 changeLang(applicationContext, "English")
             }
         }
 
-      /*  if (checkFineLocationPermission(this)) {
-            //  getLocationDetail = GetLocationDetail(this, this)
-            //  request = LocationRequest()
-            //  request?.interval = INTERVAL
-            //  request?.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-            //  easyWayLocation = EasyWayLocation(this, request, true, this)
-            // easyWayLocation?.startLocation() //calculateDistance()
+        /*  if (checkFineLocationPermission(this)) {
+              //  getLocationDetail = GetLocationDetail(this, this)
+              //  request = LocationRequest()
+              //  request?.interval = INTERVAL
+              //  request?.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+              //  easyWayLocation = EasyWayLocation(this, request, true, this)
+              // easyWayLocation?.startLocation() //calculateDistance()
 
-        }*//* else {
+          }*//* else {
             requestFineLocationPermission(this)
         }*//*
 
@@ -297,11 +327,12 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
     override fun onPause() {
         super.onPause()
-       /* if (checkFineLocationPermission(this)) {
-            //    easyWayLocation?.endUpdates()
-        } else {
-            requestFineLocationPermission(this)
-        }*/
+        sessionExpirationHandler.detach()
+        /* if (checkFineLocationPermission(this)) {
+             //    easyWayLocation?.endUpdates()
+         } else {
+             requestFineLocationPermission(this)
+         }*/
     }
 
     override fun onDestroy() {
@@ -324,21 +355,25 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-      /*  if (requestCode == FINE_LOCATION_REQUEST) {
-            //      easyWayLocation?.startLocation()
-        } else {
-            when (requestCode) {
-                PERMISSION_REQUEST_READ_PHONE_STATE ->
-                    if (grantResults.size > 0) {
-                        val CallAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        if (!CallAccepted) {
-                            binding.containerBody.snackbar("Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG)
-                        }
-                    }
-            }
-        }*/
+        /*  if (requestCode == FINE_LOCATION_REQUEST) {
+              //      easyWayLocation?.startLocation()
+          } else {
+              when (requestCode) {
+                  PERMISSION_REQUEST_READ_PHONE_STATE ->
+                      if (grantResults.size > 0) {
+                          val CallAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                          if (!CallAccepted) {
+                              binding.containerBody.snackbar("Permission Required for Incoming Call Dialog Feature", Snackbar.LENGTH_LONG)
+                          }
+                      }
+              }
+          }*/
     }
 
 
@@ -390,27 +425,37 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
         val str = resources.getString(R.string.base_url_thumb) + member?.profilePic
         logUser(member)
         Glide.with(this)
-                .load(str)
-                .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
-                .into(object : CustomTarget<Drawable>() {
-                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        menu?.findItem(R.id.action_profile)?.icon = resource
-                    }
+            .load(str)
+            .apply(RequestOptions.circleCropTransform()).thumbnail(0.5f)
+            .into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    menu?.findItem(R.id.action_profile)?.icon = resource
+                }
 
-                    override fun onLoadCleared(placeholder: Drawable?) {
+                override fun onLoadCleared(placeholder: Drawable?) {
 
-                    }
-                })
+                }
+            })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_profile -> {
-                startSweetProgress(this, getString(R.string.MoveProfile), getString(R.string.loading))
+                startSweetProgress(
+                    this,
+                    getString(R.string.MoveProfile),
+                    getString(R.string.loading)
+                )
 
                 val jsonObject = JSONObject()
                 val jsonObj = JSONObject()
-                jsonObj.put(getString(R.string.id), Guru.getString(getString(R.string.member_id), ""))
+                jsonObj.put(
+                    getString(R.string.id),
+                    Guru.getString(getString(R.string.member_id), "")
+                )
                 jsonObject.put(getString(R.string.filter_by), jsonObj)
                 val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
                 isClicked = true
@@ -418,15 +463,21 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
                 true
             }
+
             R.id.action_notify -> {
-                binding.containerBody.snackbar(getString(R.string.coming_soon), Snackbar.LENGTH_LONG)
+                binding.containerBody.snackbar(
+                    getString(R.string.coming_soon),
+                    Snackbar.LENGTH_LONG
+                )
                 movetoFragment(this, NotificationListFragment())
                 true
             }
+
             R.id.action_share -> {
                 shareApp(this)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -474,23 +525,23 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
 
                     val counts = MasterCounts()
                     counts.business_categories =
-                        Integer.parseInt(response.countList.businessCategories)
+                        response.countList.businessCategories?.toIntOrNull() ?: 0
                     counts.business_sub_categories =
-                        Integer.parseInt(response.countList.businessSubCategories)
-                    counts.cities = Integer.parseInt(response.countList.cities)
-                    counts.committees = Integer.parseInt(response.countList.committees)
-                    counts.current_activity = Integer.parseInt(response.countList.currentActivity)
-                    counts.designations = Integer.parseInt(response.countList.designations)
-                    counts.districts = Integer.parseInt(response.countList.districts)
-                    counts.educations = Integer.parseInt(response.countList.educations)
-                    counts.local_community = Integer.parseInt(response.countList.localCommunity)
-                    counts.native_place = Integer.parseInt(response.countList.native)
-                    counts.occupation = Integer.parseInt(response.countList.occupation)
-                    counts.relations = Integer.parseInt(response.countList.relations)
-                    counts.states = Integer.parseInt(response.countList.states)
-                    counts.sub_casts = Integer.parseInt(response.countList.subCasts)
-                    counts.sub_community = Integer.parseInt(response.countList.subCommunity)
-                    counts.gotra = Integer.parseInt(response.countList.gotra)
+                        response.countList.businessSubCategories?.toIntOrNull() ?: 0
+                    counts.cities = response.countList.cities?.toIntOrNull() ?: 0
+                    counts.committees = response.countList.committees?.toIntOrNull() ?: 0
+                    counts.current_activity = response.countList.currentActivity?.toIntOrNull() ?: 0
+                    counts.designations = response.countList.designations?.toIntOrNull() ?: 0
+                    counts.districts = response.countList.districts?.toIntOrNull() ?: 0
+                    counts.educations = response.countList.educations?.toIntOrNull() ?: 0
+                    counts.local_community = response.countList.localCommunity?.toIntOrNull() ?: 0
+                    counts.native_place = response.countList.native?.toIntOrNull() ?: 0
+                    counts.occupation = response.countList.occupation?.toIntOrNull() ?: 0
+                    counts.relations = response.countList.relations?.toIntOrNull() ?: 0
+                    counts.states = response.countList.states?.toIntOrNull() ?: 0
+                    counts.sub_casts = response.countList.subCasts?.toIntOrNull() ?: 0
+                    counts.sub_community = response.countList.subCommunity?.toIntOrNull() ?: 0
+                    counts.gotra = response.countList.gotra?.toIntOrNull() ?: 0
                     val dbCount = dashboardViewModel.getMasterCounts()
 
                     if (dbCount == null) {

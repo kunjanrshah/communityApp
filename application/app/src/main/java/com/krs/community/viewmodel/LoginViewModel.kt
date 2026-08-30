@@ -206,7 +206,9 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                                             )
                                         }
                                         val member = Member()
+                                        member.id = loginModel.userId ?: ""
                                         member.accessToken = loginModel.authToken
+                                        member.role = loginModel.role ?: ""
                                         val loginResponse = LoginResponse()
                                         loginResponse.success = true
                                         loginResponse.message = loginModel.message

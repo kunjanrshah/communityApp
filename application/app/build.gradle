@@ -90,8 +90,8 @@ android {
 
         ghanchi {
             applicationId "com.ghanchi.samaj"
-            versionCode 23
-            versionName "1.0.14"
+            versionCode 3
+            versionName "3"
             resValue "string", "app_name", "Muslim Ghanchi Parivar"
             resValue "string", "dev_name", "Mehboob Gogda"
             resValue "string", "dev_contact", "9377133222"
@@ -110,7 +110,7 @@ android {
             resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
             resValue "string", "facebook_app_id", "2264814596961704"
             resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
-            buildConfigField "String", "BASE_URL", '"http://localhost:3000/graphql/"'
+            buildConfigField "String", "BASE_URL", '"http://lip-reproach-payday.ngrok-free.dev/graphql/"'
             //https://muslimghanchi.samajapp.in/API/
         }
         medk {

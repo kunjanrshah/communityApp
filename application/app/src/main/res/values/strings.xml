@@ -380,6 +380,9 @@
     <string name="user_id" translatable="false">user_id</string>
     <string name="profile_percentage" translatable="false">profile_percent</string>
     <string name="access_token" translatable="false">access_token</string>
+    <string name="session_expired_title">Session Expired</string>
+    <string name="session_expired_message">Your session has expired. Please log in again to continue.</string>
+    <string name="cancel">Cancel</string>
     <string name="refresh_token" translatable="false">refresh_token</string>
     <string name="date" translatable="false">date</string>
     <string name="state" translatable="false">state</string>
