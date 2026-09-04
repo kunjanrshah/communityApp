@@ -2,10 +2,12 @@ package com.krs.community.utils
 
 import android.content.Context
 import android.util.Log
+import com.auth0.android.jwt.JWT
 import com.krs.community.auth.TokenManager
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer
+import java.util.Date
 
 class GraphQLAuthInterceptor(
     private val context: Context,
@@ -34,8 +36,21 @@ class GraphQLAuthInterceptor(
             val accessToken = tokenManager.accessToken
 
             if (!accessToken.isNullOrEmpty()) {
-                requestBuilder.addHeader(AUTH_HEADER, BEARER_PREFIX + accessToken)
-                Log.d(tag, "Added Bearer token to request: ${original.url}")
+                val trimmedToken = accessToken.trim()
+                if (trimmedToken != accessToken) {
+                    Log.w(tag, "Access token had whitespace — trimmed before use: ${original.url}")
+                }
+                if (isTokenExpired(trimmedToken)) {
+                    Log.w(
+                        tag,
+                        "Access token is expired — request will likely fail with 401: ${original.url}"
+                    )
+                }
+                requestBuilder.addHeader(AUTH_HEADER, BEARER_PREFIX + trimmedToken)
+                Log.d(
+                    tag,
+                    "Added Bearer token (length=${trimmedToken.length}) to request: ${original.url}"
+                )
             } else {
                 Log.w(
                     tag,
@@ -44,6 +59,18 @@ class GraphQLAuthInterceptor(
             }
         } else {
             Log.d(tag, "Skipping auth for Login/Register request: ${original.url}")
+        }
+
+        // Rebuild the request body so downstream interceptors and the network
+        // layer see a fresh, unconsumed body. writeTo() on the original body
+        // consumes it in OkHttp, so we must recreate it from the buffer content.
+        if (body != null && requestBodyString.isNotEmpty()) {
+            val contentType = body.contentType()
+            val newBody = okhttp3.RequestBody.create(
+                contentType,
+                requestBodyString
+            )
+            requestBuilder.method(original.method, newBody)
         }
 
         return chain.proceed(requestBuilder.build())
@@ -57,5 +84,21 @@ class GraphQLAuthInterceptor(
                 (normalizedBody.contains("login(") ||
                         normalizedBody.contains("register(") ||
                         normalizedBody.contains("refreshtoken("))
+    }
+
+    private fun isTokenExpired(token: String): Boolean {
+        return try {
+            val jwt = JWT(token)
+            val expiresAt = jwt.expiresAt
+            if (expiresAt == null) {
+                Log.w(tag, "Token has no expiry claim — treating as expired")
+                true
+            } else {
+                expiresAt.before(Date())
+            }
+        } catch (e: Exception) {
+            Log.w(tag, "Failed to parse JWT for expiry check: ${e.message}")
+            true
+        }
     }
 }

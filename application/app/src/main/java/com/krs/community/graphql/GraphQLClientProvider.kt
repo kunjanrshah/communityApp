@@ -20,6 +20,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 object GraphQLClientProvider {
 
+    private var cachedTokenRefreshApi: TokenRefreshApi? = null
+
     fun provideApolloClient(context: Context): ApolloClient {
         val tokenManager = TokenManager(context)
 
@@ -29,6 +31,7 @@ object GraphQLClientProvider {
         // (authenticator triggers refresh → refresh triggers authenticator …).
         val refreshClient = createApolloClient(context, authenticator = null)
         val tokenRefreshApi = TokenRefreshApi.getInstance(refreshClient)
+        cachedTokenRefreshApi = tokenRefreshApi
 
         val strategies = listOf<AuthExceptionHandler>(
             RefreshTokenStrategy(tokenManager, tokenRefreshApi),
@@ -37,6 +40,13 @@ object GraphQLClientProvider {
 
         val authenticator = TokenAuthenticator(strategies)
         return createApolloClient(context, authenticator)
+    }
+
+    fun provideTokenRefreshApi(context: Context): TokenRefreshApi {
+        return cachedTokenRefreshApi ?: run {
+            val refreshClient = createApolloClient(context, authenticator = null)
+            TokenRefreshApi.getInstance(refreshClient).also { cachedTokenRefreshApi = it }
+        }
     }
 
     private fun createApolloClient(

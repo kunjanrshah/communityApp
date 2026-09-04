@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
+import com.apollographql.apollo.exception.ApolloHttpException
 import com.krs.community.GetBusinessCategoriesQuery
 import com.krs.community.GetCitiesQuery
 import com.krs.community.GetCommitteesQuery
@@ -20,6 +21,9 @@ import com.krs.community.IsAppVersionExistsQuery
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
+import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
+import com.krs.community.auth.TokenRefreshCallbackRegistry
 import com.krs.community.entities.BusinessCategory
 import com.krs.community.entities.BusinessSubCategory
 import com.krs.community.entities.City
@@ -47,7 +51,9 @@ import kotlinx.coroutines.withContext
 
 class DashboardRepository(
     private val apolloClient: ApolloClient,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    private val tokenManager: TokenManager,
+    private val tokenRefreshApi: TokenRefreshApi
 ) : SafeApiRequest() {
 
     private val subCommunity = MutableLiveData<List<SubCommunity>>()
@@ -83,6 +89,7 @@ class DashboardRepository(
     private val committee = MutableLiveData<List<Committee>>()
     private val designation = MutableLiveData<List<Designation>>()
     private val lastUpdated = MutableLiveData<LastUpdated>()
+    private val apiError = MutableLiveData<String?>()
     private val TAG: String = DashboardRepository::class.java.simpleName
     private fun saveCurrentActivity(currentActivity: List<CurrentActivity>) {
         Coroutines.io {
@@ -481,11 +488,38 @@ class DashboardRepository(
                     date = (Integer.parseInt(date) + 1).toString()
                 }
 
-                val response = apolloClient.query(
+                var retry = true
+                var response = apolloClient.query(
                     GetDesignationsQuery(
                         if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
                     )
                 ).execute()
+
+                if (response.hasErrors()) {
+                    response.errors?.let {
+                        when (handleGraphQLErrors(it)) {
+                            AuthResult.TokenRefreshed -> {
+                                if (retry) {
+                                    retry = false
+                                    response = apolloClient.query(
+                                        GetDesignationsQuery(
+                                            if (date != null) Optional.Present(
+                                                DateInputDto(
+                                                    date = Optional.Present(
+                                                        date
+                                                    )
+                                                )
+                                            ) else Optional.Absent
+                                        )
+                                    ).execute()
+                                }
+                            }
+
+                            AuthResult.SessionExpired -> return@withContext
+                            AuthResult.NotAuthError -> {}
+                        }
+                    }
+                }
                 val getDesignation = response.data?.getDesignations
 
                 if (getDesignation != null && getDesignation.success) {
@@ -508,7 +542,13 @@ class DashboardRepository(
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                when (handleApolloException(e)) {
+                    AuthResult.SessionExpired -> return@withContext
+                    else -> {
+                        e.printStackTrace()
+                        apiError.postValue("GetDesignations: ${e.message}")
+                    }
+                }
             }
         }
     }
@@ -534,11 +574,27 @@ class DashboardRepository(
                     date = (Integer.parseInt(date) + 1).toString()
                 }
 
-                val response = apolloClient.query(
-                    GetCommitteesQuery(
-                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
-                    )
-                ).execute()
+                val queryInput =
+                    if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                var retry = true
+                var response = apolloClient.query(GetCommitteesQuery(queryInput)).execute()
+
+                if (response.hasErrors()) {
+                    response.errors?.let {
+                        when (handleGraphQLErrors(it)) {
+                            AuthResult.TokenRefreshed -> {
+                                if (retry) {
+                                    retry = false
+                                    response =
+                                        apolloClient.query(GetCommitteesQuery(queryInput)).execute()
+                                }
+                            }
+
+                            AuthResult.SessionExpired -> return@withContext
+                            AuthResult.NotAuthError -> {}
+                        }
+                    }
+                }
                 val getCommittee = response.data?.getCommittees
 
                 if (getCommittee != null && getCommittee.success) {
@@ -561,7 +617,13 @@ class DashboardRepository(
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                when (handleApolloException(e)) {
+                    AuthResult.SessionExpired -> return@withContext
+                    else -> {
+                        e.printStackTrace()
+                        apiError.postValue("GetCommittees: ${e.message}")
+                    }
+                }
             }
         }
     }
@@ -742,12 +804,27 @@ class DashboardRepository(
                     date = (Integer.parseInt(date) + 1).toString()
                 }
 
-                // Execute GraphQL query
-                val response = apolloClient.query(
-                    GetEducationsQuery(
-                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
-                    )
-                ).execute()
+                val queryInput =
+                    if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                var retry = true
+                var response = apolloClient.query(GetEducationsQuery(queryInput)).execute()
+
+                if (response.hasErrors()) {
+                    response.errors?.let {
+                        when (handleGraphQLErrors(it)) {
+                            AuthResult.TokenRefreshed -> {
+                                if (retry) {
+                                    retry = false
+                                    response =
+                                        apolloClient.query(GetEducationsQuery(queryInput)).execute()
+                                }
+                            }
+
+                            AuthResult.SessionExpired -> return@withContext
+                            AuthResult.NotAuthError -> {}
+                        }
+                    }
+                }
                 val getEducation = response.data?.getEducations
 
                 // If success, update DB and post data
@@ -773,7 +850,13 @@ class DashboardRepository(
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                when (handleApolloException(e)) {
+                    AuthResult.SessionExpired -> return@withContext
+                    else -> {
+                        e.printStackTrace()
+                        apiError.postValue("GetEducations: ${e.message}")
+                    }
+                }
             }
         }
     }
@@ -906,14 +989,29 @@ class DashboardRepository(
                     e.printStackTrace()
                 }
 
-                // Execute GraphQL query
-                val response = apolloClient.query(
-                    GetCitiesQuery(
-                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
-                    )
-                ).execute()
+                val queryInput =
+                    if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                var retry = true
+                var response = apolloClient.query(GetCitiesQuery(queryInput)).execute()
 
                 Log.d(TAG, "fetchCity response errors: ${response.hasErrors()}")
+
+                if (response.hasErrors()) {
+                    response.errors?.let {
+                        when (handleGraphQLErrors(it)) {
+                            AuthResult.TokenRefreshed -> {
+                                if (retry) {
+                                    retry = false
+                                    response =
+                                        apolloClient.query(GetCitiesQuery(queryInput)).execute()
+                                }
+                            }
+
+                            AuthResult.SessionExpired -> return@withContext
+                            AuthResult.NotAuthError -> {}
+                        }
+                    }
+                }
 
                 val getCities = response.data?.getCities
 
@@ -940,7 +1038,10 @@ class DashboardRepository(
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                when (handleApolloException(e)) {
+                    AuthResult.SessionExpired -> return@withContext
+                    else -> e.printStackTrace()
+                }
             }
         }
     }
@@ -967,11 +1068,28 @@ class DashboardRepository(
                     date = (Integer.parseInt(date) + 1).toString()
                 }
 
-                val response = apolloClient.query(
-                    GetBusinessCategoriesQuery(
-                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
-                    )
-                ).execute()
+                val queryInput =
+                    if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                var retry = true
+                var response = apolloClient.query(GetBusinessCategoriesQuery(queryInput)).execute()
+
+                if (response.hasErrors()) {
+                    response.errors?.let {
+                        when (handleGraphQLErrors(it)) {
+                            AuthResult.TokenRefreshed -> {
+                                if (retry) {
+                                    retry = false
+                                    response =
+                                        apolloClient.query(GetBusinessCategoriesQuery(queryInput))
+                                            .execute()
+                                }
+                            }
+
+                            AuthResult.SessionExpired -> return@withContext
+                            AuthResult.NotAuthError -> {}
+                        }
+                    }
+                }
                 val getBusinessCategory = response.data?.getBusinessCategories
 
                 if (getBusinessCategory != null && getBusinessCategory.success) {
@@ -995,7 +1113,13 @@ class DashboardRepository(
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                when (handleApolloException(e)) {
+                    AuthResult.SessionExpired -> return@withContext
+                    else -> {
+                        e.printStackTrace()
+                        apiError.postValue("GetBusinessCategories: ${e.message}")
+                    }
+                }
             }
         }
     }
@@ -1019,12 +1143,27 @@ class DashboardRepository(
                     date = (Integer.parseInt(date) + 1).toString()
                 }
 
-                // Execute GraphQL query
-                val response = apolloClient.query(
-                    GetRelationsQuery(
-                        if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
-                    )
-                ).execute()
+                val queryInput =
+                    if (date != null) Optional.Present(DateInputDto(date = Optional.Present(date))) else Optional.Absent
+                var retry = true
+                var response = apolloClient.query(GetRelationsQuery(queryInput)).execute()
+
+                if (response.hasErrors()) {
+                    response.errors?.let {
+                        when (handleGraphQLErrors(it)) {
+                            AuthResult.TokenRefreshed -> {
+                                if (retry) {
+                                    retry = false
+                                    response =
+                                        apolloClient.query(GetRelationsQuery(queryInput)).execute()
+                                }
+                            }
+
+                            AuthResult.SessionExpired -> return@withContext
+                            AuthResult.NotAuthError -> {}
+                        }
+                    }
+                }
                 val getRelations = response.data?.getRelations
 
                 if (getRelations != null && getRelations.success) {
@@ -1047,7 +1186,99 @@ class DashboardRepository(
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                when (handleApolloException(e)) {
+                    AuthResult.SessionExpired -> return@withContext
+                    else -> {
+                        e.printStackTrace()
+                        apiError.postValue("GetRelations: ${e.message}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun getApiError(): MutableLiveData<String?> = apiError
+
+    /**
+     * Result of attempting to resolve an auth failure (401).
+     */
+    private enum class AuthResult {
+        SessionExpired,
+        TokenRefreshed,
+        NotAuthError
+    }
+
+    /**
+     * Checks GraphQL response errors for auth-related failures.
+     * Returns the [AuthResult] so the caller can decide whether to retry.
+     */
+    private suspend fun handleGraphQLErrors(errors: List<com.apollographql.apollo.api.Error>): AuthResult {
+        for (error in errors) {
+            val extensions = error.extensions as? Map<*, *>
+            val statusCode = extensions?.get("statusCode")?.toString()
+            val message = error.message?.lowercase() ?: ""
+
+            if (statusCode == "401" || message.contains("unauthorized") || message.contains("401")) {
+                Log.w(TAG, "GraphQL auth error detected: ${error.message} (statusCode=$statusCode)")
+                return handleAuthFailure()
+            }
+        }
+        for (error in errors) {
+            apiError.postValue("GraphQL error: ${error.message}")
+        }
+        return AuthResult.NotAuthError
+    }
+
+    /**
+     * Checks the Apollo response exception for HTTP-level auth failures.
+     * Returns the [AuthResult] so the caller can decide whether to retry.
+     */
+    private suspend fun handleApolloException(exception: Throwable): AuthResult {
+        if (exception is ApolloHttpException) {
+            if (exception.statusCode == 401) {
+                Log.w(TAG, "Apollo HTTP 401 detected — attempting token refresh")
+                return handleAuthFailure()
+            }
+        }
+        return AuthResult.NotAuthError
+    }
+
+    /**
+     * Attempts to resolve an auth failure (401) by refreshing the access
+     * token. Returns [AuthResult.TokenRefreshed] if the token was
+     * refreshed successfully (caller should retry the original request),
+     * or [AuthResult.SessionExpired] if the session can no longer be
+     * recovered.
+     */
+    private suspend fun handleAuthFailure(): AuthResult = withContext(Dispatchers.IO) {
+        val refreshToken = tokenManager.refreshToken
+        if (refreshToken.isNullOrBlank()) {
+            Log.w(TAG, "No refresh token available — session expired")
+            TokenRefreshCallbackRegistry.notifySessionExpired()
+            return@withContext AuthResult.SessionExpired
+        }
+
+        when (val result = tokenRefreshApi.refreshToken(refreshToken)) {
+            is TokenRefreshApi.RefreshResult.Success -> {
+                tokenManager.saveTokens(result.accessToken, result.refreshToken)
+                Log.d(TAG, "Token refresh succeeded — caller should retry request")
+                AuthResult.TokenRefreshed
+            }
+
+            is TokenRefreshApi.RefreshResult.Failure -> {
+                when (result.error) {
+                    is TokenRefreshApi.SessionExpired -> {
+                        Log.w(TAG, "Session expired: ${result.error.message}")
+                        tokenManager.clearTokens()
+                        TokenRefreshCallbackRegistry.notifySessionExpired()
+                    }
+
+                    else -> {
+                        Log.e(TAG, "Token refresh failed: ${result.error.message}")
+                        apiError.postValue("Token refresh failed: ${result.error.message}")
+                    }
+                }
+                AuthResult.SessionExpired
             }
         }
     }

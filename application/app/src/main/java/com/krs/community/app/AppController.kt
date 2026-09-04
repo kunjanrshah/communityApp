@@ -34,6 +34,7 @@ import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.auth.SessionExpirationHandler
 import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
 import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.repositories.ByDistanceRepository
@@ -115,6 +116,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { AppDatabase(instance()) }
         bind<ApolloClient>() with singleton { GraphQLClientProvider.provideApolloClient(this@AppController) }
         bind<TokenManager>() with singleton { TokenManager(this@AppController) }
+        bind<TokenRefreshApi>() with singleton { GraphQLClientProvider.provideTokenRefreshApi(this@AppController) }
         bind<SessionExpirationHandler>() with singleton { SessionExpirationHandler() }
 
         bind() from singleton { RegisterRepository(instance()) }
@@ -125,7 +127,14 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { ByDistanceRepository(instance(), instance()) }
         bind() from singleton { FamilyDetailRepository(instance()) }
         bind() from singleton { ProfileDetailRepository(instance(), instance()) }
-        bind() from singleton { DashboardRepository(instance(), instance()) }
+        bind() from singleton {
+            DashboardRepository(
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
         bind() from singleton { StatisticsRepository(instance(), instance()) }
         bind() from singleton { ContactListRepository(instance(), instance()) }
         bind() from singleton { SmartSearchRepository(instance(), instance()) }

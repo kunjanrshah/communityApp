@@ -39,9 +39,17 @@ class ApiLogInterceptor(
 
         Log.d(tag, requestLog)
 
+        val newRequest = original.newBuilder().apply {
+            if (requestBody != null && requestString.isNotEmpty()) {
+                val contentType = requestBody.contentType()
+                val newBody = okhttp3.RequestBody.create(contentType, requestString)
+                method(original.method, newBody)
+            }
+        }.build()
+
         val response: Response
         try {
-            response = chain.proceed(original)
+            response = chain.proceed(newRequest)
         } catch (e: Exception) {
             val errorLog = buildString {
                 appendLine("══════════════════════════════════════════════")
@@ -75,7 +83,7 @@ class ApiLogInterceptor(
         Log.d(tag, responseLog)
 
         val newResponseBody = responseBody?.let {
-            ResponseBody.create(null, responseString ?: "")
+            ResponseBody.create(responseBody.contentType(), responseString ?: "")
         }
 
         return response.newBuilder()

@@ -597,10 +597,8 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
 
     private fun successResponse(data: RegisterModel, isAdmin: Boolean) {
         Guru.putString(getString(R.string.user_id), data.userId)
-        Guru.putString(getString(R.string.access_token), data.accessToken)
-        data.refreshToken?.let { refreshToken ->
-            Guru.putString(getString(R.string.refresh_token), refreshToken)
-        }
+        val tokenManager = com.krs.community.auth.TokenManager(this)
+        tokenManager.saveTokens(data.accessToken.trim(), data.refreshToken?.trim())
         val member = Member()
         member.id = data.userId
         member.accessToken = data.accessToken

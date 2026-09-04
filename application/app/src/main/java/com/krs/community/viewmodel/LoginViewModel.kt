@@ -7,13 +7,13 @@ import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.github.squti.guru.Guru
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.krs.community.BuildConfig
 import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
+import com.krs.community.auth.TokenManager
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginModel
 import com.krs.community.model.LoginResponse
@@ -195,19 +195,15 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                             withContext(Dispatchers.Main) {
                                 result.onSuccess { loginModel ->
                                     if (loginModel.message.equals("success", ignoreCase = true)) {
-                                        Guru.putString(
-                                            app.applicationContext.getString(R.string.access_token),
-                                            loginModel.authToken
+                                        val tokenManager = TokenManager(app.applicationContext)
+                                        tokenManager.saveTokens(
+                                            loginModel.authToken.trim(),
+                                            loginModel.refreshToken?.trim()
                                         )
-                                        loginModel.refreshToken?.let { refreshToken ->
-                                            Guru.putString(
-                                                app.applicationContext.getString(R.string.refresh_token),
-                                                refreshToken
-                                            )
-                                        }
                                         val member = Member()
                                         member.id = loginModel.userId ?: ""
                                         member.accessToken = loginModel.authToken
+                                        member.refreshToken = loginModel.refreshToken ?: ""
                                         member.role = loginModel.role ?: ""
                                         val loginResponse = LoginResponse()
                                         loginResponse.success = true

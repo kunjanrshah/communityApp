@@ -11,9 +11,8 @@ import com.krs.community.BuildConfig;
 import com.krs.community.R;
 import com.krs.community.listeners.RetrofitListener;
 import com.krs.community.model.ErrorObject;
-import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.ApiLogInterceptor;
-import com.krs.community.utils.Logger;
+import com.krs.community.utils.AppConstants;
 import com.krs.community.utils.Utility;
 
 import java.io.IOException;
@@ -57,6 +56,7 @@ public class RetrofitBase {
                                 .addHeader(context.getString(R.string.apikey), AppConstants.API_KEY_VALUE)
                                 .addHeader(context.getString(R.string.devicetoken), Guru.getString(AppConstants.DEVICE_TOKEN, ""))
                                 .addHeader(context.getString(R.string.intudid), "145dfdfs")
+                                .addHeader("Authorization", "Bearer " + Guru.getString(context.getString(R.string.access_token), ""))
                                 .build();
                         return chain.proceed(request);
                     }
@@ -69,7 +69,7 @@ public class RetrofitBase {
             httpClientBuilder.readTimeout(AppConstants.TimeOut.IMAGE_UPLOAD_SOCKET_TIMEOUT, TimeUnit.MINUTES);
             httpClientBuilder.connectTimeout(AppConstants.TimeOut.IMAGE_UPLOAD_CONNECTION_TIMEOUT, TimeUnit.MINUTES);
         }
-       // addingHeaders(httpClientBuilder);
+        // addingHeaders(httpClientBuilder); — auth header now added inline above
 
         OkHttpClient httpClient = httpClientBuilder.build();
 
@@ -87,8 +87,7 @@ public class RetrofitBase {
     }
 
     private void addingHeaders(OkHttpClient.Builder builder) {
-
-        builder.interceptors().add(new Interceptor() {
+        builder.addInterceptor(new Interceptor() {
             @NonNull
             @Override
             public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
@@ -96,6 +95,7 @@ public class RetrofitBase {
                         .addHeader(context.getString(R.string.apikey), AppConstants.API_KEY_VALUE)
                         .addHeader(context.getString(R.string.devicetoken), Guru.getString(AppConstants.DEVICE_TOKEN, ""))
                         .addHeader(context.getString(R.string.intudid), "145dfdfs")
+                        .addHeader("Authorization", "Bearer " + Guru.getString(context.getString(R.string.access_token), ""))
                         .build();
                 return chain.proceed(request);
             }
@@ -119,7 +119,12 @@ public class RetrofitBase {
         Gson gson = new Gson();
         ErrorObject errorPojo;
         try {
-            errorPojo = gson.fromJson((response.errorBody()).string(), ErrorObject.class);
+            ResponseBody errorBody = response.errorBody();
+            if (errorBody != null) {
+                errorPojo = gson.fromJson(errorBody.string(), ErrorObject.class);
+            } else {
+                errorPojo = null;
+            }
             if (errorPojo == null) {
                 errorPojo = Utility.getServerErrorPojo(context);
             }

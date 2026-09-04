@@ -16,14 +16,14 @@ class TokenManager(
 ) {
 
     val accessToken: String?
-        get() = getString(R.string.access_token)
+        get() = getString(R.string.access_token)?.trim()
 
     val refreshToken: String?
-        get() = getString(R.string.refresh_token)
+        get() = getString(R.string.refresh_token)?.trim()
 
     fun saveTokens(accessToken: String?, refreshToken: String?) {
-        putString(R.string.access_token, accessToken)
-        putString(R.string.refresh_token, refreshToken)
+        putString(R.string.access_token, accessToken?.trim())
+        putString(R.string.refresh_token, refreshToken?.trim())
     }
 
     fun clearTokens() {

@@ -43,6 +43,7 @@ import com.krs.community.app.AppController
 import com.krs.community.app.AppSignatureHashHelper
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.app.SMSReceiver
+import com.krs.community.auth.TokenManager
 import com.krs.community.databinding.ActivityLoginwithBinding
 import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginResponse
@@ -511,8 +512,9 @@ class LoginActivity : AppCompatActivity(), ILoginListener, KodeinAware,
     fun goToDashboard(response: LoginResponse) {
         hideSweetProgress()
         if (response.data != null) {
+            val tokenManager = TokenManager(this)
+            tokenManager.saveTokens(member.accessToken, member.refreshToken)
             Guru.putString(getString(R.string.user_id), member.id)
-            Guru.putString(getString(R.string.access_token), member.accessToken)
             val json = Gson().toJson(response.data)
             Guru.putString(getString(R.string.loginMember), json)
             Guru.putString(getString(R.string.member_id), response.data.id)
