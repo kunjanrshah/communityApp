@@ -46,7 +46,8 @@ class GraphQLAuthInterceptor(
                         "Access token is expired — request will likely fail with 401: ${original.url}"
                     )
                 }
-                requestBuilder.addHeader(AUTH_HEADER, BEARER_PREFIX + trimmedToken)
+                requestBuilder.removeHeader(AUTH_HEADER)
+                requestBuilder.header(AUTH_HEADER, BEARER_PREFIX + trimmedToken)
                 Log.d(
                     tag,
                     "Added Bearer token (length=${trimmedToken.length}) to request: ${original.url}"
@@ -87,18 +88,25 @@ class GraphQLAuthInterceptor(
     }
 
     private fun isTokenExpired(token: String): Boolean {
+        if (token.isBlank()) return true
+        val segments = token.split('.')
+        if (segments.size != 3) {
+            Log.w(tag, "Token does not look like a JWT — skipping expiry check")
+            return false
+        }
+
         return try {
             val jwt = JWT(token)
             val expiresAt = jwt.expiresAt
             if (expiresAt == null) {
-                Log.w(tag, "Token has no expiry claim — treating as expired")
-                true
+                Log.w(tag, "Token has no expiry claim — not treating it as expired")
+                false
             } else {
                 expiresAt.before(Date())
             }
         } catch (e: Exception) {
             Log.w(tag, "Failed to parse JWT for expiry check: ${e.message}")
-            true
+            false
         }
     }
 }
