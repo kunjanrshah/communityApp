@@ -1,0 +1,32 @@
+query SearchByCity($input: SearchByCityInput!) {
+    searchByCity(input: $input) {
+        success
+        totalHead
+        totalMem
+        members {
+            id
+            role
+            head_id
+            member_code
+            email
+            mobile
+            first_name
+            last_name_id
+            father_name
+            mother_name
+            status
+            gender
+            profile_pic
+            userAddress {
+                id
+                user_id
+                address
+                city_id
+                states_id
+                area
+                pincode
+                addr_type
+            }
+        }
+    }
+}

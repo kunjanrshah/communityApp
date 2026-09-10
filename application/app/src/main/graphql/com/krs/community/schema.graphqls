@@ -296,6 +296,30 @@ type SearchResult {
   members: [UserDTO!]!
 }
 
+input SearchByCityInput {
+    cityId: Int!
+
+    subCommunityId: Int
+
+    alpha: String
+
+    search: String
+
+    start: Int! = 0
+
+    length: Int! = 10
+}
+
+type SearchByCityResponse {
+    success: Boolean!
+
+    totalHead: Int!
+
+    totalMem: Int!
+
+    members: [UserDTO!]!
+}
+
 type Reminder {
   id: Int!
 
@@ -395,6 +419,8 @@ type Query {
   smartFilter(input: SearchRequestDTO!): SearchResult!
 
   nearByUsers(filter: GetNearbyUsersInput!): SearchResult!
+
+    searchByCity(input: SearchByCityInput!): SearchByCityResponse!
 
   isAppVersionExists(version: Float!): Boolean!
 

@@ -6,7 +6,11 @@ import android.location.Location
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +22,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppDatabase
+import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
 import com.krs.community.repositories.SmartFilterRepository
@@ -37,7 +42,13 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     private var cur_lat = MutableLiveData<Double>()
     private var cur_lng = MutableLiveData<Double>()
     private lateinit var filterViewModel: SmartFilterViewModel
-    private val filterViewModelFactory = SmartFilterViewModelFactory(SmartFilterRepository(ApiServices(), AppDatabase.invoke(mContext)))
+    private val filterViewModelFactory = SmartFilterViewModelFactory(
+        SmartFilterRepository(
+            ApiServices(),
+            AppDatabase.invoke(mContext),
+            GraphQLClientProvider.provideApolloClient(mContext.applicationContext)
+        )
+    )
     private lateinit var request: LocationRequest
     private var tvUserDist: TextView? = null
 

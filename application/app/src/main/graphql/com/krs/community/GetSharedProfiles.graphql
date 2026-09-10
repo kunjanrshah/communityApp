@@ -1,0 +1,11 @@
+query GetSharedProfiles($userId: Int!) {
+    getSharedProfiles(userId: $userId) {
+        id
+        first_name
+        last_name_id
+        member_code
+        mobile
+        email
+        status
+    }
+}

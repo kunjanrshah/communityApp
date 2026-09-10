@@ -138,7 +138,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { StatisticsRepository(instance(), instance()) }
         bind() from singleton { ContactListRepository(instance(), instance()) }
         bind() from singleton { SmartSearchRepository(instance(), instance()) }
-        bind() from singleton { SmartFilterRepository(instance(), instance()) }
+        bind() from singleton { SmartFilterRepository(instance(), instance(), instance()) }
         bind() from singleton { DocumentListRepository(instance()) }
         bind() from singleton { CalendarSearchRepository(instance(), instance()) }
         bind() from singleton { NewsRepository(instance()) }
