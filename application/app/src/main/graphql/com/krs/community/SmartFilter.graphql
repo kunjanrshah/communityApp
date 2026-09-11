@@ -1,0 +1,54 @@
+query SmartFilter($input: SearchRequestDTO!) {
+    smartFilter(input: $input) {
+        totalRecords
+        members {
+            id
+            role
+            head_id
+            member_code
+            email
+            mobile
+            first_name
+            last_name_id
+            father_name
+            mother_name
+            status
+            gender
+            profile_pic
+            region
+            is_expired
+            sub_community_id
+            local_community_id
+            education_id
+            occupation_id
+            userAddress {
+                address
+                local_address
+                city_id
+                states_id
+                area
+                pincode
+            }
+            userPersonalDetail {
+                marital_status
+                birth_date
+                marriage_date
+                blood_group
+                native_place_id
+                gotra_id
+                is_donor
+                matrimony
+            }
+            userWorkDetail {
+                business_category_id
+                business_address
+            }
+            userMatrimony {
+                birth_place_id
+                is_spect
+                is_mangal
+                is_shani
+            }
+        }
+    }
+}

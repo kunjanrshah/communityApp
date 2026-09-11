@@ -8,12 +8,7 @@ plugins {
 apollo {
     service("service") {
         packageName.set("com.krs.community")
-
-        introspection {
-            endpointUrl.set("http://localhost:3000/graphql")
-            schemaFile.set(file("src/main/graphql/com/krs/community/schema.graphqls"))
-        }
-
+        schemaFile.set(file("src/main/graphql/com/krs/community/schema.graphqls"))
         generateKotlinModels.set(true)
     }
 }

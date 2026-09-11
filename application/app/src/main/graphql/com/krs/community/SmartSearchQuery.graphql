@@ -1,0 +1,20 @@
+query SmartSearch($input: SearchInput!) {
+    smartSearch(input: $input) {
+        totalRecords
+        members {
+            id
+            first_name
+            member_code
+            email
+            mobile
+            sub_community_id
+            local_community_id
+            last_name_id
+            profile_pic
+            region
+            status
+            matchedFields
+            member_count
+        }
+    }
+}

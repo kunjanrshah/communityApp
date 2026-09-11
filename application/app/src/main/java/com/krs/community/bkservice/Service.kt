@@ -21,13 +21,19 @@ import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.bkservice.utilities.Notification
+import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.repositories.ProfileDetailRepository
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class Service : android.app.Service(), Listener, AddressCallBack {
@@ -152,7 +158,11 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                             jsonObject.put(getString(R.string.is_location_enable), "1")
 
                             val profile = JsonParser().parse(jsonObject.toString()) as JsonObject
-                            val mProfileDetailRepository = ProfileDetailRepository(ApiServices(), AppDatabase.invoke(AppController.mApplication))
+                            val mProfileDetailRepository = ProfileDetailRepository(
+                                ApiServices(),
+                                AppDatabase.invoke(AppController.mApplication),
+                                GraphQLClientProvider.provideApolloClient(AppController.mApplication)
+                            )
                             val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
                             response.let {
                                 withContext(Dispatchers.Main) {

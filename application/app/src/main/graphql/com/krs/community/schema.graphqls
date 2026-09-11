@@ -199,6 +199,8 @@ type UserDTO {
 
   matchedFields: [String!]
 
+    member_count: Int
+
   distance: String
 
   nearBy: String
@@ -473,6 +475,8 @@ input SearchRequestDTO {
   orderBy: String
 
   orderByVal: String
+
+    alpha: String
 
   filter_by: SmartFilterDto
 }

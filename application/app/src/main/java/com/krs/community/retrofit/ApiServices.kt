@@ -3,8 +3,40 @@ package com.krs.community.retrofit
 
 import com.google.gson.JsonObject
 import com.krs.community.app.AppController
-import com.krs.community.model.*
-import com.krs.community.responses.*
+import com.krs.community.model.ByDistanceModel
+import com.krs.community.model.LoginResponse
+import com.krs.community.model.RegisterModel
+import com.krs.community.model.ResponseModel
+import com.krs.community.model.SearchByCityData
+import com.krs.community.model.SearchByCityModel
+import com.krs.community.responses.ActivityResponse
+import com.krs.community.responses.BusinessCategoryResponse
+import com.krs.community.responses.BusinessSubResponse
+import com.krs.community.responses.ByDistanceResponse
+import com.krs.community.responses.CityResponse
+import com.krs.community.responses.CommitteeResponse
+import com.krs.community.responses.DeleteProfileResponse
+import com.krs.community.responses.DesignationResponse
+import com.krs.community.responses.EducationResponse
+import com.krs.community.responses.FamilyDetailResponse
+import com.krs.community.responses.GotraResponse
+import com.krs.community.responses.LastNameResponse
+import com.krs.community.responses.LocalCommResponse
+import com.krs.community.responses.MasterUpdateResponse
+import com.krs.community.responses.NativeResponse
+import com.krs.community.responses.NewsResponse
+import com.krs.community.responses.OccupationResponse
+import com.krs.community.responses.RelationsResponse
+import com.krs.community.responses.ReminderResponse
+import com.krs.community.responses.SmartFilterResponse
+import com.krs.community.responses.StateResponse
+import com.krs.community.responses.StatisticResponse
+import com.krs.community.responses.SubCommResponse
+import com.krs.community.responses.UpdateProfileResponse
+import com.krs.community.responses.UploadedFilesResponse
+import com.krs.community.responses.UserInnerLogoutResponse
+import com.krs.community.responses.UserStatusResponse
+import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.AppConstants
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -82,9 +114,6 @@ interface ApiServices {
 
     @POST(AppConstants.UrlPath.GET_STATISTICS)
     suspend fun getStatistics(@Body request: JsonObject): Response<StatisticResponse>
-
-    @POST(AppConstants.UrlPath.GET_SMART_FILTER)
-    suspend fun getSearchByFilter(@Body request: JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_USERS_BYDATE)
     suspend fun getSearchByDate(@Body request: JsonObject): Response<SmartFilterResponse>

@@ -126,7 +126,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { BrowseCityRepository(instance(), instance(), instance()) }
         bind() from singleton { ByDistanceRepository(instance(), instance()) }
         bind() from singleton { FamilyDetailRepository(instance()) }
-        bind() from singleton { ProfileDetailRepository(instance(), instance()) }
+        bind() from singleton { ProfileDetailRepository(instance(), instance(), instance()) }
         bind() from singleton {
             DashboardRepository(
                 instance(),
