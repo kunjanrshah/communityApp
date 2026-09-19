@@ -3,7 +3,6 @@ package com.krs.community.retrofit
 
 import com.google.gson.JsonObject
 import com.krs.community.app.AppController
-import com.krs.community.model.ByDistanceModel
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.RegisterModel
 import com.krs.community.model.ResponseModel
@@ -12,7 +11,6 @@ import com.krs.community.model.SearchByCityModel
 import com.krs.community.responses.ActivityResponse
 import com.krs.community.responses.BusinessCategoryResponse
 import com.krs.community.responses.BusinessSubResponse
-import com.krs.community.responses.ByDistanceResponse
 import com.krs.community.responses.CityResponse
 import com.krs.community.responses.CommitteeResponse
 import com.krs.community.responses.DeleteProfileResponse
@@ -115,17 +113,11 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.GET_STATISTICS)
     suspend fun getStatistics(@Body request: JsonObject): Response<StatisticResponse>
 
-    @POST(AppConstants.UrlPath.GET_USERS_BYDATE)
-    suspend fun getSearchByDate(@Body request: JsonObject): Response<SmartFilterResponse>
-
     @POST(AppConstants.UrlPath.GET_SHARED_PROFILE)
     suspend fun getSharedProfile(@Body request: JsonObject): Response<SmartFilterResponse>
 
     @POST(AppConstants.UrlPath.GET_EVENTS)
     suspend fun getNewsList(@Body request: JsonObject): Response<NewsResponse>
-
-    @POST(AppConstants.UrlPath.GET_SEARCH_NEAR_BY)
-    suspend fun getSearchByDistance(@Body request: ByDistanceModel): Response<ByDistanceResponse>
 
     @POST(AppConstants.UrlPath.SEARCH_BY_KEYWORDS)
     suspend fun getSearchByKeywords(@Body request: JsonObject): Response<searchByKeywordsResponse>

@@ -252,6 +252,34 @@ type GetMastersResponseDTO {
   last_updated: Int!
 }
 
+type UsersByDateResponse {
+    success: Boolean!
+
+    message: String
+
+    total_records: Int
+
+    members: [UserDTO!]!
+}
+
+input GetUsersByDateInput {
+    fromdate: String
+
+    todate: String
+
+    date: String
+
+    filter: String
+
+    id: Int
+
+    sub_community_id: Int
+
+    start: Int
+
+    length: Int
+}
+
 type CityDto {
   id: Int!
 
@@ -379,6 +407,8 @@ type Query {
   getFamilyMembers(head_id: Float!): [UserDTO!]!
 
   usersByDateRange(fromDate: String!, toDate: String!, page: Float!, limit: Float!): [UserDTO!]!
+
+    usersByDate(input: GetUsersByDateInput!): UsersByDateResponse!
 
   getInactiveUsers(input: GetInactiveUsersInput!): [UserDTO!]!
 
@@ -599,6 +629,8 @@ input GetNearbyUsersInput {
   length: Int
 
   subCommunityId: Int
+
+    user_id: Int
 }
 
 type Mutation {
@@ -855,6 +887,8 @@ input LoginInput {
 }
 
 input ForgotPasswordInput {
+    resetType: String!
+
   email: String!
 }
 

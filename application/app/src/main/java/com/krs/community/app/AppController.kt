@@ -39,11 +39,13 @@ import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.repositories.BrowseCityRepository
 import com.krs.community.repositories.ByDistanceRepository
 import com.krs.community.repositories.CalendarSearchRepository
+import com.krs.community.repositories.ChangePasswordRepository
 import com.krs.community.repositories.CommitteeRepository
 import com.krs.community.repositories.ContactListRepository
 import com.krs.community.repositories.DashboardRepository
 import com.krs.community.repositories.DocumentListRepository
 import com.krs.community.repositories.FamilyDetailRepository
+import com.krs.community.repositories.ForgotPasswordRepository
 import com.krs.community.repositories.LoginRepository
 import com.krs.community.repositories.NewsRepository
 import com.krs.community.repositories.PasswordRepository
@@ -122,6 +124,8 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { RegisterRepository(instance()) }
         bind() from singleton { LoginRepository(instance()) }
         bind() from singleton { PasswordRepository(instance()) }
+        bind() from singleton { ForgotPasswordRepository(instance()) }
+        bind() from singleton { ChangePasswordRepository(instance()) }
         bind() from singleton { ShareEventRepository(instance()) }
         bind() from singleton { BrowseCityRepository(instance(), instance(), instance()) }
         bind() from singleton { ByDistanceRepository(instance(), instance()) }
@@ -140,7 +144,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { SmartSearchRepository(instance(), instance()) }
         bind() from singleton { SmartFilterRepository(instance(), instance(), instance()) }
         bind() from singleton { DocumentListRepository(instance()) }
-        bind() from singleton { CalendarSearchRepository(instance(), instance()) }
+        bind() from singleton { CalendarSearchRepository(instance(), instance(), instance()) }
         bind() from singleton { NewsRepository(instance()) }
         bind() from singleton { RoomMemberRepository(instance(), instance()) }
         bind() from singleton { CommitteeRepository(instance(), instance()) }
@@ -150,7 +154,7 @@ class AppController : Application(), KodeinAware {
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
         bind() from provider { RegisterViewModelFactory(instance()) }
         bind() from provider { LoginViewModelFactory(instance()) }
-        bind() from provider { PasswordViewModelFactory(instance()) }
+        bind() from provider { PasswordViewModelFactory(instance(), instance(), instance()) }
         bind() from provider { ShareEventViewModelFactory(instance()) }
         bind() from provider { BrowseCityViewModelFactory(instance()) }
         bind() from provider { ByDistanceViewModelFactory(instance()) }

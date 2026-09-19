@@ -1,0 +1,31 @@
+query NearByUsers($filter: GetNearbyUsersInput!) {
+    nearByUsers(filter: $filter) {
+        totalRecords
+        members {
+            id
+            role
+            head_id
+            member_code
+            first_name
+            last_name_id
+            father_name
+            mother_name
+            email
+            mobile
+            profile_pic
+            region
+            sub_community_id
+            local_community_id
+            status
+            gender
+            matchedFields
+            member_count
+            nearBy
+            distance
+            userAddress {
+                city_id
+                area
+            }
+        }
+    }
+}

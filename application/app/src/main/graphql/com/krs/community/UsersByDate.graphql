@@ -1,0 +1,38 @@
+query UsersByDate($input: GetUsersByDateInput!) {
+    usersByDate(input: $input) {
+        success
+        message
+        total_records
+        members {
+            id
+            first_name
+            member_code
+            father_name
+            mother_name
+            email
+            mobile
+            profile_pic
+            region
+            sub_community_id
+            local_community_id
+            last_name_id
+            role
+            head_id
+            status
+            gender
+            matchedFields
+            member_count
+            nearBy
+            distance
+            expire_date
+            userAddress {
+                city_id
+                area
+            }
+            userPersonalDetail {
+                birth_date
+                marriage_date
+            }
+        }
+    }
+}
