@@ -428,8 +428,9 @@ class DashboardRepository(
 
     suspend fun getUpdatedVersion(version: Double): Boolean {
         return try {
-            val response = apolloClient.query(IsAppVersionExistsQuery(version)).execute()
-            response.data?.isAppVersionExists ?: false
+            val response = apolloClient.query(IsAppVersionExistsQuery()).execute()
+            val appVersion = response.data?.getAppVersion
+            appVersion != null && appVersion.version > version
         } catch (e: Exception) {
             e.printStackTrace()
             false

@@ -204,6 +204,44 @@ type UserDTO {
   distance: String
 
   nearBy: String
+
+    last_name: String
+
+    head_name: String
+
+    relation: String
+
+    city: String
+
+    state: String
+
+    sub_community: String
+
+    local_community: String
+
+    designation: String
+
+    committee: String
+
+    education: String
+
+    occupation: String
+
+    current_activity: String
+
+    gotra: String
+
+    native: String
+
+    business_category: String
+
+    business_sub_category: String
+
+    mossad: String
+
+    profile_completed: String
+
+    online_status: Int
 }
 
 enum Role {
@@ -362,6 +400,12 @@ type Reminder {
   message: String!
 }
 
+type AppVersion {
+    id: Int!
+
+    version: Float!
+}
+
 type UploadModel {
   id: Int!
 
@@ -403,8 +447,38 @@ type MastersCountResponseDTO {
     userCounts: UserCountsDTO!
 }
 
+type FamilyMemberDTO {
+    id: Int!
+    first_name: String!
+    last_name: String
+    head_id: Int
+    head_name: String
+    relation: String
+    city: String
+    state: String
+    sub_community: String
+    local_community: String
+    designation: String
+    committee: String
+    education: String
+    occupation: String
+    current_activity: String
+    gotra: String
+    native: String
+    business_category: String
+    profile_completed: String
+    online_status: Int
+    login_status: Boolean
+}
+
+type FamilyResponseDTO {
+    success: Boolean!
+    total_records: Int!
+    members: [FamilyMemberDTO!]!
+}
+
 type Query {
-  getFamilyMembers(head_id: Float!): [UserDTO!]!
+    getFamilyMembers(head_id: Float!, loginUserId: Int): FamilyResponseDTO!
 
   usersByDateRange(fromDate: String!, toDate: String!, page: Float!, limit: Float!): [UserDTO!]!
 
@@ -456,11 +530,47 @@ type Query {
 
   isAppVersionExists(version: Float!): Boolean!
 
+    getAppVersion: AppVersion!
+
     getMastersCounts: MastersCountResponseDTO!
 
     getSubCommunities(date: DateInputDto): GetMastersResponseDTO!
 
     getLocalCommunities(date: DateInputDto, subCommunityId: Int!): GetMastersResponseDTO!
+
+    getUserProfile(id: Int!): UserDTO!
+
+    searchCommitteeUsers(input: SearchCommitteeUsersInput!): SearchCommitteeUsersResponse!
+}
+
+input SearchCommitteeUsersInput {
+    start: Int! = 0
+
+    length: Int! = 10
+
+    committeeId: Int
+
+    name: String
+
+    relationId: Int
+
+    designationId: Int
+
+    localCommunityId: Int
+
+    startDate: String
+
+    endDate: String
+}
+
+type SearchCommitteeUsersResponse {
+    success: Boolean!
+
+    message: String!
+
+    total_records: Int!
+
+    members: [UserDTO!]!
 }
 
 input DateInputDto {

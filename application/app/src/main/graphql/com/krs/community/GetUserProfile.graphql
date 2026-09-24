@@ -1,0 +1,52 @@
+query GetUserProfile($id: Int!) {
+    getUserProfile(id: $id) {
+        id
+        first_name
+        last_name
+        member_code
+        email
+        mobile
+        gender
+        head_id
+        head_name
+        relation
+        city
+        state
+        sub_community
+        local_community
+        designation
+        committee
+        education
+        occupation
+        current_activity
+        gotra
+        native
+        business_category
+        business_sub_category
+        mossad
+        profile_completed
+        online_status
+        login_status
+        userAddress {
+            id
+            address
+            area
+            pincode
+            city_id
+            states_id
+            addr_type
+        }
+        userPersonalDetail {
+            id
+            blood_group
+            marital_status
+            birth_date
+        }
+        userWorkDetail {
+            id
+            company_name
+            website
+            work_details
+        }
+    }
+}

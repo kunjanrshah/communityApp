@@ -129,7 +129,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { ShareEventRepository(instance()) }
         bind() from singleton { BrowseCityRepository(instance(), instance(), instance()) }
         bind() from singleton { ByDistanceRepository(instance(), instance()) }
-        bind() from singleton { FamilyDetailRepository(instance()) }
+        bind() from singleton { FamilyDetailRepository(instance(), instance()) }
         bind() from singleton { ProfileDetailRepository(instance(), instance(), instance()) }
         bind() from singleton {
             DashboardRepository(
@@ -147,7 +147,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { CalendarSearchRepository(instance(), instance(), instance()) }
         bind() from singleton { NewsRepository(instance()) }
         bind() from singleton { RoomMemberRepository(instance(), instance()) }
-        bind() from singleton { CommitteeRepository(instance(), instance()) }
+        bind() from singleton { CommitteeRepository(instance(), instance(), instance()) }
 
         bind() from provider { ContactListViewModelFactory(instance()) }
         bind() from provider { StatisticsViewModelFactory(instance()) }

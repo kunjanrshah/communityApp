@@ -1,0 +1,90 @@
+query SearchCommitteeUsers($input: SearchCommitteeUsersInput!) {
+    searchCommitteeUsers(input: $input) {
+        success
+        message
+        total_records
+        members {
+            id
+            first_name
+            last_name
+            member_code
+            mobile
+            email
+            committee
+            designation
+            city
+            state
+            relation
+            profile_pic
+            head_id
+            head_name
+            status
+            gender
+            is_expired
+            region
+            sub_community_id
+            local_community_id
+            last_name_id
+            father_name
+            mother_name
+            education_id
+            occupation_id
+            sub_community
+            local_community
+            education
+            occupation
+            current_activity
+            gotra
+            native
+            business_category
+            business_sub_category
+            mossad
+            profile_completed
+            online_status
+            login_status
+            last_login
+            profile_percent
+            matchedFields
+            member_count
+            distance
+            nearBy
+            expire_date
+            userAddress {
+                address
+                local_address
+                city_id
+                states_id
+                area
+                pincode
+            }
+            userPersonalDetail {
+                native_place_id
+                blood_group
+                marital_status
+                birth_date
+                gotra_id
+                is_donor
+                matrimony
+                marriage_date
+            }
+            userWorkDetail {
+                business_category_id
+                business_address
+                company_name
+                website
+                work_details
+            }
+            userMatrimony {
+                birth_place_id
+                is_spect
+                is_mangal
+                is_shani
+                birth_time
+                hobby
+                about_me
+                weight
+                height
+            }
+        }
+    }
+}

@@ -56,6 +56,54 @@ public class Member implements Serializable {
     @Expose
     private String profileCompleted = "0%";
 
+    @SerializedName("sub_community")
+    @Expose
+    private String subCommunity = "";
+
+    @SerializedName("local_community")
+    @Expose
+    private String localCommunity = "";
+
+    @SerializedName("native")
+    @Expose
+    private String nativePlace = "";
+
+    @SerializedName("designation")
+    @Expose
+    private String designation = "";
+
+    @SerializedName("committee")
+    @Expose
+    private String committee = "";
+
+    @SerializedName("education")
+    @Expose
+    private String education = "";
+
+    @SerializedName("occupation")
+    @Expose
+    private String occupation = "";
+
+    @SerializedName("current_activity")
+    @Expose
+    private String currentActivity = "";
+
+    @SerializedName("gotra")
+    @Expose
+    private String gotra = "";
+
+    @SerializedName("business_category")
+    @Expose
+    private String businessCategory = "";
+
+    @SerializedName("business_sub_category")
+    @Expose
+    private String businessSubCategory = "";
+
+    @SerializedName("mossad")
+    @Expose
+    private String mossad = "";
+
     @SerializedName("profile_password")
     @Expose
     private String profilePassword = "";
@@ -148,6 +196,9 @@ public class Member implements Serializable {
     @SerializedName("city")
     @Expose
     private String city = "";
+    @SerializedName("state")
+    @Expose
+    private String state = "";
     @SerializedName("state_id")
     @Expose
     private String stateId = "0";
@@ -328,6 +379,102 @@ public class Member implements Serializable {
 
     public void setProfileCompleted(String profileCompleted) {
         this.profileCompleted = profileCompleted;
+    }
+
+    public String getSubCommunity() {
+        return subCommunity;
+    }
+
+    public void setSubCommunity(String subCommunity) {
+        this.subCommunity = subCommunity;
+    }
+
+    public String getLocalCommunity() {
+        return localCommunity;
+    }
+
+    public void setLocalCommunity(String localCommunity) {
+        this.localCommunity = localCommunity;
+    }
+
+    public String getNativePlace() {
+        return nativePlace;
+    }
+
+    public void setNativePlace(String nativePlace) {
+        this.nativePlace = nativePlace;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public String getCommittee() {
+        return committee;
+    }
+
+    public void setCommittee(String committee) {
+        this.committee = committee;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getCurrentActivity() {
+        return currentActivity;
+    }
+
+    public void setCurrentActivity(String currentActivity) {
+        this.currentActivity = currentActivity;
+    }
+
+    public String getGotra() {
+        return gotra;
+    }
+
+    public void setGotra(String gotra) {
+        this.gotra = gotra;
+    }
+
+    public String getBusinessCategory() {
+        return businessCategory;
+    }
+
+    public void setBusinessCategory(String businessCategory) {
+        this.businessCategory = businessCategory;
+    }
+
+    public String getBusinessSubCategory() {
+        return businessSubCategory;
+    }
+
+    public void setBusinessSubCategory(String businessSubCategory) {
+        this.businessSubCategory = businessSubCategory;
+    }
+
+    public String getMossad() {
+        return mossad;
+    }
+
+    public void setMossad(String mossad) {
+        this.mossad = mossad;
     }
 
     public String getDistance() {
@@ -904,6 +1051,14 @@ public class Member implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getRelation() {

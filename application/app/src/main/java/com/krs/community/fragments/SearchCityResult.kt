@@ -206,12 +206,6 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     }
                 }
 
-                var count = member.memberCount
-                if (count != 0) {
-                    count += 1
-                }
-                holder.badge.setNumber(count)
-
                 if (member.mobile.isEmpty()) {
                     viewHolder.tvMobile.text = getString(R.string.mobile_not_available)
                     viewHolder.ivMobile.visibility = View.GONE
@@ -235,10 +229,13 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
                     viewHolder.ivEmail.visibility = View.VISIBLE
                     viewHolder.tvEmail.text = member.emailAddress
                 }
+
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
+                    holder.badge.setNumber(member.memberCount + 1)
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
+                    holder.badge.clear()
                 }
 
                 var code: String? = null

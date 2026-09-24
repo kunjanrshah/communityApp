@@ -1,0 +1,29 @@
+query GetFamilyMembers($headId: Float!, $loginUserId: Int) {
+    getFamilyMembers(head_id: $headId, loginUserId: $loginUserId) {
+        success
+        total_records
+        members {
+            id
+            first_name
+            last_name
+            head_id
+            head_name
+            relation
+            city
+            state
+            sub_community
+            local_community
+            designation
+            committee
+            education
+            occupation
+            current_activity
+            gotra
+            native
+            business_category
+            profile_completed
+            online_status
+            login_status
+        }
+    }
+}

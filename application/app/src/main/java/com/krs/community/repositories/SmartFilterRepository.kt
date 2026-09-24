@@ -6,6 +6,7 @@ import com.apollographql.apollo.api.Optional
 import com.google.gson.JsonObject
 import com.krs.community.GetSharedProfilesQuery
 import com.krs.community.GetSharingProfilesQuery
+import com.krs.community.GetUserProfileQuery
 import com.krs.community.SmartFilterQuery
 import com.krs.community.app.AppDatabase
 import com.krs.community.model.LoginResponse
@@ -257,6 +258,72 @@ class SmartFilterRepository(
     suspend fun searchByUser(jsonObject: JsonObject): LoginResponse {
         return apiRequest {
             api.getUserProfile(jsonObject)
+        }
+    }
+
+    suspend fun getUserProfileById(id: Int): LoginResponse {
+        val response = apolloClient.query(GetUserProfileQuery(id)).execute()
+
+        val errors = response.errors?.firstOrNull()?.message
+        if (!errors.isNullOrEmpty()) {
+            throw Exception(errors)
+        }
+
+        val result = response.data?.getUserProfile
+
+        return LoginResponse().apply {
+            success = true
+            message = "success"
+            data = result?.let { mapGraphUserToMember(it) }
+        }
+    }
+
+    private fun mapGraphUserToMember(user: GetUserProfileQuery.GetUserProfile): Member {
+        return Member().apply {
+            id = user.id.toString()
+            firstName = user.first_name ?: ""
+            lastName = user.last_name ?: ""
+            memberCode = user.member_code ?: ""
+            emailAddress = user.email ?: ""
+            mobile = user.mobile ?: ""
+            gender = if (user.gender) "Male" else "Female"
+            headId = user.head_id?.toString() ?: "0"
+            head_name = user.head_name ?: ""
+            relation = user.relation ?: ""
+            city = user.city ?: ""
+            state = user.state ?: ""
+            subCommunity = user.sub_community ?: ""
+            localCommunity = user.local_community ?: ""
+            designation = user.designation ?: ""
+            committee = user.committee ?: ""
+            education = user.education ?: ""
+            occupation = user.occupation ?: ""
+            currentActivity = user.current_activity ?: ""
+            gotra = user.gotra ?: ""
+            nativePlace = user.native ?: ""
+            businessCategory = user.business_category ?: ""
+            businessSubCategory = user.business_sub_category ?: ""
+            mossad = user.mossad ?: ""
+            profileCompleted = user.profile_completed ?: ""
+            onlineStatus = user.online_status ?: 0
+            loginStatus = if (user.login_status == true) 1 else 0
+            user.userAddress?.let { addr ->
+                address = addr.address ?: ""
+                cityId = addr.city_id?.toString() ?: "0"
+                stateId = addr.states_id?.toString() ?: "0"
+                area = addr.area ?: ""
+                pincode = addr.pincode ?: ""
+            }
+            user.userPersonalDetail?.let { pd ->
+                bloodGroup = pd.blood_group ?: ""
+                maritalStatus = pd.marital_status ?: ""
+                birthDate = pd.birth_date?.toString() ?: ""
+            }
+            user.userWorkDetail?.let { wd ->
+                companyName = wd.company_name ?: ""
+                website = wd.website ?: ""
+                workDetails = wd.work_details ?: ""
+            }
         }
     }
 
