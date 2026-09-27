@@ -1,0 +1,12 @@
+mutation GetUserActivityStatus($input: GetUserActivityStatusInput!) {
+    getUserActivityStatus(input: $input) {
+        success
+        message
+        data {
+            id
+            last_login
+            login_status
+            online_status
+        }
+    }
+}
