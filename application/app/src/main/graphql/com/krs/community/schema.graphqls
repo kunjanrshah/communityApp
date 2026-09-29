@@ -478,7 +478,7 @@ type FamilyResponseDTO {
 }
 
 type Query {
-    getFamilyMembers(head_id: Float!, loginUserId: Int): FamilyResponseDTO!
+    getFamilyMembers(head_id: Int!, loginUserId: Int): FamilyResponseDTO!
 
   usersByDateRange(fromDate: String!, toDate: String!, page: Float!, limit: Float!): [UserDTO!]!
 
@@ -752,6 +752,8 @@ type Mutation {
 
   updateLastLogin(user_id: Int!): Boolean!
 
+    getUserActivityStatus(input: GetUserActivityStatusInput!): GetUserActivityStatusResponse!
+
   deleteUserById(userId: Int!): String!
 
   changeRole(input: ChangeRoleInput!): String!
@@ -785,6 +787,23 @@ input ChangePasswordInput {
   currentPassword: String!
 
   newPassword: String!
+}
+
+input GetUserActivityStatusInput {
+    id: Int!
+}
+
+type GetUserActivityStatusData {
+    id: Int
+    last_login: DateTime
+    login_status: Boolean
+    online_status: Boolean
+}
+
+type GetUserActivityStatusResponse {
+    success: Boolean!
+    message: String
+    data: GetUserActivityStatusData
 }
 
 input UpsertUserInput {

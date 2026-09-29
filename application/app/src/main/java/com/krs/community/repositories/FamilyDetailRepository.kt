@@ -17,8 +17,8 @@ class FamilyDetailRepository(
 ) : SafeApiRequest() {
 
     suspend fun getFamilyMembers(data: JsonObject): FamilyDetailResponse {
-        val headId = data.get("head_id")?.asNumber?.toDouble()
-            ?: data.get("headId")?.asNumber?.toDouble()
+        val headId = data.get("head_id")?.asNumber?.toInt()
+            ?: data.get("headId")?.asNumber?.toInt()
             ?: throw IllegalArgumentException("head_id/headId is required for getFamilyMembers")
 
         val loginUserId = data.get("loginUserId")?.asNumber?.toInt()

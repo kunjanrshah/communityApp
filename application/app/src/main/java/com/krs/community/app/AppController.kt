@@ -28,8 +28,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.auth.SessionExpirationHandler
@@ -56,6 +54,7 @@ import com.krs.community.repositories.ShareEventRepository
 import com.krs.community.repositories.SmartFilterRepository
 import com.krs.community.repositories.SmartSearchRepository
 import com.krs.community.repositories.StatisticsRepository
+import com.krs.community.repositories.UserActivityStatusRepository
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.retrofit.RetrofitBase
 import com.krs.community.utils.AppConstants
@@ -80,7 +79,6 @@ import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import com.krs.community.viewmodelfactory.SmartSearchViewModelFactory
 import com.krs.community.viewmodelfactory.StatisticsViewModelFactory
 import net.gotev.uploadservice.UploadServiceConfig
-import org.json.JSONObject
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -127,7 +125,15 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { ForgotPasswordRepository(instance()) }
         bind() from singleton { ChangePasswordRepository(instance()) }
         bind() from singleton { ShareEventRepository(instance()) }
-        bind() from singleton { BrowseCityRepository(instance(), instance(), instance()) }
+        bind() from singleton {
+            BrowseCityRepository(
+                instance(),
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        }
         bind() from singleton { ByDistanceRepository(instance(), instance()) }
         bind() from singleton { FamilyDetailRepository(instance(), instance()) }
         bind() from singleton { ProfileDetailRepository(instance(), instance(), instance()) }
@@ -291,12 +297,18 @@ class AppController : Application(), KodeinAware {
         Coroutines.io {
             val memberId = Guru.getString(getString(R.string.member_id), "")
             if (!memberId.isNullOrEmpty()) {
-                val jsonObject = JSONObject()
-                jsonObject.put(getString(R.string.id), memberId)
-                jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-                jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-                val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
-                retrofitBase.apiServices.getUserStatus(updated)
+                try {
+                    val memberIdValue = memberId.toIntOrNull()
+                    if (memberIdValue == null) {
+                        Log.w("AppController", "Invalid member ID: $memberId")
+                        return@io
+                    }
+                    val apolloClient = GraphQLClientProvider.provideApolloClient(this)
+                    UserActivityStatusRepository(apolloClient)
+                        .getUserActivityStatus(memberIdValue)
+                } catch (e: Exception) {
+                    Log.e("AppController", "Failed to update user activity status: ${e.message}", e)
+                }
             }
         }
     }

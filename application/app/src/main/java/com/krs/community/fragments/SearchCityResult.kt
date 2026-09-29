@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.ActionMode
 import android.view.Gravity
@@ -232,7 +233,8 @@ class SearchCityResult : Fragment(), RoomMemberListener, KodeinAware, IbrowseCit
 
                 if (member.headId.equals("0")) {
                     holder.tvRole.text = resources.getString(R.string.Family_Head)
-                    holder.badge.setNumber(member.memberCount + 1)
+                    Log.d(TAG, "Member Count: " + member.memberCount)
+                    holder.badge.setNumber(member.memberCount)
                 } else {
                     holder.tvRole.text = resources.getString(R.string.Member)
                     holder.badge.clear()

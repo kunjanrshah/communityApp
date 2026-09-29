@@ -7,21 +7,7 @@ import okhttp3.Request
 import okhttp3.Response
 
 /**
- * Strategy that handles a 401 by attempting an automated token refresh.
- *
- * Key design decisions:
- *
- * 1. **Synchronized refresh** — Uses a [Mutex] so that when multiple
- *    concurrent requests fail with 401, only the first triggers a
- *    refresh; the rest wait and then reuse the new token.
- *
- * 2. **Token persistence** — After a successful refresh, the new
- *    access and refresh tokens are persisted via [TokenManager].
- *
- * 3. **Session expiration** — If the refresh mutation itself returns
- *    401 (or the token is blank/invalid), this strategy notifies the
- *    [TokenRefreshCallbackRegistry] which triggers the session-expired
- *    flow (dialog + navigation to Login).
+ * Refreshes the access token after an authenticated request receives 401.
  */
 class RefreshTokenStrategy(
     private val tokenManager: TokenManager,
@@ -30,32 +16,54 @@ class RefreshTokenStrategy(
 
     companion object {
         private const val TAG = "RefreshTokenStrategy"
+        private const val AUTH_HEADER = "Authorization"
+        private const val BEARER_PREFIX = "Bearer "
     }
 
-    // Guards the refresh-critical section so only one refresh runs at a time.
     private val refreshLock = Mutex()
 
     override fun canHandle(response: Response): Boolean =
-        response.code == 401
+        response.code == 401 &&
+                response.request.header(AUTH_HEADER)
+                    ?.removePrefix(BEARER_PREFIX)
+                    ?.isNotBlank() == true
 
     override suspend fun handle(response: Response): Request? {
         if (!canHandle(response)) return null
 
-        val currentRefreshToken = tokenManager.refreshToken
-        if (currentRefreshToken.isNullOrBlank()) {
-            Log.w(TAG, "No refresh token available — session expired")
-            TokenRefreshCallbackRegistry.notifySessionExpired()
-            return null
-        }
-
         return refreshLock.withLock {
-            val result = tokenRefreshApi.refreshToken(currentRefreshToken)
-            when (result) {
+            val failedAccessToken = response.request.header(AUTH_HEADER)
+                ?.removePrefix(BEARER_PREFIX)
+                ?.trim()
+            val latestAccessToken = tokenManager.accessToken
+
+            // Another concurrent request may already have refreshed the token.
+            if (!latestAccessToken.isNullOrBlank() && latestAccessToken != failedAccessToken) {
+                return@withLock response.request.newBuilder()
+                    .header(AUTH_HEADER, BEARER_PREFIX + latestAccessToken)
+                    .build()
+            }
+
+            val currentRefreshToken = tokenManager.refreshToken
+            if (currentRefreshToken.isNullOrBlank()) {
+                Log.w(TAG, "No refresh token available — session expired")
+                tokenManager.clearTokens()
+                TokenRefreshCallbackRegistry.notifySessionExpired()
+                return@withLock null
+            }
+
+            when (val result = tokenRefreshApi.refreshToken(currentRefreshToken)) {
                 is TokenRefreshApi.RefreshResult.Success -> {
                     tokenManager.saveTokens(result.accessToken, result.refreshToken)
+                    val refreshedAccessToken = tokenManager.accessToken
+                    if (refreshedAccessToken.isNullOrBlank()) {
+                        Log.e(TAG, "Refresh succeeded but the access token was blank")
+                        return@withLock null
+                    }
+
                     Log.d(TAG, "Tokens refreshed and persisted")
                     response.request.newBuilder()
-                        .header("Authorization", "Bearer ${result.accessToken}")
+                        .header(AUTH_HEADER, BEARER_PREFIX + refreshedAccessToken)
                         .build()
                 }
 
@@ -67,9 +75,7 @@ class RefreshTokenStrategy(
                             TokenRefreshCallbackRegistry.notifySessionExpired()
                         }
 
-                        else -> {
-                            Log.e(TAG, "Refresh failed: ${result.error.message}")
-                        }
+                        else -> Log.e(TAG, "Refresh failed: ${result.error.message}")
                     }
                     null
                 }

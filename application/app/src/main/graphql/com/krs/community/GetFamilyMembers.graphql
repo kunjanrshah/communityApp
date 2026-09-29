@@ -1,4 +1,4 @@
-query GetFamilyMembers($headId: Float!, $loginUserId: Int) {
+query GetFamilyMembers($headId: Int!, $loginUserId: Int) {
     getFamilyMembers(head_id: $headId, loginUserId: $loginUserId) {
         success
         total_records

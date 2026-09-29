@@ -61,7 +61,6 @@ public class AppConstants {
         String INNER_LOGOUT = "InnerLogout";
         String SET_REMINDER = "SetReminder";
         String GET_USER_PROFILE = "GetUserProfile";
-        String GET_USER_STATUS = "GetUserActivityStatus";
         String GET_MASTER_UPDATE_COUNTS = "GetMasterUpdateCounts";
         String SEND_MAIL = "SendMail";
         String UPLOAD_FILES = "UploadFiles";

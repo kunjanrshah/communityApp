@@ -9,7 +9,7 @@ class UserActivityStatusRepository(
     private val apolloClient: ApolloClient
 ) {
 
-    suspend fun getUserActivityStatus(id: Long): UserActivityStatusResult {
+    suspend fun getUserActivityStatus(id: Int): UserActivityStatusResult {
         return try {
             val input = GetUserActivityStatusInput(id = id)
             val response = apolloClient.mutation(GetUserActivityStatusMutation(input)).execute()
@@ -22,7 +22,7 @@ class UserActivityStatusRepository(
                 Log.d("UserActivityStatus", "Activity status fetched successfully")
                 UserActivityStatusResult.Success(data.data?.let {
                     UserActivityStatusData(
-                        id = it.id ?: 0,
+                        id = it.id?.toLong() ?: 0L,
                         lastLogin = it.last_login?.toString(),
                         loginStatus = it.login_status ?: false,
                         onlineStatus = it.online_status ?: false

@@ -6,9 +6,7 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.network.okHttpClient
 import com.github.squti.guru.Guru.getString
 import com.krs.community.BuildConfig
-import com.krs.community.auth.AuthExceptionHandler
 import com.krs.community.auth.RefreshTokenStrategy
-import com.krs.community.auth.SessionExpirationStrategy
 import com.krs.community.auth.TokenAuthenticator
 import com.krs.community.auth.TokenManager
 import com.krs.community.auth.TokenRefreshApi
@@ -21,31 +19,31 @@ import okhttp3.logging.HttpLoggingInterceptor
 object GraphQLClientProvider {
 
     private var cachedTokenRefreshApi: TokenRefreshApi? = null
+    private var cachedTokenAuthenticator: TokenAuthenticator? = null
 
     fun provideApolloClient(context: Context): ApolloClient {
-        val tokenManager = TokenManager(context)
-
-        // A lightweight OkHttpClient for the refresh-mutation only.
-        // This must NOT include the GraphQLAuthInterceptor or the
-        // TokenAuthenticator, otherwise we risk infinite recursion
-        // (authenticator triggers refresh → refresh triggers authenticator …).
-        val refreshClient = createApolloClient(context, authenticator = null)
-        val tokenRefreshApi = TokenRefreshApi.getInstance(refreshClient)
-        cachedTokenRefreshApi = tokenRefreshApi
-
-        val strategies = listOf<AuthExceptionHandler>(
-            RefreshTokenStrategy(tokenManager, tokenRefreshApi),
-            SessionExpirationStrategy(tokenManager)
-        )
-
-        val authenticator = TokenAuthenticator(strategies)
-        return createApolloClient(context, authenticator)
+        return createApolloClient(context, provideTokenAuthenticator(context))
     }
 
+    @Synchronized
+    fun provideTokenAuthenticator(context: Context): TokenAuthenticator {
+        return cachedTokenAuthenticator ?: run {
+            val appContext = context.applicationContext
+            val tokenRefreshApi = provideTokenRefreshApi(appContext)
+            TokenAuthenticator(
+                listOf(RefreshTokenStrategy(TokenManager(appContext), tokenRefreshApi))
+            ).also { cachedTokenAuthenticator = it }
+        }
+    }
+
+    @Synchronized
     fun provideTokenRefreshApi(context: Context): TokenRefreshApi {
         return cachedTokenRefreshApi ?: run {
-            val refreshClient = createApolloClient(context, authenticator = null)
-            TokenRefreshApi.getInstance(refreshClient).also { cachedTokenRefreshApi = it }
+            // Keep refresh calls on a client without an authenticator to avoid recursion.
+            val refreshClient = createApolloClient(context.applicationContext, authenticator = null)
+            TokenRefreshApi.getInstance(refreshClient).also {
+                cachedTokenRefreshApi = it
+            }
         }
     }
 

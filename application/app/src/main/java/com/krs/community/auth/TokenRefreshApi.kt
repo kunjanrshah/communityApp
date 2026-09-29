@@ -2,6 +2,7 @@ package com.krs.community.auth
 
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Error
 import com.apollographql.apollo.exception.ApolloHttpException
 import com.krs.community.RefreshTokenMutation
 
@@ -54,13 +55,10 @@ class TokenRefreshApi private constructor(
             } else {
                 val error = response.errors?.firstOrNull()?.message ?: "Refresh token failed"
                 Log.w(TAG, "Refresh token rejected: $error")
-                // If the refresh mutation returned an HTTP 401 (the refresh
-                // token itself is expired/invalid), treat this as session
-                // expiration. Apollo wraps non-2xx HTTP responses in
-                // ApolloHttpException, accessible via response.exception.
                 val httpException = response.exception as? ApolloHttpException
                 val isHttp401 = httpException?.statusCode == 401
-                if (isHttp401) {
+                val isGraphQl401 = isUnauthorizedGraphQlError(response.errors)
+                if (isHttp401 || isGraphQl401) {
                     RefreshResult.Failure(SessionExpired(error))
                 } else {
                     RefreshResult.Failure(RefreshFailed(error))
@@ -89,4 +87,13 @@ class TokenRefreshApi private constructor(
 
     /** Thrown when refresh fails for a transient or non-auth reason. */
     class RefreshFailed(message: String) : Exception(message)
+
+    private fun isUnauthorizedGraphQlError(errors: List<Error>?): Boolean {
+        if (errors.isNullOrEmpty()) return false
+        return errors.any { error ->
+            val statusCode = (error.extensions as? Map<*, *>)?.get("statusCode")?.toString()
+            val message = error.message.lowercase()
+            statusCode == "401" || message.contains("unauthorized") || message.contains("401")
+        }
+    }
 }

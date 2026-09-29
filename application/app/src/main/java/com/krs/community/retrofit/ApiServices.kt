@@ -33,7 +33,6 @@ import com.krs.community.responses.SubCommResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.responses.UploadedFilesResponse
 import com.krs.community.responses.UserInnerLogoutResponse
-import com.krs.community.responses.UserStatusResponse
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.utils.AppConstants
 import okhttp3.MultipartBody
@@ -139,9 +138,6 @@ interface ApiServices {
 
     @POST(AppConstants.UrlPath.GET_FAMILY_MEMBER)
     suspend fun getFamilyMembers(@Body request: JsonObject): Response<FamilyDetailResponse>
-
-    @POST(AppConstants.UrlPath.GET_USER_STATUS)
-    suspend fun getUserStatus(@Body request: JsonObject): Response<UserStatusResponse>
 
     @POST(AppConstants.UrlPath.INNER_LOGIN)
     suspend fun innerLogin(@Body request: JsonObject): Response<LoginResponse>
