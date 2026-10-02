@@ -127,9 +127,6 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.CHANGE_ROLE)
     suspend fun changeRole(@Body request: JsonObject): Response<searchByKeywordsResponse>
 
-    @POST(AppConstants.UrlPath.GET_INACTIVE_USERS)
-    suspend fun getInActiveUsers(@Body request: JsonObject): Response<SmartFilterResponse>
-
     @POST(AppConstants.UrlPath.GET_DOCUMENT)
     suspend fun getDocumentList(@Body request: JsonObject): Response<UploadedFilesResponse>
 

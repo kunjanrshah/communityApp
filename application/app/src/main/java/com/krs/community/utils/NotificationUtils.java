@@ -57,41 +57,38 @@ public class NotificationUtils {
         }
     }
 
-    public void getBitmapAsyncAndNotification(String message, Intent intent, String fullname, String mobile, String email, String photo, String homeAddress, String userId, String CityName) {
-        final Bitmap[] bitmap = {null};
-        if (!TextUtils.isEmpty(photo)) {
-            if (photo.length() > 4 && Patterns.WEB_URL.matcher(photo).matches()) {
-                Glide.with(mContext.getApplicationContext())
-                        .asBitmap()
-                        .load(photo)
-                        .thumbnail(0.5f)
-                        .transition(withCrossFade())
-                        .apply(RequestOptions.circleCropTransform())
-                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                        .into(new CustomTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                bitmap[0] = resource;
-                                displayImageNotification(bitmap[0], intent, message, fullname, mobile, email, homeAddress, userId, CityName);
-                            }
+    public void getBitmapAsyncAndNotification(String message, Intent intent, String fullname, String mobile, String email, String photo, String homeAddress, String userId, String CityName, String notificationType) {
+        final Bitmap fallbackBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.user_profile);
+        if (!TextUtils.isEmpty(photo) && photo.length() > 4 && Patterns.WEB_URL.matcher(photo).matches()) {
+            Glide.with(mContext.getApplicationContext())
+                    .asBitmap()
+                    .load(photo)
+                    .thumbnail(0.5f)
+                    .transition(withCrossFade())
+                    .apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            displayImageNotification(resource, intent, message, fullname, mobile, email, homeAddress, userId, CityName, notificationType);
+                        }
 
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-                                Bitmap bitmap1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.user_profile);
-                                displayImageNotification(bitmap1, intent, message, fullname, mobile, email, homeAddress, userId, CityName);
-                            }
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            displayImageNotification(fallbackBitmap, intent, message, fullname, mobile, email, homeAddress, userId, CityName, notificationType);
+                        }
 
-                            @Override
-                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                                Bitmap bitmap1 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.user_profile);
-                                displayImageNotification(bitmap1, intent, message, fullname, mobile, email, homeAddress, userId, CityName);
-                            }
-                        });
-            }
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            displayImageNotification(fallbackBitmap, intent, message, fullname, mobile, email, homeAddress, userId, CityName, notificationType);
+                        }
+                    });
+        } else {
+            displayImageNotification(fallbackBitmap, intent, message, fullname, mobile, email, homeAddress, userId, CityName, notificationType);
         }
     }
 
-    private void displayImageNotification(Bitmap bitmap, @NonNull Intent intent, String message, String fullname, String mobile, String email, String homeAddress, String userId, String CityName) {
+    private void displayImageNotification(Bitmap bitmap, @NonNull Intent intent, String message, String fullname, String mobile, String email, String homeAddress, String userId, String CityName, String notificationType) {
 
         String CHANNEL_ID = mContext.getString(R.string.notification_channel_id);
         final Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + mContext.getPackageName() + "/raw/notification");
@@ -116,13 +113,14 @@ public class NotificationUtils {
             intentApprove.putExtra("action", "Approve");
             intentApprove.putExtra("Phone", mobile);
             intentApprove.putExtra("userId", userId);
+            intentApprove.putExtra("notification_type", notificationType);
             intentApprove.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            pendingIntentApprove = PendingIntent.getBroadcast(mContext, 2, intentApprove, PendingIntent.FLAG_CANCEL_CURRENT);
+            pendingIntentApprove = PendingIntent.getBroadcast(mContext, 2, intentApprove, getPendingIntentFlags(PendingIntent.FLAG_CANCEL_CURRENT));
         }
 
-        pendingIntentCall = PendingIntent.getBroadcast(mContext, 0, intentCall, PendingIntent.FLAG_CANCEL_CURRENT);
-        pendingIntentWhatsApp = PendingIntent.getBroadcast(mContext, 1, intentWhatsApp, PendingIntent.FLAG_CANCEL_CURRENT);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+        pendingIntentCall = PendingIntent.getBroadcast(mContext, 0, intentCall, getPendingIntentFlags(PendingIntent.FLAG_CANCEL_CURRENT));
+        pendingIntentWhatsApp = PendingIntent.getBroadcast(mContext, 1, intentWhatsApp, getPendingIntentFlags(PendingIntent.FLAG_CANCEL_CURRENT));
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0 /* Request code */, intent, getPendingIntentFlags(PendingIntent.FLAG_ONE_SHOT));
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         inboxStyle.addLine(fullname);
@@ -181,14 +179,27 @@ public class NotificationUtils {
         }
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, mContext.getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT);
+        if (notificationManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, mContext.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(channel);
         }
 
         if (notificationManager != null) {
-            notificationManager.notify(Integer.parseInt(userId), notification);
+            int notificationId;
+            try {
+                notificationId = Integer.parseInt(userId);
+            } catch (NumberFormatException ignored) {
+                notificationId = (int) System.currentTimeMillis();
+            }
+            notificationManager.notify(notificationId, notification);
             playNotificationSound();
         }
+    }
+
+    private int getPendingIntentFlags(int baseFlags) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return baseFlags | PendingIntent.FLAG_IMMUTABLE;
+        }
+        return baseFlags;
     }
 }

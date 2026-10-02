@@ -596,16 +596,18 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
     }
 
     private fun successResponse(data: RegisterModel, isAdmin: Boolean) {
-        Guru.putString(getString(R.string.user_id), data.userId)
-        val tokenManager = com.krs.community.auth.TokenManager(this)
-        tokenManager.saveTokens(data.accessToken.trim(), data.refreshToken?.trim())
-        val member = Member()
-        member.id = data.userId
-        member.accessToken = data.accessToken
-        member.mobile = data.mobile
-        member.role = data.role
-        val json = Gson().toJson(member)
-        Guru.putString(getString(R.string.loginMember), json)
+        if (isAdmin) {
+            Guru.putString(getString(R.string.user_id), data.userId)
+            val tokenManager = com.krs.community.auth.TokenManager(this)
+            tokenManager.saveTokens(data.accessToken.trim(), data.refreshToken?.trim())
+            val member = Member()
+            member.id = data.userId
+            member.accessToken = data.accessToken
+            member.mobile = data.mobile
+            member.role = data.role
+            val json = Gson().toJson(member)
+            Guru.putString(getString(R.string.loginMember), json)
+        }
         clearAll()
         if (isAdmin) {
             goToFamilyDetailActivity(data)
@@ -835,4 +837,3 @@ class RegisterActivty : AppCompatActivity(), UCropFragmentCallback, IRegisterLis
         binding.txtBdate.text = date + "($age)"
     }
 }
-

@@ -74,8 +74,7 @@ class NotificationBadge(
 
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        inflater.inflate(R.layout.notification_badge, this, true)
-        binding = NotificationBadgeBinding.inflate(inflater)
+        binding = NotificationBadgeBinding.inflate(inflater, this, true)
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.NotificationBadge, 0, 0)
         try {
             val textColor = a.getColor(R.styleable.NotificationBadge_android_textColor,

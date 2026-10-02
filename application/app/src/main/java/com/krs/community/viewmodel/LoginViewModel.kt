@@ -18,6 +18,7 @@ import com.krs.community.listeners.ILoginListener
 import com.krs.community.model.LoginModel
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
+import com.krs.community.repositories.DeviceTokenRepository
 import com.krs.community.repositories.LoginRepository
 import com.krs.community.type.LoginInput
 import com.krs.community.utils.ApiException
@@ -32,8 +33,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class LoginViewModel(private val loginRepository: LoginRepository,
-                     var app: Application) : AndroidViewModel(app) {
+class LoginViewModel(
+    private val loginRepository: LoginRepository,
+    private val deviceTokenRepository: DeviceTokenRepository,
+    var app: Application
+) : AndroidViewModel(app) {
 
     lateinit var iLoginListener: ILoginListener
     lateinit var mILoginListener: ILoginListener
@@ -210,6 +214,7 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                                         loginResponse.message = loginModel.message
                                         loginResponse.data = member
                                         iLoginListener.userLogin(loginResponse, false)
+                                        uploadDeviceToken()
                                     } else {
                                         iLoginListener.getFailure(loginModel.message)
                                     }
@@ -246,6 +251,18 @@ class LoginViewModel(private val loginRepository: LoginRepository,
                     thejob.complete()
                 }
             }
+        }
+    }
+
+    fun uploadDeviceToken() {
+        val job = Job()
+        CoroutineScope(IO + job).launch {
+            try {
+                deviceTokenRepository.updateDeviceToken()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            job.complete()
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.google.gson.JsonObject
+import com.krs.community.GetInactiveUsersQuery
 import com.krs.community.GetSharedProfilesQuery
 import com.krs.community.GetSharingProfilesQuery
 import com.krs.community.GetUserProfileQuery
@@ -13,6 +14,7 @@ import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.retrofit.ApiServices
+import com.krs.community.type.GetInactiveUsersInput
 import com.krs.community.type.SearchRequestDTO
 import com.krs.community.type.SmartFilterDto
 import kotlinx.coroutines.Dispatchers
@@ -383,8 +385,41 @@ class SmartFilterRepository(
     }
 
     suspend fun getInActiveRecords(jsonObject: JsonObject): SmartFilterResponse {
-        return apiRequest {
-            api.getInActiveUsers(jsonObject)
+        val input = GetInactiveUsersInput(
+            start = safeInt(jsonObject, "start")?.let { Optional.Present(it) } ?: Optional.Absent,
+            length = safeInt(jsonObject, "length")?.let { Optional.Present(it) } ?: Optional.Absent,
+            sub_community_id = safeInt(jsonObject, "sub_community_id")
+                ?.let { Optional.Present(it) } ?: Optional.Absent,
+            local_community_id = safeInt(jsonObject, "local_community_id")
+                ?.let { Optional.Present(it) } ?: Optional.Absent
+        )
+        val response = apolloClient.query(GetInactiveUsersQuery(input)).execute()
+        response.errors?.firstOrNull()?.message?.let { throw IllegalStateException(it) }
+        val result = response.data?.getInactiveUsers
+            ?: throw IllegalStateException("Get inactive users returned no data")
+
+        return SmartFilterResponse().apply {
+            success = result.success
+            message = result.message ?: ""
+            totalRecords = result.total_records
+            members = result.members.map { user ->
+                Member().apply {
+                    id = user.id.toString()
+                    headId = user.head_id.toString()
+                    firstName = user.first_name ?: ""
+                    subCastId = user.last_name_id?.toString() ?: ""
+                    mobile = user.mobile ?: ""
+                    emailAddress = user.email ?: ""
+                    status = user.status.toString()
+                    subCommunityId = user.sub_community_id?.toString() ?: ""
+                    localCommunityId = user.local_community_id?.toString() ?: ""
+                    memberCount = user.member_count ?: 0
+                    address = user.userAddress?.address ?: ""
+                    area = user.userAddress?.area ?: ""
+                    cityId = user.userAddress?.city_id?.toString() ?: ""
+                    stateId = user.userAddress?.states_id?.toString() ?: ""
+                }
+            }
         }
     }
 

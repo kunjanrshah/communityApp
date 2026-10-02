@@ -18,14 +18,20 @@ class SmartSearchRepository(
 ) : SafeApiRequest() {
 
     suspend fun searchByKeyword(jsonObject: JsonObject): searchByKeywordsResponse {
-        val start = safeInt(jsonObject, "start") ?: 0
-        val length = safeInt(jsonObject, "length") ?: 10
-        val filterBy = safeString(jsonObject, "filterBy")
+        val payload = extractSearchInput(jsonObject)
+        val start = safeInt(payload, "start") ?: 0
+        val length = safeInt(payload, "length") ?: 10
+        val filterBy = safeString(payload, "filterBy")
+            ?: safeString(payload, "filter_by")
+            ?: safeString(payload, "str_search")
+        val requestedSubCommunityId = safeInt(payload, "sub_community_id")
+            ?: safeInt(payload, "subCommunityId")
+        val mergedFilterBy = mergeFilterBy(filterBy, requestedSubCommunityId)
 
         val input = SearchInput(
             start = Optional.Present(start),
             length = Optional.Present(length),
-            filterBy = filterBy?.let { Optional.Present(it) } ?: Optional.Absent
+            filterBy = mergedFilterBy?.let { Optional.Present(it) } ?: Optional.Absent
         )
 
         try {
@@ -79,6 +85,35 @@ class SmartSearchRepository(
 
     fun getLocalCommName(id: String): String {
         return db.getLocalCommunityDao().getLocalCommName(id)
+    }
+
+    private fun extractSearchInput(jsonObject: JsonObject): JsonObject {
+        if (jsonObject.has("variables") && jsonObject.get("variables").isJsonObject) {
+            val variables = jsonObject.getAsJsonObject("variables")
+            if (variables.has("input") && variables.get("input").isJsonObject) {
+                return variables.getAsJsonObject("input")
+            }
+        }
+
+        if (jsonObject.has("input") && jsonObject.get("input").isJsonObject) {
+            return jsonObject.getAsJsonObject("input")
+        }
+
+        return jsonObject
+    }
+
+    private fun mergeFilterBy(filterBy: String?, subCommunityId: Int?): String? {
+        val base = filterBy?.trim()?.takeIf { it.isNotEmpty() }
+        // Treat null/0/negative as "no sub-community filter".
+        val community = subCommunityId
+            ?.takeIf { it > 0 }
+            ?.toString()
+            ?: return base
+
+        if (base.isNullOrEmpty()) return "sub_community_id:$community"
+        if (base.contains("sub_community_id", ignoreCase = true)) return base
+
+        return "$base sub_community_id:$community"
     }
 
     // Helpers copied from SmartFilterRepository patterns

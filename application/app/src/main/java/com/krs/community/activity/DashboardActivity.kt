@@ -55,6 +55,7 @@ import com.krs.community.responses.MasterUpdateResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.utils.Coroutines
 import com.krs.community.utils.NotificationUtils
+import com.krs.community.utils.MyPermissionChecker.Companion.checkRequestNotificationPermissions
 import com.krs.community.utils.Utility.backNavigation
 import com.krs.community.utils.Utility.changeLang
 import com.krs.community.utils.Utility.getAppVersionCode
@@ -285,6 +286,9 @@ class DashboardActivity : AppCompatActivity(), FragmentDrawerListener, KodeinAwa
     override fun onResume() {
         super.onResume()
         sessionExpirationHandler.attach(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            checkRequestNotificationPermissions(this)
+        }
         loadProfile()
         NotificationUtils.clearNotifications(applicationContext)
         hideSweetProgress()

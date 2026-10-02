@@ -186,7 +186,7 @@
 
     <!-- Register Screen -->
     <string name="hint_address">Address</string>
-    <string name="register_now">REGISTER NOW</string>
+    <string name="register_now">Add Family Head</string>
     <string name="hint_name">First Name</string>
     <string name="hint_email">Email ID</string>
     <string name="hint_mobile">10 digit mobile</string>
@@ -1197,4 +1197,9 @@
     <string name="plain_password">plain_password</string>
     <string name="profile_pic">profile_pic</string>
     <string name="notification">notification</string>
+    <string name="new_member_registered">New member registered</string>
+    <string name="notification_type">notification_type</string>
+    <string name="notif_type_registration">registration</string>
+    <string name="notif_type_approved">approved</string>
+    <string name="notif_type_message">message</string>
 </resources>

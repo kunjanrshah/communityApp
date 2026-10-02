@@ -484,7 +484,7 @@ type Query {
 
     usersByDate(input: GetUsersByDateInput!): UsersByDateResponse!
 
-  getInactiveUsers(input: GetInactiveUsersInput!): [UserDTO!]!
+    getInactiveUsers(input: GetInactiveUsersInput!): GetInactiveUsersResponse!
 
   getSharedProfiles(userId: Int!): [UserDTO!]!
 
@@ -582,9 +582,25 @@ input GetInactiveUsersInput {
 
   limit: Int
 
+    length: Int
+
   subCommunityId: Int
 
   localCommunityId: Int
+
+    sub_community_id: Int
+
+    local_community_id: Int
+}
+
+type GetInactiveUsersResponse {
+    success: Boolean!
+
+    message: String
+
+    total_records: Int!
+
+    members: [UserDTO!]!
 }
 
 input GetContactListInput {

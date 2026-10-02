@@ -281,15 +281,16 @@ class SmartFilterAdapter(private val _context: Context,
 
             val min = rangeAgeBar?.selectedMinValue.toString()
             val max = rangeAgeBar?.selectedMaxValue.toString()
-            if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_minage)] = min
+            if (max.equals("0", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_minage)] = ""
+                mapChildValues[_context.getString(R.string.ss_maxage)] = ""
             } else {
-                mapChildValues[_context.getString(R.string.ss_minage)] = "0"
-            }
-            if (max.isNotEmpty() && !max.equals("100", ignoreCase = true)) {
+                if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
+                    mapChildValues[_context.getString(R.string.ss_minage)] = min
+                } else {
+                    mapChildValues[_context.getString(R.string.ss_minage)] = "0"
+                }
                 mapChildValues[_context.getString(R.string.ss_maxage)] = max
-            } else {
-                mapChildValues[_context.getString(R.string.ss_maxage)] = "100"
             }
         }
         if (edtEmail != null) {
@@ -441,28 +442,30 @@ class SmartFilterAdapter(private val _context: Context,
 
             var min = rangeHeightBar1?.selectedMinValue.toString()
             var max = rangeHeightBar1?.selectedMaxValue.toString()
-            if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_min_height)] = min
+            if (max.equals("0", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_min_height)] = ""
+                mapChildValues[_context.getString(R.string.ss_max_height)] = ""
             } else {
-                mapChildValues[_context.getString(R.string.ss_min_height)] = "0"
-            }
-            if (max.isNotEmpty() && !max.equals("200", ignoreCase = true)) {
+                if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
+                    mapChildValues[_context.getString(R.string.ss_min_height)] = min
+                } else {
+                    mapChildValues[_context.getString(R.string.ss_min_height)] = "0"
+                }
                 mapChildValues[_context.getString(R.string.ss_max_height)] = max
-            } else {
-                mapChildValues[_context.getString(R.string.ss_max_height)] = "200"
             }
 
             min = rangeWeightBar?.selectedMinValue.toString()
             max = rangeWeightBar?.selectedMaxValue.toString()
-            if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
-                mapChildValues[_context.getString(R.string.ss_min_weight)] = min
+            if (max.equals("0", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_min_weight)] = ""
+                mapChildValues[_context.getString(R.string.ss_max_weight)] = ""
             } else {
-                mapChildValues[_context.getString(R.string.ss_min_weight)] = "0"
-            }
-            if (max.isNotEmpty() && !max.equals("200", ignoreCase = true)) {
+                if (min.isNotEmpty() && !min.equals("0", ignoreCase = true)) {
+                    mapChildValues[_context.getString(R.string.ss_min_weight)] = min
+                } else {
+                    mapChildValues[_context.getString(R.string.ss_min_weight)] = "0"
+                }
                 mapChildValues[_context.getString(R.string.ss_max_weight)] = max
-            } else {
-                mapChildValues[_context.getString(R.string.ss_max_weight)] = "200"
             }
 
             val bplace = edtBirthPlace?.text.toString().trim { it <= ' ' }
@@ -511,7 +514,14 @@ class SmartFilterAdapter(private val _context: Context,
             }
             val min = rangeUpdationBar?.selectedMinValue.toString()
             val max = rangeUpdationBar?.selectedMaxValue.toString()
-            if ((min.isNotEmpty() && max.isNotEmpty()) || !(max.equals("100", ignoreCase = true) && min.equals("0", ignoreCase = true))) {
+            if (max.equals("0", ignoreCase = true)) {
+                mapChildValues[_context.getString(R.string.ss_min_percentage)] = ""
+                mapChildValues[_context.resources.getString(R.string.ss_max_percentage)] = ""
+            } else if ((min.isNotEmpty() && max.isNotEmpty()) || !(max.equals(
+                    "100",
+                    ignoreCase = true
+                ) && min.equals("0", ignoreCase = true))
+            ) {
                 mapChildValues[_context.getString(R.string.ss_min_percentage)] = min
                 mapChildValues[_context.resources.getString(R.string.ss_max_percentage)] = max
             } else {
@@ -903,6 +913,7 @@ class SmartFilterAdapter(private val _context: Context,
                     }
 
                     rangeAgeBar?.setOnRangeSeekbarFinalValueListener { minValue: Number, maxValue: Number -> Log.d("CRS=>", minValue.toString() + " : " + maxValue) }
+                    rangeAgeBar?.setMinStartValue(0f)?.setMaxStartValue(0f)?.apply()
                     setFieldValues()
                 }
 
@@ -1150,6 +1161,8 @@ class SmartFilterAdapter(private val _context: Context,
                     tvMaxWeight?.text = "$maxValue"
                 }
 
+                rangeHeightBar1?.setMinStartValue(0f)?.setMaxStartValue(0f)?.apply()
+                rangeWeightBar?.setMinStartValue(0f)?.setMaxStartValue(0f)?.apply()
                 setFieldValues()
             }
             6 -> {
@@ -1187,6 +1200,7 @@ class SmartFilterAdapter(private val _context: Context,
                 }
                 rangeUpdationBar?.setOnRangeSeekbarFinalValueListener({ minValue, maxValue -> Log.d("CRS=>", "$minValue : $maxValue") })
 
+                rangeUpdationBar?.setMinStartValue(0f)?.setMaxStartValue(0f)?.apply()
                 setFieldValues()
             }
             else -> {
@@ -1259,11 +1273,11 @@ class SmartFilterAdapter(private val _context: Context,
             chkIsMangal?.isChecked = false
 
             rangeHeightBar1?.setMinStartValue(0f)
-            rangeHeightBar1?.setMaxStartValue(200f)
+            rangeHeightBar1?.setMaxStartValue(0f)
             rangeHeightBar1?.apply()
 
             rangeWeightBar?.setMinStartValue(0f)
-            rangeWeightBar?.setMaxStartValue(200f)
+            rangeWeightBar?.setMaxStartValue(0f)
             rangeWeightBar?.apply()
         }
         if (tvCreated != null) {
@@ -1271,11 +1285,11 @@ class SmartFilterAdapter(private val _context: Context,
             tvUpdated?.text = ""
 
             rangeAgeBar?.setMinStartValue(0f)
-            rangeAgeBar?.setMaxStartValue(100f)
+            rangeAgeBar?.setMaxStartValue(0f)
             rangeAgeBar?.apply()
 
             rangeUpdationBar?.setMinStartValue(0f)
-            rangeUpdationBar?.setMaxStartValue(100f)
+            rangeUpdationBar?.setMaxStartValue(0f)
             rangeUpdationBar?.apply()
         }
         mapChildValues.clear()

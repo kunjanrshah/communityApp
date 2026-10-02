@@ -2,6 +2,7 @@ package com.krs.community.repositories
 
 import com.apollographql.apollo.ApolloClient
 import com.krs.community.RegisterMutation
+import com.krs.community.UpdateDeviceTokenMutation
 import com.krs.community.app.FileUtils.decodeJwtPayload
 import com.krs.community.model.RegisterModel
 import com.krs.community.type.RegisterInput
@@ -48,6 +49,15 @@ class RegisterRepository(
             }
         } catch (e: Exception) {
             kotlin.Result.failure(e)
+        }
+    }
+
+    suspend fun updateDeviceToken(): Boolean {
+        return try {
+            val response = apolloClient.mutation(UpdateDeviceTokenMutation()).execute()
+            response.data?.updateDeviceToken == true
+        } catch (e: Exception) {
+            false
         }
     }
 

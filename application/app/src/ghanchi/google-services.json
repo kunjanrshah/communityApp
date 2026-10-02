@@ -1,13 +1,13 @@
-﻿{
+{
   "project_info": {
-    "project_number": "880736251672",
-    "project_id": "ghanchi-community1",
-    "storage_bucket": "ghanchi-community1.appspot.com"
+    "project_number": "527343060515",
+    "project_id": "communityapp-1341c",
+    "storage_bucket": "communityapp-1341c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:880736251672:android:cf77325f3945f93036786d",
+        "mobilesdk_app_id": "1:527343060515:android:7703d1f497f10c354e5396",
         "android_client_info": {
           "package_name": "com.ghanchi.samaj"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA3lS1QrNVJ6S5Hz5q10JQZ5lzYO_xorBI"
+          "current_key": "AIzaSyAKS3amSWARb178_rH6n2g0PqIxU5y1EPM"
         }
       ],
       "services": {

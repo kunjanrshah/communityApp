@@ -39,7 +39,6 @@ public class AppConstants {
         String CHANGE_STATUS = "StatusChange";
         String CHANGE_ROLE = "RoleChange";
         String GET_CONTACT_LIST = "GetContactList";
-        String GET_INACTIVE_USERS = "getInactiveUsers";
         String GET_DOCUMENT = "GetFiles";
         String ADD_MEMBER = "AddMember";
         String DELETE_MEMBER = "DeleteMember";

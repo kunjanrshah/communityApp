@@ -3,29 +3,40 @@ package com.krs.community.viewmodel
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.github.squti.guru.Guru
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
+import com.google.firebase.messaging.FirebaseMessaging
 import com.krs.community.R
 import com.krs.community.activity.LoginActivity
+import com.krs.community.auth.TokenManager
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.IRegisterListener
 import com.krs.community.model.RegisterModel
+import com.krs.community.repositories.DeviceTokenRepository
 import com.krs.community.repositories.RegisterRepository
 import com.krs.community.type.RegisterInput
 import com.krs.community.utils.ApiException
+import com.krs.community.utils.AppConstants
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.Utility
 import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.File
 
 
 class RegisterViewModel(
     private val registerRepository: RegisterRepository,
+    private val deviceTokenRepository: DeviceTokenRepository,
     var app: Application
 ) : AndroidViewModel(app) {
 
@@ -313,6 +324,7 @@ class RegisterViewModel(
                                 it.onSuccess {
                                     if (it.message.equals("success", ignoreCase = true)) {
                                         iRegisterListener?.getRegisterSuccess(it, isAdmin)
+                                        uploadDeviceToken(it, isAdmin)
                                     } else {
                                         iRegisterListener?.getRegisterFailure(it.message, 0)
                                     }
@@ -348,6 +360,54 @@ class RegisterViewModel(
                     }
                     thejob.complete()
                 }
+            }
+        }
+    }
+
+    private fun uploadDeviceToken(registerModel: RegisterModel, isAdmin: Boolean) {
+        val job = Job()
+        CoroutineScope(IO + job).launch {
+            val tokenManager = TokenManager(app.applicationContext)
+            val previousAccessToken = tokenManager.accessToken
+            val previousRefreshToken = tokenManager.refreshToken
+            try {
+                if (!isAdmin) {
+                    tokenManager.saveTokens(registerModel.accessToken, registerModel.refreshToken)
+                }
+                val deviceToken = Guru.getString(AppConstants.DEVICE_TOKEN, null)
+                if (deviceToken.isNullOrEmpty()) {
+                    Log.w(TAG, "FCM token not cached, fetching now...")
+                    val token = suspendCancellableCoroutine<String?> { cont ->
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                cont.resumeWith(Result.success(task.result))
+                            } else {
+                                Log.e(TAG, "Failed to fetch FCM token", task.exception)
+                                cont.resumeWith(Result.success(null))
+                            }
+                        }
+                    }
+                    token?.let {
+                        Guru.putString(AppConstants.DEVICE_TOKEN, it)
+                        Log.d(TAG, "FCM token fetched and cached")
+                    } ?: run {
+                        Log.e(TAG, "Failed to fetch FCM token, cannot update device token")
+                        return@launch
+                    }
+                }
+                val result = deviceTokenRepository.updateDeviceToken()
+                if (!result) {
+                    Log.e(TAG, "Failed to update device token: API returned false")
+                } else {
+                    Log.d(TAG, "Device token updated on server successfully")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception updating device token", e)
+            } finally {
+                if (!isAdmin) {
+                    tokenManager.saveTokens(previousAccessToken, previousRefreshToken)
+                }
+                job.complete()
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.krs.community.app
+﻿package com.krs.community.app
 
 
 import android.annotation.SuppressLint
@@ -41,6 +41,7 @@ import com.krs.community.repositories.ChangePasswordRepository
 import com.krs.community.repositories.CommitteeRepository
 import com.krs.community.repositories.ContactListRepository
 import com.krs.community.repositories.DashboardRepository
+import com.krs.community.repositories.DeviceTokenRepository
 import com.krs.community.repositories.DocumentListRepository
 import com.krs.community.repositories.FamilyDetailRepository
 import com.krs.community.repositories.ForgotPasswordRepository
@@ -150,6 +151,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { SmartSearchRepository(instance(), instance()) }
         bind() from singleton { SmartFilterRepository(instance(), instance(), instance()) }
         bind() from singleton { DocumentListRepository(instance()) }
+        bind() from singleton { DeviceTokenRepository(instance()) }
         bind() from singleton { CalendarSearchRepository(instance(), instance(), instance()) }
         bind() from singleton { NewsRepository(instance()) }
         bind() from singleton { RoomMemberRepository(instance(), instance()) }
@@ -158,8 +160,8 @@ class AppController : Application(), KodeinAware {
         bind() from provider { ContactListViewModelFactory(instance()) }
         bind() from provider { StatisticsViewModelFactory(instance()) }
         bind() from provider { FamilyDetailViewModelFactory(instance()) }
-        bind() from provider { RegisterViewModelFactory(instance()) }
-        bind() from provider { LoginViewModelFactory(instance()) }
+        bind() from provider { RegisterViewModelFactory(instance(), instance()) }
+        bind() from provider { LoginViewModelFactory(instance(), instance()) }
         bind() from provider { PasswordViewModelFactory(instance(), instance(), instance()) }
         bind() from provider { ShareEventViewModelFactory(instance()) }
         bind() from provider { BrowseCityViewModelFactory(instance()) }
