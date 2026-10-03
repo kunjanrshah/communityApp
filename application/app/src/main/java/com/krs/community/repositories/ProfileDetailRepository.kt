@@ -27,9 +27,7 @@ class ProfileDetailRepository(
 ) : SafeApiRequest() {
 
     suspend fun changeStatus(jsonObject: JsonObject): searchByKeywordsResponse {
-        return apiRequest {
-            api.changeStatus(jsonObject)
-        }
+        return apolloClient.changeMemberStatus(jsonObject)
     }
 
     suspend fun updateProfile(profile: JsonObject): UpdateProfileResponse {

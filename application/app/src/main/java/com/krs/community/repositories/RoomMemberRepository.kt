@@ -1,6 +1,7 @@
 package com.krs.community.repositories
 
 import androidx.lifecycle.LiveData
+import com.apollographql.apollo.ApolloClient
 import com.google.gson.JsonObject
 import com.krs.community.app.AppDatabase
 import com.krs.community.entities.RoomMember
@@ -9,7 +10,10 @@ import com.krs.community.retrofit.ApiServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RoomMemberRepository(private val api: ApiServices, private val db: AppDatabase
+class RoomMemberRepository(
+    private val api: ApiServices,
+    private val db: AppDatabase,
+    private val apolloClient: ApolloClient
 ) : SafeApiRequest() {
 
     private val TAG: String = RoomMemberRepository::class.java.simpleName
@@ -49,9 +53,7 @@ class RoomMemberRepository(private val api: ApiServices, private val db: AppData
     }
 
     suspend fun changeStatus(jsonObject: JsonObject): searchByKeywordsResponse {
-        return apiRequest {
-            api.changeStatus(jsonObject)
-        }
+        return apolloClient.changeMemberStatus(jsonObject)
     }
 
     suspend fun changeRole(jsonObject: JsonObject): searchByKeywordsResponse {

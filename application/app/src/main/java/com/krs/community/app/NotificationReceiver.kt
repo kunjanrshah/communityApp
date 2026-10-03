@@ -10,13 +10,19 @@ import com.github.squti.guru.Guru
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
+import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.repositories.RoomMemberRepository
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.retrofit.ApiServices
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
 import com.krs.community.utils.NotificationUtils
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URLEncoder
 
@@ -73,33 +79,29 @@ class NotificationReceiver : BroadcastReceiver() {
     fun changeStatus(jsonObject: JsonObject, context: Context) {
         jobChangeStatus = Job()
         jobChangeStatus.let { thejob ->
-            mRoomMemberRepository = RoomMemberRepository(ApiServices(), AppDatabase(context))
+            val pendingResult = goAsync()
+            mRoomMemberRepository = RoomMemberRepository(
+                ApiServices(),
+                AppDatabase(context),
+                GraphQLClientProvider.provideApolloClient(context.applicationContext)
+            )
 
             CoroutineScope(Dispatchers.IO + thejob!!).launch {
                 try {
                     val response = mRoomMemberRepository.changeStatus(jsonObject)
-                    response.let {
-                        withContext(Dispatchers.Main) {
-                            getMembers(response)
-                            thejob.complete()
-                        }
-                        return@launch
+                    withContext(Dispatchers.Main) {
+                        getMembers(response)
                     }
-                    // mRoomMemberListener?.getFailure(response.message as String)
                 } catch (e: ApiException) {
-                    e.message?.let {
-                        // mRoomMemberListener?.getFailure(it)
-                    }
+                    Log.e("NotificationReceiver", "Status change failed: ${e.message}", e)
                 } catch (e: NoInternetException) {
-                    e.message?.let {
-                        // mRoomMemberListener?.getFailure(it)
-                    }
+                    Log.e("NotificationReceiver", "Status change failed: ${e.message}", e)
                 } catch (e: Exception) {
-                    e.message?.let {
-                        // mRoomMemberListener?.getFailure(it)
-                    }
+                    Log.e("NotificationReceiver", "Status change failed: ${e.message}", e)
+                } finally {
+                    thejob.complete()
+                    pendingResult.finish()
                 }
-                thejob.complete()
             }
         }
     }
@@ -109,7 +111,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val success = response.success
         Log.e("success", "" + success)
 
-        if (success.equals("true")) {
+        if (success == true) {
             Log.e("success", "" + success)
             NotificationUtils.clearNotifications(AppController.mApplication)
         }

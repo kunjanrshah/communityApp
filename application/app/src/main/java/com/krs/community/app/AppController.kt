@@ -154,7 +154,7 @@ class AppController : Application(), KodeinAware {
         bind() from singleton { DeviceTokenRepository(instance()) }
         bind() from singleton { CalendarSearchRepository(instance(), instance(), instance()) }
         bind() from singleton { NewsRepository(instance()) }
-        bind() from singleton { RoomMemberRepository(instance(), instance()) }
+        bind() from singleton { RoomMemberRepository(instance(), instance(), instance()) }
         bind() from singleton { CommitteeRepository(instance(), instance(), instance()) }
 
         bind() from provider { ContactListViewModelFactory(instance()) }

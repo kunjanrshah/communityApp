@@ -3,15 +3,21 @@ package com.krs.community.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import com.github.squti.guru.Guru
 import com.google.gson.JsonObject
+import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.entities.RoomMember
 import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.repositories.RoomMemberRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RoomMemberViewModel(
         private val mRoomMemberRepository: RoomMemberRepository,
@@ -107,19 +113,34 @@ class RoomMemberViewModel(
 
     fun changeStatus(jsonObject: JsonObject) {
         if (isNetworkConnected(app.applicationContext)) {
+            val statusRequest = jsonObject.deepCopy()
+            if (!statusRequest.has("id") || statusRequest.get("id").isJsonNull) {
+                val memberId = Guru.getString(app.getString(R.string.member_id), "")?.toIntOrNull()
+                if (memberId == null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        mRoomMemberListener?.getFailure("Unable to determine the current member ID")
+                    }
+                    return
+                }
+                statusRequest.addProperty("id", memberId)
+            }
             jobChangeStatus = Job()
             jobChangeStatus.let { thejob ->
 
                 CoroutineScope(Dispatchers.IO + thejob!!).launch {
                     try {
-                        val response = mRoomMemberRepository.changeStatus(jsonObject)
-                        response.let {
-                            withContext(Dispatchers.Main) {
-                                mRoomMemberListener?.getFailure(response.message)
-                                thejob.complete()
+                        val response = mRoomMemberRepository.changeStatus(statusRequest)
+                        withContext(Dispatchers.Main) {
+                            if (response.success == true) {
+                                mRoomMemberListener?.refreshList()
+                            } else {
+                                mRoomMemberListener?.getFailure(
+                                    response.message ?: "Status change failed"
+                                )
                             }
-                            return@launch
+                            thejob.complete()
                         }
+                        return@launch
                     } catch (e: ApiException) {
                         e.message?.let {
                             mRoomMemberListener?.getFailure(it)

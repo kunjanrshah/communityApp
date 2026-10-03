@@ -1,5 +1,7 @@
 package com.krs.community.utils;
 
+import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -29,8 +31,6 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.krs.community.R;
 import com.krs.community.app.NotificationReceiver;
-
-import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade;
 
 public class NotificationUtils {
 
@@ -101,12 +101,14 @@ public class NotificationUtils {
         intentCall.putExtra("Phone", mobile);
         intentCall.putExtra("userId", userId);
         intentCall.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intentCall.setData(Uri.parse("samajapp://notification/call/" + userId));
 
         Intent intentWhatsApp = new Intent(mContext, NotificationReceiver.class);
         intentWhatsApp.putExtra("action", "WhatsApp");
         intentWhatsApp.putExtra("Phone", mobile);
         intentWhatsApp.putExtra("userId", userId);
         intentWhatsApp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intentWhatsApp.setData(Uri.parse("samajapp://notification/whatsapp/" + userId));
 
         if (!message.contains("Approved")) {
             Intent intentApprove = new Intent(mContext, NotificationReceiver.class);
@@ -115,11 +117,13 @@ public class NotificationUtils {
             intentApprove.putExtra("userId", userId);
             intentApprove.putExtra("notification_type", notificationType);
             intentApprove.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intentApprove.setData(Uri.parse("samajapp://notification/approve/" + userId));
             pendingIntentApprove = PendingIntent.getBroadcast(mContext, 2, intentApprove, getPendingIntentFlags(PendingIntent.FLAG_CANCEL_CURRENT));
         }
 
         pendingIntentCall = PendingIntent.getBroadcast(mContext, 0, intentCall, getPendingIntentFlags(PendingIntent.FLAG_CANCEL_CURRENT));
         pendingIntentWhatsApp = PendingIntent.getBroadcast(mContext, 1, intentWhatsApp, getPendingIntentFlags(PendingIntent.FLAG_CANCEL_CURRENT));
+        intent.setData(Uri.parse("samajapp://notification/open/" + userId));
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0 /* Request code */, intent, getPendingIntentFlags(PendingIntent.FLAG_ONE_SHOT));
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();

@@ -121,9 +121,6 @@ interface ApiServices {
     @POST(AppConstants.UrlPath.SEARCH_BY_KEYWORDS)
     suspend fun getSearchByKeywords(@Body request: JsonObject): Response<searchByKeywordsResponse>
 
-    @POST(AppConstants.UrlPath.CHANGE_STATUS)
-    suspend fun changeStatus(@Body request: JsonObject): Response<searchByKeywordsResponse>
-
     @POST(AppConstants.UrlPath.CHANGE_ROLE)
     suspend fun changeRole(@Body request: JsonObject): Response<searchByKeywordsResponse>
 

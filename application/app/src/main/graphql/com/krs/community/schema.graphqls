@@ -961,6 +961,8 @@ input StatusChangeInputDto {
 
   status: Int!
 
+    id: Int!
+
   extra_info: Int
 
   password: String

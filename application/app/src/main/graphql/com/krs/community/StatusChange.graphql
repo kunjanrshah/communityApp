@@ -1,0 +1,6 @@
+mutation StatusChange($data: StatusChangeInputDto!) {
+    statusChange(data: $data) {
+        success
+        message
+    }
+}

@@ -36,7 +36,6 @@ public class AppConstants {
         String GET_COMMITTEE = "GetCommittee";
         String GET_DESIGNATION = "GetDesignation";
         String SEARCH_BY_KEYWORDS = "SmartSearch";
-        String CHANGE_STATUS = "StatusChange";
         String CHANGE_ROLE = "RoleChange";
         String GET_CONTACT_LIST = "GetContactList";
         String GET_DOCUMENT = "GetFiles";
