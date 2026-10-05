@@ -59,6 +59,7 @@ class GraphQLAuthInterceptor(
                 )
             }
         } else {
+            requestBuilder.removeHeader(AUTH_HEADER)
             Log.d(tag, "Skipping auth for Login/Register request: ${original.url}")
         }
 

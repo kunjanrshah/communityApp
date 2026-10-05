@@ -3,6 +3,7 @@ package com.krs.community.utils
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -16,10 +17,16 @@ import android.print.PrintAttributes
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ViewUtils
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.bumptech.glide.Glide
@@ -28,7 +35,6 @@ import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.github.squti.guru.Guru
 import com.google.android.material.snackbar.Snackbar
 import com.krs.community.BuildConfig
-
 import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.entities.RoomMember
@@ -45,7 +51,7 @@ import com.yalantis.ucrop.model.AspectRatio
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 
 
 fun Context.toast(message: String) {
@@ -537,150 +543,64 @@ fun getMemberFromRoomMember(roomMember: RoomMember): Member {
     return member
 }
 
-fun createMemberListPDF(mContext: Context, lstMember: ArrayList<Member>, lstFilter: ArrayList<String>, profileDetailViewModel: ProfileDetailViewModel) = Coroutines.main {
+fun createMemberListPDF(
+    mContext: Context,
+    lstMember: ArrayList<Member>,
+    lstFilter: ArrayList<String>,
+    profileDetailViewModel: ProfileDetailViewModel
+) = Coroutines.main {
+    if (lstMember.isEmpty()) {
+        Toast.makeText(mContext, R.string.NoRecordList, Toast.LENGTH_SHORT).show()
+        return@main
+    }
 
-    var Bdate = ""
-    val df = SimpleDateFormat("dd.MM.yyyy h:mm a") //'at'
-    val currentdate = df.format(Calendar.getInstance().timeInMillis)
-    val logo_path = "https://muslimghanchi.samajapp.in/ic_logo1.png"
-    val header = "<center> <table height='80'><tr><th><img src=$logo_path alt=''></th style='padding-left: 10px;'><th></th><th style='padding-top: 20px;'><h1>${mContext.getString(R.string.app_name)}</h1></th></tr></table>  </center> <object align=right>$currentdate</object><br><br>"
-    var rows = header
-    for (member in lstMember) {
-        try {
-            var name = member.firstName
-            var state = member.stateId
-            var city = member.cityId
-            var local = member.localCommunityId
-            var sub = member.subCommunityId
-            if (!member.birthDate.isNullOrEmpty()) {
-                Bdate = Utility.changeDateFormat(
-                    member.birthDate,
-                    Utility.yyyy_MM_dd,
-                    Utility.dd_MM_yyyy
-                )
-                val age = Utility.getAge(Bdate, Utility.dd_MM_yyyy)
-                Bdate += " ($age)"
-            }
-            if (!member.subCastId.isNullOrEmpty()) {
-                val lname =
-                    profileDetailViewModel.getLastNameById(Integer.parseInt(member.subCastId))
-                name = member.firstName + " " + member.fatherName + " " + lname
-            }
+    Utility.startSweetProgress(
+        mContext,
+        mContext.getString(R.string.exporting_search_list),
+        mContext.getString(R.string.please_wait)
+    )
+    try {
+        val file = MemberListPdfExporter.create(
+            mContext,
+            lstMember,
+            lstFilter,
+            profileDetailViewModel
+        )
+        Utility.hideSweetProgress()
+        displayMemberListPdfDialog(mContext, file, lstMember.size)
+    } catch (exception: Exception) {
+        Utility.hideSweetProgress()
+        Log.e("MemberListPdf", "Unable to create member list PDF", exception)
+        Toast.makeText(
+            mContext,
+            mContext.getString(R.string.pdf_export_failed, exception.localizedMessage.orEmpty()),
+            Toast.LENGTH_LONG
+        ).show()
+    }
+}
 
-            if (!member.stateId.isNullOrEmpty()) {
-                state = profileDetailViewModel.getstateNameById(Integer.parseInt(member.stateId))
-            }
-
-            if (!member.cityId.isNullOrEmpty()) {
-                city = profileDetailViewModel.getcityName(Integer.parseInt(member.cityId))
-            }
-            if (!member.localCommunityId.isNullOrEmpty()) {
-                local = profileDetailViewModel.getLocalCommunityName(member.localCommunityId)
-            }
-            if (!member.subCommunityId.isNullOrEmpty()) {
-                sub = profileDetailViewModel.getSubCommName(member.subCommunityId)
-            }
-
-            val path = mContext.getString(R.string.base_url_thumb) + member.profilePic
-            val headerImage = "<img src=$path alt=$name>"
-            val lblName = name
-            val lblGender = "<b>Gender:</b> ${member.gender}"
-            val lblBdate = "<b>BirthDate:</b> $Bdate"
-            val lblSub = "<b>Sub Community:</b> $sub"
-            val lblLocal = "<b>Local Community:</b> $local"
-            val lblMother = "<b>MotherName:</b> ${member.motherName}"
-            val lblEmail = "<b>Email:</b> ${member.emailAddress}"
-            val lblMobile = "<b>Mobile:</b> ${member.mobile}"
-            val lblState = "<b>State:</b> $state"
-            val lblCity = "<b>City:</b> $city"
-            val lblArea = "<b>Area:</b> ${member.area}"
-            val lblAddress = "<b>Address:</b> ${member.address}"
-            val lblPinCode = "<b>Pincode:</b> ${member.pincode}"
-            val lblBg = "<b>BloodGroup:</b> ${member.bloodGroup}"
-            val lblMarital = "<b>Marital:</b> ${member.maritalStatus}"
-
-            rows += "<table>"
-            if (lstFilter.contains("name")) {
-                rows += "<tr><td><b> $lblName </b></tr>"
-            }
-            rows += "<tr>"
-            if (lstFilter.contains("photo")) {
-                rows += "<td> $headerImage </td>"
-            }
-            rows += "<td> "
-            /* if (lstFilter.contains("father")) {
-                 rows += "$lblFather <br> "
-             }*/
-            if (lstFilter.contains("mother")) {
-                rows += "$lblMother <br> "
-            }
-            if (lstFilter.contains("mobile")) {
-                rows += "$lblMobile <br> "
-            }
-            if (lstFilter.contains("email")) {
-                rows += "$lblEmail "
-            }
-            rows += "</td></tr>"
-            rows += "<tr>"
-            if (lstFilter.contains("gender")) {
-                rows += "<td> $lblGender</td>"
-            }
-            if (lstFilter.contains("marital")) {
-                rows += "<td> $lblMarital</td>"
-            }
-            rows += "</tr>"
-            rows += "<tr>"
-            if (lstFilter.contains("bdate")) {
-                rows += "<td> $lblBdate</td>"
-            }
-            if (lstFilter.contains("blood")) {
-                rows += "<td> $lblBg</td>"
-            }
-            rows += "</tr>"
-            if (lstFilter.contains("address")) {
-                rows += "<tr><td colspan='2'> $lblAddress</td></tr>"
-            }
-            rows += "<tr>"
-            if (lstFilter.contains("state")) {
-                rows += "<td> $lblState</td>"
-            }
-            if (lstFilter.contains("city")) {
-                rows += "<td> $lblCity</td>"
-            }
-            rows += "</tr>"
-            rows += "<tr>"
-            if (lstFilter.contains("area")) {
-                rows += "<td> $lblArea</td>"
-            }
-            if (lstFilter.contains("pincode")) {
-                rows += "<td> $lblPinCode</td>"
-            }
-            rows += "</tr>"
-
-            rows += "<tr>"
-            if (lstFilter.contains("local_community")) {
-                rows += "<td> $lblLocal</td>"
-            }
-            rows += "</tr>"
-            rows += "<tr>"
-            if (lstFilter.contains("sub_community")) {
-                rows += "<td> $lblSub</td>"
-            }
-            rows += "</tr>"
-
-            rows += "</table><br><br>"
-        } catch (e: Exception) {
-            e.printStackTrace()
+private fun displayMemberListPdfDialog(context: Context, file: File, recordCount: Int) {
+    SweetAlertDialog(context, SweetAlertDialog.PDF_TYPE)
+        .setTitleText(context.getString(R.string.app_name))
+        .setContentText("PDF ready to print: $recordCount records")
+        .setCustomImage(R.drawable.ic_app)
+        .showCancelButton(true)
+        .setNeutralText(context.getString(R.string.print))
+        .setNeutralClickListener {
+            it.dismissWithAnimation()
+            openPdf(context, file.absolutePath)
         }
-
-    }
-    if (checkReadStoragePermission(mContext)) {
-        val df = SimpleDateFormat("dd_MM_yyyy_h_mm_a") //'at'
-        val currentdate = df.format(Calendar.getInstance().timeInMillis)
-        createPdf(mContext, "community_${currentdate}", rows)
-    } else {
-        requestStoragePermission(mContext as AppCompatActivity)
-    }
+        .setConfirmText(context.getString(R.string.share))
+        .setConfirmClickListener {
+            it.dismissWithAnimation()
+            shareFile(context, file.absolutePath)
+        }
+        .setCancelText(context.getString(R.string.view))
+        .setCancelClickListener {
+            it.dismissWithAnimation()
+            openPdf(context, file.absolutePath)
+        }
+        .show()
 }
 
 fun createMemberPDF(mContext: Context, member: Member, profileDetailViewModel: ProfileDetailViewModel) {
@@ -1028,15 +948,24 @@ fun displayPDFDialog(context: Context, name: String, filePath: String, content: 
 fun openPdf(context: Context, filePath: String) {
 
     val file = File(filePath)
-    val path = Uri.fromFile(file)
-
-    val pdfOpenintent = Intent(Intent.ACTION_VIEW)
-    pdfOpenintent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-    pdfOpenintent.setDataAndType(path, "application/pdf")
+    if (!file.exists()) {
+        Toast.makeText(context, R.string.pdf_file_not_found, Toast.LENGTH_SHORT).show()
+        return
+    }
     try {
-        context.startActivity(pdfOpenintent)
-    } catch (e: ActivityNotFoundException) {
-
+        val uri = FileProvider.getUriForFile(
+            context,
+            context.applicationContext.packageName + ".provider",
+            file
+        )
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "application/pdf")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+            clipData = ClipData.newUri(context.contentResolver, file.name, uri)
+        }
+        context.startActivity(intent)
+    } catch (exception: ActivityNotFoundException) {
+        Toast.makeText(context, R.string.pdf_viewer_not_found, Toast.LENGTH_SHORT).show()
     }
 
 }
@@ -1045,13 +974,32 @@ fun shareFile(context: Context, filePath: String) {
     val file = File(filePath)
     val intent = Intent(Intent.ACTION_SEND)
     if (file.exists()) {
-        val path = Uri.fromFile(file)
-        intent.type = "application/pdf"
-        intent.putExtra(Intent.EXTRA_STREAM, path)
-        intent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.sharing) + context.getString(R.string.app_name))
-        intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.sharing) + context.getString(R.string.app_name))
-
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.sharedetails)))
+        val uri = FileProvider.getUriForFile(
+            context,
+            context.applicationContext.packageName + ".provider",
+            file
+        )
+        intent.apply {
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                context.getString(R.string.sharing) + context.getString(R.string.app_name)
+            )
+            putExtra(
+                Intent.EXTRA_TEXT,
+                context.getString(R.string.sharing) + context.getString(R.string.app_name)
+            )
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            clipData = ClipData.newUri(context.contentResolver, file.name, uri)
+        }
+        context.startActivity(
+            Intent.createChooser(intent, context.getString(R.string.sharedetails)).apply {
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        )
+    } else {
+        Toast.makeText(context, R.string.pdf_file_not_found, Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -1077,4 +1025,3 @@ fun shareDetails(activity: FragmentActivity?, name: String, mobile: String, emai
     intent.putExtra(Intent.EXTRA_TEXT, text)
     activity?.startActivity(Intent.createChooser(intent, "Choose one"))
 }
-

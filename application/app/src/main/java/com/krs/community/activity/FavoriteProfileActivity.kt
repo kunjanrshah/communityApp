@@ -465,9 +465,6 @@ class FavoriteProfileActivity : AppCompatActivity(), SearchLiveo.OnSearchListene
                     createMemberListPDF(this, expMems, filters, profileDetailViewModel)
                 }
             }
-            Handler().postDelayed({
-                Utility.hideSweetProgress()
-            }, 7000)
         } else {
             mBinding.recyclerView.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
         }

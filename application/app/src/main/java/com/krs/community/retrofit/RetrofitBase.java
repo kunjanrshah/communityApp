@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.krs.community.BuildConfig;
 import com.krs.community.R;
-import com.krs.community.graphql.GraphQLClientProvider;
 import com.krs.community.listeners.RetrofitListener;
 import com.krs.community.model.ErrorObject;
 import com.krs.community.utils.ApiLogInterceptor;
@@ -61,8 +60,7 @@ public class RetrofitBase {
                                 .build();
                         return chain.proceed(request);
                     }
-                })
-                .authenticator(GraphQLClientProvider.INSTANCE.provideTokenAuthenticator(context));
+                });
 
         if (addTimeout) {
             httpClientBuilder.readTimeout(AppConstants.TimeOut.SOCKET_TIME_OUT, TimeUnit.MINUTES);

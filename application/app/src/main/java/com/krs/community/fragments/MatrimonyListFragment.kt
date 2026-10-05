@@ -6,9 +6,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -41,9 +49,18 @@ import com.krs.community.listeners.RoomMemberListener
 import com.krs.community.model.Member
 import com.krs.community.parallaxrecyclerview.ParallaxRecyclerAdapter
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.utils.*
+import com.krs.community.utils.Coroutines
 import com.krs.community.utils.MyPermissionChecker.Companion.checkReadStoragePermission
 import com.krs.community.utils.MyPermissionChecker.Companion.requestStoragePermission
+import com.krs.community.utils.Utility
+import com.krs.community.utils.createMemberListPDF
+import com.krs.community.utils.createMemberPDF
+import com.krs.community.utils.getMemberCode
+import com.krs.community.utils.getRoomMemberFromMember
+import com.krs.community.utils.openFilter
+import com.krs.community.utils.openImageDialog
+import com.krs.community.utils.shareDetails
+import com.krs.community.utils.snackbar
 import com.krs.community.viewmodel.ProfileDetailViewModel
 import com.krs.community.viewmodel.RoomMemberViewModel
 import com.krs.community.viewmodel.SmartFilterViewModel
@@ -562,9 +579,6 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 Utility.startSweetProgress(activity, getString(R.string.exporting_search_list), getString(R.string.please_wait))
             }
             createMemberListPDF(activity as AppCompatActivity, lstMembers, filters, profileDetailViewModel)
-            Handler().postDelayed({
-                Utility.hideSweetProgress()
-            }, 7000)
         } else {
             binding.listMatrimony.snackbar(getString(R.string.NoRecordList), Snackbar.LENGTH_SHORT)
         }
