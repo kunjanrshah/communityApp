@@ -28,7 +28,6 @@ import com.krs.community.responses.RelationsResponse
 import com.krs.community.responses.ReminderResponse
 import com.krs.community.responses.SmartFilterResponse
 import com.krs.community.responses.StateResponse
-import com.krs.community.responses.StatisticResponse
 import com.krs.community.responses.SubCommResponse
 import com.krs.community.responses.UpdateProfileResponse
 import com.krs.community.responses.UploadedFilesResponse
@@ -108,9 +107,6 @@ interface ApiServices {
 
     @POST(AppConstants.UrlPath.DELETE_MEMBER)
     suspend fun deleteMember(@Body request: JsonObject): Response<DeleteProfileResponse>
-
-    @POST(AppConstants.UrlPath.GET_STATISTICS)
-    suspend fun getStatistics(@Body request: JsonObject): Response<StatisticResponse>
 
     @POST(AppConstants.UrlPath.GET_SHARED_PROFILE)
     suspend fun getSharedProfile(@Body request: JsonObject): Response<SmartFilterResponse>

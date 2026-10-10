@@ -1056,6 +1056,7 @@
     <string name="pdf_export_failed">Could not create PDF: %1$s</string>
     <string name="pdf_file_not_found">The PDF file could not be found.</string>
     <string name="pdf_viewer_not_found">No PDF viewer is available on this device.</string>
+    <string name="community_scope_unavailable">Could not determine your sub-community. Please sign in again or contact support.</string>
     <string name="install_app">"Install the app from play store \n"+ "https://play.google.com/store/apps/details?id="</string>
     <string name="mobile_not_found">Mobile not found!</string>
     <string name="filter_values" translatable="false">filter_values</string>

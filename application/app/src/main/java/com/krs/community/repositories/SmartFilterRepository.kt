@@ -55,6 +55,8 @@ class SmartFilterRepository(
         return try {
             val response = apolloClient.query(SmartFilterQuery(input)).execute()
 
+            response.exception?.let { throw it }
+
             val errors = response.errors?.firstOrNull()?.message
             if (!errors.isNullOrEmpty()) {
                 throw Exception(errors)
@@ -120,6 +122,7 @@ class SmartFilterRepository(
     private fun buildSmartFilterDto(filterByJson: JsonObject?): SmartFilterDto? {
         if (filterByJson == null) return null
         return SmartFilterDto(
+            role = getString(filterByJson, "role"),
             id = getInt(filterByJson, "id"),
             last_name_id = getInt(filterByJson, "last_name_id"),
             local_community_id = getInt(filterByJson, "local_community_id"),
@@ -283,6 +286,9 @@ class SmartFilterRepository(
     private fun mapGraphUserToMember(user: GetUserProfileQuery.GetUserProfile): Member {
         return Member().apply {
             id = user.id.toString()
+            role = user.role.name
+            subCommunityId = user.sub_community_id?.toString() ?: ""
+            localCommunityId = user.local_community_id?.toString() ?: ""
             firstName = user.first_name ?: ""
             lastName = user.last_name ?: ""
             memberCode = user.member_code ?: ""

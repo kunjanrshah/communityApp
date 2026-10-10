@@ -1,0 +1,19 @@
+query GetStatistics($input: StatisticsInputDto!) {
+    getStatistics(input: $input) {
+        success
+        data {
+            TotalVillages
+            TotalFamily
+            TotalMembers
+            TotalMale
+            TotalFemale
+            TotalUnmarriedMale
+            TotalUnmarriedFemale
+            TotalInterestedMale
+            TotalInterestedFemale
+        }
+        cities {
+            city_id
+        }
+    }
+}

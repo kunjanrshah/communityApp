@@ -97,7 +97,6 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
     private lateinit var tvCount: TextView
     private var loginUserSubCommunityId = ""
     private var loginUserLocalCommunityId = ""
-    private var role = ""
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
     private lateinit var adapter: ParallaxRecyclerAdapter<Member>
     private lateinit var llRoot: FrameLayout
@@ -357,85 +356,93 @@ class AdminsFragment : Fragment(), KodeinAware, ByFilterListener, RoomMemberList
 
         val loginuser = Guru.getString(getString(R.string.loginMember), "")
         loginMem = Gson().fromJson<Member>(loginuser, Member::class.java)
-        loginUserSubCommunityId = loginMem?.subCommunityId.toString()
-        loginUserLocalCommunityId = loginMem?.localCommunityId.toString()
-        role = loginMem?.role.toString()
+        loginUserSubCommunityId = loginMem?.subCommunityId.orEmpty()
+        loginUserLocalCommunityId = loginMem?.localCommunityId.orEmpty()
         getSubAdmin()
         return root
     }
 
     private fun getSubAdmin() {
         count = 1
+        SubCount = 0
+        LocalCount = 0
+        lstAdmins.clear()
+        adapter.notifyDataSetChanged()
+        shimmerFrameLayout.startShimmerAnimation()
+        shimmerFrameLayout.visibility = View.VISIBLE
+
+        val subCommunityId = loginUserSubCommunityId.toIntOrNull()?.takeIf { it > 0 }
+        if (subCommunityId == null) {
+            getLocalAdmin()
+            return
+        }
+
         val jsonObject = JSONObject()
         jsonObject.put(getString(R.string.start), "0")
         jsonObject.put(getString(R.string.length), "")
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.role), resources.getString(R.string.SUB_ADMIN))
-        if (role != getString(R.string.super_admin)) {
-            jsonObj.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
-        }
+        jsonObj.put(getString(R.string.sub_community_id), subCommunityId)
         jsonObject.put(getString(R.string.filter_by), jsonObj)
         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)
-        shimmerFrameLayout.startShimmerAnimation()
-        shimmerFrameLayout.visibility = View.VISIBLE
-        lstAdmins.clear()
-        adapter.notifyDataSetChanged()
         Utility.hideKeyboard(activity)
     }
 
     private fun getLocalAdmin() {
         count = 2
+        val localCommunityId = loginUserLocalCommunityId.toIntOrNull()?.takeIf { it > 0 }
+        if (localCommunityId == null) {
+            finishAdminLoading()
+            return
+        }
+
         val jsonObject = JSONObject()
         jsonObject.put(getString(R.string.start), "0")
         jsonObject.put(getString(R.string.length), "")
         val jsonObj = JSONObject()
         jsonObj.put(getString(R.string.role), resources.getString(R.string.LOCAL_ADMIN))
-
-        if (role == getString(R.string.SUB_ADMIN)) {
-            jsonObj.put(getString(R.string.sub_community_id), loginUserSubCommunityId)
-        } else if (role != getString(R.string.super_admin)) {
-            jsonObj.put(getString(R.string.local_community_id), loginUserLocalCommunityId)
-        }
-
+        jsonObj.put(getString(R.string.local_community_id), localCommunityId)
         jsonObject.put(getString(R.string.filter_by), jsonObj)
         val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
         smartFilterViewModel.smartFilterSearch(updated)
-
-        Handler().postDelayed({
-            shimmerFrameLayout.stopShimmerAnimation()
-            shimmerFrameLayout.visibility = View.GONE
-        }, 4000)
     }
 
     override fun getMembers(response: SmartFilterResponse) {
         if (count == 1) {
             lstAdmins.clear()
-            if (response.members != null && response.members.size > 0) {
-                SubCount = response.totalRecords
+            SubCount = response.totalRecords
+            if (response.members.isNotEmpty()) {
                 lstAdmins.addAll(response.members)
             }
             getLocalAdmin()
         } else if (count == 2) {
-            if (response.members != null && response.members.size > 0) {
-                LocalCount = response.totalRecords
+            LocalCount = response.totalRecords
+            if (response.members.isNotEmpty()) {
                 lstAdmins.addAll(response.members)
             }
-            adapter.notifyDataSetChanged()
-            shimmerFrameLayout.stopShimmerAnimation()
-            shimmerFrameLayout.visibility = View.GONE
-            actionMode?.finish()
-            selectedItems.clear()
-            cancelDialog()
-            if (lstAdmins.size == 0) {
-                rvAdmins.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
-            }
+            finishAdminLoading()
+        }
+    }
 
-            if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER) || loginMem?.role == getString(R.string.LOCAL_ADMIN)) {
-                ivExport.visibility = View.GONE
-            } else {
-                ivExport.visibility = View.VISIBLE
-            }
+    private fun finishAdminLoading() {
+        adapter.notifyDataSetChanged()
+        shimmerFrameLayout.stopShimmerAnimation()
+        shimmerFrameLayout.visibility = View.GONE
+        actionMode?.finish()
+        selectedItems.clear()
+        cancelDialog()
+        if (lstAdmins.isEmpty()) {
+            rvAdmins.snackbar(getString(R.string.noFoundNonActives), Snackbar.LENGTH_SHORT)
+        }
+
+        if (loginMem?.role.isNullOrEmpty() || loginMem?.role == getString(R.string.USER) || loginMem?.role == getString(
+                R.string.LOCAL_ADMIN
+            )
+        ) {
+            ivExport.visibility = View.GONE
+        } else {
+            ivExport.visibility = View.VISIBLE
         }
     }
 

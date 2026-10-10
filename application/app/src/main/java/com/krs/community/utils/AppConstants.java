@@ -41,7 +41,6 @@ public class AppConstants {
         String GET_DOCUMENT = "GetFiles";
         String ADD_MEMBER = "AddMember";
         String DELETE_MEMBER = "DeleteMember";
-        String GET_STATISTICS = "GetStatistics";
         String UPDATE_PROFILE = "EditProfile";
         String GET_USERS_BYDATE = "GetUsersByDate";
         String GET_EVENTS = "getEvents";

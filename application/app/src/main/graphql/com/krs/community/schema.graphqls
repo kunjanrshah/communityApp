@@ -6,6 +6,120 @@ type AuthResponse {
   message: String!
 }
 
+type LoginResponseDTO {
+    success: Boolean!
+
+    OTP: String
+
+    message: String!
+
+    data: LoginMemberDTO
+}
+
+type LoginMemberDTO {
+    access_token: String
+    refresh_token: String
+    about_me: String
+    address: String
+    area: String
+    birth_date: String
+    birth_place: String
+    birth_time: String
+    blood_group: String
+    business_address: String
+    business_category: String
+    business_category_id: String
+    business_logo: String
+    business_sub_category: String
+    business_sub_category_id: String
+    city: String
+    city_id: String
+    committee: String
+    committee_id: String
+    company_name: String
+    created_dt: String
+    current_activity: String
+    current_activity_id: String
+    designation: String
+    designation_id: String
+    distance: String
+    distinct_id: String
+    education: String
+    education_id: String
+    email_address: String
+    expectation: String
+    expire_date: String
+    facebook_profile: String
+    father_name: String
+    first_name: String
+    gender: String
+    gotra: String
+    gotra_id: String
+    head_id: String
+    head_name: String
+    head_sub_cast_id: String
+    height: String
+    hobby: String
+    home_lat: String
+    home_lng: String
+    is_donor: String
+    is_expired: String
+    isImportant: Boolean
+    is_location_enable: String
+    is_mangal: String
+    is_rented: String
+    is_shani: String
+    is_spect: String
+    last_login: String
+    last_name: String
+    local_address: String
+    local_community: String
+    local_community_id: String
+    login_status: Int
+    marital_status: String
+    marriage_date: String
+    matched: String
+    matrimony: String
+    member_code: String
+    member_count: Int
+    mosaad_id: String
+    mossad: String
+    mother_name: String
+    native: String
+    native_place_id: String
+    nearBy: String
+    occupation: String
+    occupation_id: String
+    office_lat: String
+    office_lng: String
+    online_status: Int
+    phone: String
+    pincode: String
+    profile_completed: String
+    profile_percentage: String
+    profile_pic: String
+    region: String
+    relation: String
+    relation_id: String
+    sharing_id: String
+    state: String
+    state_id: String
+    status: String
+    sub_cast_id: String
+    sub_community: String
+    sub_community_id: String
+    updated_dt: String
+    user_lat: String
+    user_lng: String
+    website: String
+    weight: String
+    work_details: String
+    reminder_birth_date: String
+    reminder_marriage_date: String
+    reminder_expire_date: String
+    matches: [String!]
+}
+
 """
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 """
@@ -54,7 +168,7 @@ type UserMatrimonyDTO {
 
   birth_time: String
 
-  birth_place_id: Int!
+    birth_place_id: Int
 
   hobby: String!
 
@@ -245,8 +359,9 @@ type UserDTO {
 }
 
 enum Role {
-  ADMIN
-
+    SUPER_ADMIN
+    SUB_ADMIN
+    LOCAL_ADMIN
   USER
 }
 
@@ -335,6 +450,8 @@ type CityResponseDto {
 }
 
 type StatisticsDataDto {
+    TotalVillages: Int
+
   TotalFamily: Int!
 
   TotalMembers: Int!
@@ -356,6 +473,12 @@ type StatisticsResponseDto {
   success: Boolean!
 
   data: StatisticsDataDto!
+
+    cities: [StatisticsCityDto!]!
+}
+
+type StatisticsCityDto {
+    city_id: Int!
 }
 
 type SearchResult {
@@ -638,6 +761,8 @@ input SearchRequestDTO {
 }
 
 input SmartFilterDto {
+    role: String
+
   id: Int
 
   last_name_id: Int
@@ -788,7 +913,7 @@ type Mutation {
 
   register(RegisterInput: RegisterInput!): AuthResponse!
 
-  login(LoginInput: LoginInput!): AuthResponse!
+    login(LoginInput: LoginInput!): LoginResponseDTO!
 
   refreshToken(token: String!): AuthResponse!
 

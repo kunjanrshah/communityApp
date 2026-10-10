@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.squti.guru.Guru
@@ -16,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar.make
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.activity.DashboardActivity
 import com.krs.community.app.AppController
@@ -29,7 +29,6 @@ import com.krs.community.utils.Coroutines
 import com.krs.community.utils.Utility
 import com.krs.community.viewmodel.StatisticsViewModel
 import com.krs.community.viewmodelfactory.StatisticsViewModelFactory
-import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -41,6 +40,9 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
     private lateinit var binding: FragmentStatisticsBinding
     private lateinit var snackbar: Snackbar
     private lateinit var loginMem: Member
+    private var cityNamesLiveData: LiveData<List<String>>? = null
+    private var cityNamesObserver: Observer<List<String>>? = null
+    private var loadedCityIds: String? = null
     var subCommId = 0
     var localCommId = 0
     var cityId = 0
@@ -125,6 +127,8 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
         binding.spLocalComm.setOnItemClickListener {
             Coroutines.io {
                 localCommId = statisticsViewModel.getLocalIdByName(binding.spLocalComm.text.toString())
+                cityId = 0
+                Coroutines.main { binding.spCity.setSelection(0) }
                 getStatisticsResult()
             }
         }
@@ -156,24 +160,23 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
 
     private fun getStatisticsResult() {
         if (isNetworkConnected(activity as AppCompatActivity)) {
-            val jsonObject = JSONObject()
-            jsonObject.put(getString(R.string.user_id), Guru.getString(getString(R.string.user_id), ""))
-            jsonObject.put(getString(R.string.access_token), Guru.getString(getString(R.string.access_token), ""))
-            jsonObject.put(getString(R.string.city_id), cityId)
-            jsonObject.put(getString(R.string.local_community_id), localCommId)
-
-            if (loginMem.role != getString(R.string.super_admin)) {
-                jsonObject.put(getString(R.string.sub_community_id), loginMem.subCommunityId)
-            } else {
-                jsonObject.put(getString(R.string.sub_community_id), subCommId)
+            val input = JsonObject().apply {
+                addProperty("cityId", cityId)
+                addProperty("localCommunityId", localCommId)
             }
-            val updated = JsonParser().parse(jsonObject.toString()) as JsonObject
+            if (loginMem.role != getString(R.string.super_admin)) {
+                loginMem.subCommunityId.toIntOrNull()?.let {
+                    input.addProperty("subCommunityId", it)
+                }
+            } else {
+                input.addProperty("subCommunityId", subCommId)
+            }
             Coroutines.main {
                 binding.shimmerViewContainer.startShimmerAnimation()
                 binding.shimmerViewContainer.visibility = View.VISIBLE
                 binding.scroll.visibility = View.GONE
             }
-            statisticsViewModel.getStatistics(updated)
+            statisticsViewModel.getStatistics(JsonObject().apply { add("input", input) })
         }
     }
 
@@ -198,25 +201,36 @@ class StatisticFragment : Fragment(), KodeinAware, StatisticsListener {
                 binding.llVillages.visibility = View.VISIBLE
                 binding.tvVillage.text = response.data.totalVillages.toString()
             }
-//            Coroutines.io {
-//                val lst = ArrayList<String>()
-//                for (city in response.cities) {
-//                    lst.add(city.cityId)
-//                }
-//                if (lst.isNotEmpty()) {
-//                    val list = statisticsViewModel.getCityDistinctName(lst)
-//                    Coroutines.main {
-//                        list.observe(activity as AppCompatActivity, Observer {
-//                            binding.spCity.clear()
-//                            val lstValue = ArrayList<String>()
-//                            lstValue.add("All Villages")
-//                            lstValue.addAll(it)
-//                            binding.spCity.setItems(lstValue.toTypedArray())
-//                            binding.spCity.setExpandTint(R.color.black)
-//                        })
-//                    }
-//                }
-//            }
+            updateCityFilter(response)
+        }
+    }
+
+    private fun updateCityFilter(response: StatisticResponse) {
+        val cityIds = response.cities.orEmpty().mapNotNull { it.cityId }.distinct()
+        val cityIdsKey = cityIds.joinToString(",")
+        if (loadedCityIds == cityIdsKey) return
+
+        cityNamesObserver?.let { observer ->
+            cityNamesLiveData?.removeObserver(observer)
+        }
+        loadedCityIds = cityIdsKey
+        if (cityIds.isEmpty()) {
+            binding.spCity.setItems(arrayOf("All Villages"))
+            binding.spCity.setExpandTint(R.color.black)
+            return
+        }
+
+        Coroutines.io {
+            val cityNames = statisticsViewModel.getCityDistinctName(ArrayList(cityIds))
+            Coroutines.main {
+                cityNamesLiveData = cityNames
+                val observer = Observer<List<String>> { names ->
+                    binding.spCity.setItems((listOf("All Villages") + names).toTypedArray())
+                    binding.spCity.setExpandTint(R.color.black)
+                }
+                cityNamesObserver = observer
+                cityNames.observe(viewLifecycleOwner, observer)
+            }
         }
     }
 

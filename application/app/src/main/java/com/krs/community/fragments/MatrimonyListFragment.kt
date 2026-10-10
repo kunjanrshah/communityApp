@@ -23,6 +23,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -70,6 +71,7 @@ import com.krs.community.viewmodelfactory.SmartFilterViewModelFactory
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton
 import com.nightonke.boommenu.BoomMenuButton
 import com.orhanobut.dialogplus.DialogPlus
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -96,6 +98,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
     private lateinit var ivExport: ImageView
     private var snackbar: Snackbar? = null
     private var loginMember: Member? = null
+    private var communityScopeReady = false
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -169,11 +172,16 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
                 val holder = viewHolder as ListViewHolder
                 val member = lstMembers[position]
-                holder.tvName.text = member.firstName
-                Coroutines.io {
-                    val name = member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(member.subCastId.toInt())
-                    Coroutines.main {
-                        holder.tvName.text = name
+                holder.tvName.text = member.firstName.orEmpty()
+                member.subCastId.toIntOrNull()?.let { subCastId ->
+                    Coroutines.io {
+                        val name =
+                            member.firstName + " " + member.fatherName + " " + smartFilterViewModel.getLastNameById(
+                                subCastId
+                            )
+                        Coroutines.main {
+                            holder.tvName.text = name
+                        }
                     }
                 }
                 if (!member.cityId.isNullOrEmpty()) {
@@ -239,7 +247,8 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
                 } else {
                     holder.tvAge.text = "N/A"
                 }
-                viewHolder.iconText.text = viewHolder.tvName.text.substring(0, 1)
+                viewHolder.iconText.text =
+                    viewHolder.tvName.text.firstOrNull()?.toString().orEmpty()
                 holder.tvStatus.text = member.maritalStatus
 
                 if (member.mobile.isNullOrEmpty()) {
@@ -357,7 +366,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             }
         }
         DashboardActivity.stop = false
-        searchMatrimonyList(jsonObj)
+        loadInitialMatrimonyList()
         return binding.root
     }
 
@@ -441,15 +450,29 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
 
     private fun searchMatrimonyList(jsonObj: JSONObject) {
+        if (!communityScopeReady) return
         if (!DashboardActivity.stop) {
             DashboardActivity.stop = true
             val jsonObject = JSONObject()
             jsonObject.put(getString(R.string.start), AppController.mApplication.start)
             jsonObject.put(getString(R.string.length), AppController.mApplication.length)
-            jsonObj.put(getString(R.string.matrimony), "Yes")
+            jsonObj.put(getString(R.string.matrimony), true)
 
             if (loginMember?.role != getString(R.string.super_admin)) {
-                jsonObj.put(getString(R.string.sub_community_id), loginMember?.subCommunityId)
+                val subCommunityId = loginMember?.subCommunityId
+                    ?.toIntOrNull()
+                    ?.takeIf { it > 0 }
+                if (subCommunityId == null) {
+                    DashboardActivity.stop = true
+                    Utility.displaySnackBarWithBottomMargin(
+                        binding.listMatrimony,
+                        getString(R.string.community_scope_unavailable)
+                    )
+                    return
+                }
+                jsonObj.put(getString(R.string.sub_community_id), subCommunityId)
+            } else {
+                jsonObj.remove(getString(R.string.sub_community_id))
             }
 
 
@@ -473,6 +496,49 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
             } else {
                 snackbar = Snackbar.make(binding.listMatrimony, getString(R.string.load_more), Snackbar.LENGTH_INDEFINITE)
                 snackbar?.show()
+            }
+        }
+    }
+
+    private fun loadInitialMatrimonyList() {
+        val member = loginMember
+        val subCommunityId = member?.subCommunityId?.toIntOrNull()?.takeIf { it > 0 }
+        if (member?.role == getString(R.string.super_admin) || subCommunityId != null) {
+            communityScopeReady = true
+            searchMatrimonyList(jsonObj)
+            return
+        }
+
+        val userId = member?.id?.toIntOrNull()
+        if (userId == null || userId <= 0) {
+            DashboardActivity.stop = true
+            Utility.displaySnackBarWithBottomMargin(
+                binding.listMatrimony,
+                getString(R.string.community_scope_unavailable)
+            )
+            return
+        }
+
+        DashboardActivity.stop = true
+        binding.shimmerViewContainer.startShimmerAnimation()
+        binding.shimmerViewContainer.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val profile = smartFilterViewModel.getUserProfileById(userId)
+                val resolvedSubCommunityId = profile?.subCommunityId
+                    ?.toIntOrNull()
+                    ?.takeIf { it > 0 }
+                if (resolvedSubCommunityId == null) {
+                    throw IllegalStateException(getString(R.string.community_scope_unavailable))
+                }
+
+                member.subCommunityId = resolvedSubCommunityId.toString()
+                Guru.putString(getString(R.string.loginMember), Gson().toJson(member))
+                communityScopeReady = true
+                DashboardActivity.stop = false
+                searchMatrimonyList(jsonObj)
+            } catch (exception: Exception) {
+                getFailure(exception.message ?: getString(R.string.community_scope_unavailable))
             }
         }
     }
@@ -568,7 +634,7 @@ class MatrimonyListFragment : Fragment(), KodeinAware, ByFilterListener, RoomMem
 
     override fun loadApi() {
         if (!DashboardActivity.stop) {
-            AppController.mApplication.start = (lstMembers.size + 1)
+            AppController.mApplication.start = lstMembers.size
             searchMatrimonyList(jsonObj)
         }
     }

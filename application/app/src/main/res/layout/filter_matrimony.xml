@@ -423,7 +423,7 @@
             app:bar_highlight_color="@color/colorPrimary"
             app:corner_radius="10"
             app:data_type="_integer"
-            app:gap="10"
+            app:gap="0"
             app:left_thumb_color="@color/colorPrimary"
             app:left_thumb_color_pressed="@color/colorPrimary"
             app:max_start_value="100"

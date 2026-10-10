@@ -7,11 +7,16 @@ import com.google.gson.JsonObject
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.listeners.ILoginListener
+import com.krs.community.model.Member
 import com.krs.community.repositories.SmartFilterRepository
 import com.krs.community.utils.ApiException
 import com.krs.community.utils.NoInternetException
-
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterRepository, var app: Application) : AndroidViewModel(app) {
 
@@ -49,6 +54,10 @@ class SmartFilterViewModel(private val mSmartFilterRepository: SmartFilterReposi
 
     suspend fun getNativeById(id: Int): String {
         return mSmartFilterRepository.getNativeById(id)
+    }
+
+    suspend fun getUserProfileById(id: Int): Member? {
+        return mSmartFilterRepository.getUserProfileById(id).data
     }
 
     fun getIdByLastName(name: String): Int {

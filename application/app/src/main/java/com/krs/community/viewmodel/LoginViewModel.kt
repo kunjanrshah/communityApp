@@ -15,9 +15,7 @@ import com.krs.community.R
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
 import com.krs.community.auth.TokenManager
 import com.krs.community.listeners.ILoginListener
-import com.krs.community.model.LoginModel
 import com.krs.community.model.LoginResponse
-import com.krs.community.model.Member
 import com.krs.community.repositories.DeviceTokenRepository
 import com.krs.community.repositories.LoginRepository
 import com.krs.community.type.LoginInput
@@ -193,27 +191,26 @@ class LoginViewModel(
                 CoroutineScope(IO + thejob!!).launch {
 
                     try {
-                        val result: kotlin.Result<LoginModel> =
+                        val result: kotlin.Result<LoginResponse> =
                             loginRepository.getLogin(input)
                         result.let {
                             withContext(Dispatchers.Main) {
                                 result.onSuccess { loginModel ->
-                                    if (loginModel.message.equals("success", ignoreCase = true)) {
+                                    if (loginModel.success == true) {
+                                        val member = loginModel.data
+                                        if (member == null || member.accessToken.isNullOrBlank()) {
+                                            iLoginListener.getFailure(
+                                                app.applicationContext.getString(R.string.Authenticationfailed)
+                                            )
+                                            return@onSuccess
+                                        }
+
                                         val tokenManager = TokenManager(app.applicationContext)
                                         tokenManager.saveTokens(
-                                            loginModel.authToken.trim(),
-                                            loginModel.refreshToken?.trim()
+                                            member.accessToken.trim(),
+                                            member.refreshToken.trim()
                                         )
-                                        val member = Member()
-                                        member.id = loginModel.userId ?: ""
-                                        member.accessToken = loginModel.authToken
-                                        member.refreshToken = loginModel.refreshToken ?: ""
-                                        member.role = loginModel.role ?: ""
-                                        val loginResponse = LoginResponse()
-                                        loginResponse.success = true
-                                        loginResponse.message = loginModel.message
-                                        loginResponse.data = member
-                                        iLoginListener.userLogin(loginResponse, false)
+                                        iLoginListener.userLogin(loginModel, false)
                                         uploadDeviceToken()
                                     } else {
                                         iLoginListener.getFailure(loginModel.message)
