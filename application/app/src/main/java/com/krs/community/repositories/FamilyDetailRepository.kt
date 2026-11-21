@@ -4,6 +4,8 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.google.gson.JsonObject
 import com.krs.community.GetFamilyMembersQuery
+import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.responses.DeleteProfileResponse
@@ -13,7 +15,9 @@ import com.krs.community.retrofit.ApiServices
 
 class FamilyDetailRepository(
     private val api: ApiServices,
-    private val apolloClient: ApolloClient
+    private val apolloClient: ApolloClient,
+    private val tokenManager: TokenManager,
+    private val tokenRefreshApi: TokenRefreshApi
 ) : SafeApiRequest() {
 
     suspend fun getFamilyMembers(data: JsonObject): FamilyDetailResponse {
@@ -30,10 +34,13 @@ class FamilyDetailRepository(
             Optional.Absent
         }
 
-        val response = apolloClient.query(
-            GetFamilyMembersQuery(headId, loginUserIdOptional)
-        ).execute()
+        val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+            apolloClient.query(
+                GetFamilyMembersQuery(headId, loginUserIdOptional)
+            ).execute()
+        }
 
+        response.exception?.let { throw it }
         val errors = response.errors?.firstOrNull()?.message
         if (!errors.isNullOrEmpty()) {
             throw Exception(errors)

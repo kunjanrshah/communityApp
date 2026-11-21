@@ -20,6 +20,7 @@ import com.krs.community.R
 import com.krs.community.app.AppController
 import com.krs.community.app.AppDatabase
 import com.krs.community.app.ConnectionLiveData.Companion.isNetworkConnected
+import com.krs.community.auth.TokenManager
 import com.krs.community.bkservice.utilities.Notification
 import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.repositories.ProfileDetailRepository
@@ -161,7 +162,9 @@ class Service : android.app.Service(), Listener, AddressCallBack {
                             val mProfileDetailRepository = ProfileDetailRepository(
                                 ApiServices(),
                                 AppDatabase.invoke(AppController.mApplication),
-                                GraphQLClientProvider.provideApolloClient(AppController.mApplication)
+                                GraphQLClientProvider.provideApolloClient(AppController.mApplication),
+                                TokenManager(AppController.mApplication),
+                                GraphQLClientProvider.provideTokenRefreshApi(AppController.mApplication)
                             )
                             val response: UpdateProfileResponse = mProfileDetailRepository.updateProfile(profile)
                             response.let {

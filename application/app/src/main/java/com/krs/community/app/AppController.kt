@@ -135,9 +135,11 @@ class AppController : Application(), KodeinAware {
                 instance()
             )
         }
-        bind() from singleton { ByDistanceRepository(instance(), instance()) }
-        bind() from singleton { FamilyDetailRepository(instance(), instance()) }
-        bind() from singleton { ProfileDetailRepository(instance(), instance(), instance()) }
+        bind() from singleton { ByDistanceRepository(instance(), instance(), instance(), instance()) }
+        bind() from singleton { FamilyDetailRepository(instance(), instance(), instance(), instance()) }
+        bind() from singleton {
+            ProfileDetailRepository(instance(), instance(), instance(), instance(), instance())
+        }
         bind() from singleton {
             DashboardRepository(
                 instance(),
@@ -146,16 +148,18 @@ class AppController : Application(), KodeinAware {
                 instance()
             )
         }
-        bind() from singleton { StatisticsRepository(instance(), instance()) }
+        bind() from singleton { StatisticsRepository(instance(), instance(), instance(), instance()) }
         bind() from singleton { ContactListRepository(instance(), instance()) }
-        bind() from singleton { SmartSearchRepository(instance(), instance()) }
-        bind() from singleton { SmartFilterRepository(instance(), instance(), instance()) }
+        bind() from singleton { SmartSearchRepository(instance(), instance(), instance(), instance()) }
+        bind() from singleton {
+            SmartFilterRepository(instance(), instance(), instance(), instance(), instance())
+        }
         bind() from singleton { DocumentListRepository(instance()) }
         bind() from singleton { DeviceTokenRepository(instance()) }
         bind() from singleton { CalendarSearchRepository(instance(), instance(), instance()) }
         bind() from singleton { NewsRepository(instance()) }
         bind() from singleton { RoomMemberRepository(instance(), instance(), instance()) }
-        bind() from singleton { CommitteeRepository(instance(), instance(), instance()) }
+        bind() from singleton { CommitteeRepository(instance(), instance(), instance(), instance()) }
 
         bind() from provider { ContactListViewModelFactory(instance()) }
         bind() from provider { StatisticsViewModelFactory(instance()) }
@@ -306,7 +310,11 @@ class AppController : Application(), KodeinAware {
                         return@io
                     }
                     val apolloClient = GraphQLClientProvider.provideApolloClient(this)
-                    UserActivityStatusRepository(apolloClient)
+                    UserActivityStatusRepository(
+                        apolloClient,
+                        TokenManager(this@AppController),
+                        GraphQLClientProvider.provideTokenRefreshApi(this@AppController)
+                    )
                         .getUserActivityStatus(memberIdValue)
                 } catch (e: Exception) {
                     Log.e("AppController", "Failed to update user activity status: ${e.message}", e)

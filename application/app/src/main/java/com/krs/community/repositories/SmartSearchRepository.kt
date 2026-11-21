@@ -6,6 +6,8 @@ import com.apollographql.apollo.api.Optional
 import com.google.gson.JsonObject
 import com.krs.community.SmartSearchQuery
 import com.krs.community.app.AppDatabase
+import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
 import com.krs.community.model.Member
 import com.krs.community.responses.searchByKeywordsResponse
 import com.krs.community.type.SearchInput
@@ -14,7 +16,9 @@ import kotlinx.coroutines.withContext
 
 class SmartSearchRepository(
     private val apolloClient: ApolloClient,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    private val tokenManager: TokenManager,
+    private val tokenRefreshApi: TokenRefreshApi
 ) : SafeApiRequest() {
 
     suspend fun searchByKeyword(jsonObject: JsonObject): searchByKeywordsResponse {
@@ -35,7 +39,10 @@ class SmartSearchRepository(
         )
 
         try {
-            val response = apolloClient.query(SmartSearchQuery(input)).execute()
+            val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+                apolloClient.query(SmartSearchQuery(input)).execute()
+            }
+            response.exception?.let { throw it }
             val errors = response.errors?.firstOrNull()?.message
             if (!errors.isNullOrEmpty()) throw Exception(errors)
 

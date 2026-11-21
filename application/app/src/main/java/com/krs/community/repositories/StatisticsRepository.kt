@@ -6,6 +6,8 @@ import com.apollographql.apollo.api.Optional
 import com.google.gson.JsonObject
 import com.krs.community.GetStatisticsQuery
 import com.krs.community.app.AppDatabase
+import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
 import com.krs.community.responses.StatisticResponse
 import com.krs.community.responses.Statistics
 import com.krs.community.type.StatisticsInputDto
@@ -14,7 +16,9 @@ import kotlinx.coroutines.withContext
 
 class StatisticsRepository(
     private val apolloClient: ApolloClient,
-        private val db: AppDatabase
+    private val db: AppDatabase,
+    private val tokenManager: TokenManager,
+    private val tokenRefreshApi: TokenRefreshApi
 ) : SafeApiRequest() {
 
     private val TAG: String = StatisticsRepository::class.java.simpleName
@@ -28,7 +32,11 @@ class StatisticsRepository(
                 ?: Optional.Absent
         )
 
-        val response = apolloClient.query(GetStatisticsQuery(input)).execute()
+        val query = GetStatisticsQuery(input)
+        val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+            apolloClient.query(query).execute()
+        }
+
         response.exception?.let { throw it }
         response.errors?.firstOrNull()?.message?.let { throw Exception(it) }
         val result = response.data?.getStatistics

@@ -267,6 +267,10 @@ type UserDTO {
 
   local_community_id: Int
 
+  committee_id: Int
+
+  designation_id: Int
+
   first_name: String!
 
   last_name_id: Int!
@@ -669,21 +673,31 @@ type Query {
 input SearchCommitteeUsersInput {
     start: Int! = 0
 
-    length: Int! = 10
+    length: Int! = 25
+
+    filterBy: String
 
     committeeId: Int
 
-    name: String
-
-    relationId: Int
-
     designationId: Int
 
-    localCommunityId: Int
+    filter_by: SearchCommitteeUsersFilterInput
+}
 
-    startDate: String
+input SearchCommitteeUsersFilterInput {
+    str_search: String
 
-    endDate: String
+    local_community_id: Int
+
+    sub_community_id: Int
+
+    committee_id: Int
+
+    designation_id: Int
+
+    start_date: String
+
+    end_date: String
 }
 
 type SearchCommitteeUsersResponse {

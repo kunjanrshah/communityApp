@@ -3,16 +3,23 @@ package com.krs.community.repositories
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.krs.community.GetUserActivityStatusMutation
+import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
 import com.krs.community.type.GetUserActivityStatusInput
 
 class UserActivityStatusRepository(
-    private val apolloClient: ApolloClient
+    private val apolloClient: ApolloClient,
+    private val tokenManager: TokenManager,
+    private val tokenRefreshApi: TokenRefreshApi
 ) {
 
     suspend fun getUserActivityStatus(id: Int): UserActivityStatusResult {
         return try {
             val input = GetUserActivityStatusInput(id = id)
-            val response = apolloClient.mutation(GetUserActivityStatusMutation(input)).execute()
+            val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+                apolloClient.mutation(GetUserActivityStatusMutation(input)).execute()
+            }
+            response.exception?.let { throw it }
             val data = response.data?.getUserActivityStatus
 
             val errors = response.errors?.firstOrNull()?.message

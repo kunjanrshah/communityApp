@@ -6,23 +6,26 @@ import com.apollographql.apollo.api.Optional
 import com.google.gson.JsonObject
 import com.krs.community.SearchCommitteeUsersQuery
 import com.krs.community.app.AppDatabase
+import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
-import com.krs.community.retrofit.ApiServices
+import com.krs.community.type.SearchCommitteeUsersFilterInput
 import com.krs.community.type.SearchCommitteeUsersInput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class CommitteeRepository(
-    private val api: ApiServices,
     private val db: AppDatabase,
-    private val apolloClient: ApolloClient
+    private val apolloClient: ApolloClient,
+    private val tokenManager: TokenManager,
+    private val tokenRefreshApi: TokenRefreshApi
 ) : SafeApiRequest() {
 
     suspend fun getUsersInCommittee(data: JsonObject): SmartFilterResponse {
         val start = safeInt(data, "start") ?: 0
         val lengthRaw = safeInt(data, "length")
-        val length = lengthRaw ?: 10
+        val length = lengthRaw ?: 25
 
         val filterByJson = try {
             if (data.has("filter_by") && data.get("filter_by").isJsonObject)
@@ -34,18 +37,30 @@ class CommitteeRepository(
         val input = SearchCommitteeUsersInput(
             start = Optional.Present(start),
             length = Optional.Present(length),
-            committeeId = getOptionalInt(filterByJson, "committee_id"),
-            relationId = getOptionalInt(filterByJson, "relation_id"),
-            designationId = getOptionalInt(filterByJson, "designation_id"),
-            localCommunityId = getOptionalInt(filterByJson, "local_community_id"),
-            startDate = getOptionalString(filterByJson, "start_date"),
-            endDate = getOptionalString(filterByJson, "end_date"),
-            name = getOptionalString(filterByJson, "str_search")
+            filterBy = getOptionalString(data, "filterBy"),
+            committeeId = getOptionalInt(data, "committeeId"),
+            designationId = getOptionalInt(data, "designationId"),
+            filter_by = filterByJson?.let { filter ->
+                Optional.Present(
+                    SearchCommitteeUsersFilterInput(
+                        str_search = getOptionalString(filter, "str_search"),
+                        local_community_id = getOptionalInt(filter, "local_community_id"),
+                        sub_community_id = getOptionalInt(filter, "sub_community_id"),
+                        committee_id = getOptionalInt(filter, "committee_id"),
+                        designation_id = getOptionalInt(filter, "designation_id"),
+                        start_date = getOptionalString(filter, "start_date"),
+                        end_date = getOptionalString(filter, "end_date")
+                    )
+                )
+            } ?: Optional.Absent
         )
 
         return try {
-            val response = apolloClient.query(SearchCommitteeUsersQuery(input)).execute()
+            val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+                apolloClient.query(SearchCommitteeUsersQuery(input)).execute()
+            }
 
+            response.exception?.let { throw it }
             val errors = response.errors?.firstOrNull()?.message
             if (!errors.isNullOrEmpty()) {
                 throw Exception(errors)
@@ -61,83 +76,15 @@ class CommitteeRepository(
                     Member().apply {
                         id = member.id.toString()
                         firstName = member.first_name ?: ""
-                        lastName = member.last_name ?: ""
                         memberCode = member.member_code ?: ""
-                        mobile = member.mobile ?: ""
                         committee = member.committee ?: ""
+                        committeeId = member.committee_id?.toString() ?: "0"
                         designation = member.designation ?: ""
-                        city = member.city ?: ""
-                        state = member.state ?: ""
-                        relation = member.relation ?: ""
-                        emailAddress = member.email ?: ""
-                        fatherName = member.father_name ?: ""
-                        motherName = member.mother_name ?: ""
-                        status = member.status.toString()
-                        gender = if (member.gender) "Male" else "Female"
-                        headId = member.head_id.toString()
-                        head_name = member.head_name ?: ""
-                        profilePic = member.profile_pic ?: ""
-                        region = member.region ?: ""
-                        isExpired = member.is_expired.toString()
-                        subCommunityId = member.sub_community_id?.toString() ?: "0"
-                        localCommunityId = member.local_community_id?.toString() ?: "0"
-                        subCastId = member.last_name_id?.toString() ?: "0"
-                        educationId = member.education_id?.toString() ?: "0"
-                        occupationId = member.occupation_id?.toString() ?: "0"
+                        designationId = member.designation_id?.toString() ?: "0"
                         subCommunity = member.sub_community ?: ""
+                        subCommunityId = member.sub_community_id?.toString() ?: "0"
                         localCommunity = member.local_community ?: ""
-                        education = member.education ?: ""
-                        occupation = member.occupation ?: ""
-                        currentActivity = member.current_activity ?: ""
-                        gotra = member.gotra ?: ""
-                        nativePlace = member.native ?: ""
-                        businessCategory = member.business_category ?: ""
-                        businessSubCategory = member.business_sub_category ?: ""
-                        mossad = member.mossad ?: ""
-                        profileCompleted = member.profile_completed ?: ""
-                        onlineStatus = member.online_status ?: 0
-                        loginStatus = if (member.login_status == true) 1 else 0
-                        lastLogin = member.last_login?.toString() ?: ""
-                        profilePercentage = member.profile_percent?.toString() ?: "0"
-                        matched = member.matchedFields?.joinToString(",") ?: ""
-                        memberCount = member.member_count ?: 0
-                        distance = member.distance ?: ""
-                        nearBy = member.nearBy ?: ""
-                        expireDate = member.expire_date?.toString() ?: ""
-                        member.userAddress?.let { addr ->
-                            address = addr.address ?: ""
-                            localAddress = addr.local_address ?: ""
-                            cityId = addr.city_id?.toString() ?: "0"
-                            stateId = addr.states_id?.toString() ?: "0"
-                            area = addr.area ?: ""
-                            pincode = addr.pincode ?: ""
-                        }
-                        member.userPersonalDetail?.let { pd ->
-                            nativePlaceId = pd.native_place_id?.toString() ?: "0"
-                            bloodGroup = pd.blood_group ?: ""
-                            maritalStatus = pd.marital_status ?: ""
-                            birthDate = pd.birth_date?.toString() ?: ""
-                            gotraId = pd.gotra_id?.toString() ?: "0"
-                            isDonor = pd.is_donor.toString()
-                            matrimony = if (pd.matrimony == true) "YES" else "NO"
-                            marriageDate = pd.marriage_date?.toString() ?: ""
-                        }
-                        member.userWorkDetail?.let { wd ->
-                            businessCategoryId = wd.business_category_id?.toString() ?: "0"
-                            businessAddress = wd.business_address ?: ""
-                            companyName = wd.company_name ?: ""
-                            website = wd.website ?: ""
-                            workDetails = wd.work_details ?: ""
-                        }
-                        member.userMatrimony?.let { um ->
-                            birthPlace = um.birth_place_id?.toString() ?: ""
-                            isSpect = um.is_spect.toString()
-                            isMangal = um.is_mangal.toString()
-                            isShani = um.is_shani.toString()
-                            birthTime = um.birth_time ?: ""
-                            hobby = um.hobby ?: ""
-                            aboutMe = um.about_me ?: ""
-                        }
+                        localCommunityId = member.local_community_id?.toString() ?: "0"
                     }
                 } ?: emptyList()
             }

@@ -7,6 +7,8 @@ import com.apollographql.apollo.api.Optional
 import com.google.gson.JsonObject
 import com.krs.community.SmartFilterQuery
 import com.krs.community.app.AppDatabase
+import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
 import com.krs.community.model.Member
 import com.krs.community.responses.DeleteProfileResponse
 import com.krs.community.responses.SmartFilterResponse
@@ -23,7 +25,9 @@ import okhttp3.RequestBody
 class ProfileDetailRepository(
     private val api: ApiServices,
     private val db: AppDatabase,
-    private val apolloClient: ApolloClient
+    private val apolloClient: ApolloClient,
+    private val tokenManager: TokenManager,
+    private val tokenRefreshApi: TokenRefreshApi
 ) : SafeApiRequest() {
 
     suspend fun changeStatus(jsonObject: JsonObject): searchByKeywordsResponse {
@@ -67,8 +71,11 @@ class ProfileDetailRepository(
             filter_by = smartFilterDto?.let { Optional.Present(it) } ?: Optional.Absent
         )
 
-        val response = apolloClient.query(SmartFilterQuery(input)).execute()
+        val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+            apolloClient.query(SmartFilterQuery(input)).execute()
+        }
 
+        response.exception?.let { throw it }
         val errors = response.errors?.firstOrNull()?.message
         if (!errors.isNullOrEmpty()) {
             throw Exception(errors)

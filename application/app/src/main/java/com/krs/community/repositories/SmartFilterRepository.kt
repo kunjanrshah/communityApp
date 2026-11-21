@@ -10,6 +10,8 @@ import com.krs.community.GetSharingProfilesQuery
 import com.krs.community.GetUserProfileQuery
 import com.krs.community.SmartFilterQuery
 import com.krs.community.app.AppDatabase
+import com.krs.community.auth.TokenManager
+import com.krs.community.auth.TokenRefreshApi
 import com.krs.community.model.LoginResponse
 import com.krs.community.model.Member
 import com.krs.community.responses.SmartFilterResponse
@@ -23,7 +25,9 @@ import kotlinx.coroutines.withContext
 class SmartFilterRepository(
     private val api: ApiServices,
     private val db: AppDatabase,
-    private val apolloClient: ApolloClient
+    private val apolloClient: ApolloClient,
+    private val tokenManager: TokenManager,
+    private val tokenRefreshApi: TokenRefreshApi
 ) : SafeApiRequest() {
 
     suspend fun searchByName(jsonObject: JsonObject): SmartFilterResponse {
@@ -53,7 +57,9 @@ class SmartFilterRepository(
         )
 
         return try {
-            val response = apolloClient.query(SmartFilterQuery(input)).execute()
+            val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+                apolloClient.query(SmartFilterQuery(input)).execute()
+            }
 
             response.exception?.let { throw it }
 
@@ -267,8 +273,11 @@ class SmartFilterRepository(
     }
 
     suspend fun getUserProfileById(id: Int): LoginResponse {
-        val response = apolloClient.query(GetUserProfileQuery(id)).execute()
+        val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+            apolloClient.query(GetUserProfileQuery(id)).execute()
+        }
 
+        response.exception?.let { throw it }
         val errors = response.errors?.firstOrNull()?.message
         if (!errors.isNullOrEmpty()) {
             throw Exception(errors)
@@ -340,13 +349,19 @@ class SmartFilterRepository(
             ?: jsonObject.get("user_id")?.asString?.toIntOrNull()
             ?: throw IllegalArgumentException("id/user_id is required for getSharedProfile")
 
-        val sharedResponse = apolloClient.query(GetSharedProfilesQuery(userId)).execute()
-        val sharingResponse = apolloClient.query(GetSharingProfilesQuery(userId)).execute()
+        val sharedResponse = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+            apolloClient.query(GetSharedProfilesQuery(userId)).execute()
+        }
+        val sharingResponse = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+            apolloClient.query(GetSharingProfilesQuery(userId)).execute()
+        }
 
+        sharedResponse.exception?.let { throw it }
         val sharedErrors = sharedResponse.errors?.firstOrNull()?.message
         if (!sharedErrors.isNullOrEmpty()) {
             throw Exception(sharedErrors)
         }
+        sharingResponse.exception?.let { throw it }
         val sharingErrors = sharingResponse.errors?.firstOrNull()?.message
         if (!sharingErrors.isNullOrEmpty()) {
             throw Exception(sharingErrors)

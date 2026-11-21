@@ -105,8 +105,13 @@ android {
             resValue "string", "web_client_id", "317054014432-8ohr3rvo1965n4mtuf5p2skr6kg3br3s.apps.googleusercontent.com"
             resValue "string", "facebook_app_id", "2264814596961704"
             resValue "string", "fb_login_protocol_scheme", "fb2264814596961704"
-            buildConfigField "String", "BASE_URL", '"https://lip-reproach-payday.ngrok-free.dev/graphql/"'
-            //https://muslimghanchi.samajapp.in/API/
+
+            boolean isDev = true // Switch to false to use Prod URL
+
+            def prodUrl = "https://muslimghanchi.samajapp.in/graphql"
+            def devUrl = "https://lip-reproach-payday.ngrok-free.dev/graphql"
+
+            buildConfigField "String", "BASE_URL", "\"${isDev ? devUrl : prodUrl}\""
         }
         medk {
             applicationId "com.medk.samaj"

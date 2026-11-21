@@ -441,7 +441,11 @@ class DashboardRepository(
     suspend fun getMastersCounts(): MasterUpdateResponse? {
         return withContext(Dispatchers.IO) {
             try {
-                val response = apolloClient.query(GetMastersCountsQuery()).execute()
+                val response = executeWithTokenRefresh(tokenManager, tokenRefreshApi) {
+                    apolloClient.query(GetMastersCountsQuery()).execute()
+                }
+                response.exception?.let { throw it }
+                response.errors?.firstOrNull()?.message?.let { throw Exception(it) }
 
                 val data = response.data?.getMastersCounts ?: return@withContext null
 

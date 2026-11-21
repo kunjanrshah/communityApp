@@ -22,6 +22,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.krs.community.R
 import com.krs.community.app.AppDatabase
+import com.krs.community.auth.TokenManager
 import com.krs.community.graphql.GraphQLClientProvider
 import com.krs.community.listeners.ByFilterListener
 import com.krs.community.model.Member
@@ -45,8 +46,10 @@ class LocationAdapter(var mContext: Context, var member: Member) : BaseAdapter()
     private val filterViewModelFactory = SmartFilterViewModelFactory(
         SmartFilterRepository(
             ApiServices(),
-            AppDatabase.invoke(mContext),
-            GraphQLClientProvider.provideApolloClient(mContext.applicationContext)
+            AppDatabase.invoke(mContext.applicationContext),
+            GraphQLClientProvider.provideApolloClient(mContext.applicationContext),
+            TokenManager(mContext.applicationContext),
+            GraphQLClientProvider.provideTokenRefreshApi(mContext.applicationContext)
         )
     )
     private lateinit var request: LocationRequest
